@@ -1,0 +1,131 @@
+'use client';
+
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Tutorial } from '@/types/tutorial';
+import { useTutorialEngine } from '@/hooks/useTutorialEngine';
+import TutorialOverlay from './TutorialOverlay';
+import KeyboardZoneOverlay from './KeyboardZoneOverlay';
+
+interface TutorialRunnerProps {
+  tutorial: Tutorial;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  DevicePanel: React.ComponentType<any>;
+}
+
+export default function TutorialRunner({
+  tutorial,
+  DevicePanel,
+}: TutorialRunnerProps) {
+  const store = useTutorialEngine(tutorial);
+
+  const step = store.currentStep();
+  const totalSteps = store.totalSteps();
+  const isFirst = store.isFirstStep();
+  const isLast = store.isLastStep();
+  const progress = store.progress();
+
+  const handleClose = () => {
+    store.reset();
+    // Navigate back to landing -- the consuming app should handle this
+    // via a route change or callback. For now we reset the store.
+    if (typeof window !== 'undefined') {
+      window.history.back();
+    }
+  };
+
+  if (!store.isActive || !step) {
+    return null;
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 flex flex-col bg-[#0a0a14]">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0f0f1a]/80 backdrop-blur-md">
+        <div className="flex items-center gap-4">
+          {/* Back / close button */}
+          <button
+            type="button"
+            onClick={handleClose}
+            className="flex items-center justify-center w-9 h-9 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            aria-label="Close tutorial"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+
+          {/* Tutorial title */}
+          <div>
+            <h1 className="text-base font-semibold text-white leading-tight">
+              {tutorial.title}
+            </h1>
+            <p className="text-xs text-white/40 mt-0.5">
+              {tutorial.category} &middot; {tutorial.difficulty} &middot;{' '}
+              {tutorial.estimatedTime}
+            </p>
+          </div>
+        </div>
+
+        {/* Step counter in header */}
+        <div className="text-sm text-white/40 font-medium">
+          {store.currentStepIndex + 1} / {totalSteps}
+        </div>
+      </header>
+
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col items-center justify-center overflow-auto p-6">
+        {/* Device Panel */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key="device-panel"
+            className="w-full max-w-5xl"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
+          >
+            <DevicePanel
+              panelState={store.panelState}
+              displayState={store.displayState}
+              highlightedControls={store.highlightedControls}
+              zones={store.zones}
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Keyboard zone overlay */}
+        {store.zones.length > 0 && (
+          <div className="w-full max-w-5xl mt-4">
+            <KeyboardZoneOverlay zones={store.zones} />
+          </div>
+        )}
+      </div>
+
+      {/* Tutorial overlay card */}
+      <AnimatePresence>
+        {step && (
+          <TutorialOverlay
+            step={step}
+            stepNumber={store.currentStepIndex + 1}
+            totalSteps={totalSteps}
+            onNext={store.nextStep}
+            onPrev={store.prevStep}
+            onClose={handleClose}
+            isFirst={isFirst}
+            isLast={isLast}
+            progress={progress}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

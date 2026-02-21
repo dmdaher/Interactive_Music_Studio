@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0f;
+  --foreground: #e0e0e0;
+  --accent: #00aaff;
+  --accent-glow: rgba(0, 170, 255, 0.3);
+  --card-bg: #141420;
+  --card-border: #2a2a3a;
+  --surface: #1a1a2a;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 #111;
+}
+
+/* LCD Screen Effect */
+.lcd-screen {
+  background: linear-gradient(180deg, #0a0a1a 0%, #0d0d2a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.lcd-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+.lcd-text {
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 8px currentColor;
+}

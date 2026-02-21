@@ -1,0 +1,323 @@
+import { Tutorial } from '@/types/tutorial';
+
+export const splitKeyboardZones: Tutorial = {
+  id: 'split-keyboard-zones',
+  deviceId: 'fantom-08',
+  title: 'Split Keyboard Using Zone 1 and Zone 2',
+  description:
+    'Learn how to split your Fantom 08 keyboard into two zones — Zone 1 for bass sounds on the left hand and Zone 2 for piano on the right hand.',
+  category: 'zones-splits',
+  difficulty: 'beginner',
+  estimatedTime: '5 min',
+  tags: ['zones', 'split', 'keyboard', 'beginner'],
+  steps: [
+    {
+      id: 'step-1',
+      title: 'Welcome to Zone Splitting',
+      instruction:
+        "In this tutorial, you'll learn how to split the Fantom 08 keyboard into two zones. This lets you play different sounds with your left and right hands.",
+      details:
+        "We'll set up Zone 1 for a bass sound on the lower keys and Zone 2 for a piano sound on the upper keys.",
+      highlightControls: [],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'home',
+        title: 'FANTOM-08',
+      },
+    },
+    {
+      id: 'step-2',
+      title: 'Press the Zone 1 Button',
+      instruction: 'First, press the Zone 1 button to select Zone 1 for editing.',
+      details: 'Zone 1 will be our bass zone covering the lower half of the keyboard.',
+      highlightControls: ['zone-1'],
+      panelStateChanges: {
+        'zone-1': { active: true, ledOn: true, ledColor: '#3B82F6' },
+      },
+      displayState: {
+        screenType: 'zone-view',
+        title: 'ZONE VIEW',
+        zones: [
+          {
+            zoneNumber: 1,
+            zoneName: 'Zone 1',
+            toneName: 'INIT TONE',
+            keyRangeLow: 'A0',
+            keyRangeHigh: 'C8',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: true,
+          },
+        ],
+      },
+      tipText: 'The Zone 1 LED should light up blue.',
+    },
+    {
+      id: 'step-3',
+      title: 'Open the Menu',
+      instruction: 'Press the Menu button to access Zone settings.',
+      highlightControls: ['menu'],
+      panelStateChanges: {
+        menu: { active: true, ledOn: true },
+      },
+      displayState: {
+        screenType: 'menu',
+        title: 'MENU',
+        menuItems: [
+          { label: 'Zone Setting', selected: true },
+          { label: 'Tone Edit' },
+          { label: 'Effects' },
+          { label: 'System' },
+        ],
+        selectedIndex: 0,
+      },
+    },
+    {
+      id: 'step-4',
+      title: 'Select Zone Setting',
+      instruction: 'Press Enter to open Zone Setting.',
+      highlightControls: ['enter'],
+      panelStateChanges: {
+        enter: { active: true },
+      },
+      displayState: {
+        screenType: 'menu',
+        title: 'ZONE SETTING',
+        menuItems: [
+          { label: 'Key Range', selected: true },
+          { label: 'Velocity Range' },
+          { label: 'Octave Shift' },
+          { label: 'Transpose' },
+        ],
+        selectedIndex: 0,
+      },
+    },
+    {
+      id: 'step-5',
+      title: 'Open Key Range',
+      instruction: 'Press Enter to edit the Key Range for Zone 1.',
+      highlightControls: ['enter'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'key-range',
+        title: 'KEY RANGE - Zone 1',
+        parameterName: 'Key Range Low',
+        parameterValue: 'A0',
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 108,
+          label: 'Zone 1 (Full)',
+        },
+      ],
+    },
+    {
+      id: 'step-6',
+      title: 'Set Zone 1 Upper Limit',
+      instruction:
+        'Use the Value dial to set the upper limit of Zone 1 to B3. This gives your left hand the lower 3 octaves for bass.',
+      highlightControls: ['value-dial'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'key-range',
+        title: 'KEY RANGE - Zone 1',
+        parameterName: 'Key Range High',
+        parameterValue: 'B3',
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Bass)',
+        },
+      ],
+      tipText: 'B3 is the B just below middle C.',
+    },
+    {
+      id: 'step-7',
+      title: 'Activate Zone 2',
+      instruction: 'Press the Zone 2 button to activate and select Zone 2.',
+      highlightControls: ['zone-2'],
+      panelStateChanges: {
+        'zone-2': { active: true, ledOn: true, ledColor: '#EF4444' },
+        menu: { active: false, ledOn: false },
+        enter: { active: false },
+      },
+      displayState: {
+        screenType: 'zone-view',
+        title: 'ZONE VIEW',
+        zones: [
+          {
+            zoneNumber: 1,
+            zoneName: 'Zone 1',
+            toneName: 'AC.BASS',
+            keyRangeLow: 'A0',
+            keyRangeHigh: 'B3',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: false,
+          },
+          {
+            zoneNumber: 2,
+            zoneName: 'Zone 2',
+            toneName: 'INIT TONE',
+            keyRangeLow: 'C4',
+            keyRangeHigh: 'C8',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: true,
+          },
+        ],
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Bass)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Piano)',
+        },
+      ],
+    },
+    {
+      id: 'step-8',
+      title: 'Select a Piano Tone',
+      instruction: 'Press the Tone Select button to browse piano sounds for Zone 2.',
+      highlightControls: ['tone-select'],
+      panelStateChanges: {
+        'tone-select': { active: true, ledOn: true },
+      },
+      displayState: {
+        screenType: 'tone-select',
+        title: 'TONE SELECT - Zone 2',
+        menuItems: [
+          { label: 'Concert Grand', selected: true },
+          { label: 'Bright Piano' },
+          { label: 'Stage Piano' },
+          { label: 'Electric Piano' },
+        ],
+        selectedIndex: 0,
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Bass)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Piano)',
+        },
+      ],
+    },
+    {
+      id: 'step-9',
+      title: 'Save Your Scene',
+      instruction: 'Press the Write button to save your split keyboard setup as a Scene.',
+      highlightControls: ['write'],
+      panelStateChanges: {
+        write: { active: true, ledOn: true },
+        'tone-select': { active: false, ledOn: false },
+      },
+      displayState: {
+        screenType: 'write',
+        title: 'WRITE',
+        confirmText: 'Write to Scene?',
+        statusText: 'Press Enter to confirm',
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Bass)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Piano)',
+        },
+      ],
+    },
+    {
+      id: 'step-10',
+      title: 'Split Complete!',
+      instruction:
+        'Your keyboard is now split into two zones. Zone 1 (blue) plays bass on the left, and Zone 2 (red) plays piano on the right.',
+      details:
+        'Try playing both zones! The split point is at middle C (C4). You can adjust the split point anytime by editing the Key Range.',
+      highlightControls: [],
+      panelStateChanges: {
+        write: { active: false, ledOn: false },
+      },
+      displayState: {
+        screenType: 'zone-view',
+        title: 'ZONE VIEW',
+        zones: [
+          {
+            zoneNumber: 1,
+            zoneName: 'Zone 1',
+            toneName: 'AC.BASS',
+            keyRangeLow: 'A0',
+            keyRangeHigh: 'B3',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: false,
+          },
+          {
+            zoneNumber: 2,
+            zoneName: 'Zone 2',
+            toneName: 'Concert Grand',
+            keyRangeLow: 'C4',
+            keyRangeHigh: 'C8',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: false,
+          },
+        ],
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (AC.BASS)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Concert Grand)',
+        },
+      ],
+      tipText: 'You can create up to 8 zones for complex layered setups!',
+    },
+  ],
+};
