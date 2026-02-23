@@ -27,9 +27,9 @@ export default function CommonSection({
       transition={{ duration: 0.3, delay: 0.1 }}
     >
       {/* Left column: Scene buttons (evenly spaced) */}
-      <div className="flex flex-col gap-4 flex-shrink-0">
-        <div className="flex flex-col items-center gap-0.5">
-          <span className="text-[9px] font-semibold tracking-widest uppercase text-neutral-400">
+      <div className="flex flex-col gap-8 flex-shrink-0">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-[11px] font-bold tracking-widest uppercase text-neutral-300">
             SCENE
           </span>
           <PanelButton
@@ -55,7 +55,7 @@ export default function CommonSection({
         />
         <PanelButton
           id="zone-view"
-          label="Zone Vw"
+          label="Zone View"
           variant="function"
           size="md"
           labelPosition="above"
@@ -65,7 +65,7 @@ export default function CommonSection({
         />
         <PanelButton
           id="single-tone"
-          label="Single"
+          label="Single Tone"
           variant="function"
           size="md"
           labelPosition="above"
@@ -86,8 +86,9 @@ export default function CommonSection({
       </div>
 
       {/* Right column: Wheel on top, nav buttons + bottom row below */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-6">
         {/* Wheel */}
+        <div className="mt-3" />
         <ValueDial
           id="value-dial"
           size="lg"
@@ -95,7 +96,7 @@ export default function CommonSection({
         />
 
         {/* Dec ▲ Inc */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mt-4">
           <PanelButton
             id="dec"
             label="Dec"
@@ -185,7 +186,7 @@ export default function CommonSection({
               highlighted={isHighlighted('exit')}
               onClick={() => onButtonClick?.('exit')}
             />
-            <span className="text-[6px] tracking-wide text-neutral-400 uppercase font-medium">
+            <span className="text-[7px] tracking-wide text-neutral-300 uppercase font-bold">
               [PANIC]
             </span>
           </div>
@@ -200,7 +201,7 @@ export default function CommonSection({
               highlighted={isHighlighted('enter')}
               onClick={() => onButtonClick?.('enter')}
             />
-            <span className="text-[6px] tracking-wide text-neutral-400 uppercase font-medium">
+            <span className="text-[7px] tracking-wide text-neutral-300 uppercase font-bold">
               [NUMERIC]
             </span>
           </div>

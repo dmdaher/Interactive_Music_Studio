@@ -26,7 +26,7 @@ interface FantomPanelProps {
 }
 
 // Design size — the "native" size of the panel (wider to match the real Fantom 08)
-const PANEL_NATURAL_WIDTH = 2450;
+const PANEL_NATURAL_WIDTH = 2600;
 const PANEL_NATURAL_HEIGHT = 580;
 
 const toneCategories = [
@@ -143,19 +143,20 @@ export default function FantomPanel({
               {/* Rows 1-4: Write/MFX/M.Pad/DAW | Display | Scene+Nav */}
               <div className="flex items-stretch gap-2 flex-1 min-h-0">
                 {/* Write/MFX/M.Pad/DAW — vertical column left of display (no Menu) */}
-                <div className="flex flex-col gap-10 justify-start pt-2 flex-shrink-0 pr-4">
+                <div className="flex flex-col gap-8 justify-start pt-2 flex-shrink-0 pr-4">
                   {[
                     { id: 'write', label: 'Write', hasLed: true },
-                    { id: 'master-fx', label: 'MFX' },
-                    { id: 'motional-pad', label: 'M.Pad' },
-                    { id: 'daw-ctrl', label: 'DAW' },
+                    { id: 'master-fx', label: 'Master FX' },
+                    { id: 'motional-pad', label: 'Motional Pad' },
+                    { id: 'daw-ctrl', label: 'DAW Ctrl' },
+                    { id: 'menu', label: 'Menu' },
                   ].map((btn) => (
                     <PanelButton
                       key={btn.id}
                       id={btn.id}
                       label={btn.label}
                       variant="function"
-                      size="sm"
+                      size="md"
                       labelPosition="above"
                       {...(btn.hasLed ? { hasLed: true, ledOn: panelState[btn.id]?.ledOn ?? false, ledColor: '#ff2222' } : {})}
                       active={panelState[btn.id]?.active ?? false}
@@ -187,19 +188,7 @@ export default function FantomPanel({
 
               {/* Row 5: Menu | E1-E6 knobs | Tempo, Shift, Exit, Enter */}
               <div className="flex items-end gap-2">
-                <div className="flex-shrink-0 pr-4">
-                  <PanelButton
-                    id="menu"
-                    label="Menu"
-                    variant="menu"
-                    size="sm"
-                    labelPosition="above"
-                    active={panelState['menu']?.active ?? false}
-                    highlighted={highlightedControls.includes('menu')}
-                    onClick={() => onButtonClick?.('menu')}
-                  />
-                </div>
-                <div className="grid grid-cols-6 gap-0 flex-1" style={{ maxWidth: 620 }}>
+                <div className="grid grid-cols-6 gap-0 flex-1 ml-16" style={{ maxWidth: 620 }}>
                   {['function-e1', 'function-e2', 'function-e3', 'function-e4', 'function-e5', 'function-e6'].map((id) => (
                     <div key={id} className="flex justify-center">
                       <Knob
