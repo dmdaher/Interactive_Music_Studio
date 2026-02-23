@@ -35,11 +35,11 @@ export default function PadButton({
   onClick,
 }: PadButtonProps) {
   return (
-    <div className="flex flex-col items-center gap-1" data-control-id={id}>
       <motion.button
         type="button"
+        data-control-id={id}
         onClick={onClick}
-        className="w-11 h-11 rounded-lg cursor-pointer select-none flex items-center justify-center"
+        className="w-16 h-16 rounded-lg cursor-pointer select-none relative"
         style={{
           background: active
             ? `linear-gradient(145deg, ${color} 0%, ${color}cc 60%, ${color}99 100%)`
@@ -64,10 +64,9 @@ export default function PadButton({
               : 'radial-gradient(circle at 40% 35%, rgba(255,255,255,0.06) 0%, transparent 60%)',
           }}
         />
-        <span className="text-[8px] font-medium text-gray-300 uppercase tracking-wider text-center leading-tight z-10 relative">
+        <span className="absolute bottom-1.5 right-2 text-[11px] font-bold text-gray-400 z-10">
           {label}
         </span>
       </motion.button>
-    </div>
   );
 }

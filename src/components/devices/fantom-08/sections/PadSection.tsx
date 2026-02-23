@@ -30,18 +30,14 @@ export default function PadSection({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, delay: 0.3 }}
     >
-      <span className="text-[8px] font-semibold tracking-widest uppercase text-neutral-400 text-center">
-        PADS
-      </span>
-
       <div className="flex gap-5">
         {/* Pad function buttons: vertical column on the left */}
-        <div className="flex flex-col gap-0.5 justify-center">
+        <div className="flex flex-col gap-2 justify-center">
           <PanelButton
             id="sampling"
             label="Samp"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             active={panelState['sampling']?.active ?? false}
             highlighted={highlightedControls.includes('sampling')}
@@ -51,7 +47,7 @@ export default function PadSection({
             id="pad-mode"
             label="Mode"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             active={panelState['pad-mode']?.active ?? false}
             highlighted={highlightedControls.includes('pad-mode')}
@@ -61,7 +57,7 @@ export default function PadSection({
             id="clip-board"
             label="Clip"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             active={panelState['clip-board']?.active ?? false}
             highlighted={highlightedControls.includes('clip-board')}
@@ -71,7 +67,7 @@ export default function PadSection({
             id="bank"
             label="Bank"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             active={panelState['bank']?.active ?? false}
             highlighted={highlightedControls.includes('bank')}
@@ -81,7 +77,7 @@ export default function PadSection({
             id="hold"
             label="Hold"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             active={panelState['hold']?.active ?? false}
             highlighted={highlightedControls.includes('hold')}
@@ -90,7 +86,7 @@ export default function PadSection({
         </div>
 
         {/* 4x4 pad grid */}
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-4 gap-x-3 gap-y-1.5">
           {padIds.map((pad) => {
             const state = panelState[pad.id];
             return (

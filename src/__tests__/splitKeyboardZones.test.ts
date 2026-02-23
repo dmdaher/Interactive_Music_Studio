@@ -25,7 +25,7 @@ describe('splitKeyboardZones tutorial data integrity', () => {
       'zone-int', 'menu', 'write', 'exit', 'enter', 'tone-select', 'value-dial',
       'cursor-up', 'cursor-down', 'cursor-left', 'cursor-right',
       'scene-up', 'scene-down',
-      'pitch-wheel', 'mod-wheel', 's1-btn', 's2-btn',
+      'wheel-1', 'wheel-2', 'pitch-wheel', 's1-btn', 's2-btn',
       'split', 'chord-memory', 'arpeggio', 'transpose', 'octave-down', 'octave-up',
       'cutoff-knob', 'resonance-knob', 'attack-knob', 'decay-knob',
       'sustain-knob', 'release-knob', 'effects-knob', 'lfo-rate-knob',

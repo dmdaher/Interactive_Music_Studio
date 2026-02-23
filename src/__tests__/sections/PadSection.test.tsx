@@ -34,15 +34,10 @@ describe('PadSection', () => {
 
   it('function buttons in vertical column (flex-col)', () => {
     const { container } = render(<PadSection {...defaultProps} />);
-    const functionColumn = container.querySelector('.flex-col.gap-0\\.5');
+    const functionColumn = container.querySelector('.flex-col.gap-2');
     expect(functionColumn).toBeInTheDocument();
     const buttons = functionColumn?.querySelectorAll('[data-control-id]');
     expect(buttons?.length).toBe(5);
-  });
-
-  it('has "PADS" label', () => {
-    render(<PadSection {...defaultProps} />);
-    expect(screen.getByText('PADS')).toBeInTheDocument();
   });
 
   it('renders all expected controls (21 total)', () => {

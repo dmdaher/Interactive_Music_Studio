@@ -91,9 +91,9 @@ const commonControls: PanelControl[] = [
 
 // --- Controller Section Controls (①) ---
 const controllerControls: PanelControl[] = [
+  { id: 'wheel-1', type: 'wheel', label: 'Wheel 1', section: 'controller', defaultValue: 64, minValue: 0, maxValue: 127 },
+  { id: 'wheel-2', type: 'wheel', label: 'Wheel 2', section: 'controller', defaultValue: 0, minValue: 0, maxValue: 127 },
   { id: 'pitch-wheel', type: 'wheel', label: 'Pitch', section: 'controller', defaultValue: 64, minValue: 0, maxValue: 127 },
-  { id: 'mod-wheel', type: 'wheel', label: 'Mod', section: 'controller', defaultValue: 0, minValue: 0, maxValue: 127 },
-  { id: 'pitch-mod-lever', type: 'wheel', label: 'Pitch/Mod', section: 'controller', defaultValue: 64, minValue: 0, maxValue: 127 },
   { id: 's1-btn', type: 'button', label: 'S1', section: 'controller', variant: 'function', size: 'sm' },
   { id: 's2-btn', type: 'button', label: 'S2', section: 'controller', variant: 'function', size: 'sm' },
 ];

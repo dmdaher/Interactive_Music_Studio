@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Lever from '@/components/controls/Lever';
 import Wheel from '@/components/controls/Wheel';
 import PanelButton from '@/components/controls/PanelButton';
 import { PanelState } from '@/types/panel';
@@ -19,48 +18,56 @@ export default function ControllerSection({
 
   return (
     <motion.div
-      className="flex items-end gap-1.5"
+      className="flex flex-col items-center justify-between h-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, delay: 0.15 }}
     >
-      {/* Pitch bend / modulation lever */}
-      <Lever
-        id="pitch-mod-lever"
-        label="P.Bend"
-        highlighted={highlightedControls.includes('pitch-mod-lever')}
-      />
-      {/* Pitch bend wheel */}
-      <Wheel
-        id="pitch-wheel"
-        label="Pitch"
-        value={getValue('pitch-wheel') || 64}
-        highlighted={highlightedControls.includes('pitch-wheel')}
-      />
-      {/* Mod wheel */}
-      <Wheel
-        id="mod-wheel"
-        label="Mod"
-        value={getValue('mod-wheel')}
-        highlighted={highlightedControls.includes('mod-wheel')}
-      />
-      {/* S1/S2 assignable buttons (stacked vertically) */}
-      <div className="flex flex-col gap-1 pb-0.5">
-        <PanelButton
-          id="s1-btn"
-          label="S1"
-          variant="function"
-          size="sm"
-          active={panelState['s1-btn']?.active ?? false}
-          highlighted={highlightedControls.includes('s1-btn')}
+      {/* Wheel 1 and Wheel 2 in 2 columns */}
+      <div className="flex gap-3">
+        <Wheel
+          id="wheel-1"
+          label="Wheel 1"
+          value={getValue('wheel-1') || 64}
+          highlighted={highlightedControls.includes('wheel-1')}
         />
-        <PanelButton
-          id="s2-btn"
-          label="S2"
-          variant="function"
-          size="sm"
-          active={panelState['s2-btn']?.active ?? false}
-          highlighted={highlightedControls.includes('s2-btn')}
+        <Wheel
+          id="wheel-2"
+          label="Wheel 2"
+          value={getValue('wheel-2')}
+          highlighted={highlightedControls.includes('wheel-2')}
+        />
+      </div>
+
+      {/* Bottom group: S1/S2 buttons + pitch wheel */}
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex gap-3">
+          <PanelButton
+            id="s1-btn"
+            label="S1"
+            variant="function"
+            size="sm"
+            labelPosition="above"
+            active={panelState['s1-btn']?.active ?? false}
+            highlighted={highlightedControls.includes('s1-btn')}
+          />
+          <PanelButton
+            id="s2-btn"
+            label="S2"
+            variant="function"
+            size="sm"
+            labelPosition="above"
+            active={panelState['s2-btn']?.active ?? false}
+            highlighted={highlightedControls.includes('s2-btn')}
+          />
+        </div>
+
+        {/* Pitch wheel centered below */}
+        <Wheel
+          id="pitch-wheel"
+          label="Pitch"
+          value={getValue('pitch-wheel') || 64}
+          highlighted={highlightedControls.includes('pitch-wheel')}
         />
       </div>
     </motion.div>

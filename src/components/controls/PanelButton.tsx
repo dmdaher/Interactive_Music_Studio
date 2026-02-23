@@ -95,7 +95,7 @@ export default function PanelButton({
 
       {/* Label above button (panel-printed text) */}
       {labelPosition === 'above' && (
-        <span className={`${sizeStyle.text} font-medium text-neutral-400 leading-tight text-center tracking-wide uppercase`}>
+        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-tight text-center tracking-wide uppercase`}>
           {label}
         </span>
       )}

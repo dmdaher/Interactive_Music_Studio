@@ -26,17 +26,17 @@ interface FantomPanelProps {
 }
 
 // Design size — the "native" size of the panel (wider to match the real Fantom 08)
-const PANEL_NATURAL_WIDTH = 2000;
+const PANEL_NATURAL_WIDTH = 2450;
 const PANEL_NATURAL_HEIGHT = 580;
 
 const toneCategories = [
-  { id: 'tone-cat-1', label: 'A.Pno' },
-  { id: 'tone-cat-2', label: 'E.Pno' },
+  { id: 'tone-cat-1', label: 'Ac Piano' },
+  { id: 'tone-cat-2', label: 'El Piano' },
   { id: 'tone-cat-3', label: 'Organ' },
   { id: 'tone-cat-4', label: 'Keys' },
-  { id: 'tone-cat-5', label: 'Gtr' },
+  { id: 'tone-cat-5', label: 'Guitar' },
   { id: 'tone-cat-6', label: 'Bass' },
-  { id: 'tone-cat-7', label: 'Str' },
+  { id: 'tone-cat-7', label: 'Strings' },
   { id: 'tone-cat-8', label: 'Brass' },
   { id: 'tone-cat-9', label: 'Wind' },
   { id: 'tone-cat-10', label: 'Choir' },
@@ -45,7 +45,7 @@ const toneCategories = [
   { id: 'tone-cat-13', label: 'FX' },
   { id: 'tone-cat-14', label: 'Drums' },
   { id: 'tone-cat-15', label: 'User' },
-  { id: 'tone-cat-16', label: 'Asgn' },
+  { id: 'tone-cat-16', label: 'Assign' },
 ];
 
 export default function FantomPanel({
@@ -201,7 +201,7 @@ export default function FantomPanel({
 
             {/* Right-side 2-row layout: upper sections + bottom tone categories */}
             <div
-              className="flex-1 min-w-0 flex flex-col gap-1.5 rounded-lg px-1.5 py-1.5"
+              className="flex-1 min-w-0 flex flex-col gap-1.5 rounded-lg pl-1.5 pr-4 py-1.5"
               style={{
                 background: 'rgba(0,0,0,0.15)',
                 boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)',
@@ -214,15 +214,17 @@ export default function FantomPanel({
                   highlightedControls={highlightedControls}
                   onButtonClick={onButtonClick}
                 />
-                <PadSection
-                  panelState={panelState}
-                  highlightedControls={highlightedControls}
-                  onButtonClick={onButtonClick}
-                />
+                <div className="ml-2">
+                  <PadSection
+                    panelState={panelState}
+                    highlightedControls={highlightedControls}
+                    onButtonClick={onButtonClick}
+                  />
+                </div>
               </div>
 
               {/* Lower row: Tone categories spanning full width */}
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-0.5 -mt-14">
                 <div className="grid grid-cols-16 gap-0.5">
                   {toneCategories.map((cat) => {
                     const state = panelState[cat.id];

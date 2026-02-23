@@ -6,7 +6,7 @@ describe('Slider', () => {
   it('track height is 80px and width is 16px', () => {
     const { container } = render(<Slider id="s1-slider" label="S1" />);
     const track = container.querySelector('.rounded-md') as HTMLElement;
-    expect(track?.style.height).toBe('80px');
+    expect(track?.style.height).toBe('120px');
     expect(track?.style.width).toBe('16px');
   });
 

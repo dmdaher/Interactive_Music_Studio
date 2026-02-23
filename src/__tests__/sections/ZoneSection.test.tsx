@@ -35,13 +35,12 @@ describe('ZoneSection', () => {
     }
   });
 
-  it('renders 8 zone buttons + INT', () => {
+  it('renders 8 zone buttons', () => {
     const { container } = render(<ZoneSection {...defaultProps} />);
     const zoneBtnIds = ['zone-1', 'zone-2', 'zone-3', 'zone-4', 'zone-5', 'zone-6', 'zone-7', 'zone-8'];
     zoneBtnIds.forEach((id) => {
       expect(container.querySelector(`[data-control-id="${id}"]`)).toBeInTheDocument();
     });
-    expect(container.querySelector('[data-control-id="zone-int"]')).toBeInTheDocument();
   });
 
   it('renders ZONE 9-16 and ZONE SELECT buttons', () => {
@@ -62,8 +61,8 @@ describe('ZoneSection', () => {
     zoneBtnIds.forEach((id) => {
       const control = container.querySelector(`[data-control-id="${id}"]`);
       expect(control).toBeInTheDocument();
-      // Each zone button wrapper should have 2 children (LED + button)
-      expect(control?.children.length).toBe(2);
+      // Each zone button wrapper should have 3 children (label + LED + button)
+      expect(control?.children.length).toBe(3);
     });
   });
 
@@ -90,23 +89,19 @@ describe('ZoneSection', () => {
     const zone1 = container.querySelector('[data-control-id="zone-1"] button') as HTMLElement;
     fireEvent.click(zone1);
     expect(onClick).toHaveBeenCalledWith('zone-1');
-
-    const intBtn = container.querySelector('[data-control-id="zone-int"] button') as HTMLElement;
-    fireEvent.click(intBtn);
-    expect(onClick).toHaveBeenCalledWith('zone-int');
   });
 
-  it('has "ZONE" label', () => {
+  it('has OCTAVE label', () => {
     render(<ZoneSection {...defaultProps} />);
-    expect(screen.getByText('ZONE')).toBeInTheDocument();
+    expect(screen.getByText('OCTAVE')).toBeInTheDocument();
   });
 
-  it('renders all expected controls (37 total)', () => {
+  it('renders all expected controls (36 total)', () => {
     const { container } = render(<ZoneSection {...defaultProps} />);
     const allControls = container.querySelectorAll('[data-control-id]');
     // 1 master-vol + 3 buttons (pan-level, ctrl, assign) + 8 knobs + 8 sliders +
-    // 8 zone buttons + 1 INT + 2 (zone-9-16, zone-select) +
-    // 3 (split, arp, chord) + 3 (trans, oct-down, oct-up) = 37
-    expect(allControls.length).toBe(37);
+    // 8 zone buttons + 2 (zone-9-16, zone-select) +
+    // 3 (split, arp, chord) + 3 (trans, oct-down, oct-up) = 36
+    expect(allControls.length).toBe(36);
   });
 });

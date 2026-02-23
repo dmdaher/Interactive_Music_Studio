@@ -9,7 +9,7 @@ interface SliderProps {
   highlighted?: boolean;
 }
 
-const TRACK_HEIGHT = 80;
+const TRACK_HEIGHT = 120;
 const THUMB_HEIGHT = 14;
 const TRAVEL = TRACK_HEIGHT - THUMB_HEIGHT;
 
