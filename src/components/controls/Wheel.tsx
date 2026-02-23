@@ -9,9 +9,9 @@ interface WheelProps {
   highlighted?: boolean;
 }
 
-const WHEEL_HEIGHT = 100;
-const WHEEL_WIDTH = 24;
-const THUMB_HEIGHT = 18;
+const WHEEL_HEIGHT = 80;
+const WHEEL_WIDTH = 20;
+const THUMB_HEIGHT = 14;
 const TRAVEL = WHEEL_HEIGHT - THUMB_HEIGHT;
 
 const highlightAnimation = {
@@ -40,7 +40,7 @@ export default function Wheel({
   const thumbOffset = TRAVEL - (clampedValue / 127) * TRAVEL;
 
   return (
-    <div className="flex flex-col items-center gap-2" data-control-id={id}>
+    <div className="flex flex-col items-center gap-1" data-control-id={id}>
       {/* Wheel track */}
       <motion.div
         className="relative cursor-pointer"

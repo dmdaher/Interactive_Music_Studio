@@ -1,17 +1,20 @@
 'use client';
 
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PanelState } from '@/types/panel';
 import { DisplayState } from '@/types/display';
 import { ZoneConfig } from '@/types/keyboard';
 import DisplayScreen from './display/DisplayScreen';
 import ZoneSection from './sections/ZoneSection';
-import SceneSection from './sections/SceneSection';
+
 import CommonSection from './sections/CommonSection';
 import ControllerSection from './sections/ControllerSection';
-import SynthControlSection from './sections/SynthControlSection';
-import SequencerSection from './sections/SequencerSection';
+import SynthModeSection from './sections/SynthModeSection';
+
 import PadSection from './sections/PadSection';
+import PanelButton from '@/components/controls/PanelButton';
+import Knob from '@/components/controls/Knob';
 import Keyboard from './Keyboard';
 
 interface FantomPanelProps {
@@ -22,6 +25,29 @@ interface FantomPanelProps {
   onButtonClick?: (id: string) => void;
 }
 
+// Design size — the "native" size of the panel (wider to match the real Fantom 08)
+const PANEL_NATURAL_WIDTH = 2000;
+const PANEL_NATURAL_HEIGHT = 580;
+
+const toneCategories = [
+  { id: 'tone-cat-1', label: 'A.Pno' },
+  { id: 'tone-cat-2', label: 'E.Pno' },
+  { id: 'tone-cat-3', label: 'Organ' },
+  { id: 'tone-cat-4', label: 'Keys' },
+  { id: 'tone-cat-5', label: 'Gtr' },
+  { id: 'tone-cat-6', label: 'Bass' },
+  { id: 'tone-cat-7', label: 'Str' },
+  { id: 'tone-cat-8', label: 'Brass' },
+  { id: 'tone-cat-9', label: 'Wind' },
+  { id: 'tone-cat-10', label: 'Choir' },
+  { id: 'tone-cat-11', label: 'Synth' },
+  { id: 'tone-cat-12', label: 'Pad' },
+  { id: 'tone-cat-13', label: 'FX' },
+  { id: 'tone-cat-14', label: 'Drums' },
+  { id: 'tone-cat-15', label: 'User' },
+  { id: 'tone-cat-16', label: 'Asgn' },
+];
+
 export default function FantomPanel({
   panelState,
   displayState,
@@ -29,121 +55,205 @@ export default function FantomPanel({
   zones,
   onButtonClick,
 }: FantomPanelProps) {
-  return (
-    <motion.div
-      className="relative w-full rounded-xl overflow-hidden select-none"
-      style={{
-        backgroundColor: '#1a1a1a',
-        backgroundImage:
-          'radial-gradient(ellipse at 30% 20%, rgba(60,60,60,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(40,40,40,0.08) 0%, transparent 50%)',
-      }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Panel texture overlay */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            'repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(255,255,255,0.005) 1px, rgba(255,255,255,0.005) 2px)',
-        }}
-      />
+  const containerRef = useRef<HTMLDivElement>(null);
 
-      <div className="relative z-10 flex flex-col gap-4 p-4">
-        {/* Top bar: branding */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-bold tracking-[0.3em] text-neutral-500">
+  return (
+    <div
+      ref={containerRef}
+      className="w-full h-full overflow-x-auto"
+    >
+      <motion.div
+        className="relative rounded-2xl overflow-hidden select-none"
+        style={{
+          width: PANEL_NATURAL_WIDTH,
+          minWidth: PANEL_NATURAL_WIDTH,
+          height: PANEL_NATURAL_HEIGHT,
+          backgroundColor: '#1a1a1a',
+          backgroundImage:
+            'repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 3px), radial-gradient(ellipse at 30% 20%, rgba(60,60,60,0.12) 0%, transparent 60%)',
+          boxShadow:
+            '0 0 0 1px rgba(80,80,80,0.3), 0 2px 0 0 rgba(255,255,255,0.04) inset, 0 -2px 0 0 rgba(0,0,0,0.4) inset, 0 8px 32px rgba(0,0,0,0.6)',
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Top bezel highlight */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none z-30"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 70%, transparent 95%)',
+          }}
+        />
+
+        <div className="relative z-10 flex flex-col h-full p-2">
+          {/* Branding bar */}
+          <div className="flex items-center gap-3 mb-1 px-1">
+            <span
+              className="text-[10px] font-bold tracking-[0.35em] text-neutral-500"
+              style={{ fontFamily: 'system-ui, sans-serif' }}
+            >
               ROLAND
             </span>
-            <span className="text-xs tracking-widest text-neutral-600">
+            <span className="text-[9px] tracking-[0.2em] text-neutral-600 font-medium">
               FANTOM-08
             </span>
           </div>
+
+          {/* ROW 1: Control Panel — single horizontal row */}
+          <div className="flex items-stretch gap-2 flex-1 min-h-0">
+            {/* Wheels + Sliders (far left) */}
+            <div
+              className="flex-shrink-0 flex items-end rounded-lg px-1.5 py-1.5"
+              style={{
+                background: 'rgba(0,0,0,0.15)',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)',
+              }}
+            >
+              <ControllerSection
+                panelState={panelState}
+                highlightedControls={highlightedControls}
+              />
+            </div>
+
+            {/* Zone Buttons + Knobs/Sliders (left of display — Section ② on real Fantom) */}
+            <div
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-lg px-1.5 py-1.5"
+              style={{
+                background: 'rgba(0,0,0,0.12)',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
+              }}
+            >
+              <ZoneSection
+                panelState={panelState}
+                highlightedControls={highlightedControls}
+                onButtonClick={onButtonClick}
+              />
+            </div>
+
+            {/* DISPLAY area: Write buttons (left) | Screen (center) | Navigation (right) | E1-E6 (below) */}
+            <div
+              className="flex-shrink-0 flex flex-col gap-1 rounded-lg px-1.5 py-1.5"
+              style={{
+                background: 'rgba(0,0,0,0.12)',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
+              }}
+            >
+              <div className="flex items-stretch gap-2 flex-1 min-h-0">
+                {/* Write/MFX/M.Pad/DAW/Menu — vertical column left of display */}
+                <div className="flex flex-col gap-10 justify-start pt-2 flex-shrink-0 pr-4">
+                  {[
+                    { id: 'write', label: 'Write', hasLed: true },
+                    { id: 'master-fx', label: 'MFX' },
+                    { id: 'motional-pad', label: 'M.Pad' },
+                    { id: 'daw-ctrl', label: 'DAW' },
+                    { id: 'menu', label: 'Menu' },
+                  ].map((btn) => (
+                    <PanelButton
+                      key={btn.id}
+                      id={btn.id}
+                      label={btn.label}
+                      variant={btn.id === 'menu' ? 'menu' : 'function'}
+                      size="sm"
+                      labelPosition="above"
+                      {...(btn.hasLed ? { hasLed: true, ledOn: panelState[btn.id]?.ledOn ?? false, ledColor: '#ff2222' } : {})}
+                      active={panelState[btn.id]?.active ?? false}
+                      highlighted={highlightedControls.includes(btn.id)}
+                      onClick={() => onButtonClick?.(btn.id)}
+                    />
+                  ))}
+                </div>
+
+                {/* Display screen + E1-E6 knobs (center column) */}
+                <div className="flex flex-col gap-1.5 min-w-0" style={{ width: 600 }}>
+                  <div className="flex items-center">
+                    <DisplayScreen
+                      displayState={displayState}
+                      highlighted={highlightedControls.includes('display')}
+                    />
+                  </div>
+                  {/* E1-E6 knobs below display, spanning screen width */}
+                  <div className="flex items-center justify-between mt-2">
+                    {['function-e1', 'function-e2', 'function-e3', 'function-e4', 'function-e5', 'function-e6'].map((id) => (
+                      <Knob
+                        key={id}
+                        id={id}
+                        label=""
+                        value={panelState[id]?.value ?? 64}
+                        highlighted={highlightedControls.includes(id)}
+                        size="md"
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation section (right of display) */}
+                <div className="flex-shrink-0 flex items-center px-4">
+                  <CommonSection
+                    panelState={panelState}
+                    highlightedControls={highlightedControls}
+                    onButtonClick={onButtonClick}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right-side 2-row layout: upper sections + bottom tone categories */}
+            <div
+              className="flex-1 min-w-0 flex flex-col gap-1.5 rounded-lg px-1.5 py-1.5"
+              style={{
+                background: 'rgba(0,0,0,0.15)',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)',
+              }}
+            >
+              {/* Upper row: SynthCtrl+Sequencer | Pads */}
+              <div className="flex items-stretch gap-10 flex-1 min-h-0">
+                <SynthModeSection
+                  panelState={panelState}
+                  highlightedControls={highlightedControls}
+                  onButtonClick={onButtonClick}
+                />
+                <PadSection
+                  panelState={panelState}
+                  highlightedControls={highlightedControls}
+                  onButtonClick={onButtonClick}
+                />
+              </div>
+
+              {/* Lower row: Tone categories spanning full width */}
+              <div className="flex flex-col gap-0.5">
+                <div className="grid grid-cols-16 gap-0.5">
+                  {toneCategories.map((cat) => {
+                    const state = panelState[cat.id];
+                    return (
+                      <PanelButton
+                        key={cat.id}
+                        id={cat.id}
+                        label={cat.label}
+                        variant="category"
+                        size="sm"
+                        labelPosition="above"
+                        active={state?.active ?? false}
+                        highlighted={highlightedControls.includes(cat.id)}
+                        onClick={() => onButtonClick?.(cat.id)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ROW 2: Keyboard (full width) */}
+          <div className="w-full mt-1.5">
+            <Keyboard
+              zones={zones}
+              highlightedKeys={[]}
+            />
+          </div>
         </div>
-
-        {/* TOP ROW: Display + Common + Scene */}
-        <div className="flex items-start gap-4">
-          {/* Display (center-left) */}
-          <div className="flex-shrink-0">
-            <DisplayScreen
-              displayState={displayState}
-              highlighted={highlightedControls.includes('display')}
-            />
-          </div>
-
-          {/* Common section (center-right) */}
-          <div className="flex-shrink-0">
-            <CommonSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-
-          {/* Scene section (far right) */}
-          <div className="flex-shrink-0 ml-auto">
-            <SceneSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
-
-        {/* MIDDLE ROW: Synth controls, Zone section, Pad section */}
-        <div className="flex items-start gap-4">
-          <div className="flex-shrink-0">
-            <SynthControlSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-            />
-          </div>
-
-          <div className="flex-shrink-0">
-            <ZoneSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-
-          <div className="flex-shrink-0 ml-auto">
-            <PadSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
-
-        {/* BOTTOM AREA: Controller, Sequencer, then full-width keyboard */}
-        <div className="flex items-end gap-4">
-          <div className="flex-shrink-0">
-            <ControllerSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-            />
-          </div>
-
-          <div className="flex-shrink-0">
-            <SequencerSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
-
-        {/* Keyboard spanning full width */}
-        <div className="w-full">
-          <Keyboard
-            zones={zones}
-            highlightedKeys={[]}
-          />
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

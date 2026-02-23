@@ -9,8 +9,8 @@ interface SliderProps {
   highlighted?: boolean;
 }
 
-const TRACK_HEIGHT = 100;
-const THUMB_HEIGHT = 16;
+const TRACK_HEIGHT = 80;
+const THUMB_HEIGHT = 14;
 const TRAVEL = TRACK_HEIGHT - THUMB_HEIGHT;
 
 const highlightAnimation = {
@@ -39,12 +39,12 @@ export default function Slider({
   const thumbOffset = TRAVEL - (clampedValue / 127) * TRAVEL;
 
   return (
-    <div className="flex flex-col items-center gap-2" data-control-id={id}>
+    <div className="flex flex-col items-center gap-1" data-control-id={id}>
       {/* Fader assembly */}
       <motion.div
         className="relative rounded-md"
         style={{
-          width: 20,
+          width: 16,
           height: TRACK_HEIGHT,
           background: 'linear-gradient(to bottom, #1a1a1a, #111111)',
           boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.05)',
@@ -84,9 +84,9 @@ export default function Slider({
         <div
           className="absolute left-1/2 rounded-sm cursor-pointer"
           style={{
-            width: 18,
+            width: 14,
             height: THUMB_HEIGHT,
-            marginLeft: -9,
+            marginLeft: -7,
             top: thumbOffset,
             background: 'linear-gradient(to bottom, #888 0%, #666 30%, #555 60%, #444 100%)',
             boxShadow:

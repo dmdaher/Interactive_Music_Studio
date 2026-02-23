@@ -27,8 +27,6 @@ export default function TutorialRunner({
 
   const handleClose = () => {
     store.reset();
-    // Navigate back to landing -- the consuming app should handle this
-    // via a route change or callback. For now we reset the store.
     if (typeof window !== 'undefined') {
       window.history.back();
     }
@@ -41,18 +39,17 @@ export default function TutorialRunner({
   return (
     <div className="fixed inset-0 z-40 flex flex-col bg-[#0a0a14]">
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0f0f1a]/80 backdrop-blur-md">
-        <div className="flex items-center gap-4">
-          {/* Back / close button */}
+      <header className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0f0f1a]/80 backdrop-blur-md flex-shrink-0">
+        <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleClose}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             aria-label="Close tutorial"
           >
             <svg
-              width="18"
-              height="18"
+              width="16"
+              height="16"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -64,31 +61,29 @@ export default function TutorialRunner({
             </svg>
           </button>
 
-          {/* Tutorial title */}
           <div>
-            <h1 className="text-base font-semibold text-white leading-tight">
+            <h1 className="text-sm font-semibold text-white leading-tight">
               {tutorial.title}
             </h1>
-            <p className="text-xs text-white/40 mt-0.5">
+            <p className="text-[10px] text-white/40 mt-0.5">
               {tutorial.category} &middot; {tutorial.difficulty} &middot;{' '}
               {tutorial.estimatedTime}
             </p>
           </div>
         </div>
 
-        {/* Step counter in header */}
-        <div className="text-sm text-white/40 font-medium">
+        <div className="text-xs text-white/40 font-medium">
           {store.currentStepIndex + 1} / {totalSteps}
         </div>
       </header>
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col items-center justify-center overflow-auto p-6">
+      {/* Main content area — scrollable, panel + overlay in flow */}
+      <div className="flex-1 flex flex-col items-center overflow-auto p-3">
         {/* Device Panel */}
         <AnimatePresence mode="wait">
           <motion.div
             key="device-panel"
-            className="w-full max-w-5xl"
+            className="w-full"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -104,28 +99,30 @@ export default function TutorialRunner({
 
         {/* Keyboard zone overlay */}
         {store.zones.length > 0 && (
-          <div className="w-full max-w-5xl mt-4">
+          <div className="w-full mt-2">
             <KeyboardZoneOverlay zones={store.zones} />
           </div>
         )}
-      </div>
 
-      {/* Tutorial overlay card */}
-      <AnimatePresence>
-        {step && (
-          <TutorialOverlay
-            step={step}
-            stepNumber={store.currentStepIndex + 1}
-            totalSteps={totalSteps}
-            onNext={store.nextStep}
-            onPrev={store.prevStep}
-            onClose={handleClose}
-            isFirst={isFirst}
-            isLast={isLast}
-            progress={progress}
-          />
-        )}
-      </AnimatePresence>
+        {/* Tutorial step panel — in-flow below keyboard */}
+        <div className="w-full mt-3">
+          <AnimatePresence>
+            {step && (
+              <TutorialOverlay
+                step={step}
+                stepNumber={store.currentStepIndex + 1}
+                totalSteps={totalSteps}
+                onNext={store.nextStep}
+                onPrev={store.prevStep}
+                onClose={handleClose}
+                isFirst={isFirst}
+                isLast={isLast}
+                progress={progress}
+              />
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }

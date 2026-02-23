@@ -41,7 +41,7 @@ const inactiveIconColor = '#777';
 
 function PlayIcon({ color }: { color: string }) {
   return (
-    <svg width="14" height="16" viewBox="0 0 14 16" fill="none">
+    <svg width="10" height="12" viewBox="0 0 14 16" fill="none">
       <path d="M2 1L13 8L2 15V1Z" fill={color} />
     </svg>
   );
@@ -49,7 +49,7 @@ function PlayIcon({ color }: { color: string }) {
 
 function StopIcon({ color }: { color: string }) {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <svg width="9" height="9" viewBox="0 0 12 12" fill="none">
       <rect x="1" y="1" width="10" height="10" rx="1" fill={color} />
     </svg>
   );
@@ -57,7 +57,7 @@ function StopIcon({ color }: { color: string }) {
 
 function RecIcon({ color }: { color: string }) {
   return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
       <circle cx="7" cy="7" r="6" fill={color} />
     </svg>
   );
@@ -80,25 +80,28 @@ export default function TransportButton({
   const iconColor = active ? activeIconColor[icon] : inactiveIconColor;
 
   return (
-    <motion.button
-      type="button"
-      data-control-id={id}
-      onClick={onClick}
-      className="w-11 h-11 rounded-full cursor-pointer select-none flex items-center justify-center"
-      style={{
-        background: active
-          ? 'linear-gradient(to bottom, #4a4a4a 0%, #333 50%, #2a2a2a 100%)'
-          : 'linear-gradient(to bottom, #3a3a3a 0%, #2a2a2a 50%, #1e1e1e 100%)',
-        boxShadow: active
-          ? `inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05), ${activeGlow[icon]}`
-          : '0 3px 6px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)',
-        border: '1px solid #111',
-        transform: active ? 'translateY(1px)' : 'translateY(0)',
-      }}
-      {...(highlighted ? highlightAnimation : {})}
-      whileTap={{ scale: 0.92 }}
-    >
+    <div className="flex flex-col items-center gap-0.5" data-control-id={id}>
+      {/* Icon above the button */}
       <IconComponent color={iconColor} />
-    </motion.button>
+
+      {/* Blank button */}
+      <motion.button
+        type="button"
+        onClick={onClick}
+        className="w-8 h-8 rounded-full cursor-pointer select-none flex items-center justify-center"
+        style={{
+          background: active
+            ? 'linear-gradient(to bottom, #4a4a4a 0%, #333 50%, #2a2a2a 100%)'
+            : 'linear-gradient(to bottom, #3a3a3a 0%, #2a2a2a 50%, #1e1e1e 100%)',
+          boxShadow: active
+            ? `inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.05), ${activeGlow[icon]}`
+            : '0 3px 6px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)',
+          border: '1px solid #111',
+          transform: active ? 'translateY(1px)' : 'translateY(0)',
+        }}
+        {...(highlighted ? highlightAnimation : {})}
+        whileTap={{ scale: 0.92 }}
+      />
+    </div>
   );
 }

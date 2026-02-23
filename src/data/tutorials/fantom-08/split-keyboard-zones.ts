@@ -22,7 +22,10 @@ export const splitKeyboardZones: Tutorial = {
       panelStateChanges: {},
       displayState: {
         screenType: 'home',
-        title: 'FANTOM-08',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
+        tempo: 120,
+        beatSignature: '4/4',
       },
     },
     {
@@ -37,11 +40,20 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'zone-view',
         title: 'ZONE VIEW',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
+        tempo: 120,
+        beatSignature: '4/4',
+        zoneViewMode: 1,
         zones: [
           {
             zoneNumber: 1,
             zoneName: 'Zone 1',
             toneName: 'INIT TONE',
+            toneType: 'Z-Core',
+            toneBank: 'PR-A',
+            toneCategory: 'Init',
+            toneNumber: '0001',
             keyRangeLow: 'A0',
             keyRangeHigh: 'C8',
             volume: 100,
@@ -64,13 +76,21 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'menu',
         title: 'MENU',
+        tempo: 120,
+        beatSignature: '4/4',
         menuItems: [
-          { label: 'Zone Setting', selected: true },
-          { label: 'Tone Edit' },
-          { label: 'Effects' },
+          { label: 'Tone Edit', selected: true },
+          { label: 'Arpeggio' },
+          { label: 'Effects Edit' },
+          { label: 'Chord Memory' },
+          { label: 'Zone Edit' },
+          { label: 'File Utility' },
+          { label: 'Scene Edit' },
+          { label: 'Utility' },
+          { label: 'Mixer' },
           { label: 'System' },
         ],
-        selectedIndex: 0,
+        selectedIndex: 4,
       },
     },
     {
@@ -83,7 +103,9 @@ export const splitKeyboardZones: Tutorial = {
       },
       displayState: {
         screenType: 'menu',
-        title: 'ZONE SETTING',
+        title: 'ZONE EDIT',
+        tempo: 120,
+        beatSignature: '4/4',
         menuItems: [
           { label: 'Key Range', selected: true },
           { label: 'Velocity Range' },
@@ -102,8 +124,10 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'key-range',
         title: 'KEY RANGE - Zone 1',
-        parameterName: 'Key Range Low',
-        parameterValue: 'A0',
+        tempo: 120,
+        beatSignature: '4/4',
+        parameterName: 'A0',
+        parameterValue: 'C8',
       },
       zones: [
         {
@@ -125,7 +149,9 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'key-range',
         title: 'KEY RANGE - Zone 1',
-        parameterName: 'Key Range High',
+        tempo: 120,
+        beatSignature: '4/4',
+        parameterName: 'A0',
         parameterValue: 'B3',
       },
       zones: [
@@ -152,11 +178,20 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'zone-view',
         title: 'ZONE VIEW',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
+        tempo: 120,
+        beatSignature: '4/4',
+        zoneViewMode: 4,
         zones: [
           {
             zoneNumber: 1,
             zoneName: 'Zone 1',
             toneName: 'AC.BASS',
+            toneType: 'SN-AP',
+            toneBank: 'EXSN03',
+            toneCategory: 'Ac.Bass',
+            toneNumber: '0312',
             keyRangeLow: 'A0',
             keyRangeHigh: 'B3',
             volume: 100,
@@ -168,6 +203,10 @@ export const splitKeyboardZones: Tutorial = {
             zoneNumber: 2,
             zoneName: 'Zone 2',
             toneName: 'INIT TONE',
+            toneType: 'Z-Core',
+            toneBank: 'PR-A',
+            toneCategory: 'Init',
+            toneNumber: '0001',
             keyRangeLow: 'C4',
             keyRangeHigh: 'C8',
             volume: 100,
@@ -204,7 +243,9 @@ export const splitKeyboardZones: Tutorial = {
       },
       displayState: {
         screenType: 'tone-select',
-        title: 'TONE SELECT - Zone 2',
+        title: 'TONE LIST - Zone 2',
+        tempo: 120,
+        beatSignature: '4/4',
         menuItems: [
           { label: 'Concert Grand', selected: true },
           { label: 'Bright Piano' },
@@ -241,7 +282,11 @@ export const splitKeyboardZones: Tutorial = {
       },
       displayState: {
         screenType: 'write',
-        title: 'WRITE',
+        title: 'SCENE WRITE',
+        tempo: 120,
+        beatSignature: '4/4',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
         confirmText: 'Write to Scene?',
         statusText: 'Press Enter to confirm',
       },
@@ -276,11 +321,20 @@ export const splitKeyboardZones: Tutorial = {
       displayState: {
         screenType: 'zone-view',
         title: 'ZONE VIEW',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
+        tempo: 120,
+        beatSignature: '4/4',
+        zoneViewMode: 4,
         zones: [
           {
             zoneNumber: 1,
             zoneName: 'Zone 1',
             toneName: 'AC.BASS',
+            toneType: 'SN-AP',
+            toneBank: 'EXSN03',
+            toneCategory: 'Ac.Bass',
+            toneNumber: '0312',
             keyRangeLow: 'A0',
             keyRangeHigh: 'B3',
             volume: 100,
@@ -292,6 +346,10 @@ export const splitKeyboardZones: Tutorial = {
             zoneNumber: 2,
             zoneName: 'Zone 2',
             toneName: 'Concert Grand',
+            toneType: 'SN-AP',
+            toneBank: 'EXSN03',
+            toneCategory: 'Ac.Piano',
+            toneNumber: '0001',
             keyRangeLow: 'C4',
             keyRangeHigh: 'C8',
             volume: 100,

@@ -5,59 +5,99 @@ import { DISPLAY_COLORS } from '@/lib/constants';
 
 interface WriteScreenProps {
   confirmText?: string;
+  sceneName?: string;
+  sceneNumber?: string;
 }
 
-export default function WriteScreen({ confirmText }: WriteScreenProps) {
-  return (
-    <div className="flex flex-col items-center justify-center h-full gap-4 p-4 font-mono">
-      {/* Warning icon */}
-      <motion.div
-        className="text-2xl"
-        style={{ color: DISPLAY_COLORS.warning }}
-        animate={{ opacity: [1, 0.5, 1] }}
-        transition={{ duration: 1.2, repeat: Infinity }}
-      >
-        !
-      </motion.div>
+export default function WriteScreen({ confirmText, sceneName, sceneNumber }: WriteScreenProps) {
+  const sourceLabel = sceneNumber && sceneName
+    ? `${sceneNumber}: ${sceneName}`
+    : confirmText ?? 'Current Scene';
+  const destLabel = sourceLabel;
 
-      {/* Confirm text */}
-      <div className="text-center">
-        <p className="text-xs mb-2" style={{ color: DISPLAY_COLORS.header }}>
-          WRITE TO...
-        </p>
-        <p className="text-sm font-bold" style={{ color: DISPLAY_COLORS.text }}>
-          {confirmText ?? 'Save current settings?'}
-        </p>
+  return (
+    <div className="flex flex-col h-full p-3 font-mono">
+      {/* Source */}
+      <div className="mb-1">
+        <span className="text-[11px] tracking-wider" style={{ color: DISPLAY_COLORS.header }}>
+          WRITE SOURCE
+        </span>
+      </div>
+      <div
+        className="px-3 py-1.5 rounded mb-2"
+        style={{
+          backgroundColor: `${DISPLAY_COLORS.border}40`,
+          border: `1px solid ${DISPLAY_COLORS.border}`,
+        }}
+      >
+        <span className="text-[10px]" style={{ color: DISPLAY_COLORS.text }}>
+          {sourceLabel}
+        </span>
       </div>
 
-      {/* Action hints */}
-      <div className="flex items-center gap-6 mt-2">
-        <div className="flex flex-col items-center gap-0.5">
+      {/* Arrow */}
+      <div className="flex justify-center my-1">
+        <motion.span
+          className="text-sm"
+          style={{ color: DISPLAY_COLORS.active }}
+          animate={{ y: [0, 2, 0] }}
+          transition={{ duration: 1, repeat: Infinity }}
+        >
+          &#9660;
+        </motion.span>
+      </div>
+
+      {/* Destination */}
+      <div className="mb-1">
+        <span className="text-[11px] tracking-wider" style={{ color: DISPLAY_COLORS.header }}>
+          WRITE DESTINATION
+        </span>
+      </div>
+      <motion.div
+        className="px-3 py-1.5 rounded mb-3"
+        style={{
+          backgroundColor: `${DISPLAY_COLORS.active}15`,
+          border: `1px solid ${DISPLAY_COLORS.active}60`,
+        }}
+        animate={{
+          borderColor: [`${DISPLAY_COLORS.active}60`, `${DISPLAY_COLORS.active}`, `${DISPLAY_COLORS.active}60`],
+        }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+      >
+        <span className="text-[10px] font-bold" style={{ color: DISPLAY_COLORS.highlight }}>
+          {destLabel}
+        </span>
+      </motion.div>
+
+      {/* Action buttons */}
+      <div className="flex items-center justify-between mt-auto">
+        <span
+          className="text-[11px] px-2 py-1 rounded border"
+          style={{
+            color: DISPLAY_COLORS.header,
+            borderColor: DISPLAY_COLORS.border,
+          }}
+        >
+          RENAME
+        </span>
+        <div className="flex gap-2">
           <span
-            className="text-[10px] px-3 py-1 rounded border"
-            style={{
-              color: DISPLAY_COLORS.highlight,
-              borderColor: DISPLAY_COLORS.highlight,
-            }}
-          >
-            ENTER
-          </span>
-          <span className="text-[8px]" style={{ color: DISPLAY_COLORS.text }}>
-            Confirm
-          </span>
-        </div>
-        <div className="flex flex-col items-center gap-0.5">
-          <span
-            className="text-[10px] px-3 py-1 rounded border"
+            className="text-[11px] px-2.5 py-1 rounded border"
             style={{
               color: DISPLAY_COLORS.warning,
               borderColor: DISPLAY_COLORS.warning,
             }}
           >
-            EXIT
+            CANCEL
           </span>
-          <span className="text-[8px]" style={{ color: DISPLAY_COLORS.text }}>
-            Cancel
+          <span
+            className="text-[11px] px-3 py-1 rounded border font-bold"
+            style={{
+              color: DISPLAY_COLORS.highlight,
+              borderColor: DISPLAY_COLORS.highlight,
+            }}
+          >
+            OK
           </span>
         </div>
       </div>

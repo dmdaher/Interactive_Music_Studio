@@ -46,7 +46,6 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
   // Calculate zone label positions
   const zoneLabels = useMemo(() => {
     return zones.map((zone) => {
-      // Find the white key positions for the zone's range
       const lowWhiteIdx = findNearestWhiteKeyIndex(zone.lowNote, whiteNotes);
       const highWhiteIdx = findNearestWhiteKeyIndex(zone.highNote, whiteNotes);
       const centerPct = ((lowWhiteIdx + highWhiteIdx) / 2 / totalWhiteKeys) * 100;
@@ -64,12 +63,12 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
   return (
     <motion.div
       className="flex flex-col w-full"
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.35 }}
     >
-      {/* Keyboard container */}
-      <div className="relative w-full h-24 select-none">
+      {/* Keyboard container — taller for proper proportions */}
+      <div className="relative w-full h-32 select-none">
         {/* White keys */}
         <div className="flex h-full">
           {whiteNotes.map((note) => {
@@ -88,13 +87,14 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
                   backgroundColor: isHighlighted ? '#ffffcc' : '#f5f5f0',
                   borderRightWidth: 1,
                   borderColor: '#bbb',
-                  borderRadius: '0 0 3px 3px',
+                  borderRadius: '0 0 4px 4px',
+                  boxShadow: '0 2px 3px rgba(0,0,0,0.15) inset, -1px 0 0 rgba(0,0,0,0.04)',
                 }}
               >
                 {/* Zone color overlay */}
                 {zoneColor && (
                   <div
-                    className="absolute inset-0 rounded-b-[3px] pointer-events-none"
+                    className="absolute inset-0 rounded-b-[4px] pointer-events-none"
                     style={{
                       backgroundColor: zoneColor,
                       opacity: 0.2,
@@ -104,7 +104,7 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
 
                 {/* C note label */}
                 {isC && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 text-[7px] text-neutral-500 pointer-events-none">
+                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 text-[6px] text-neutral-500 pointer-events-none">
                     {midiNoteToName(note.midiNote)}
                   </span>
                 )}
@@ -115,8 +115,6 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
 
         {/* Black keys */}
         {blackNotes.map((note) => {
-          // Determine position: black key sits between the two adjacent white keys
-          // Find the preceding white key index
           const precWhiteIdx = findPrecedingWhiteKeyIndex(note.midiNote, whiteKeyIndexMap, allNotes);
           if (precWhiteIdx === undefined) return null;
 
@@ -136,11 +134,14 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
               style={{
                 left: `${leftPercent}%`,
                 width: `${widthPercent}%`,
-                height: '60%',
+                height: '62%',
                 transform: 'translateX(-50%)',
-                backgroundColor: isHighlighted ? '#666644' : '#222222',
+                backgroundColor: isHighlighted ? '#666644' : '#1a1a1a',
                 zIndex: 2,
-                boxShadow: '1px 2px 3px rgba(0,0,0,0.4)',
+                boxShadow: '1px 3px 4px rgba(0,0,0,0.5), inset 0 -2px 3px rgba(255,255,255,0.05)',
+                background: isHighlighted
+                  ? '#666644'
+                  : 'linear-gradient(to bottom, #2a2a2a 0%, #1a1a1a 60%, #111 100%)',
               }}
             >
               {/* Zone color overlay on black key */}
@@ -160,7 +161,7 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
 
       {/* Zone labels below the keyboard */}
       {zoneLabels.length > 0 && (
-        <div className="relative w-full h-5 mt-1">
+        <div className="relative w-full h-4 mt-0.5">
           {zoneLabels.map((zl) => (
             <div
               key={zl.zoneNumber}
@@ -172,7 +173,7 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
               }}
             >
               <span
-                className="text-[8px] font-mono font-bold tracking-wide px-1 rounded-sm"
+                className="text-[7px] font-mono font-bold tracking-wide px-1 rounded-sm"
                 style={{
                   color: zl.color,
                   backgroundColor: `${zl.color}18`,
@@ -188,10 +189,6 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
   );
 }
 
-/**
- * Find the nearest white key index for a given midi note.
- * If the note itself is white, returns its index; otherwise returns the preceding white key.
- */
 function findNearestWhiteKeyIndex(midi: number, whiteNotes: { midiNote: number }[]): number {
   for (let i = whiteNotes.length - 1; i >= 0; i--) {
     if (whiteNotes[i].midiNote <= midi) return i;
@@ -199,15 +196,11 @@ function findNearestWhiteKeyIndex(midi: number, whiteNotes: { midiNote: number }
   return 0;
 }
 
-/**
- * Find the index of the white key that immediately precedes a black key.
- */
 function findPrecedingWhiteKeyIndex(
   blackMidi: number,
   whiteKeyIndexMap: Map<number, number>,
-  allNotes: { midiNote: number; isBlack: boolean }[],
+  _allNotes: { midiNote: number; isBlack: boolean }[],
 ): number | undefined {
-  // Walk backward from the black key to find the nearest white key
   for (let m = blackMidi - 1; m >= 0; m--) {
     const idx = whiteKeyIndexMap.get(m);
     if (idx !== undefined) return idx;

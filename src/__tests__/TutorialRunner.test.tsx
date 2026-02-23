@@ -1,0 +1,93 @@
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import TutorialRunner from '@/components/tutorial/TutorialRunner';
+import { useTutorialStore } from '@/store/tutorialStore';
+import { Tutorial } from '@/types/tutorial';
+
+// Mock ResizeObserver
+beforeEach(() => {
+  global.ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  }));
+  useTutorialStore.getState().reset();
+});
+
+const testTutorial: Tutorial = {
+  id: 'test-tutorial',
+  deviceId: 'fantom-08',
+  title: 'Test Tutorial Title',
+  description: 'A test',
+  category: 'basics',
+  difficulty: 'beginner',
+  estimatedTime: '5 min',
+  tags: ['test'],
+  steps: [
+    {
+      id: 'step-1',
+      title: 'First Step',
+      instruction: 'Do the first thing',
+      highlightControls: [],
+      panelStateChanges: {},
+      displayState: { screenType: 'home' },
+    },
+    {
+      id: 'step-2',
+      title: 'Second Step',
+      instruction: 'Do the second thing',
+      highlightControls: [],
+      panelStateChanges: {},
+      displayState: { screenType: 'home' },
+    },
+  ],
+};
+
+// Simple mock device panel
+function MockDevicePanel() {
+  return <div data-testid="device-panel">Mock Panel</div>;
+}
+
+describe('TutorialRunner', () => {
+  it('renders header with tutorial title/category/difficulty', () => {
+    render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
+    expect(screen.getByText('Test Tutorial Title')).toBeInTheDocument();
+    // Category + difficulty in subtitle
+    expect(screen.getByText(/basics/)).toBeInTheDocument();
+    expect(screen.getByText(/beginner/)).toBeInTheDocument();
+  });
+
+  it('device panel rendered', () => {
+    render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
+    expect(screen.getByTestId('device-panel')).toBeInTheDocument();
+  });
+
+  it('tutorial overlay rendered with step content', () => {
+    render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
+    expect(screen.getByText('First Step')).toBeInTheDocument();
+    expect(screen.getByText('Do the first thing')).toBeInTheDocument();
+  });
+
+  it('no max-w-5xl constraint on panel container', () => {
+    const { container } = render(
+      <TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />,
+    );
+    const maxWConstraint = container.querySelector('.max-w-5xl');
+    expect(maxWConstraint).toBeNull();
+  });
+
+  it('close button calls reset + history.back', () => {
+    const historyBack = vi.spyOn(window.history, 'back').mockImplementation(() => {});
+    render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
+    // There are two close buttons (header + overlay), click the header one
+    const closeBtns = screen.getAllByLabelText('Close tutorial');
+    fireEvent.click(closeBtns[0]);
+    expect(historyBack).toHaveBeenCalled();
+    historyBack.mockRestore();
+  });
+
+  it('step counter shows "N / total"', () => {
+    render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
+    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+  });
+});

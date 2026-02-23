@@ -78,7 +78,7 @@ export default function KeyRangeScreen({
             borderColor: selectedField === 'low' ? DISPLAY_COLORS.active : DISPLAY_COLORS.border,
           }}
         >
-          <span className="text-[9px]" style={{ color: DISPLAY_COLORS.header }}>
+          <span className="text-[11px]" style={{ color: DISPLAY_COLORS.header }}>
             LOW
           </span>
           <span className="text-sm font-bold" style={{ color: DISPLAY_COLORS.highlight }}>
@@ -101,7 +101,7 @@ export default function KeyRangeScreen({
             borderColor: selectedField === 'high' ? DISPLAY_COLORS.active : DISPLAY_COLORS.border,
           }}
         >
-          <span className="text-[9px]" style={{ color: DISPLAY_COLORS.header }}>
+          <span className="text-[11px]" style={{ color: DISPLAY_COLORS.header }}>
             HIGH
           </span>
           <span className="text-sm font-bold" style={{ color: DISPLAY_COLORS.highlight }}>

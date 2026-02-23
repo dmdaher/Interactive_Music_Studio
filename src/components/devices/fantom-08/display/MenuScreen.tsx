@@ -10,54 +10,48 @@ interface MenuScreenProps {
 
 export default function MenuScreen({ items, selectedIndex = 0 }: MenuScreenProps) {
   return (
-    <div className="flex flex-col gap-0.5 p-2 font-mono text-[11px]">
-      {items.map((item, index) => {
-        const isSelected = item.selected ?? index === selectedIndex;
+    <div className="p-2 font-mono text-[10px] h-full overflow-auto">
+      <div className="grid grid-cols-2 gap-1.5">
+        {items.map((item, index) => {
+          const isSelected = item.selected ?? index === selectedIndex;
 
-        return (
-          <motion.div
-            key={`${item.label}-${index}`}
-            className="flex items-center justify-between px-2 py-1 rounded-sm"
-            style={{
-              backgroundColor: isSelected ? `${DISPLAY_COLORS.active}30` : 'transparent',
-              borderLeft: isSelected ? `2px solid ${DISPLAY_COLORS.active}` : '2px solid transparent',
-            }}
-            initial={{ opacity: 0, x: -4 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.15, delay: index * 0.02 }}
-          >
-            {/* Selection indicator + label */}
-            <div className="flex items-center gap-2">
-              {isSelected && (
-                <motion.span
-                  style={{ color: DISPLAY_COLORS.active }}
-                  animate={{ opacity: [1, 0.4, 1] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
-                >
-                  &gt;
-                </motion.span>
-              )}
+          return (
+            <motion.div
+              key={`${item.label}-${index}`}
+              className="flex items-center justify-between px-2.5 py-2 rounded"
+              style={{
+                backgroundColor: isSelected
+                  ? `${DISPLAY_COLORS.active}30`
+                  : `${DISPLAY_COLORS.border}50`,
+                border: isSelected
+                  ? `1px solid ${DISPLAY_COLORS.active}`
+                  : `1px solid ${DISPLAY_COLORS.border}80`,
+              }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15, delay: index * 0.025 }}
+            >
               <span
+                className="font-bold tracking-wide text-[10px]"
                 style={{
                   color: isSelected ? DISPLAY_COLORS.highlight : DISPLAY_COLORS.text,
                 }}
               >
-                {item.label}
+                {item.label.toUpperCase()}
               </span>
-            </div>
 
-            {/* Value */}
-            {item.value && (
-              <span
-                className="text-[10px]"
-                style={{ color: isSelected ? DISPLAY_COLORS.active : DISPLAY_COLORS.zoneMuted }}
-              >
-                {item.value}
-              </span>
-            )}
-          </motion.div>
-        );
-      })}
+              {item.value && (
+                <span
+                  className="text-[10px]"
+                  style={{ color: isSelected ? DISPLAY_COLORS.active : DISPLAY_COLORS.zoneMuted }}
+                >
+                  {item.value}
+                </span>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 }

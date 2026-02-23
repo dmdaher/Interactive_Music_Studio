@@ -10,6 +10,10 @@ export interface ZoneDisplayInfo {
   pan: number;
   muted: boolean;
   active: boolean;
+  toneType?: string;
+  toneBank?: string;
+  toneCategory?: string;
+  toneNumber?: string;
 }
 
 export interface DisplayState {
@@ -22,6 +26,11 @@ export interface DisplayState {
   parameterValue?: string;
   statusText?: string;
   confirmText?: string;
+  sceneName?: string;
+  sceneNumber?: string;
+  tempo?: number;
+  beatSignature?: string;
+  zoneViewMode?: 1 | 4 | 8 | 16;
 }
 
 export interface MenuItem {

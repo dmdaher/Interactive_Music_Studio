@@ -39,7 +39,7 @@ export default function PadButton({
       <motion.button
         type="button"
         onClick={onClick}
-        className="w-14 h-14 rounded-lg cursor-pointer select-none flex items-center justify-center"
+        className="w-11 h-11 rounded-lg cursor-pointer select-none flex items-center justify-center"
         style={{
           background: active
             ? `linear-gradient(145deg, ${color} 0%, ${color}cc 60%, ${color}99 100%)`

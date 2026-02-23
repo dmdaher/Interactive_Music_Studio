@@ -12,13 +12,14 @@ interface PanelButtonProps {
   ledOn?: boolean;
   ledColor?: string;
   highlighted?: boolean;
+  labelPosition?: 'on' | 'above';
   onClick?: () => void;
 }
 
 const sizeClasses: Record<string, { button: string; text: string; led: string }> = {
-  sm: { button: 'w-10 h-8', text: 'text-[9px]', led: 'w-2 h-2' },
-  md: { button: 'w-14 h-10', text: 'text-[10px]', led: 'w-2.5 h-2.5' },
-  lg: { button: 'w-20 h-12', text: 'text-xs', led: 'w-3 h-3' },
+  sm: { button: 'w-8 h-6', text: 'text-[7px]', led: 'w-1.5 h-1.5' },
+  md: { button: 'w-10 h-7', text: 'text-[8px]', led: 'w-2 h-2' },
+  lg: { button: 'w-14 h-9', text: 'text-[9px]', led: 'w-2.5 h-2.5' },
 };
 
 const variantStyles: Record<string, { base: string; active: string }> = {
@@ -73,13 +74,14 @@ export default function PanelButton({
   ledOn = false,
   ledColor = '#00ff44',
   highlighted = false,
+  labelPosition = 'on',
   onClick,
 }: PanelButtonProps) {
   const sizeStyle = sizeClasses[size];
   const variantStyle = variantStyles[variant];
 
   return (
-    <div className="flex flex-col items-center gap-1" data-control-id={id}>
+    <div className="flex flex-col items-center gap-0.5" data-control-id={id}>
       {/* LED indicator */}
       {hasLed && (
         <div
@@ -89,6 +91,13 @@ export default function PanelButton({
             boxShadow: ledOn ? `0 0 6px 2px ${ledColor}` : 'inset 0 1px 2px rgba(0,0,0,0.5)',
           }}
         />
+      )}
+
+      {/* Label above button (panel-printed text) */}
+      {labelPosition === 'above' && (
+        <span className={`${sizeStyle.text} font-medium text-neutral-400 leading-tight text-center tracking-wide uppercase`}>
+          {label}
+        </span>
       )}
 
       {/* Button */}
@@ -112,9 +121,11 @@ export default function PanelButton({
         {...(highlighted ? highlightAnimation : {})}
         whileTap={{ scale: 0.95, y: 2 }}
       >
-        <span className={`${sizeStyle.text} font-medium text-gray-200 leading-tight text-center px-1 tracking-wide uppercase`}>
-          {label}
-        </span>
+        {labelPosition === 'on' && (
+          <span className={`${sizeStyle.text} font-medium text-gray-200 leading-tight text-center px-1 tracking-wide uppercase`}>
+            {label}
+          </span>
+        )}
       </motion.button>
     </div>
   );

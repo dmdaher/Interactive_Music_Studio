@@ -11,8 +11,8 @@ interface KnobProps {
 }
 
 const sizeConfig = {
-  sm: { outer: 32, inner: 26, indicator: 10, label: 'text-[8px]' },
-  md: { outer: 44, inner: 36, indicator: 14, label: 'text-[10px]' },
+  sm: { outer: 26, inner: 20, indicator: 8, label: 'text-[7px]' },
+  md: { outer: 34, inner: 28, indicator: 11, label: 'text-[8px]' },
 };
 
 const highlightAnimation = {
@@ -43,7 +43,7 @@ export default function Knob({
   const cfg = sizeConfig[size];
 
   return (
-    <div className="flex flex-col items-center gap-1.5" data-control-id={id}>
+    <div className="flex flex-col items-center gap-1" data-control-id={id}>
       {/* Knob body */}
       <motion.div
         className="relative rounded-full cursor-pointer"
