@@ -132,7 +132,7 @@ export default function FantomPanel({
               />
             </div>
 
-            {/* DISPLAY area: Write buttons (left) | Screen (center) | Navigation (right) | E1-E6 (below) */}
+            {/* DISPLAY area: 5-row layout */}
             <div
               className="flex-shrink-0 flex flex-col gap-1 rounded-lg px-1.5 py-1.5"
               style={{
@@ -140,21 +140,21 @@ export default function FantomPanel({
                 boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
               }}
             >
+              {/* Rows 1-4: Write/MFX/M.Pad/DAW | Display | Scene+Nav */}
               <div className="flex items-stretch gap-2 flex-1 min-h-0">
-                {/* Write/MFX/M.Pad/DAW/Menu — vertical column left of display */}
+                {/* Write/MFX/M.Pad/DAW — vertical column left of display (no Menu) */}
                 <div className="flex flex-col gap-10 justify-start pt-2 flex-shrink-0 pr-4">
                   {[
                     { id: 'write', label: 'Write', hasLed: true },
                     { id: 'master-fx', label: 'MFX' },
                     { id: 'motional-pad', label: 'M.Pad' },
                     { id: 'daw-ctrl', label: 'DAW' },
-                    { id: 'menu', label: 'Menu' },
                   ].map((btn) => (
                     <PanelButton
                       key={btn.id}
                       id={btn.id}
                       label={btn.label}
-                      variant={btn.id === 'menu' ? 'menu' : 'function'}
+                      variant="function"
                       size="sm"
                       labelPosition="above"
                       {...(btn.hasLed ? { hasLed: true, ledOn: panelState[btn.id]?.ledOn ?? false, ledColor: '#ff2222' } : {})}
@@ -165,26 +165,13 @@ export default function FantomPanel({
                   ))}
                 </div>
 
-                {/* Display screen + E1-E6 knobs (center column) */}
+                {/* Display screen (center column — no E1-E6 here) */}
                 <div className="flex flex-col gap-1.5 min-w-0" style={{ width: 600 }}>
-                  <div className="flex items-center">
+                  <div className="flex items-center flex-1">
                     <DisplayScreen
                       displayState={displayState}
                       highlighted={highlightedControls.includes('display')}
                     />
-                  </div>
-                  {/* E1-E6 knobs below display, spanning screen width */}
-                  <div className="flex items-center justify-between mt-2">
-                    {['function-e1', 'function-e2', 'function-e3', 'function-e4', 'function-e5', 'function-e6'].map((id) => (
-                      <Knob
-                        key={id}
-                        id={id}
-                        label=""
-                        value={panelState[id]?.value ?? 64}
-                        highlighted={highlightedControls.includes(id)}
-                        size="md"
-                      />
-                    ))}
                   </div>
                 </div>
 
@@ -195,6 +182,35 @@ export default function FantomPanel({
                     highlightedControls={highlightedControls}
                     onButtonClick={onButtonClick}
                   />
+                </div>
+              </div>
+
+              {/* Row 5: Menu | E1-E6 knobs | Tempo, Shift, Exit, Enter */}
+              <div className="flex items-end gap-2">
+                <div className="flex-shrink-0 pr-4">
+                  <PanelButton
+                    id="menu"
+                    label="Menu"
+                    variant="menu"
+                    size="sm"
+                    labelPosition="above"
+                    active={panelState['menu']?.active ?? false}
+                    highlighted={highlightedControls.includes('menu')}
+                    onClick={() => onButtonClick?.('menu')}
+                  />
+                </div>
+                <div className="grid grid-cols-6 gap-0 flex-1" style={{ maxWidth: 620 }}>
+                  {['function-e1', 'function-e2', 'function-e3', 'function-e4', 'function-e5', 'function-e6'].map((id) => (
+                    <div key={id} className="flex justify-center">
+                      <Knob
+                        id={id}
+                        label=""
+                        value={panelState[id]?.value ?? 64}
+                        highlighted={highlightedControls.includes(id)}
+                        size="md"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
