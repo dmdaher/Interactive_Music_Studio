@@ -17,7 +17,7 @@ export const splitKeyboardZones: Tutorial = {
       instruction:
         "In this tutorial, you'll learn how to split the Fantom 08 keyboard into two zones. This lets you play different sounds with your left and right hands.",
       details:
-        "We'll set up Zone 1 for a bass sound on the lower keys and Zone 2 for a piano sound on the upper keys.",
+        "We'll use the Split button to quickly divide the keyboard, then assign a bass sound to the left hand and a piano sound to the right. Follow the highlighted buttons on the panel above.",
       highlightControls: [],
       panelStateChanges: {},
       displayState: {
@@ -30,12 +30,14 @@ export const splitKeyboardZones: Tutorial = {
     },
     {
       id: 'step-2',
-      title: 'Press the Zone 1 Button',
-      instruction: 'First, press the Zone 1 button to select Zone 1 for editing.',
-      details: 'Zone 1 will be our bass zone covering the lower half of the keyboard.',
-      highlightControls: ['zone-1'],
+      title: 'Open Zone View',
+      instruction:
+        'Press the Zone View button to see an overview of all zones on the display.',
+      details:
+        'Zone View shows you all active zones, their assigned tones, and keyboard ranges at a glance.',
+      highlightControls: ['zone-view'],
       panelStateChanges: {
-        'zone-1': { active: true, ledOn: true, ledColor: '#3B82F6' },
+        'zone-view': { active: true },
       },
       displayState: {
         screenType: 'zone-view',
@@ -63,96 +65,175 @@ export const splitKeyboardZones: Tutorial = {
           },
         ],
       },
-      tipText: 'The Zone 1 LED should light up blue.',
+      tipText: 'Right now only Zone 1 is active, covering the full keyboard.',
     },
     {
       id: 'step-3',
-      title: 'Open the Menu',
-      instruction: 'Press the Menu button to access Zone settings.',
-      highlightControls: ['menu'],
+      title: 'Press the Split Button',
+      instruction:
+        'Press the Split button in the Zone section to create a keyboard split. This activates Zone 2 and opens the split point editor.',
+      details:
+        'The Split button is the quickest way to divide your keyboard into two zones. It automatically activates Zone 2 and lets you set where the split occurs.',
+      highlightControls: ['split'],
       panelStateChanges: {
-        menu: { active: true, ledOn: true },
+        split: { active: true, ledOn: true, ledColor: '#00ff44' },
+        'zone-view': { active: false },
+        'zone-1': { active: true, ledOn: true, ledColor: '#3B82F6' },
+        'zone-2': { active: true, ledOn: true, ledColor: '#EF4444' },
       },
-      displayState: {
-        screenType: 'menu',
-        title: 'MENU',
-        tempo: 120,
-        beatSignature: '4/4',
-        menuItems: [
-          { label: 'Tone Edit', selected: true },
-          { label: 'Arpeggio' },
-          { label: 'Effects Edit' },
-          { label: 'Chord Memory' },
-          { label: 'Zone Edit' },
-          { label: 'File Utility' },
-          { label: 'Scene Edit' },
-          { label: 'Utility' },
-          { label: 'Mixer' },
-          { label: 'System' },
-        ],
-        selectedIndex: 4,
-      },
-    },
-    {
-      id: 'step-4',
-      title: 'Select Zone Setting',
-      instruction: 'Press Enter to open Zone Setting.',
-      highlightControls: ['enter'],
-      panelStateChanges: {
-        enter: { active: true },
-      },
-      displayState: {
-        screenType: 'menu',
-        title: 'ZONE EDIT',
-        tempo: 120,
-        beatSignature: '4/4',
-        menuItems: [
-          { label: 'Key Range', selected: true },
-          { label: 'Velocity Range' },
-          { label: 'Octave Shift' },
-          { label: 'Transpose' },
-        ],
-        selectedIndex: 0,
-      },
-    },
-    {
-      id: 'step-5',
-      title: 'Open Key Range',
-      instruction: 'Press Enter to edit the Key Range for Zone 1.',
-      highlightControls: ['enter'],
-      panelStateChanges: {},
       displayState: {
         screenType: 'key-range',
-        title: 'KEY RANGE - Zone 1',
+        title: 'SPLIT POINT',
         tempo: 120,
         beatSignature: '4/4',
-        parameterName: 'A0',
-        parameterValue: 'C8',
+        parameterName: 'Split at',
+        parameterValue: 'C4',
       },
       zones: [
         {
           zoneNumber: 1,
           color: '#3B82F6',
           lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Lower)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
           highNote: 108,
-          label: 'Zone 1 (Full)',
+          label: 'Zone 2 (Upper)',
         },
       ],
+      tipText: 'The Split LED lights up green when split mode is active.',
     },
     {
-      id: 'step-6',
-      title: 'Set Zone 1 Upper Limit',
+      id: 'step-4',
+      title: 'Set the Split Point',
       instruction:
-        'Use the Value dial to set the upper limit of Zone 1 to B3. This gives your left hand the lower 3 octaves for bass.',
+        'Use the Value dial to set the split point to C4 (middle C). Zone 1 will cover A0–B3 and Zone 2 will cover C4–C8.',
+      details:
+        'You can also use the Inc and Dec buttons to fine-tune the split point one note at a time. C4 is a natural split point that gives bass sounds 3 full octaves.',
       highlightControls: ['value-dial'],
       panelStateChanges: {},
       displayState: {
         screenType: 'key-range',
-        title: 'KEY RANGE - Zone 1',
+        title: 'SPLIT POINT',
         tempo: 120,
         beatSignature: '4/4',
-        parameterName: 'A0',
-        parameterValue: 'B3',
+        parameterName: 'Split at',
+        parameterValue: 'C4',
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Lower)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Upper)',
+        },
+      ],
+      tipText: 'C4 (middle C) is the default split point.',
+    },
+    {
+      id: 'step-5',
+      title: 'Select Zone 1',
+      instruction:
+        'Press Enter to confirm the split point, then press the Zone 1 button to select it for tone assignment.',
+      highlightControls: ['enter', 'zone-1'],
+      panelStateChanges: {
+        'zone-1': { active: true, ledOn: true, ledColor: '#3B82F6' },
+        'zone-2': { active: false, ledOn: true, ledColor: '#EF4444' },
+      },
+      displayState: {
+        screenType: 'zone-view',
+        title: 'ZONE VIEW',
+        sceneNumber: 'A001',
+        sceneName: 'Homecoming',
+        tempo: 120,
+        beatSignature: '4/4',
+        zoneViewMode: 4,
+        zones: [
+          {
+            zoneNumber: 1,
+            zoneName: 'Zone 1',
+            toneName: 'INIT TONE',
+            toneType: 'Z-Core',
+            toneBank: 'PR-A',
+            toneCategory: 'Init',
+            toneNumber: '0001',
+            keyRangeLow: 'A0',
+            keyRangeHigh: 'B3',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: true,
+          },
+          {
+            zoneNumber: 2,
+            zoneName: 'Zone 2',
+            toneName: 'INIT TONE',
+            toneType: 'Z-Core',
+            toneBank: 'PR-A',
+            toneCategory: 'Init',
+            toneNumber: '0001',
+            keyRangeLow: 'C4',
+            keyRangeHigh: 'C8',
+            volume: 100,
+            pan: 0,
+            muted: false,
+            active: false,
+          },
+        ],
+      },
+      zones: [
+        {
+          zoneNumber: 1,
+          color: '#3B82F6',
+          lowNote: 21,
+          highNote: 59,
+          label: 'Zone 1 (Lower)',
+        },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Upper)',
+        },
+      ],
+      tipText: 'Zone 1 LED is blue, Zone 2 LED is red — both stay lit to show both zones are active.',
+    },
+    {
+      id: 'step-6',
+      title: 'Choose a Bass Tone',
+      instruction:
+        'Press the Bass tone category button to browse bass sounds for Zone 1.',
+      details:
+        'The 16 tone category buttons along the bottom of the panel let you quickly filter tones by type. Use the Value dial to scroll through the bass tone list.',
+      highlightControls: ['tone-cat-6'],
+      panelStateChanges: {
+        'tone-cat-6': { active: true },
+      },
+      displayState: {
+        screenType: 'tone-select',
+        title: 'TONE LIST - Zone 1',
+        tempo: 120,
+        beatSignature: '4/4',
+        menuItems: [
+          { label: 'AC.BASS', selected: true },
+          { label: 'Finger Bass' },
+          { label: 'Pick Bass' },
+          { label: 'Fretless Bass' },
+        ],
+        selectedIndex: 0,
       },
       zones: [
         {
@@ -162,18 +243,28 @@ export const splitKeyboardZones: Tutorial = {
           highNote: 59,
           label: 'Zone 1 (Bass)',
         },
+        {
+          zoneNumber: 2,
+          color: '#EF4444',
+          lowNote: 60,
+          highNote: 108,
+          label: 'Zone 2 (Upper)',
+        },
       ],
-      tipText: 'B3 is the B just below middle C.',
+      tipText: 'AC.BASS is the first tone in the Bass category — a great acoustic upright bass sound.',
     },
     {
       id: 'step-7',
-      title: 'Activate Zone 2',
-      instruction: 'Press the Zone 2 button to activate and select Zone 2.',
+      title: 'Switch to Zone 2',
+      instruction:
+        'Press the Zone 2 button to switch to Zone 2 for tone assignment.',
+      details:
+        'Zone 2 covers the upper half of the keyboard (C4–C8). We\'ll assign a piano sound to it.',
       highlightControls: ['zone-2'],
       panelStateChanges: {
         'zone-2': { active: true, ledOn: true, ledColor: '#EF4444' },
-        menu: { active: false, ledOn: false },
-        enter: { active: false },
+        'zone-1': { active: false, ledOn: true, ledColor: '#3B82F6' },
+        'tone-cat-6': { active: false },
       },
       displayState: {
         screenType: 'zone-view',
@@ -222,7 +313,7 @@ export const splitKeyboardZones: Tutorial = {
           color: '#3B82F6',
           lowNote: 21,
           highNote: 59,
-          label: 'Zone 1 (Bass)',
+          label: 'Zone 1 (AC.BASS)',
         },
         {
           zoneNumber: 2,
@@ -232,14 +323,18 @@ export const splitKeyboardZones: Tutorial = {
           label: 'Zone 2 (Piano)',
         },
       ],
+      tipText: 'The Zone 2 LED lights up red when selected.',
     },
     {
       id: 'step-8',
-      title: 'Select a Piano Tone',
-      instruction: 'Press the Tone Select button to browse piano sounds for Zone 2.',
-      highlightControls: ['tone-select'],
+      title: 'Choose a Piano Tone',
+      instruction:
+        'Press the Ac Piano tone category button to browse acoustic piano sounds for Zone 2.',
+      details:
+        'Use the Value dial or Inc/Dec buttons to scroll through the piano tone list and preview sounds.',
+      highlightControls: ['tone-cat-1'],
       panelStateChanges: {
-        'tone-select': { active: true, ledOn: true },
+        'tone-cat-1': { active: true },
       },
       displayState: {
         screenType: 'tone-select',
@@ -250,7 +345,7 @@ export const splitKeyboardZones: Tutorial = {
           { label: 'Concert Grand', selected: true },
           { label: 'Bright Piano' },
           { label: 'Stage Piano' },
-          { label: 'Electric Piano' },
+          { label: 'Warm Grand' },
         ],
         selectedIndex: 0,
       },
@@ -260,7 +355,7 @@ export const splitKeyboardZones: Tutorial = {
           color: '#3B82F6',
           lowNote: 21,
           highNote: 59,
-          label: 'Zone 1 (Bass)',
+          label: 'Zone 1 (AC.BASS)',
         },
         {
           zoneNumber: 2,
@@ -270,15 +365,19 @@ export const splitKeyboardZones: Tutorial = {
           label: 'Zone 2 (Piano)',
         },
       ],
+      tipText: 'Concert Grand is the first tone in the Ac Piano category.',
     },
     {
       id: 'step-9',
       title: 'Save Your Scene',
-      instruction: 'Press the Write button to save your split keyboard setup as a Scene.',
-      highlightControls: ['write'],
+      instruction:
+        'Press the Write button to save your split keyboard setup as a Scene, then press Enter to confirm.',
+      details:
+        'Writing saves all zone settings, tone assignments, and key ranges to the current scene slot.',
+      highlightControls: ['write', 'enter'],
       panelStateChanges: {
         write: { active: true, ledOn: true },
-        'tone-select': { active: false, ledOn: false },
+        'tone-cat-1': { active: false },
       },
       displayState: {
         screenType: 'write',
@@ -296,14 +395,14 @@ export const splitKeyboardZones: Tutorial = {
           color: '#3B82F6',
           lowNote: 21,
           highNote: 59,
-          label: 'Zone 1 (Bass)',
+          label: 'Zone 1 (AC.BASS)',
         },
         {
           zoneNumber: 2,
           color: '#EF4444',
           lowNote: 60,
           highNote: 108,
-          label: 'Zone 2 (Piano)',
+          label: 'Zone 2 (Concert Grand)',
         },
       ],
     },
@@ -313,7 +412,7 @@ export const splitKeyboardZones: Tutorial = {
       instruction:
         'Your keyboard is now split into two zones. Zone 1 (blue) plays bass on the left, and Zone 2 (red) plays piano on the right.',
       details:
-        'Try playing both zones! The split point is at middle C (C4). You can adjust the split point anytime by editing the Key Range.',
+        'Try playing both zones! The split point is at middle C (C4). You can adjust the split point anytime by pressing the Split button again.',
       highlightControls: [],
       panelStateChanges: {
         write: { active: false, ledOn: false },

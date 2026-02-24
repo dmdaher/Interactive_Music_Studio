@@ -22,18 +22,18 @@ describe('splitKeyboardZones tutorial data integrity', () => {
   it('steps that highlight controls list valid control IDs', () => {
     const validControlIds = [
       'zone-1', 'zone-2', 'zone-3', 'zone-4', 'zone-5', 'zone-6', 'zone-7', 'zone-8',
-      'zone-int', 'menu', 'write', 'exit', 'enter', 'tone-select', 'value-dial',
+      'zone-int', 'menu', 'write', 'exit', 'enter', 'value-dial',
       'cursor-up', 'cursor-down', 'cursor-left', 'cursor-right',
-      'scene-up', 'scene-down',
+      'dec', 'inc', 'shift', 'tempo',
+      'scene-select', 'scene-chain', 'zone-view', 'single-tone',
       'wheel-1', 'wheel-2', 'pitch-wheel', 's1-btn', 's2-btn',
       'split', 'chord-memory', 'arpeggio', 'transpose', 'octave-down', 'octave-up',
-      'cutoff-knob', 'resonance-knob', 'attack-knob', 'decay-knob',
-      'sustain-knob', 'release-knob', 'effects-knob', 'lfo-rate-knob',
-      'play', 'stop', 'rec', 'tempo-knob', 'display',
+      'master-fx', 'motional-pad', 'daw-ctrl',
+      'play', 'stop', 'rec', 'display',
     ];
-    // Add scene and pad IDs
+    // Add tone category, pad IDs
     for (let i = 1; i <= 16; i++) {
-      validControlIds.push(`scene-${i}`);
+      validControlIds.push(`tone-cat-${i}`);
       validControlIds.push(`pad-${i}`);
     }
 
