@@ -35,7 +35,6 @@ const zoneControls: PanelControl[] = [
   { id: 'zone-6', type: 'button', label: 'Zone 6', section: 'zone', variant: 'zone', size: 'md', hasLed: true, ledColor: '#EC4899' },
   { id: 'zone-7', type: 'button', label: 'Zone 7', section: 'zone', variant: 'zone', size: 'md', hasLed: true, ledColor: '#06B6D4' },
   { id: 'zone-8', type: 'button', label: 'Zone 8', section: 'zone', variant: 'zone', size: 'md', hasLed: true, ledColor: '#F97316' },
-  { id: 'zone-int', type: 'button', label: 'INT', section: 'zone', variant: 'zone', size: 'sm', hasLed: true, ledColor: '#00ff44' },
   // ZONE 9-16, ZONE SELECT
   { id: 'zone-9-16', type: 'button', label: 'Zone 9-16', section: 'zone', variant: 'function', size: 'sm' },
   { id: 'zone-select', type: 'button', label: 'Zone Select', section: 'zone', variant: 'function', size: 'sm' },

@@ -159,7 +159,7 @@ This row/column approach maps directly to how we structure the panel sections an
 | `effect` | `MenuScreen` | Effects parameter list |
 
 ### Control ID Naming Convention
-- Zone buttons: `zone-1`..`zone-8`, `zone-int`, `zone-9-16`, `zone-select`
+- Zone buttons: `zone-1`..`zone-8`, `zone-9-16`, `zone-select`
 - Sliders/Knobs: `slider-1`..`slider-8`, `ctrl-knob-1`..`ctrl-knob-8`
 - Tone categories: `tone-cat-1`..`tone-cat-16` (A.Piano, E.Piano, Organ, Keys, Guitar, Bass, Strings, Brass, Wind, Choir, Synth, Pad, FX, Drums, User, Assign)
 - Pads: `pad-1`..`pad-16`

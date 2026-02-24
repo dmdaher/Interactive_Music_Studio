@@ -22,7 +22,7 @@ describe('splitKeyboardZones tutorial data integrity', () => {
   it('steps that highlight controls list valid control IDs', () => {
     const validControlIds = [
       'zone-1', 'zone-2', 'zone-3', 'zone-4', 'zone-5', 'zone-6', 'zone-7', 'zone-8',
-      'zone-int', 'menu', 'write', 'exit', 'enter', 'value-dial',
+      'menu', 'write', 'exit', 'enter', 'value-dial',
       'cursor-up', 'cursor-down', 'cursor-left', 'cursor-right',
       'dec', 'inc', 'shift', 'tempo',
       'scene-select', 'scene-chain', 'zone-view', 'single-tone',
