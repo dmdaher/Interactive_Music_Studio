@@ -8,6 +8,10 @@ import KeyRangeScreen from './KeyRangeScreen';
 import WriteScreen from './WriteScreen';
 import MenuScreen from './MenuScreen';
 import SceneSelectScreen from './SceneSelectScreen';
+import MixerScreen from './MixerScreen';
+import SceneEditScreen from './SceneEditScreen';
+import ZoneEditScreen from './ZoneEditScreen';
+import EffectsEditScreen from './EffectsEditScreen';
 
 interface DisplayScreenProps {
   displayState: DisplayState;
@@ -245,6 +249,43 @@ export default function DisplayScreen({ displayState, highlighted = false }: Dis
           />
         );
 
+      case 'mixer':
+        return displayState.zones ? (
+          <MixerScreen
+            zones={displayState.zones}
+            viewMode={displayState.mixerViewMode}
+            selectedZone={displayState.selectedIndex}
+          />
+        ) : null;
+
+      case 'scene-edit':
+        return (
+          <SceneEditScreen
+            activeTab={displayState.activeTab}
+            parameters={displayState.menuItems}
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'zone-edit':
+        return (
+          <ZoneEditScreen
+            zones={displayState.zones}
+            activeTab={displayState.activeTab}
+            category={displayState.zoneEditCategory}
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'effects-edit':
+        return (
+          <EffectsEditScreen
+            zones={displayState.zones}
+            activeTab={displayState.activeTab}
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
       case 'home':
       default:
         return <SceneSelectScreen displayState={displayState} />;
@@ -375,6 +416,14 @@ function screenTitle(screenType: string): string {
       return 'TONE LIST';
     case 'effect':
       return 'EFFECTS';
+    case 'mixer':
+      return 'MIXER';
+    case 'scene-edit':
+      return 'SCENE EDIT';
+    case 'zone-edit':
+      return 'ZONE EDIT';
+    case 'effects-edit':
+      return 'EFFECTS EDIT';
     default:
       return 'FANTOM-08';
   }

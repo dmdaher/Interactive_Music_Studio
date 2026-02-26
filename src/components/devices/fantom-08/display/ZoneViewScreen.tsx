@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ZoneDisplayInfo } from '@/types/display';
-import { DISPLAY_COLORS, ZONE_COLORS } from '@/lib/constants';
+import { DISPLAY_COLORS, ZONE_COLOR_MAP } from '@/lib/constants';
 
 interface ZoneViewScreenProps {
   zones: ZoneDisplayInfo[];
@@ -10,17 +10,6 @@ interface ZoneViewScreenProps {
   sceneNumber?: string;
   viewMode?: 1 | 4 | 8 | 16;
 }
-
-const zoneColorMap: Record<number, string> = {
-  1: ZONE_COLORS.zone1,
-  2: ZONE_COLORS.zone2,
-  3: ZONE_COLORS.zone3,
-  4: ZONE_COLORS.zone4,
-  5: ZONE_COLORS.zone5,
-  6: ZONE_COLORS.zone6,
-  7: ZONE_COLORS.zone7,
-  8: ZONE_COLORS.zone8,
-};
 
 function MiniRangeBar({ low, high, color }: { low: string; high: string; color: string }) {
   const noteToPos = (note: string): number => {
@@ -75,7 +64,7 @@ function EffectPills({ zone }: { zone: ZoneDisplayInfo }) {
 
 // 1 ZONE VIEW — most detailed, single zone fills screen
 function OneZoneView({ zone }: { zone: ZoneDisplayInfo }) {
-  const color = zoneColorMap[zone.zoneNumber] ?? DISPLAY_COLORS.text;
+  const color = ZONE_COLOR_MAP[zone.zoneNumber] ?? DISPLAY_COLORS.text;
   const toneLabel = zone.toneNumber
     ? `${zone.toneNumber}: ${zone.toneName}`
     : zone.toneName;
@@ -154,7 +143,7 @@ function FourZoneView({ zones }: { zones: ZoneDisplayInfo[] }) {
     <div className="flex flex-col font-mono divide-y" style={{ borderColor: DISPLAY_COLORS.border }}>
       {slots.map((zone, i) => {
         const num = i + 1;
-        const color = zoneColorMap[num] ?? DISPLAY_COLORS.text;
+        const color = ZONE_COLOR_MAP[num] ?? DISPLAY_COLORS.text;
 
         if (!zone) {
           return (
@@ -248,7 +237,7 @@ function EightZoneView({ zones }: { zones: ZoneDisplayInfo[] }) {
     <div className="flex flex-col font-mono text-[11px]">
       {slots.map((zone, i) => {
         const num = i + 1;
-        const color = zoneColorMap[num] ?? DISPLAY_COLORS.text;
+        const color = ZONE_COLOR_MAP[num] ?? DISPLAY_COLORS.text;
 
         if (!zone) {
           return (
@@ -313,7 +302,7 @@ function SixteenZoneView({ zones }: { zones: ZoneDisplayInfo[] }) {
   const renderCol = (items: { num: number; zone?: ZoneDisplayInfo }[]) => (
     <div className="flex-1 flex flex-col font-mono text-[10px]">
       {items.map(({ num, zone }) => {
-        const color = zoneColorMap[num] ?? DISPLAY_COLORS.text;
+        const color = ZONE_COLOR_MAP[num] ?? DISPLAY_COLORS.text;
         return (
           <div
             key={num}

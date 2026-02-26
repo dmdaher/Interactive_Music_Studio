@@ -4,6 +4,16 @@
 
 Always check, validate, and confirm before acting. Measure twice, cut once.
 
+**Accuracy over speed — always.** This project extracts and catalogs information from real hardware product manuals. Every instrument is a real product with a real manual. Before designing any screen, tutorial, or control:
+
+1. **Open the reference manual PDF** and read the specific pages. Don't work from memory or assumptions.
+2. **Cross-reference the screen catalog AND the manual together** — the catalog is a summary, the manual screenshots contain visual details the catalog may miss.
+3. **Validate every detail**: access paths, knob/button assignments, parameter ranges, tone names, screen layouts. Check the manual's parameter tables.
+4. **Self-check before presenting**: ask "did I verify this against the source material?" If not, go back and verify.
+5. **Highlighted controls must match the real workflow context** — which controls are active depends on which screen/mode the user is in. Verify per the manual.
+
+See `docs/new-instrument-playbook.md` for the full process and Appendix B for all lessons learned.
+
 ---
 
 ## Project Overview
@@ -115,6 +125,26 @@ This row/column approach maps directly to how we structure the panel sections an
 - Follow the existing Tailwind + inline style pattern for dynamic colors and glows.
 - CSS variables are defined in `globals.css`: `--background`, `--accent`, `--card-bg`, `--surface`.
 
+## Quality Gates (MANDATORY)
+
+This project has formal quality gates in `docs/quality-gates.md`. **You must follow them.**
+
+| Trigger | Gate | What You Must Do |
+|---------|------|------------------|
+| Before implementing any screen or tutorial | **PRE-BUILD** | Read the specific manual pages, cross-reference catalog, verify parameters, present ASCII layout |
+| Before claiming work is done | **POST-BUILD** | Run build + tests, verify all registrations, check for hardcoded colors, confirm dev server |
+| After any user correction | **CORRECTION** | Document the mistake, identify root cause, write prevention rule, add automated test if possible |
+| When writing any data shown in the UI | **CROSS-REFERENCE** | Verify tone names, parameter ranges, control IDs, E-knob assignments against manual/existing data |
+| After completing a major feature | **SELF-IMPROVEMENT** | Reflect on what went well/poorly, update docs, check if gates need new questions |
+
+The automated quality tests in `src/__tests__/codeQuality.test.ts` enforce structural consistency:
+- All ScreenType values registered in DisplayScreen.tsx and test validScreenTypes
+- All display components imported and have 'use client'
+- No hardcoded hex colors (must use DISPLAY_COLORS/ZONE_COLORS from constants)
+- No duplicate utility definitions (ZONE_COLOR_MAP only in constants.ts)
+
+**These tests run with `npm run test` and WILL catch violations.**
+
 ## Verification & Testing
 
 - After making changes, verify they work — run `npm run test` and check the dev server.
@@ -122,6 +152,7 @@ This row/column approach maps directly to how we structure the panel sections an
 - If something fails, investigate the root cause rather than retrying the same approach or brute-forcing past it.
 - Tests live in `src/__tests__/` with subdirectories mirroring the source structure.
 - Use Vitest + React Testing Library + jsdom for component tests.
+- The `codeQuality.test.ts` file enforces structural consistency — if you add a new ScreenType, the test will fail until you register it everywhere.
 
 ## Checking with the User
 
@@ -157,6 +188,10 @@ This row/column approach maps directly to how we structure the panel sections an
 | `menu` | `MenuScreen` | Generic scrollable list |
 | `tone-select` | `MenuScreen` | Category tabs + tone list |
 | `effect` | `MenuScreen` | Effects parameter list |
+| `mixer` | `MixerScreen` | 8/16-zone channel-strip mixer (vol, pan, solo, mute, EQ, sends) |
+| `scene-edit` | `SceneEditScreen` | Tabbed scene parameter editor (9 tabs, manual p.54) |
+| `zone-edit` | `ZoneEditScreen` | Tabbed zone parameter grid with INT/EXT categories (manual p.54-55) |
+| `effects-edit` | `EffectsEditScreen` | Signal routing diagram with effect blocks (manual p.66-67) |
 
 ### Control ID Naming Convention
 - Zone buttons: `zone-1`..`zone-8`, `zone-9-16`, `zone-select`
@@ -174,3 +209,8 @@ This row/column approach maps directly to how we structure the panel sections an
 
 - **Always search before creating**: Before creating any new file (including CLAUDE.md itself), search broadly across all relevant directories to confirm it doesn't already exist. Don't limit the search to just the current directory.
 - **Update this file after every correction**: When the user corrects a mistake, add the lesson here so it's never repeated.
+- **Never hardcode hex colors in display components**: Always use `DISPLAY_COLORS`, `ZONE_COLORS`, or `ZONE_COLOR_MAP` from `@/lib/constants`. The `codeQuality.test.ts` test will catch violations.
+- **Always validate against the reference manual PDF**: Before designing any screen, tutorial, or control — open the actual manual pages, read them, and cross-reference. Don't work from memory or assumptions.
+- **Never delegate manual PDF reading to agents**: Screen layouts must be described from direct PDF reading, not from agent summaries or general knowledge. Agents describe screens from assumptions that may be incorrect.
+- **Highlighted controls must match the real workflow context**: Which controls are active depends on which screen/mode the user is in. Verify per the manual's parameter tables.
+- **When adding a new ScreenType, register it everywhere**: types, DisplayScreen switch cases (renderScreen + screenTitle), test validScreenTypes. The automated quality test catches forgotten registrations.

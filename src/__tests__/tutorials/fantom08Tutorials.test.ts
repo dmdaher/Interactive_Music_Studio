@@ -13,7 +13,7 @@ const expectedStepCounts: Record<string, number> = {
   'panel-overview': 8,
   'selecting-scenes': 7,
   'selecting-tones': 8,
-  'saving-your-work': 6,
+  'saving-your-work': 8,
   'split-keyboard-zones': 10,
   'layering-zones': 9,
   'four-zone-setup': 12,
@@ -24,7 +24,7 @@ const expectedStepCounts: Record<string, number> = {
 
 describe('Fantom 08 tutorial collection', () => {
   it('has 10 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(10);
+    expect(fantom08Tutorials).toHaveLength(11);
   });
 
   it('all tutorials have unique IDs', () => {
@@ -108,7 +108,7 @@ describe.each(fantom08Tutorials)('$id tutorial data integrity', (tutorial: Tutor
   });
 
   it('display states have valid screen types', () => {
-    const validScreenTypes = ['home', 'zone-view', 'key-range', 'write', 'menu', 'tone-select', 'effect'];
+    const validScreenTypes = ['home', 'zone-view', 'key-range', 'write', 'menu', 'tone-select', 'effect', 'mixer', 'scene-edit', 'zone-edit', 'effects-edit'];
     tutorial.steps.forEach((step) => {
       if (step.displayState) {
         expect(

@@ -8,6 +8,7 @@ import { fourZoneSetup } from './four-zone-setup';
 import { transposeOctave } from './transpose-octave';
 import { usingSlidersKnobs } from './using-sliders-knobs';
 import { editingMfx } from './editing-mfx';
+import { understandingTheMixer } from './understanding-the-mixer';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -21,6 +22,7 @@ export const fantom08Tutorials: Tutorial[] = [
   transposeOctave,
   usingSlidersKnobs,
   editingMfx,
+  understandingTheMixer,
 ];
 
 export {
@@ -34,4 +36,5 @@ export {
   transposeOctave,
   usingSlidersKnobs,
   editingMfx,
+  understandingTheMixer,
 };

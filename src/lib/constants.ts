@@ -23,9 +23,22 @@ export const DISPLAY_COLORS = {
   active: '#00aaff',
   zoneActive: '#00ff88',
   zoneMuted: '#666666',
+  mute: '#ff4444',
   header: '#4488cc',
   border: '#333355',
+  backgroundDark: '#111122',
 } as const;
+
+export const ZONE_COLOR_MAP: Record<number, string> = {
+  1: ZONE_COLORS.zone1,
+  2: ZONE_COLORS.zone2,
+  3: ZONE_COLORS.zone3,
+  4: ZONE_COLORS.zone4,
+  5: ZONE_COLORS.zone5,
+  6: ZONE_COLORS.zone6,
+  7: ZONE_COLORS.zone7,
+  8: ZONE_COLORS.zone8,
+};
 
 export const PANEL_COLORS = {
   background: '#1a1a1a',

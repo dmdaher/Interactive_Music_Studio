@@ -8,14 +8,14 @@ export const savingYourWork: Tutorial = {
     'Learn how to save your scene settings using the Write button. Keep your tone selections, zone setups, and effect changes safe.',
   category: 'basics',
   difficulty: 'beginner',
-  estimatedTime: '2 min',
+  estimatedTime: '3 min',
   tags: ['save', 'write', 'scene', 'basics', 'beginner'],
   steps: [
     {
       id: 'step-1',
       title: 'Why Save Your Scene?',
       instruction:
-        'Any changes you make to tones, zones, or effects are temporary until you save. If you switch to another scene without saving, your changes are lost.',
+        'Any changes you make to tones, zones, or effects are temporary until you save. If you switch to another scene or power off without saving, your changes are lost.',
       details:
         'The Write button saves everything in the current scene: zone assignments, tone selections, key ranges, volumes, effects, and more.',
       highlightControls: [],
@@ -32,34 +32,35 @@ export const savingYourWork: Tutorial = {
       id: 'step-2',
       title: 'Press the Write Button',
       instruction:
-        "Press the Write button to begin saving. It's located to the right of the display area.",
+        'Press the [WRITE] button to the right of the display. The WRITE MENU appears.',
       details:
-        'The Write button LED lights up red when pressed. The display shows the Scene Write confirmation screen.',
+        'The Write Menu lets you save different types of data. We\u2019ll save the scene.',
       highlightControls: ['write'],
       panelStateChanges: {
-        write: { active: true, ledOn: true, ledColor: '#ff2222' },
+        write: { active: true },
       },
       displayState: {
-        screenType: 'write',
-        title: 'SCENE WRITE',
+        screenType: 'menu',
+        title: 'WRITE MENU',
         tempo: 120,
         beatSignature: '4/4',
-        sceneNumber: 'A001',
-        sceneName: 'My Piano Setup',
-        confirmText: 'Write to A001?',
-        statusText: 'Turn Value dial to rename',
+        menuItems: [
+          { label: 'SCENE', selected: true },
+          { label: 'TONE' },
+          { label: 'RHYTHM PATTERN GROUP' },
+          { label: 'SYSTEM' },
+        ],
+        selectedIndex: 0,
       },
       tipText:
-        "The Write button LED glows red to remind you that you're about to overwrite data.",
+        'The Write Menu lets you save different types of data. We\u2019ll save the scene.',
     },
     {
       id: 'step-3',
-      title: 'Rename Your Scene',
+      title: 'Select Scene',
       instruction:
-        'Use the Value dial to change the scene name if desired. Use the Cursor Left/Right buttons to move between characters.',
-      details:
-        'Scene names can be up to 16 characters. You can use letters, numbers, and some symbols. This step is optional — press Enter to keep the current name.',
-      highlightControls: ['value-dial', 'cursor-left', 'cursor-right'],
+        'Touch <SCENE> on the Write Menu. The Scene Write screen appears, showing where your data will be saved.',
+      highlightControls: [],
       panelStateChanges: {},
       displayState: {
         screenType: 'write',
@@ -68,18 +69,20 @@ export const savingYourWork: Tutorial = {
         beatSignature: '4/4',
         sceneNumber: 'A001',
         sceneName: 'My Piano Setup',
-        confirmText: 'Rename scene:',
-        statusText: 'Use dial to change characters',
+        confirmText: 'A001: My Piano Setup',
+        statusText: 'Select destination, then touch OK',
       },
+      tipText:
+        'The screen shows WRITE SOURCE (your current scene) and WRITE DESTINATION (where it will be saved).',
     },
     {
       id: 'step-4',
-      title: 'Choose Save Destination',
+      title: 'Rename Your Scene (Optional)',
       instruction:
-        'Use the Cursor Up/Down buttons to select which scene slot to save to. By default it saves to the current slot.',
+        'To rename your scene, touch RENAME at the bottom of the screen. An on-screen keyboard appears where you can type a new name. Touch OK when done.',
       details:
-        'You can save to any empty slot or overwrite an existing scene. Be careful not to overwrite scenes you want to keep.',
-      highlightControls: ['cursor-up', 'cursor-down'],
+        'Renaming is optional. If you\u2019re happy with the current name, skip this step and move on.',
+      highlightControls: [],
       panelStateChanges: {},
       displayState: {
         screenType: 'write',
@@ -88,18 +91,62 @@ export const savingYourWork: Tutorial = {
         beatSignature: '4/4',
         sceneNumber: 'A001',
         sceneName: 'My Piano Setup',
-        confirmText: 'Write to A001?',
-        statusText: 'Press Enter to confirm',
+        confirmText: 'A001: My Piano Setup',
+        statusText: 'Touch RENAME to edit name',
       },
       tipText:
-        'Saving to the same slot replaces the old version. Save to a new slot to keep both versions.',
+        'You can also rename scenes later from the Scene Edit screen.',
     },
     {
       id: 'step-5',
-      title: 'Confirm and Save',
+      title: 'Choose Save Destination',
       instruction:
-        'Press Enter to confirm the save. The Fantom writes all settings to memory. Press Exit to cancel without saving.',
-      highlightControls: ['enter', 'exit'],
+        'Turn the Value dial to select which scene slot to save to. You can also use the Dec/Inc buttons. By default, it saves to the current slot.',
+      details:
+        'You can save to any empty slot or overwrite an existing scene. Be careful not to overwrite scenes you want to keep.',
+      highlightControls: ['value-dial', 'dec', 'inc'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'write',
+        title: 'SCENE WRITE',
+        tempo: 120,
+        beatSignature: '4/4',
+        sceneNumber: 'A001',
+        sceneName: 'My Piano Setup',
+        confirmText: 'A001: My Piano Setup',
+        statusText: 'Turn Value dial to change destination',
+      },
+      tipText:
+        'Saving to the same slot replaces the old version. Save to a new slot to keep both.',
+    },
+    {
+      id: 'step-6',
+      title: 'Confirm Save',
+      instruction:
+        'Touch OK on screen to confirm. A confirmation message appears.',
+      details:
+        'If you change your mind, touch CANCEL on screen instead.',
+      highlightControls: [],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'write',
+        title: 'SCENE WRITE',
+        tempo: 120,
+        beatSignature: '4/4',
+        sceneNumber: 'A001',
+        sceneName: 'My Piano Setup',
+        confirmText: 'Confirm save?',
+        statusText: 'Touch OK to confirm',
+      },
+    },
+    {
+      id: 'step-7',
+      title: 'Complete the Save',
+      instruction:
+        'Touch OK again on the confirmation message to complete the save. The scene is written to memory.',
+      details:
+        'Never turn off the Fantom while it\u2019s saving \u2014 this could corrupt your data.',
+      highlightControls: [],
       panelStateChanges: {},
       displayState: {
         screenType: 'write',
@@ -113,15 +160,15 @@ export const savingYourWork: Tutorial = {
       },
     },
     {
-      id: 'step-6',
+      id: 'step-8',
       title: 'Scene Saved!',
       instruction:
-        'Your scene is now saved. The Fantom returns to the home screen with your saved scene loaded.',
+        'Your scene is now saved! The Fantom returns to the home screen with your saved scene loaded.',
       details:
-        'Your saved scene will appear in the scene browser and will persist even after powering off the Fantom.',
+        'Your saved scene will appear in the scene browser and persist even after powering off.',
       highlightControls: [],
       panelStateChanges: {
-        write: { active: false, ledOn: false },
+        write: { active: false },
       },
       displayState: {
         screenType: 'home',

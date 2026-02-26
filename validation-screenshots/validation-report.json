@@ -1,0 +1,24 @@
+{
+  "timestamp": "2026-02-24T05:23:30.744Z",
+  "totalTutorials": 10,
+  "deepWalked": 4,
+  "quickTested": 6,
+  "issues": [
+    "[WARN] panel-overview: 1 panel controls missing from DOM: zone-int",
+    "[WARN] selecting-scenes: 1 panel controls missing from DOM: zone-int",
+    "[WARN] selecting-tones: 1 panel controls missing from DOM: zone-int",
+    "[WARN] saving-your-work: 1 panel controls missing from DOM: zone-int",
+    "[WARN] split-keyboard-zones: 1 panel controls missing from DOM: zone-int",
+    "[WARN] layering-zones: 1 panel controls missing from DOM: zone-int",
+    "[WARN] four-zone-setup: 1 panel controls missing from DOM: zone-int",
+    "[WARN] transpose-octave: 1 panel controls missing from DOM: zone-int",
+    "[WARN] using-sliders-knobs: 1 panel controls missing from DOM: zone-int",
+    "[WARN] editing-mfx: 1 panel controls missing from DOM: zone-int"
+  ],
+  "screenshots": [
+    "./validation-screenshots/4-zone-keyboard-overlay.png",
+    "./validation-screenshots/tone-select-screen.png",
+    "./validation-screenshots/mfx-effect-screen.png",
+    "./validation-screenshots/write-save-dialog.png"
+  ]
+}

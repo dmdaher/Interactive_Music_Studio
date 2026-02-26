@@ -122,7 +122,7 @@ export default function KeyRangeScreen({
                 borderColor: DISPLAY_COLORS.border,
                 backgroundColor: inRange(key.midi)
                   ? `${zoneColor}60`
-                  : '#1a1a2e',
+                  : DISPLAY_COLORS.background,
               }}
             />
           ))}
@@ -148,7 +148,7 @@ export default function KeyRangeScreen({
                   transform: 'translateX(-50%)',
                   backgroundColor: inRange(key.midi)
                     ? `${zoneColor}90`
-                    : '#111122',
+                    : DISPLAY_COLORS.backgroundDark,
                 }}
               />
             );
