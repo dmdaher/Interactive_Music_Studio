@@ -20,11 +20,20 @@ const expectedStepCounts: Record<string, number> = {
   'transpose-octave': 7,
   'using-sliders-knobs': 10,
   'editing-mfx': 8,
+  'understanding-the-mixer': 8,
+  'tone-editing-zoom': 9,
+  'tone-editing-pro': 10,
+  'scene-level-editing': 10,
+  'effects-routing': 11,
+  'sequencer-patterns': 9,
+  'piano-roll-editing': 10,
+  'sequencer-groups': 10,
+  'song-arrangement': 11,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 10 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(11);
+  it('has 19 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(19);
   });
 
   it('all tutorials have unique IDs', () => {
