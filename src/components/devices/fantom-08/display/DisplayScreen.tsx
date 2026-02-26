@@ -12,6 +12,29 @@ import MixerScreen from './MixerScreen';
 import SceneEditScreen from './SceneEditScreen';
 import ZoneEditScreen from './ZoneEditScreen';
 import EffectsEditScreen from './EffectsEditScreen';
+import ToneEditZoomScreen from './ToneEditZoomScreen';
+import ToneEditProScreen from './ToneEditProScreen';
+import PatternScreen from './PatternScreen';
+import PianoRollScreen from './PianoRollScreen';
+import GroupScreen from './GroupScreen';
+import SongScreen from './SongScreen';
+import RecStandbyScreen from './RecStandbyScreen';
+import MicroscopeScreen from './MicroscopeScreen';
+import SamplingScreen from './SamplingScreen';
+import SamplePadScreen from './SamplePadScreen';
+import WaveEditScreen from './WaveEditScreen';
+import PadModeScreen from './PadModeScreen';
+import MultisampleEditScreen from './MultisampleEditScreen';
+import SystemSettingsScreen from './SystemSettingsScreen';
+import ArpeggioScreen from './ArpeggioScreen';
+import ChordMemoryScreen from './ChordMemoryScreen';
+import MotionalPadScreen from './MotionalPadScreen';
+import SceneChainScreen from './SceneChainScreen';
+import SmfControlScreen from './SmfControlScreen';
+import PopupScreen from './PopupScreen';
+import FileBrowserScreen from './FileBrowserScreen';
+import ImportWizardScreen from './ImportWizardScreen';
+import ExportWizardScreen from './ExportWizardScreen';
 
 interface DisplayScreenProps {
   displayState: DisplayState;
@@ -286,6 +309,192 @@ export default function DisplayScreen({ displayState, highlighted = false }: Dis
           />
         );
 
+      case 'tone-edit-zoom':
+        return (
+          <ToneEditZoomScreen
+            toneType={displayState.toneEditData?.toneType}
+            activeTab={displayState.activeTab}
+            selectedIndex={displayState.selectedIndex}
+            activePartials={displayState.toneEditData?.activePartials}
+            selectedPartial={displayState.toneEditData?.selectedPartial}
+          />
+        );
+
+      case 'tone-edit-pro':
+        return (
+          <ToneEditProScreen
+            toneType={displayState.toneEditData?.toneType}
+            activeTab={displayState.activeTab}
+            parameters={displayState.menuItems}
+            selectedIndex={displayState.selectedIndex}
+            selectedPartial={displayState.toneEditData?.selectedPartial}
+          />
+        );
+
+      case 'pattern':
+        return (
+          <PatternScreen
+            viewMode={displayState.sequencerData?.viewMode}
+            selectedTrack={displayState.sequencerData?.selectedTrack}
+            selectedVariation={displayState.sequencerData?.selectedVariation}
+          />
+        );
+
+      case 'piano-roll':
+        return (
+          <PianoRollScreen
+            selectedIndex={displayState.selectedIndex}
+            currentMeasure={displayState.sequencerData?.currentMeasure}
+          />
+        );
+
+      case 'group':
+        return (
+          <GroupScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'song':
+        return (
+          <SongScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'rec-standby':
+        return (
+          <RecStandbyScreen
+            selectedIndex={displayState.selectedIndex}
+            recMode={displayState.sequencerData?.recMode}
+            selectedTrack={displayState.sequencerData?.selectedTrack}
+          />
+        );
+
+      case 'microscope':
+        return (
+          <MicroscopeScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'sampling':
+        return (
+          <SamplingScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'sample-pad':
+        return (
+          <SamplePadScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
+      case 'wave-edit':
+        return (
+          <WaveEditScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'pad-mode':
+        return (
+          <PadModeScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'multisample-edit':
+        return (
+          <MultisampleEditScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
+      case 'system-settings':
+        return (
+          <SystemSettingsScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
+      case 'arpeggio':
+        return (
+          <ArpeggioScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'chord-memory':
+        return (
+          <ChordMemoryScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'motional-pad':
+        return (
+          <MotionalPadScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'scene-chain':
+        return (
+          <SceneChainScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'smf-control':
+        return (
+          <SmfControlScreen
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'popup':
+        return (
+          <PopupScreen
+            popupType={displayState.popupData?.popupType}
+            parameterName={displayState.parameterName}
+            parameterValue={displayState.parameterValue}
+            message={displayState.popupData?.message}
+            options={displayState.popupData?.options}
+            currentText={displayState.popupData?.currentText}
+            selectedIndex={displayState.selectedIndex}
+          />
+        );
+
+      case 'file-browser':
+        return (
+          <FileBrowserScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
+      case 'import-wizard':
+        return (
+          <ImportWizardScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
+      case 'export-wizard':
+        return (
+          <ExportWizardScreen
+            selectedIndex={displayState.selectedIndex}
+            activeTab={displayState.activeTab}
+          />
+        );
+
       case 'home':
       default:
         return <SceneSelectScreen displayState={displayState} />;
@@ -424,6 +633,52 @@ function screenTitle(screenType: string): string {
       return 'ZONE EDIT';
     case 'effects-edit':
       return 'EFFECTS EDIT';
+    case 'tone-edit-zoom':
+      return 'TONE EDIT ZOOM';
+    case 'tone-edit-pro':
+      return 'TONE EDIT PRO';
+    case 'pattern':
+      return 'PATTERN';
+    case 'piano-roll':
+      return 'PIANO ROLL';
+    case 'group':
+      return 'GROUP';
+    case 'song':
+      return 'SONG';
+    case 'rec-standby':
+      return 'REC STANDBY';
+    case 'microscope':
+      return 'MICROSCOPE';
+    case 'sampling':
+      return 'SAMPLING STANDBY';
+    case 'sample-pad':
+      return 'SAMPLE PAD';
+    case 'wave-edit':
+      return 'WAVE EDIT';
+    case 'pad-mode':
+      return 'PAD MODE';
+    case 'multisample-edit':
+      return 'MULTISAMPLE EDIT';
+    case 'system-settings':
+      return 'SYSTEM';
+    case 'arpeggio':
+      return 'ARPEGGIO';
+    case 'chord-memory':
+      return 'CHORD MEMORY';
+    case 'motional-pad':
+      return 'MOTIONAL PAD';
+    case 'scene-chain':
+      return 'SCENE CHAIN';
+    case 'smf-control':
+      return 'SMF CONTROL';
+    case 'popup':
+      return 'POPUP';
+    case 'file-browser':
+      return 'FILE BROWSER';
+    case 'import-wizard':
+      return 'IMPORT';
+    case 'export-wizard':
+      return 'EXPORT';
     default:
       return 'FANTOM-08';
   }

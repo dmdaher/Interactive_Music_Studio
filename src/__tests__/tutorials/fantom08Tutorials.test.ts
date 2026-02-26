@@ -108,7 +108,7 @@ describe.each(fantom08Tutorials)('$id tutorial data integrity', (tutorial: Tutor
   });
 
   it('display states have valid screen types', () => {
-    const validScreenTypes = ['home', 'zone-view', 'key-range', 'write', 'menu', 'tone-select', 'effect', 'mixer', 'scene-edit', 'zone-edit', 'effects-edit'];
+    const validScreenTypes = ['home', 'zone-view', 'key-range', 'write', 'menu', 'tone-select', 'effect', 'mixer', 'scene-edit', 'zone-edit', 'effects-edit', 'tone-edit-zoom', 'tone-edit-pro', 'pattern', 'piano-roll', 'group', 'song', 'rec-standby', 'microscope', 'sampling', 'sample-pad', 'wave-edit', 'pad-mode', 'multisample-edit', 'system-settings', 'arpeggio', 'chord-memory', 'motional-pad', 'scene-chain', 'smf-control', 'popup', 'file-browser', 'import-wizard', 'export-wizard'];
     tutorial.steps.forEach((step) => {
       if (step.displayState) {
         expect(

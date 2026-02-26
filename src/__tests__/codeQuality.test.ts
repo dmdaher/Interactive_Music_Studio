@@ -52,6 +52,14 @@ function getDisplayComponentFiles(): string[] {
   );
 }
 
+const SHARED_DIR = path.join(DISPLAY_DIR, 'shared');
+
+/** Get all .tsx files in the display/shared/ directory */
+function getSharedComponentFiles(): string[] {
+  if (!fs.existsSync(SHARED_DIR)) return [];
+  return fs.readdirSync(SHARED_DIR).filter((f) => f.endsWith('.tsx'));
+}
+
 // ─────────────────────────────────────────────────
 // 1. ScreenType registration consistency
 // ─────────────────────────────────────────────────
@@ -219,5 +227,62 @@ describe('DisplayScreen.tsx completeness', () => {
 
   it('DisplayScreen.tsx exports a default function', () => {
     expect(displayScreenContent).toContain('export default function DisplayScreen');
+  });
+});
+
+// ─────────────────────────────────────────────────
+// 6. Shared display component conventions
+// ─────────────────────────────────────────────────
+
+describe('Shared display component conventions', () => {
+  const sharedFiles = getSharedComponentFiles();
+  const HEX_COLOR_REGEX = /['"]#[0-9a-fA-F]{6}['"]/g;
+
+  it('shared/ directory has components', () => {
+    expect(sharedFiles.length).toBeGreaterThan(0);
+  });
+
+  it('all shared components have the "use client" directive', () => {
+    sharedFiles.forEach((file) => {
+      const content = fs.readFileSync(path.join(SHARED_DIR, file), 'utf-8');
+      const hasDirective = content.trimStart().startsWith("'use client'");
+      expect(
+        hasDirective,
+        `Shared component "${file}" is missing the 'use client' directive at the top`
+      ).toBe(true);
+    });
+  });
+
+  it('all shared components import from @/lib/constants', () => {
+    sharedFiles.forEach((file) => {
+      const content = fs.readFileSync(path.join(SHARED_DIR, file), 'utf-8');
+      const importsConstants = content.includes("from '@/lib/constants'");
+      expect(
+        importsConstants,
+        `Shared component "${file}" does not import from @/lib/constants — all display colors should come from shared constants`
+      ).toBe(true);
+    });
+  });
+
+  it('no hardcoded hex colors in shared components', () => {
+    const violations: { file: string; colors: string[] }[] = [];
+
+    sharedFiles.forEach((file) => {
+      const content = fs.readFileSync(path.join(SHARED_DIR, file), 'utf-8');
+      const matches = content.match(HEX_COLOR_REGEX);
+      if (matches && matches.length > 0) {
+        violations.push({ file, colors: matches });
+      }
+    });
+
+    if (violations.length > 0) {
+      const details = violations
+        .map((v) => `  shared/${v.file}: ${v.colors.join(', ')}`)
+        .join('\n');
+      expect(
+        violations,
+        `Hardcoded hex colors found in shared components. Use DISPLAY_COLORS, ZONE_COLORS, or ZONE_COLOR_MAP from @/lib/constants:\n${details}`
+      ).toHaveLength(0);
+    }
   });
 });
