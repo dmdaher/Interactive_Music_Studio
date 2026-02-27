@@ -85,7 +85,7 @@ export const samplingBasics: Tutorial = {
         'Turn the E2 knob to adjust the input level. Watch the level meter on the right side of the display and aim for a strong signal that does not clip (stay out of the red).',
       details:
         'Setting proper gain is critical for a clean sample. The level meter shows L/R channel levels in real time. The signal should peak in the yellow zone without hitting red. Too low and the sample will be noisy; too high and it will distort.',
-      highlightControls: ['function-e2'],
+      highlightControls: ['function-e2', 'value-dial'],
       panelStateChanges: {},
       displayState: {
         screenType: 'sampling',
@@ -100,7 +100,7 @@ export const samplingBasics: Tutorial = {
         selectedIndex: 3,
       },
       tipText:
-        'Speak or play into the mic while adjusting gain. The meter responds in real time so you can dial in the right level before recording.',
+        'Speak or play into the mic while adjusting gain. Use the Value dial or E2 knob — the meter responds in real time so you can dial in the right level before recording.',
     },
     {
       id: 'step-5',
@@ -227,6 +227,7 @@ export const samplingBasics: Tutorial = {
         sceneName: 'Homecoming',
         tempo: 120,
         beatSignature: '4/4',
+        statusText: 'Sample saved to Pad 1',
       },
       tipText:
         'Your samples persist in the Fantom memory until you delete them. Use Write to save the scene if you want to keep pad assignments across power cycles.',
