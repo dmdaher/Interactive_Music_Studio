@@ -19,6 +19,7 @@ import { sequencerGroups } from './sequencer-groups';
 import { songArrangement } from './song-arrangement';
 import { samplingBasics } from './sampling-basics';
 import { waveEditing } from './wave-editing';
+import { padModeSetup } from './pad-mode-setup';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -43,6 +44,7 @@ export const fantom08Tutorials: Tutorial[] = [
   songArrangement,
   samplingBasics,
   waveEditing,
+  padModeSetup,
 ];
 
 export {
@@ -67,4 +69,5 @@ export {
   songArrangement,
   samplingBasics,
   waveEditing,
+  padModeSetup,
 };
