@@ -20,6 +20,7 @@ import { songArrangement } from './song-arrangement';
 import { samplingBasics } from './sampling-basics';
 import { waveEditing } from './wave-editing';
 import { padModeSetup } from './pad-mode-setup';
+import { multisampleCreation } from './multisample-creation';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -45,6 +46,7 @@ export const fantom08Tutorials: Tutorial[] = [
   samplingBasics,
   waveEditing,
   padModeSetup,
+  multisampleCreation,
 ];
 
 export {
@@ -70,4 +72,5 @@ export {
   samplingBasics,
   waveEditing,
   padModeSetup,
+  multisampleCreation,
 };

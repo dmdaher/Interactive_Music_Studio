@@ -32,11 +32,12 @@ const expectedStepCounts: Record<string, number> = {
   'sampling-basics': 9,
   'wave-editing': 10,
   'pad-mode-setup': 10,
+  'multisample-creation': 11,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 22 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(22);
+  it('has 23 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(23);
   });
 
   it('all tutorials have unique IDs', () => {
