@@ -18,6 +18,7 @@ import { pianoRollEditing } from './piano-roll-editing';
 import { sequencerGroups } from './sequencer-groups';
 import { songArrangement } from './song-arrangement';
 import { samplingBasics } from './sampling-basics';
+import { waveEditing } from './wave-editing';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -41,6 +42,7 @@ export const fantom08Tutorials: Tutorial[] = [
   sequencerGroups,
   songArrangement,
   samplingBasics,
+  waveEditing,
 ];
 
 export {
@@ -64,4 +66,5 @@ export {
   sequencerGroups,
   songArrangement,
   samplingBasics,
+  waveEditing,
 };
