@@ -454,14 +454,96 @@ export const usingSlidersKnobs: Tutorial = {
     },
     {
       id: 'step-10',
+      title: 'ASSIGN 1 vs ASSIGN 2',
+      instruction:
+        'The ASSIGN button toggles between two banks: ASSIGN 1 (per-scene assignments) and ASSIGN 2 (system-wide assignments). Press ASSIGN once for ASSIGN 1, then hold ASSIGN + PAN/LEVEL together for ASSIGN 2.',
+      details:
+        'ASSIGN 1 function assignments are made individually for each scene — different scenes can have different knob/slider mappings. ASSIGN 2 function assignments are common to the entire system — they stay the same regardless of which scene is loaded. This gives you up to 32 total custom mappings (16 per bank).',
+      highlightControls: ['assign'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'menu',
+        title: 'ASSIGN 1 (SCENE)',
+        tempo: 120,
+        beatSignature: '4/4',
+        menuItems: [
+          { label: 'Knob 1: MFX Param 1' },
+          { label: 'Knob 2: MFX Param 2' },
+          { label: 'Slider 1: Reverb Send' },
+          { label: 'Slider 2: Chorus Send' },
+        ],
+        selectedIndex: 0,
+        statusText: 'ASSIGN 1 = per-scene, ASSIGN 2 = system-wide',
+      },
+      tipText:
+        'ASSIGN 1 settings are saved with the scene. ASSIGN 2 settings are saved with the system.',
+    },
+    {
+      id: 'step-11',
+      title: 'Configuring Custom Assignments',
+      instruction:
+        'To change what a knob or slider controls in ASSIGN mode, hold SHIFT and press the ASSIGN button. This opens the assignment configuration screen where you can browse and select destination parameters.',
+      details:
+        'The configuration screen shows each knob and slider with its current assignment. Select a control, then use the Value dial to browse the destination list: OFF (no function), CC01-95 (MIDI controllers), BEND (pitch bend), AFT (aftertouch), and more. The assignments affect the zone(s) heard when you play the keyboard.',
+      highlightControls: ['shift', 'assign', 'value-dial'],
+      panelStateChanges: {
+        shift: { active: true },
+      },
+      displayState: {
+        screenType: 'menu',
+        title: 'ASSIGN SETTINGS',
+        tempo: 120,
+        beatSignature: '4/4',
+        menuItems: [
+          { label: 'Knob 1 Assign: CC74 (Cutoff)', selected: true },
+          { label: 'Knob 2 Assign: CC71 (Resonance)' },
+          { label: 'Slider 1 Assign: CC07 (Volume)' },
+          { label: 'Slider 2 Assign: CC11 (Expression)' },
+        ],
+        selectedIndex: 0,
+        statusText: 'SHIFT + ASSIGN — Configure custom mappings',
+      },
+    },
+    {
+      id: 'step-12',
+      title: 'Matrix Control Overview',
+      instruction:
+        'For advanced users, the Fantom offers Matrix Control — a system that links physical controllers to multiple tone parameters simultaneously. Access it via Menu > ZONE EDIT > the zone\'s tone control settings.',
+      details:
+        'Matrix Control uses incoming MIDI control changes (from knobs, sliders, pedals, or wheels) as a source to modify parameters of a tone. You can assign up to four Matrix Control sources per tone, each controlling a different parameter with adjustable depth. For example, Wheel 1 can simultaneously control filter cutoff and reverb send level. For details, refer to the Parameter Guide.',
+      highlightControls: ['menu'],
+      panelStateChanges: {
+        shift: { active: false },
+        assign: { active: false },
+        menu: { active: true },
+      },
+      displayState: {
+        screenType: 'zone-edit',
+        title: 'ZONE EDIT',
+        activeTab: 'CONTROL',
+        zoneEditCategory: 'INT',
+        menuItems: [
+          { label: 'Matrix Ctrl 1 Source: CC01' },
+          { label: 'Matrix Ctrl 1 Dest: Cutoff', selected: true },
+          { label: 'Matrix Ctrl 1 Depth: +63' },
+          { label: 'Matrix Ctrl 2 Source: OFF' },
+        ],
+        selectedIndex: 1,
+        statusText: 'Matrix Control — link controllers to tone parameters',
+      },
+      tipText:
+        'Matrix Control is powerful for live performance — one knob movement can control multiple parameters at once.',
+    },
+    {
+      id: 'step-13',
       title: 'Sliders & Knobs Complete!',
       instruction:
-        'You now know the three modes for the sliders and knobs: PAN/LEVEL for mixing, CTRL for synth parameters, and ASSIGN for custom mappings.',
+        'Press Exit to return to the home screen. You now know PAN/LEVEL, CTRL, and ASSIGN modes, plus ASSIGN 1/2 banks, custom configuration, and Matrix Control for advanced multi-parameter mapping.',
       details:
-        'Switch between modes during performance to get the most out of these controls. Remember to save your scene to keep your assignments.',
-      highlightControls: [],
+        'Switch between modes during performance to get the most out of these controls. ASSIGN 1 is per-scene, ASSIGN 2 is system-wide. Use Matrix Control for advanced parameter linking. Remember to save your scene and system settings to keep your assignments.',
+      highlightControls: ['exit'],
       panelStateChanges: {
-        assign: { active: false },
+        menu: { active: false },
       },
       displayState: {
         screenType: 'home',
@@ -471,7 +553,7 @@ export const usingSlidersKnobs: Tutorial = {
         beatSignature: '4/4',
       },
       tipText:
-        'Pro tip: Set up different ASSIGN mappings for each scene to tailor your controls to the music.',
+        'Pro tip: Set up different ASSIGN 1 mappings for each scene, and use ASSIGN 2 for controls you always want available.',
     },
   ],
 };

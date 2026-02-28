@@ -170,9 +170,99 @@ export const pedalWheelSetup: Tutorial = {
     },
     {
       id: 'step-9',
+      title: 'Navigate to CLICK Tab',
+      instruction:
+        'Scroll to the CLICK tab using E1. This tab configures the metronome click — its mode, level, sound, accent, and output routing.',
+      details:
+        'Click settings: Click Mode controls when the click sounds (OFF, PLAY-ONLY, REC-ONLY, PLAY&REC, ALWAYS). Click Level adjusts volume (0-10). Click Sound selects the sound type (TYPE1 = conventional metronome, TYPE2 = click, TYPE3 = beep, TYPE4 = cowbell). Click Accent Switch adds emphasis on beat 1. Click Output Assign routes the click to MAIN or SUB output.',
+      highlightControls: ['function-e1'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'system-settings',
+        title: 'SYSTEM',
+        activeTab: 'CLICK',
+        menuItems: [
+          { label: 'Click Mode: OFF', selected: true },
+          { label: 'Click Level: 5' },
+          { label: 'Click Sound: TYPE1' },
+          { label: 'Click Accent Switch: ON' },
+          { label: 'Click Output Assign: MAIN' },
+        ],
+        selectedIndex: 0,
+      },
+    },
+    {
+      id: 'step-10',
+      title: 'Configure Click Settings',
+      instruction:
+        'Select Click Mode and change it to PLAY&REC so the metronome sounds during both playback and recording. This is the most useful setting for working with the sequencer.',
+      details:
+        'Click Mode options: OFF (no click), PLAY-ONLY (click only during song/pattern playback), REC-ONLY (click only when recording), PLAY&REC (click during both), ALWAYS (click sounds at all times). For practice, ALWAYS is useful. For recording, REC-ONLY keeps the click out of your playback.',
+      highlightControls: ['function-e6'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'popup',
+        parameterName: 'Click Mode',
+        parameterValue: 'PLAY&REC',
+        popupData: { popupType: 'value' },
+        statusText: 'Click Mode: PLAY&REC — metronome during play and record',
+      },
+      tipText:
+        'Use REC-ONLY if you want the click only while recording, so playback stays clean.',
+    },
+    {
+      id: 'step-11',
+      title: 'Navigate to CONTROL Tab',
+      instruction:
+        'Scroll to the CONTROL tab using E1. This tab configures the Control Function Settings — including the Control Source Select and System Control Source assignments.',
+      details:
+        'Control Function Settings: Control Source Select determines whether tone control uses system settings (SYS) or per-scene settings (SCENE). System Control Source 1-4 lets you assign up to four MIDI messages (OFF, CC01-95, BEND, AFT) that apply in common to the entire Fantom for volume, tone, and effects control.',
+      highlightControls: ['function-e1'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'system-settings',
+        title: 'SYSTEM',
+        activeTab: 'CONTROL',
+        menuItems: [
+          { label: 'Control Source Select: SYS', selected: true },
+          { label: 'System Control Source1: CC01' },
+          { label: 'System Control Source2: OFF' },
+          { label: 'System Control Source3: OFF' },
+          { label: 'System Control Source4: OFF' },
+        ],
+        selectedIndex: 0,
+      },
+    },
+    {
+      id: 'step-12',
+      title: 'Knob and Slider Mode',
+      instruction:
+        'Navigate to the KNOB or SLIDER tabs to set the Knob Mode and Slider Mode. Choose between CATCH (value only changes when the knob/slider position matches the parameter) and DIRECT (value jumps immediately to the knob/slider position).',
+      details:
+        'CATCH mode prevents sudden jumps when a knob/slider physical position does not match the stored parameter value. The parameter only changes once the knob passes through the current value. DIRECT mode immediately sets the parameter to the knob position — faster but may cause audible jumps. CATCH is recommended for live performance.',
+      highlightControls: ['function-e1'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'system-settings',
+        title: 'SYSTEM',
+        activeTab: 'KNOB',
+        menuItems: [
+          { label: 'Knob Mode: CATCH', selected: true },
+          { label: 'Knob1-8 Assign: OFF' },
+          { label: 'Knob1-8 Range Min: 0' },
+          { label: 'Knob1-8 Range Max: 127' },
+        ],
+        selectedIndex: 0,
+        statusText: 'CATCH mode recommended for live performance',
+      },
+      tipText:
+        'CATCH mode prevents sudden volume or parameter jumps when switching scenes — highly recommended for live use.',
+    },
+    {
+      id: 'step-13',
       title: 'Save System Settings',
       instruction:
-        'Press the Write button to save your system settings changes. The indication "Completed" appears when the save is finished.',
+        'Press the Write button to save all your system settings changes — pedals, wheels, S1/S2, click, and control settings. The indication "Completed" appears when the save is finished.',
       highlightControls: ['write'],
       panelStateChanges: {
         write: { active: true, ledOn: true, ledColor: '#ff2222' },
@@ -185,12 +275,12 @@ export const pedalWheelSetup: Tutorial = {
       },
     },
     {
-      id: 'step-10',
+      id: 'step-14',
       title: 'Controller Setup Complete!',
       instruction:
-        'Your pedals, wheels, and S1/S2 buttons are now configured. Pedal 1 controls expression, Wheel 2 controls pitch bend, and S1 toggles chorus on/off. These settings apply globally across all scenes.',
+        'Your pedals, wheels, S1/S2 buttons, metronome click, and control settings are now configured. Pedal 1 controls expression, Wheel 2 controls pitch bend, S1 toggles chorus, and the click sounds during play and record.',
       details:
-        'You can also set Assign Source to SCENE instead of SYS to have different controller assignments per scene. This is useful when different sounds need different controller behaviors.',
+        'You can set Assign Source to SCENE instead of SYS for different controller assignments per scene. Use CATCH mode for knobs and sliders in live performance to prevent sudden parameter jumps. The System Control Source assignments provide global controller mapping for tone and effects control.',
       highlightControls: [],
       panelStateChanges: {
         write: { active: false, ledOn: false },

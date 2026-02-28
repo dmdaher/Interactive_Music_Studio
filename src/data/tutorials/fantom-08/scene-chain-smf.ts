@@ -235,15 +235,81 @@ export const sceneChainSmf: Tutorial = {
     },
     {
       id: 'step-10',
-      title: 'Tutorial Complete!',
+      title: 'Navigate to SMF Export',
       instruction:
-        'Press Stop to halt playback, then Exit to return to the home screen. You have learned how to organize scenes into chains for live setlist navigation and play SMF backing tracks from USB.',
+        'Press Stop to halt playback, then Exit. Now let us explore exporting your own patterns as SMF files. Press the Pattern button, then touch [E6] EXPORT on the PTN UTILITY screen to open the SEQ EXPORT screen.',
       details:
-        'Scene Chains and SMF playback are cornerstones of live performance on the Fantom 08. Assign a footswitch to step forward through your chain for hands-free scene changes. Combine SMF backing tracks with your live playing for a full-band sound. Save your chain set and scene settings with Write to preserve your setlist.',
-      highlightControls: ['stop', 'exit'],
+        'The SEQ EXPORT screen lets you convert patterns from the current scene into Standard MIDI Files and save them to a USB flash drive. You can export individual patterns, groups, or songs. The exported SMF files can be used in any DAW or MIDI player.',
+      highlightControls: ['pattern', 'function-e6'],
       panelStateChanges: {
         play: { active: false, ledOn: false },
-        stop: { active: true },
+        pattern: { active: true },
+      },
+      displayState: {
+        screenType: 'export-wizard',
+        title: 'SEQ EXPORT',
+        menuItems: [
+          { label: 'Export Source', value: 'PATTERN' },
+          { label: 'Export Tracks', value: '1-8', selected: true },
+          { label: 'Include Parameters', value: 'Tempo: ADD' },
+          { label: 'Destination', value: 'USB' },
+          { label: 'Name', value: 'A001' },
+        ],
+        selectedIndex: 1,
+        statusText: 'Select source, tracks, and parameters to export',
+      },
+    },
+    {
+      id: 'step-11',
+      title: 'Configure Export Settings',
+      instruction:
+        'Touch <EXPORT SOURCE> to choose PATTERN, GROUP, or SONG. Touch <INCLUDE PARAMETER> to select which data to include (Tempo, Level, Pan). Use <MUTE TRACK> or <SOLO TRACK> to choose which tracks are exported.',
+      details:
+        'Export options: EXPORT SOURCE selects what to export (Pattern, Group, or Song). INCLUDE PARAMETERS controls whether Tempo, Level, and Pan data are added to the SMF. MUTE TRACK / SOLO TRACK let you select specific tracks for export. RENAME lets you set the file name. DESTINATION selects the USB folder.',
+      highlightControls: ['value-dial', 'enter'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'export-wizard',
+        title: 'SEQ EXPORT',
+        menuItems: [
+          { label: 'Export Source', value: 'PATTERN' },
+          { label: 'Export Tracks', value: '1-8' },
+          { label: 'Include Parameters', value: 'Tempo: ADD, Level: ADD' },
+          { label: 'Destination', value: 'USB > ROLAND', selected: true },
+          { label: 'Name', value: 'MyPattern' },
+        ],
+        selectedIndex: 3,
+        statusText: 'Set destination folder and file name',
+      },
+      tipText:
+        'Files are named sequentially: MyPattern_01-A.MID, MyPattern_01-B.MID for each track and variation.',
+    },
+    {
+      id: 'step-12',
+      title: 'Execute Export',
+      instruction:
+        'Touch [E6] EXECUTE to start the export. The Fantom creates SMF files in the destination folder on your USB drive. A "Completed!" message appears when finished. Press Exit to return to the PTN UTILITY screen.',
+      details:
+        'The export creates a folder structure on USB: a folder with the file name you specified, containing subfolders (PTN, GRP, SNG) with individual SMF files for each track and variation. If files with the same name exist, a confirmation screen asks whether to overwrite them.',
+      highlightControls: ['function-e6'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'popup',
+        confirmText: 'Export completed!',
+        popupData: { popupType: 'confirm' },
+        statusText: 'SMF files saved to USB drive',
+      },
+    },
+    {
+      id: 'step-13',
+      title: 'Tutorial Complete!',
+      instruction:
+        'Press Exit to return to the home screen. You have learned scene chains for live setlist navigation, SMF Player for backing tracks, and SMF Export for saving your patterns as Standard MIDI Files.',
+      details:
+        'Scene Chains and SMF playback are cornerstones of live performance on the Fantom 08. SMF Export lets you share your sequencer work with any DAW. Assign a footswitch to step forward through your chain for hands-free scene changes. Save your chain set and scene settings with Write to preserve your setlist.',
+      highlightControls: ['exit'],
+      panelStateChanges: {
+        pattern: { active: false },
       },
       displayState: {
         screenType: 'home',
@@ -251,7 +317,7 @@ export const sceneChainSmf: Tutorial = {
         sceneName: 'Live Set 1',
         tempo: 120,
         beatSignature: '4/4',
-        statusText: 'Scene Chain & SMF Player configured',
+        statusText: 'Scene Chain, SMF Player & Export configured',
       },
       tipText:
         'Assign a footswitch to CHAIN FWD for hands-free scene chain stepping during live performance.',

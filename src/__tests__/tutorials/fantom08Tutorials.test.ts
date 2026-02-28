@@ -18,10 +18,10 @@ const expectedStepCounts: Record<string, number> = {
   'layering-zones': 9,
   'four-zone-setup': 12,
   'transpose-octave': 7,
-  'using-sliders-knobs': 10,
+  'using-sliders-knobs': 13,
   'editing-mfx': 8,
   'understanding-the-mixer': 8,
-  'tone-editing-zoom': 9,
+  'tone-editing-zoom': 13,
   'tone-editing-pro': 10,
   'scene-level-editing': 10,
   'effects-routing': 11,
@@ -35,7 +35,7 @@ const expectedStepCounts: Record<string, number> = {
   'multisample-creation': 11,
   'arpeggio-setup': 9,
   'chord-memory-motional': 10,
-  'scene-chain-smf': 10,
+  'scene-chain-smf': 13,
   'system-and-file-management': 11,
   'midi-concepts': 8,
   'midi-basics': 9,
@@ -45,7 +45,7 @@ const expectedStepCounts: Record<string, number> = {
   'rhythm-patterns': 8,
   'step-recording': 10,
   'tr-rec-drums': 10,
-  'sequencer-power-tools': 12,
+  'sequencer-power-tools': 15,
   'vocoder-audio-input': 10,
   'quick-edit-function-knobs': 8,
   'vtw-organ-editing': 10,
@@ -55,7 +55,7 @@ const expectedStepCounts: Record<string, number> = {
   'model-jp8-editing': 10,
   'tone-expansion-favorites': 8,
   'velocity-layers-zones': 10,
-  'pedal-wheel-setup': 10,
+  'pedal-wheel-setup': 14,
   'scene-search-navigation': 10,
   'advanced-pad-modes': 12,
   'tone-remain-performance': 10,
@@ -67,11 +67,13 @@ const expectedStepCounts: Record<string, number> = {
   'file-management-deep-dive': 12,
   'backup-factory-reset': 10,
   'display-customization': 8,
+  'getting-ready-setup': 7,
+  'troubleshooting-guide': 7,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 57 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(57);
+  it('has 59 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(59);
   });
 
   it('all tutorials have unique IDs', () => {

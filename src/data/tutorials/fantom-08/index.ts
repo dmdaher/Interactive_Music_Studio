@@ -55,6 +55,8 @@ import { usbAudioInterface } from './usb-audio-interface';
 import { fileManagementDeepDive } from './file-management-deep-dive';
 import { backupFactoryReset } from './backup-factory-reset';
 import { displayCustomization } from './display-customization';
+import { gettingReadySetup } from './getting-ready-setup';
+import { troubleshootingGuide } from './troubleshooting-guide';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -72,6 +74,8 @@ export const fantom08Tutorials: Tutorial[] = [
   pedalWheelSetup,
   sceneSearchNavigation,
   displayCustomization,
+  gettingReadySetup,
+  troubleshootingGuide,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
@@ -132,6 +136,8 @@ export {
   pedalWheelSetup,
   sceneSearchNavigation,
   displayCustomization,
+  gettingReadySetup,
+  troubleshootingGuide,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,

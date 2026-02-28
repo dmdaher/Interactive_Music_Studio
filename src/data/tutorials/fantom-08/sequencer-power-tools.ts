@@ -242,9 +242,79 @@ export const sequencerPowerTools: Tutorial = {
     },
     {
       id: 'step-12',
+      title: 'Realtime Automation Recording',
+      instruction:
+        'Return to the Pattern screen. Press Rec, then Play to enter realtime recording. While the pattern plays back, move controllers (sliders, knobs, wheels) to record automation data — control changes are captured alongside the notes.',
+      details:
+        'Automation records controller movements as CC (Control Change) data into the pattern. You can automate volume (CC07), pan (CC10), expression (CC11), cutoff (CC74), resonance (CC71), and more. The automation is recorded to the currently selected track.',
+      highlightControls: ['rec', 'play'],
+      panelStateChanges: {
+        rec: { active: true, ledOn: true, ledColor: '#ff2222' },
+        play: { active: true, ledOn: true, ledColor: '#00ff44' },
+      },
+      displayState: {
+        screenType: 'pattern',
+        sequencerData: {
+          viewMode: '8Tr',
+          selectedTrack: 0,
+          selectedVariation: 0,
+          recMode: 'realtime',
+        },
+        statusText: 'REC + PLAY — Move controllers to record automation',
+      },
+      tipText:
+        'You can also draw automation graphically in the Piano Roll Automation view.',
+    },
+    {
+      id: 'step-13',
+      title: 'Recording Automation Data',
+      instruction:
+        'While recording, move Slider 1 to automate volume changes and turn Control Knob 1 to automate cutoff sweeps. Press Stop when you are finished. The automation data is now part of the pattern.',
+      details:
+        'The automation data is merged with any existing note data on the track. If you want to re-record just the automation without affecting notes, use the Piano Roll Automation view instead — it lets you draw curves with the Pencil tool or erase specific CC data while preserving notes.',
+      highlightControls: ['slider-1', 'ctrl-knob-1', 'stop'],
+      panelStateChanges: {
+        rec: { active: false, ledOn: false },
+        play: { active: false, ledOn: false },
+        stop: { active: true },
+      },
+      displayState: {
+        screenType: 'pattern',
+        sequencerData: {
+          viewMode: '8Tr',
+          selectedTrack: 0,
+          selectedVariation: 0,
+        },
+        statusText: 'STOPPED — Automation data recorded',
+      },
+    },
+    {
+      id: 'step-14',
+      title: 'Viewing Automation in Piano Roll',
+      instruction:
+        'Press [E3] EDIT, then select PIANO ROLL. Touch the Automation icon to switch to the automation view. Here you can see the CC data you just recorded as a graph overlaid on the note data.',
+      details:
+        'The Piano Roll automation view shows: TARGET selector (choose which CC to view — Modulation, Volume, Pan, Expression, Cutoff, Resonance, etc.), MODE (POINT or LINE), and DRAW tools (Cursor, Pencil, Ruler). You can tap to add points, drag to draw curves, or erase automation data. Use UNDO if you make a mistake.',
+      highlightControls: ['function-e3'],
+      panelStateChanges: {
+        stop: { active: false },
+      },
+      displayState: {
+        screenType: 'piano-roll',
+        sequencerData: {
+          selectedTrack: 0,
+          selectedVariation: 0,
+        },
+        statusText: 'Automation view — CC74 (Cutoff) curve visible',
+      },
+      tipText:
+        'Use the Pencil tool to draw smooth automation curves — much more precise than recording in real time.',
+    },
+    {
+      id: 'step-15',
       title: 'Power Tools Complete!',
       instruction:
-        'Press Exit to return to the home screen. You now know how to use the Microscope for surgical edits, MODIFY for batch operations, and Pattern Utility for pattern management.',
+        'Press Exit to return to the home screen. You now know how to use the Microscope for surgical edits, MODIFY for batch operations, Pattern Utility for management, and realtime automation recording for dynamic controller data.',
       details:
         'Additional PTN UTILITY features: COPY/PASTE patterns between tracks and variations, DELETE unwanted patterns, RENAME patterns for easy identification, IMPORT SMF files from USB, and EXPORT patterns as SMF files to USB. Use UNDO/REDO ([E1]) to reverse any destructive operation.',
       highlightControls: ['exit'],

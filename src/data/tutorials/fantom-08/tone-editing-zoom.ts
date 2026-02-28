@@ -229,14 +229,105 @@ export const toneEditingZoom: Tutorial = {
     },
     {
       id: 'step-9',
-      title: 'Tone Editing Complete!',
+      title: 'Initialize a Tone',
       instruction:
-        "Press Exit to return to the main screen. You've learned how to navigate the Tone Edit ZOOM screen — browsing tabs with E1, selecting parameters, and editing values.",
+        'While in the ZOOM editor, touch <UTILITY> to open the Utility window. Select TONE INITIALIZE to reset the current tone to its default state — a blank Z-Core tone ready for sound design from scratch.',
       details:
-        'Remember to save your changes with the Write button if you want to keep them. Next, try the PRO view (touch <To PRO> in ZOOM) for a detailed grid showing all partials at once.',
-      highlightControls: ['exit'],
+        'Tone Initialize resets all parameters to factory defaults. The UTILITY window also offers PARTIAL INITIALIZE (reset one partial only), PARTIAL COPY (copy settings between partials), and MULTISAMPLE EDIT. After touching TONE INITIALIZE, a confirmation message appears — select [E5] OK to confirm or [E5] CANCEL to abort.',
+      highlightControls: ['function-e6'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'popup',
+        title: 'UTILITY',
+        confirmText: 'TONE INITIALIZE — Are you sure?',
+        popupData: { popupType: 'confirm' },
+        statusText: 'Touch TONE INITIALIZE, then [E5] OK to confirm',
+      },
+      tipText:
+        'Tone Initialize is useful when you want to build a sound from scratch without leftover parameter settings.',
+    },
+    {
+      id: 'step-10',
+      title: 'Enter SYNTH CTRL Mode',
+      instruction:
+        'Press Exit to leave the ZOOM editor and return to the home screen. Now try the SYNTH CTRL section — press the CUTOFF knob to directly control the filter cutoff in real time while playing.',
+      details:
+        'The SYNTH CTRL section (FILTER section on the panel) provides hands-on real-time control. The [CUTOFF] knob adjusts the filter cutoff frequency, and the [RESONANCE] knob adjusts resonance. These affect the tone of the current zone as you play.',
+      highlightControls: ['synth-cutoff', 'synth-resonance'],
       panelStateChanges: {
         'synth-mode-osc': { active: false },
+        'synth-cutoff': { active: true },
+        'synth-resonance': { active: true },
+      },
+      displayState: {
+        screenType: 'home',
+        sceneNumber: 'A005',
+        sceneName: 'Synth Lead',
+        tempo: 128,
+        beatSignature: '4/4',
+        statusText: 'SYNTH CTRL — Turn Cutoff and Resonance while playing',
+      },
+    },
+    {
+      id: 'step-11',
+      title: 'SYNTH CTRL Live Performance',
+      instruction:
+        'Turn the CUTOFF knob while playing notes to create expressive filter sweeps. Turn the RESONANCE knob to add a distinctive resonant character. These changes are temporary unless you save the tone.',
+      details:
+        'The edited parameter and its value appear in a popup window as you turn the knobs. Unlike general-purpose controllers, SYNTH CTRL changes always apply to the tone of the current zone only. If using layered settings, select the zone you want to edit first.',
+      highlightControls: ['synth-cutoff', 'synth-resonance'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'popup',
+        parameterName: 'Cutoff',
+        parameterValue: '95',
+        popupData: { popupType: 'value' },
+        statusText: 'Live filter sweep — turn knobs while playing',
+      },
+      tipText:
+        'SYNTH CTRL edits apply only to the current zone — great for tweaking one layer in a split.',
+    },
+    {
+      id: 'step-12',
+      title: 'SYNTH CTRL Section Buttons',
+      instruction:
+        'The section buttons (OSC, FILTER TYPE, PARAM, AMP, FX, LFO) are shortcuts to open the corresponding ZOOM editor tab. Press the FILTER TYPE button to jump directly to the Filter section in ZOOM.',
+      details:
+        'Each button in the SYNTH CTRL section opens a specific tab: [OSC] → OSC tab, [FILTER TYPE] → Filter Type tab, [PARAM] → Filter parameters, [AMP] → AMP ENV tab, [FX] → MFX EDIT screen, [LFO] → LFO tab. This lets you quickly jump between tone editing sections without scrolling through tabs.',
+      highlightControls: ['synth-mode-filter', 'synth-mode-amp', 'synth-mode-fx', 'synth-mode-lfo'],
+      panelStateChanges: {
+        'synth-cutoff': { active: false },
+        'synth-resonance': { active: false },
+        'synth-mode-filter': { active: true },
+      },
+      displayState: {
+        screenType: 'tone-edit-zoom',
+        activeTab: 'FILTER',
+        selectedIndex: 0,
+        toneEditData: {
+          toneType: 'Z-CORE',
+          activePartials: [true, true, false, false],
+          selectedPartial: 0,
+        },
+        menuItems: [
+          { label: 'Filter Type: LPF', selected: true },
+          { label: 'Cutoff: 95' },
+          { label: 'Resonance: 30' },
+          { label: 'Key Follow: +100' },
+        ],
+        statusText: 'FILTER TYPE button → ZOOM Filter tab',
+      },
+    },
+    {
+      id: 'step-13',
+      title: 'Tone Editing Complete!',
+      instruction:
+        "Press Exit to return to the main screen. You've learned the ZOOM editor, Tone Initialize, and the SYNTH CTRL section for real-time sound shaping.",
+      details:
+        'Remember to save your changes with the Write button if you want to keep them. Next, try the PRO view (touch <To PRO> in ZOOM) for a detailed grid showing all partials at once. Use SYNTH CTRL knobs during live performance for expressive filter sweeps.',
+      highlightControls: ['exit'],
+      panelStateChanges: {
+        'synth-mode-filter': { active: false },
       },
       displayState: {
         screenType: 'home',
@@ -246,7 +337,7 @@ export const toneEditingZoom: Tutorial = {
         beatSignature: '4/4',
       },
       tipText:
-        'Try the other Synth Control buttons (FILTER TYPE, AMP, LFO) — they all jump to the corresponding ZOOM tab.',
+        'Try the other Synth Control buttons (OSC, AMP, LFO, FX) — they all jump to the corresponding ZOOM tab.',
     },
   ],
 };
