@@ -5,7 +5,7 @@ export const snPianoEditing: Tutorial = {
   deviceId: 'fantom-08',
   title: 'SN-AP & SN-EP Piano Tone Editing',
   description:
-    'Learn to edit SuperNATURAL Acoustic Piano (SN-AP) and Electric Piano (SN-EP) tones. These specialized engines model realistic piano behavior with instrument-specific parameters like lid position, damper resonance, and bell character.',
+    'Learn to edit SuperNATURAL Acoustic Piano (SN-AP) and Electric Piano (SN-EP) tones. These specialized engines model realistic piano behavior with instrument-specific parameters like stereo width and noise level.',
   category: 'sound-design',
   difficulty: 'intermediate',
   estimatedTime: '7 min',
@@ -108,9 +108,9 @@ export const snPianoEditing: Tutorial = {
       id: 'step-4',
       title: 'Navigate to INST Tab',
       instruction:
-        'Turn E1 to switch to the INST tab. This shows instrument-specific parameters unique to SN-AP: Lid position, Damper Resonance, String Resonance, and Key Off Resonance.',
+        'Turn E1 to switch to the INST tab. This shows the instrument-specific parameter unique to SN-AP: Stereo Width.',
       details:
-        'These parameters model the physical properties of an acoustic piano. Lid controls the brightness (like opening/closing the piano lid). Damper Resonance simulates sympathetic string vibration when the sustain pedal is pressed.',
+        'Stereo Width adjusts the stereo spread of the acoustic piano sound. A value of 0 produces a narrow/mono image, while 100 gives the widest stereo spread.',
       highlightControls: ['function-e1'],
       panelStateChanges: {},
       displayState: {
@@ -121,30 +121,27 @@ export const snPianoEditing: Tutorial = {
           toneType: 'SN-AP',
         },
         menuItems: [
-          { label: 'Lid: OPEN', selected: true },
-          { label: 'Damper Resonance: 80' },
-          { label: 'String Resonance: 70' },
-          { label: 'Key Off Resonance: 60' },
+          { label: 'Stereo Width: 40', selected: true },
         ],
       },
     },
     {
       id: 'step-5',
-      title: 'Adjust Lid Position',
+      title: 'Adjust Stereo Width',
       instruction:
-        'With "Lid" selected, press Enter to open a focused value popup. The lid position affects brightness — OPEN is brightest, CLOSED is darkest.',
+        'With "Stereo Width" selected, press Enter to open a focused value popup. Lower values narrow the stereo image toward mono, while higher values widen the spread (0–100).',
       highlightControls: ['enter'],
       panelStateChanges: {},
       displayState: {
         screenType: 'popup',
-        parameterName: 'Lid',
-        parameterValue: 'OPEN',
+        parameterName: 'Stereo Width',
+        parameterValue: '40',
         popupData: {
           popupType: 'value',
         },
       },
       tipText:
-        'Try different lid positions while playing to hear how it affects the piano\'s tone color.',
+        'Try different stereo width values while playing — lower values focus the sound in the center, higher values spread it across the stereo field.',
     },
     {
       id: 'step-6',
@@ -180,9 +177,9 @@ export const snPianoEditing: Tutorial = {
       id: 'step-7',
       title: 'SN-EP Instrument Parameters',
       instruction:
-        'Turn E1 to the INST tab. SN-EP has its own set of instrument parameters: Bell Character, Damper Noise, and Key Off Noise — unique to electric piano modeling.',
+        'Turn E1 to the INST tab. SN-EP has its own instrument-specific parameter: Noise Level.',
       details:
-        'Bell Character controls the metallic attack of tine-based electric pianos. Damper Noise adds the mechanical sound of releasing keys. Key Off Noise simulates the click of keys returning to rest.',
+        'Noise Level adjusts the amount of mechanical noise in the electric piano sound (0–127). Higher values add more of the characteristic mechanical sounds of the electric piano mechanism.',
       highlightControls: ['function-e1'],
       panelStateChanges: {},
       displayState: {
@@ -193,23 +190,21 @@ export const snPianoEditing: Tutorial = {
           toneType: 'SN-EP',
         },
         menuItems: [
-          { label: 'Bell Character: 60', selected: true },
-          { label: 'Damper Noise: 50' },
-          { label: 'Key Off Noise: 40' },
+          { label: 'Noise Level: 64', selected: true },
         ],
       },
     },
     {
       id: 'step-8',
-      title: 'Adjust Bell Character',
+      title: 'Adjust Noise Level',
       instruction:
-        'Press Enter on Bell Character to open the value popup. Higher values increase the metallic "bell" quality of the attack, characteristic of a Rhodes piano.',
+        'Press Enter on Noise Level to open the value popup. Higher values add more mechanical noise to the electric piano sound (0–127).',
       highlightControls: ['enter'],
       panelStateChanges: {},
       displayState: {
         screenType: 'popup',
-        parameterName: 'Bell Character',
-        parameterValue: '60',
+        parameterName: 'Noise Level',
+        parameterValue: '64',
         popupData: {
           popupType: 'value',
         },
@@ -240,7 +235,7 @@ export const snPianoEditing: Tutorial = {
       id: 'step-10',
       title: 'SN Piano Editing Complete!',
       instruction:
-        'Press Exit to return to the home screen. You\'ve learned to edit both SN-AP and SN-EP piano tones — adjusting instrument-specific parameters and using Partial Copy to transfer settings between partials.',
+        'Press Exit to return to the home screen. You\'ve learned to edit both SN-AP and SN-EP piano tones — exploring their INST tab parameters (Stereo Width for SN-AP, Noise Level for SN-EP) and using Partial Copy to transfer settings between partials.',
       details:
         'Remember to save your edited tones with the Write button. Both SN-AP and SN-EP also have MFX tabs for adding effects like reverb, chorus, or amp simulation.',
       highlightControls: ['exit'],
