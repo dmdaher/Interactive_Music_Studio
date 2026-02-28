@@ -25,6 +25,11 @@ import { arpeggioSetup } from './arpeggio-setup';
 import { chordMemoryMotional } from './chord-memory-motional';
 import { sceneChainSmf } from './scene-chain-smf';
 import { systemAndFileManagement } from './system-and-file-management';
+import { midiConcepts } from './midi-concepts';
+import { midiBasics } from './midi-basics';
+import { midiCcMapping } from './midi-cc-mapping';
+import { dawController } from './daw-controller';
+import { midiSyncClock } from './midi-sync-clock';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -55,6 +60,11 @@ export const fantom08Tutorials: Tutorial[] = [
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  midiConcepts,
+  midiBasics,
+  midiCcMapping,
+  dawController,
+  midiSyncClock,
 ];
 
 export {
@@ -85,4 +95,9 @@ export {
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  midiConcepts,
+  midiBasics,
+  midiCcMapping,
+  dawController,
+  midiSyncClock,
 };
