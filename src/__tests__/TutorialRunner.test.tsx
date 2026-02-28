@@ -4,13 +4,7 @@ import TutorialRunner from '@/components/tutorial/TutorialRunner';
 import { useTutorialStore } from '@/store/tutorialStore';
 import { Tutorial } from '@/types/tutorial';
 
-// Mock ResizeObserver
 beforeEach(() => {
-  global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  }));
   useTutorialStore.getState().reset();
 });
 

@@ -66,3 +66,7 @@ export const TUTORIAL_CATEGORIES: { id: string; label: string; icon: string }[] 
   { id: 'sequencer', label: 'Sequencer', icon: '🎵' },
   { id: 'sampling', label: 'Sampling', icon: '🎙️' },
 ];
+
+// Panel design dimensions (px) — the "native" size of the Fantom 08 panel
+export const PANEL_NATURAL_WIDTH = 2670;
+export const PANEL_NATURAL_HEIGHT = 580;

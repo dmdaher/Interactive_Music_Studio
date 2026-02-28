@@ -16,6 +16,7 @@ import PadSection from './sections/PadSection';
 import PanelButton from '@/components/controls/PanelButton';
 import Knob from '@/components/controls/Knob';
 import Keyboard from './Keyboard';
+import { PANEL_NATURAL_WIDTH, PANEL_NATURAL_HEIGHT } from '@/lib/constants';
 
 interface FantomPanelProps {
   panelState: PanelState;
@@ -24,10 +25,6 @@ interface FantomPanelProps {
   zones?: ZoneConfig[];
   onButtonClick?: (id: string) => void;
 }
-
-// Design size — the "native" size of the panel (wider to match the real Fantom 08)
-const PANEL_NATURAL_WIDTH = 2670;
-const PANEL_NATURAL_HEIGHT = 580;
 
 const toneCategories = [
   { id: 'tone-cat-1', label: 'Ac Piano' },

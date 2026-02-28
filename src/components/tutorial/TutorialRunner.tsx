@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Tutorial } from '@/types/tutorial';
 import { useTutorialEngine } from '@/hooks/useTutorialEngine';
-import { getZoomTarget } from '@/lib/panelZoom';
 import TutorialOverlay from './TutorialOverlay';
 import KeyboardZoneOverlay from './KeyboardZoneOverlay';
 
@@ -32,23 +31,6 @@ export default function TutorialRunner({
       window.history.back();
     }
   };
-
-  // Compute zoom transform based on highlighted controls
-  const zoomTransform = useMemo(() => {
-    const target = getZoomTarget(store.highlightedControls);
-    if (!target) {
-      return { scale: 1, x: 0, y: 0 };
-    }
-
-    const scale = 1.15;
-    // Convert percentage target to translate offset.
-    // Factor 2.5 = 1/(scale-1) * scale, so a section at 0% or 100%
-    // produces a translate that centers it in the viewport.
-    const xPercent = -(target.x - 50) * (scale - 1) * 2.5;
-    const yPercent = -(target.y - 50) * (scale - 1) * 2.5;
-
-    return { scale, x: xPercent, y: yPercent };
-  }, [store.highlightedControls]);
 
   if (!store.isActive || !step) {
     return null;
@@ -95,18 +77,16 @@ export default function TutorialRunner({
         </div>
       </header>
 
-      {/* Main content area — scrollable, panel with zoom */}
-      <div className="flex-1 flex flex-col items-center overflow-hidden p-3">
-        {/* Panel zoom container */}
-        <div className="w-full flex-1 overflow-hidden rounded-lg">
-          {/* GPU-composited zoom: pure CSS transform instead of Framer Motion animate */}
-          <div
-            className="w-full origin-center"
-            style={{
-              transform: `scale(${zoomTransform.scale}) translate(${zoomTransform.x}%, ${zoomTransform.y}%)`,
-              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-              willChange: zoomTransform.scale === 1 ? 'auto' : 'transform',
-            }}
+      {/* Main content area — scrollable, panel + overlay in flow */}
+      <div className="flex-1 flex flex-col items-center overflow-auto p-3">
+        {/* Device Panel */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key="device-panel"
+            className="w-full"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             <DevicePanel
               panelState={store.panelState}
@@ -114,15 +94,15 @@ export default function TutorialRunner({
               highlightedControls={store.highlightedControls}
               zones={store.zones}
             />
+          </motion.div>
+        </AnimatePresence>
 
-            {/* Keyboard zone overlay */}
-            {store.zones.length > 0 && (
-              <div className="w-full mt-2">
-                <KeyboardZoneOverlay zones={store.zones} />
-              </div>
-            )}
+        {/* Keyboard zone overlay */}
+        {store.zones.length > 0 && (
+          <div className="w-full mt-2">
+            <KeyboardZoneOverlay zones={store.zones} />
           </div>
-        </div>
+        )}
       </div>
 
       {/* Floating tutorial overlay — position: fixed, rendered outside flow */}
