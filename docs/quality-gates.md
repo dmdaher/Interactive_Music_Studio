@@ -4,6 +4,8 @@ Mandatory checkpoints for every Claude instance working on this project. These g
 
 Each gate has questions that must be answered **with evidence** — not "yes I did it" but "here's the proof." If you can't provide evidence for a question, you haven't completed the gate.
 
+> **Context**: These gates apply at every phase of `docs/new-instrument-playbook.md` (the 7-phase pipeline for building a complete digital twin). They also apply when adding tutorials to an existing instrument via `memory/tutorial-batch-playbook.md`. See `tasks/lessons.md` for the correction pattern catalog that these gates are designed to prevent.
+
 ---
 
 ## Gate 1: PRE-BUILD (Before implementing any screen, tutorial, or feature)

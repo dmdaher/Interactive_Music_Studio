@@ -1,10 +1,16 @@
 # New Instrument Playbook
 
-> **Purpose**: Step-by-step process for adding a new instrument to the Interactive Music Studio.
+> **Purpose**: Step-by-step process for building a **complete digital twin** of a new instrument — panel, every screen, and every tutorial the manual supports.
 > Follow this playbook end-to-end when building any new device — it captures the exact workflow
 > we used for the Fantom 08, refined into a repeatable process.
 >
 > **Audience**: A Claude instance (or human developer) starting from scratch with a new device.
+>
+> **Mandatory companions**:
+> - `docs/quality-gates.md` — evidence standards at every phase (PRE-BUILD, POST-BUILD, CORRECTION, CROSS-REFERENCE, SELF-IMPROVEMENT)
+> - `memory/tutorial-batch-playbook.md` — detailed tutorial execution process (Phase 6 of this playbook)
+> - `tasks/lessons.md` — correction pattern catalog (10 hard-won patterns to avoid)
+> - `CLAUDE.md` — project instructions, architecture patterns, control ID conventions
 
 ---
 

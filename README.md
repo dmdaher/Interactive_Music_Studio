@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Interactive Music Studio
+
+A browser-based platform that builds **complete digital twins** of real hardware instruments. Given a product's manuals and photos, it creates an interactive panel replicating the real hardware, every display screen from the manual, and step-by-step tutorials covering every capability the manual documents.
+
+## What's Built
+
+**Roland Fantom 08** — fully interactive digital twin:
+- Interactive panel (88-key keyboard, LCD display, zone controls, knobs, sliders, pads, transport)
+- 11 display screen types (scene select, zone view, mixer, effects routing, tone editing, and more)
+- 57 tutorials across 9 categories (Basics, Zones & Splits, Sound Design, Effects, Sequencer, Sampling, Performance, Mixer, MIDI)
+- 659 tests passing, all quality gates green
+
+**Boss RC-505 MK2** — placeholder (Coming Soon)
+
+## Tech Stack
+
+Next.js 16 / React 19 / TypeScript 5 / Zustand 5 / Tailwind CSS 4 / Framer Motion 12 / Vitest
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev       # dev server on localhost:3000
+npm run build     # production build
+npm run test      # run tests
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Building a New Instrument
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The process for adding a new instrument is documented in detail:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Start here**: [`docs/new-instrument-playbook.md`](docs/new-instrument-playbook.md) — 7-phase end-to-end pipeline (gather materials, full manual read, screen catalog, panel design, core implementation, screens, tutorials, validation)
+2. **Quality standards**: [`docs/quality-gates.md`](docs/quality-gates.md) — mandatory evidence-based checkpoints at every phase
+3. **Tutorial execution**: Tutorial batch playbook in `memory/tutorial-batch-playbook.md` — TDD cycle for tutorial creation
+4. **Lessons learned**: [`tasks/lessons.md`](tasks/lessons.md) — 10 correction patterns from building the Fantom 08
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For Claude Code instances: see [`CLAUDE.md`](CLAUDE.md) for project instructions, mandatory onboarding sequence, and architecture patterns.
