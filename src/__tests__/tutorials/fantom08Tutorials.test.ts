@@ -61,11 +61,12 @@ const expectedStepCounts: Record<string, number> = {
   'tone-remain-performance': 10,
   'advanced-keyboard-sampling': 12,
   'pad-sampler-deep-dive': 12,
+  'importing-audio-files': 10,
 };
 
 describe('Fantom 08 tutorial collection', () => {
   it('has 44 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(51);
+    expect(fantom08Tutorials).toHaveLength(52);
   });
 
   it('all tutorials have unique IDs', () => {
