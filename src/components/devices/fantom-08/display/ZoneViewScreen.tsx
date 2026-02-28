@@ -185,7 +185,7 @@ function FourZoneView({ zones }: { zones: ZoneDisplayInfo[] }) {
                 Z{num}
               </span>
               <span className="text-[10px]" style={{ color: DISPLAY_COLORS.zoneMuted }}>
-                INT
+                {zone.intExt ?? 'INT'}
               </span>
               {isActive && (
                 <span
@@ -265,7 +265,7 @@ function EightZoneView({ zones }: { zones: ZoneDisplayInfo[] }) {
             }}
           >
             <span className="font-bold w-4" style={{ color }}>Z{num}</span>
-            <span className="text-[10px] w-5" style={{ color: DISPLAY_COLORS.zoneMuted }}>INT</span>
+            <span className="text-[10px] w-5" style={{ color: DISPLAY_COLORS.zoneMuted }}>{zone.intExt ?? 'INT'}</span>
             <span
               className="truncate w-24"
               style={{ color: DISPLAY_COLORS.text }}

@@ -161,6 +161,7 @@ export const midiConcepts: Tutorial = {
             pan: 0,
             muted: false,
             active: true,
+            intExt: 'EXT',
           },
         ],
       },

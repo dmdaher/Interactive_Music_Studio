@@ -178,6 +178,7 @@ export const midiBasics: Tutorial = {
             pan: 0,
             muted: false,
             active: true,
+            intExt: 'EXT',
           },
         ],
       },
@@ -201,7 +202,7 @@ export const midiBasics: Tutorial = {
         screenType: 'zone-edit',
         title: 'ZONE EDIT',
         zoneEditCategory: 'EXT',
-        activeTab: 'MIDI',
+        activeTab: 'OUT/PC',
         menuItems: [
           { label: 'MIDI Ch', value: '1', selected: true },
           { label: 'Bank Sel MSB', value: '---' },
@@ -222,6 +223,7 @@ export const midiBasics: Tutorial = {
             pan: 0,
             muted: false,
             active: true,
+            intExt: 'EXT',
           },
         ],
       },
@@ -241,7 +243,7 @@ export const midiBasics: Tutorial = {
         screenType: 'zone-edit',
         title: 'ZONE EDIT',
         zoneEditCategory: 'EXT',
-        activeTab: 'MIDI',
+        activeTab: 'OUT/PC',
         menuItems: [
           { label: 'MIDI Ch', value: '2', selected: true },
           { label: 'Bank Sel MSB', value: '---' },

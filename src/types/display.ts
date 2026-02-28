@@ -21,6 +21,7 @@ export interface ZoneDisplayInfo {
   toneCategory?: string;
   toneNumber?: string;
   solo?: boolean;
+  intExt?: 'INT' | 'EXT';
   chorusSend?: number;   // 0-127
   reverbSend?: number;   // 0-127
   mfxEnabled?: boolean;
