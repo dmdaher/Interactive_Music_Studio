@@ -12,6 +12,7 @@ import { editingMfx } from './editing-mfx';
 import { understandingTheMixer } from './understanding-the-mixer';
 import { toneEditingZoom } from './tone-editing-zoom';
 import { toneEditingPro } from './tone-editing-pro';
+import { vtwOrganEditing } from './vtw-organ-editing';
 import { sceneLevelEditing } from './scene-level-editing';
 import { effectsRouting } from './effects-routing';
 import { sequencerPatterns } from './sequencer-patterns';
@@ -53,6 +54,7 @@ export const fantom08Tutorials: Tutorial[] = [
   understandingTheMixer,
   toneEditingZoom,
   toneEditingPro,
+  vtwOrganEditing,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,
@@ -94,6 +96,7 @@ export {
   understandingTheMixer,
   toneEditingZoom,
   toneEditingPro,
+  vtwOrganEditing,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,
