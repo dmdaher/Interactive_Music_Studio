@@ -1,9 +1,9 @@
 # Comprehensive Tutorial Gap Analysis — Fantom 08 Reference Manual
 
-> **Date:** 2026-02-28 (updated post-Batch D)
-> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch D)
+> **Date:** 2026-02-28 (updated post-Batch E)
+> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch E)
 > **Manual:** Roland Fantom-0 Series Reference Manual (173 pages)
-> **Current state:** 37 implemented tutorials, 20 planned (Batches E-H)
+> **Current state:** 44 implemented tutorials, 13 planned (Batches F-H)
 
 ---
 
@@ -34,7 +34,7 @@
 |---|---|---|---|
 | Scene Select | 28 | COVERED | `selecting-scenes` |
 | Scene Search | 29 | PLANNED | Batch F: `scene-search-navigation` |
-| Quick Edit (E1-E6) | 30 | PLANNED | Batch E: `quick-edit-function-knobs` |
+| Quick Edit (E1-E6) | 30 | COVERED | `quick-edit-function-knobs` (Batch E) |
 | Tone Select | 31 | COVERED | `selecting-tones` |
 | Tone Search | 32 | PLANNED | Batch F: `scene-search-navigation` |
 | Single Tone Play | 34 | PLANNED | Batch F: `scene-search-navigation` |
@@ -62,16 +62,16 @@
 | Scene Appearance | 56 | PARTIAL | Planned `scene-search-navigation` mentions it |
 | Saving a Scene | 56-57 | COVERED | `saving-your-work` |
 | ZEN-Core Tone Edit | 58-59 | COVERED | `tone-editing-zoom` + `tone-editing-pro` |
-| Drum Kit Tone Edit | 60 | PLANNED | Batch E: `drum-kit-editing` |
-| SN-A Acoustic Tone | 61 | **GAP** → Fixed | New tutorial: `sn-acoustic-editing` (Batch E) |
-| VTW Organ Tone Edit | 61-62 | PLANNED | Batch E: `vtw-organ-editing` |
-| SN-AP Piano Tone | 62 | PLANNED | Batch E: `sn-piano-editing` |
-| SN-EP E.Piano Tone | 63 | PLANNED | Batch E: `sn-piano-editing` |
-| MODEL/JP-8 Tone | 63 | **GAP** → Fixed | New tutorial: `model-jp8-editing` (Batch E) |
+| Drum Kit Tone Edit | 60 | COVERED | `drum-kit-editing` (Batch E) |
+| SN-A Acoustic Tone | 61 | COVERED | `sn-acoustic-editing` (Batch E, GAP CLOSURE) |
+| VTW Organ Tone Edit | 61-62 | COVERED | `vtw-organ-editing` (Batch E) |
+| SN-AP Piano Tone | 62 | COVERED | `sn-piano-editing` (Batch E) |
+| SN-EP E.Piano Tone | 63 | COVERED | `sn-piano-editing` (Batch E) |
+| MODEL/JP-8 Tone | 63 | COVERED | `model-jp8-editing` (Batch E, GAP CLOSURE) |
 | Saving a Tone | 64 | COVERED | `saving-your-work` |
 | Initialize Tone | 64 | GAP (LOW) | Could fold into `tone-editing-zoom` |
-| Partial Copy | 64-65 | **GAP** → Fixed | Added to `sn-piano-editing` (Batch E) |
-| Edit Knobs | 65 | PLANNED | Batch E: `quick-edit-function-knobs` |
+| Partial Copy | 64-65 | COVERED | `sn-piano-editing` (Batch E) |
+| Edit Knobs | 65 | COVERED | `quick-edit-function-knobs` (Batch E) |
 | Each Zone MFX | 66-67 | COVERED | `editing-mfx` |
 | Effects Signal Flow | 66-67 | COVERED | `effects-routing` |
 | IFX/Chorus/Reverb | 68-69 | COVERED | `effects-routing` |
@@ -154,7 +154,7 @@
 | Wallpaper | 161 | PLANNED | Batch H: `display-customization` |
 | File Utility (all ops) | 162-163 | PLANNED | Batch H: `file-management-deep-dive` |
 | System 17 tabs | 164-170 | PARTIAL | Covered across multiple tutorials but some tabs not deeply taught (Sound, Click, Control) |
-| Expansion (all ops) | 171-173 | PLANNED | Batch E: `tone-expansion-favorites` |
+| Expansion (all ops) | 171-173 | COVERED | `tone-expansion-favorites` (Batch E) |
 
 ### Ch 10: Appendix (pp. 175-188)
 
@@ -198,18 +198,20 @@
 
 ---
 
-## Coverage Summary (Post-Batch D)
+## Coverage Summary (Post-Batch E)
 
 | Status | Manual Sections | % |
 |---|---|---|
-| Fully Covered (37 existing tutorials) | ~70 | 61% |
-| Planned (Batches E-H, 20 tutorials) | ~27 | 24% |
+| Fully Covered (44 existing tutorials) | ~80 | 69% |
+| Planned (Batches F-H, 13 tutorials) | ~20 | 17% |
 | Partial (exists but needs depth) | ~12 | 10% |
 | Gap (LOW, still open) | 3 | 3% |
 | N/A (appendix reference material) | ~4 | 3% |
+
+**Batch E additions (7 tutorials):** quick-edit-function-knobs, vtw-organ-editing, sn-piano-editing, drum-kit-editing, sn-acoustic-editing (GAP CLOSURE), model-jp8-editing (GAP CLOSURE), tone-expansion-favorites. All tone engines now covered. Both HIGH-priority gaps resolved.
 
 **New partial gap found in Batch D:** Realtime Automation Recording (p.124-125) — `sequencer-power-tools` covers editing automation events in Microscope but does not walk through the realtime automation recording workflow (pressing REC on a playing pattern and moving knobs). Consider adding to a future tutorial or expanding `sequencer-power-tools`.
 
 **After all batches + gap fixes: ~96% coverage** (remaining ~4% is reference material or low-priority items).
 
-**Tutorial target: 57** (37 existing + 20 planned including 2 new gap-closure tutorials).
+**Tutorial target: 57** (44 existing + 13 planned).
