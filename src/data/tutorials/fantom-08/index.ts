@@ -50,6 +50,7 @@ import { toneRemainPerformance } from './tone-remain-performance';
 import { advancedKeyboardSampling } from './advanced-keyboard-sampling';
 import { padSamplerDeepDive } from './pad-sampler-deep-dive';
 import { importingAudioFiles } from './importing-audio-files';
+import { masterEffectsOutput } from './master-effects-output';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -78,6 +79,7 @@ export const fantom08Tutorials: Tutorial[] = [
   toneExpansionFavorites,
   sceneLevelEditing,
   effectsRouting,
+  masterEffectsOutput,
   sequencerPatterns,
   pianoRollEditing,
   sequencerGroups,
@@ -133,6 +135,7 @@ export {
   toneExpansionFavorites,
   sceneLevelEditing,
   effectsRouting,
+  masterEffectsOutput,
   sequencerPatterns,
   pianoRollEditing,
   sequencerGroups,
