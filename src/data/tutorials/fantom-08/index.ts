@@ -16,6 +16,7 @@ import { vtwOrganEditing } from './vtw-organ-editing';
 import { snPianoEditing } from './sn-piano-editing';
 import { drumKitEditing } from './drum-kit-editing';
 import { snAcousticEditing } from './sn-acoustic-editing';
+import { modelJp8Editing } from './model-jp8-editing';
 import { sceneLevelEditing } from './scene-level-editing';
 import { effectsRouting } from './effects-routing';
 import { sequencerPatterns } from './sequencer-patterns';
@@ -61,6 +62,7 @@ export const fantom08Tutorials: Tutorial[] = [
   snPianoEditing,
   drumKitEditing,
   snAcousticEditing,
+  modelJp8Editing,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,
@@ -106,6 +108,7 @@ export {
   snPianoEditing,
   drumKitEditing,
   snAcousticEditing,
+  modelJp8Editing,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,

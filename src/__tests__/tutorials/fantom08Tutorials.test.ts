@@ -52,11 +52,12 @@ const expectedStepCounts: Record<string, number> = {
   'sn-piano-editing': 10,
   'drum-kit-editing': 10,
   'sn-acoustic-editing': 8,
+  'model-jp8-editing': 10,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 42 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(42);
+  it('has 43 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(43);
   });
 
   it('all tutorials have unique IDs', () => {
