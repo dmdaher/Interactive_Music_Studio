@@ -42,6 +42,7 @@ import { stepRecording } from './step-recording';
 import { trRecDrums } from './tr-rec-drums';
 import { sequencerPowerTools } from './sequencer-power-tools';
 import { vocoderAudioInput } from './vocoder-audio-input';
+import { velocityLayersZones } from './velocity-layers-zones';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -53,6 +54,7 @@ export const fantom08Tutorials: Tutorial[] = [
   layeringZones,
   fourZoneSetup,
   transposeOctave,
+  velocityLayersZones,
   usingSlidersKnobs,
   quickEditFunctionKnobs,
   editingMfx,
@@ -100,6 +102,7 @@ export {
   layeringZones,
   fourZoneSetup,
   transposeOctave,
+  velocityLayersZones,
   usingSlidersKnobs,
   quickEditFunctionKnobs,
   editingMfx,
