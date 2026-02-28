@@ -44,6 +44,7 @@ import { sequencerPowerTools } from './sequencer-power-tools';
 import { vocoderAudioInput } from './vocoder-audio-input';
 import { velocityLayersZones } from './velocity-layers-zones';
 import { pedalWheelSetup } from './pedal-wheel-setup';
+import { sceneSearchNavigation } from './scene-search-navigation';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -59,6 +60,7 @@ export const fantom08Tutorials: Tutorial[] = [
   usingSlidersKnobs,
   quickEditFunctionKnobs,
   pedalWheelSetup,
+  sceneSearchNavigation,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
@@ -108,6 +110,7 @@ export {
   usingSlidersKnobs,
   quickEditFunctionKnobs,
   pedalWheelSetup,
+  sceneSearchNavigation,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
