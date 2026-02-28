@@ -1,9 +1,9 @@
 # Comprehensive Tutorial Gap Analysis — Fantom 08 Reference Manual
 
-> **Date:** 2026-02-28 (updated post-Batch E)
-> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch E)
+> **Date:** 2026-02-28 (updated post-Batch F)
+> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch F)
 > **Manual:** Roland Fantom-0 Series Reference Manual (173 pages)
-> **Current state:** 44 implemented tutorials, 13 planned (Batches F-H)
+> **Current state:** 49 implemented tutorials, 8 planned (Batches G-H)
 
 ---
 
@@ -33,11 +33,11 @@
 | Section | Pages | Status | Mapped To |
 |---|---|---|---|
 | Scene Select | 28 | COVERED | `selecting-scenes` |
-| Scene Search | 29 | PLANNED | Batch F: `scene-search-navigation` |
+| Scene Search | 29 | COVERED | `scene-search-navigation` (Batch F) |
 | Quick Edit (E1-E6) | 30 | COVERED | `quick-edit-function-knobs` (Batch E) |
 | Tone Select | 31 | COVERED | `selecting-tones` |
-| Tone Search | 32 | PLANNED | Batch F: `scene-search-navigation` |
-| Single Tone Play | 34 | PLANNED | Batch F: `scene-search-navigation` |
+| Tone Search | 32 | COVERED | `scene-search-navigation` (Batch F) |
+| Single Tone Play | 34 | COVERED | `scene-search-navigation` (Batch F) |
 | Layering Zones | 35 | COVERED | `layering-zones` |
 | Splitting Keyboard | 36 | COVERED | `split-keyboard-zones` |
 | Multiple Zones | 37 | COVERED | `four-zone-setup` |
@@ -59,7 +59,7 @@
 | Zone Edit (params) | 54-55 | COVERED | `scene-level-editing` |
 | Zone Utility (copy/init/swap) | 55 | **GAP** → Fixed | Added to `velocity-layers-zones` (Batch F) |
 | Zone Out Assign | 55-56 | **GAP** → Fixed | Added to `master-effects-output` (Batch G) |
-| Scene Appearance | 56 | PARTIAL | Planned `scene-search-navigation` mentions it |
+| Scene Appearance | 56 | COVERED | `scene-search-navigation` (Batch F) — dedicated step for memo, rating, color, level |
 | Saving a Scene | 56-57 | COVERED | `saving-your-work` |
 | ZEN-Core Tone Edit | 58-59 | COVERED | `tone-editing-zoom` + `tone-editing-pro` |
 | Drum Kit Tone Edit | 60 | COVERED | `drum-kit-editing` (Batch E) |
@@ -105,13 +105,13 @@
 | Section | Pages | Status | Mapped To |
 |---|---|---|---|
 | Sample Pad mode | 104 | COVERED | `pad-mode-setup` |
-| Note Pad mode | 104 | PLANNED | Batch F: `advanced-pad-modes` |
-| Partial Sw/Sel | 105 | PLANNED | Batch F: `advanced-pad-modes` |
+| Note Pad mode | 104 | COVERED | `advanced-pad-modes` (Batch F) |
+| Partial Sw/Sel | 105 | COVERED | `advanced-pad-modes` (Batch F) |
 | DAW Control | 105 | COVERED | `daw-controller` |
-| Zone Mute/Solo | 106 | PLANNED | Batch F: `advanced-pad-modes` |
-| Kbd Sw Group | 106 | PLANNED | Batch F: `advanced-pad-modes` |
+| Zone Mute/Solo | 106 | COVERED | `advanced-pad-modes` (Batch F) |
+| Kbd Sw Group | 106 | COVERED | `advanced-pad-modes` (Batch F) |
 | Rhythm Pattern (pad) | 107 | COVERED | `rhythm-patterns` (Batch D) |
-| Pattern/Variation/Group Play | 107 | PLANNED | Batch F: `advanced-pad-modes` |
+| Pattern/Variation/Group Play | 107 | COVERED | `advanced-pad-modes` (Batch F) |
 
 ### Ch 07: Sequencer (pp. 109-140)
 
@@ -153,7 +153,7 @@
 | Factory Reset / Initialize | 160 | PLANNED | Batch H: `backup-factory-reset` |
 | Wallpaper | 161 | PLANNED | Batch H: `display-customization` |
 | File Utility (all ops) | 162-163 | PLANNED | Batch H: `file-management-deep-dive` |
-| System 17 tabs | 164-170 | PARTIAL | Covered across multiple tutorials but some tabs not deeply taught (Sound, Click, Control) |
+| System 17 tabs | 164-170 | PARTIAL | PEDAL/WHEEL/S1-S2 tabs covered by `pedal-wheel-setup` (Batch F), SOUND tab covered by `tone-remain-performance` (Batch F). Remaining gaps: Click, Control tabs |
 | Expansion (all ops) | 171-173 | COVERED | `tone-expansion-favorites` (Batch E) |
 
 ### Ch 10: Appendix (pp. 175-188)
@@ -198,15 +198,17 @@
 
 ---
 
-## Coverage Summary (Post-Batch E)
+## Coverage Summary (Post-Batch F)
 
 | Status | Manual Sections | % |
 |---|---|---|
-| Fully Covered (44 existing tutorials) | ~80 | 69% |
-| Planned (Batches F-H, 13 tutorials) | ~20 | 17% |
-| Partial (exists but needs depth) | ~12 | 10% |
+| Fully Covered (49 existing tutorials) | ~90 | 77% |
+| Planned (Batches G-H, 8 tutorials) | ~12 | 10% |
+| Partial (exists but needs depth) | ~10 | 9% |
 | Gap (LOW, still open) | 3 | 3% |
 | N/A (appendix reference material) | ~4 | 3% |
+
+**Batch F additions (5 tutorials):** velocity-layers-zones (Zone Utility GAP CLOSURE), pedal-wheel-setup (PEDAL/WHEEL/S1-S2 system tabs), scene-search-navigation (scene/tone search, rating, appearance, single tone), advanced-pad-modes (Note Pad, Partial Sw/Sel, Zone Mute/Solo, Kbd Sw Group, Pattern/Variation/Group Play), tone-remain-performance (Scene Remain, Tone Remain, Master Tune, Key Shift, Scale Tune). All pad modes now covered. System settings tabs significantly expanded.
 
 **Batch E additions (7 tutorials):** quick-edit-function-knobs, vtw-organ-editing, sn-piano-editing, drum-kit-editing, sn-acoustic-editing (GAP CLOSURE), model-jp8-editing (GAP CLOSURE), tone-expansion-favorites. All tone engines now covered. Both HIGH-priority gaps resolved.
 
@@ -214,4 +216,4 @@
 
 **After all batches + gap fixes: ~96% coverage** (remaining ~4% is reference material or low-priority items).
 
-**Tutorial target: 57** (44 existing + 13 planned).
+**Tutorial target: 57** (49 existing + 8 planned).
