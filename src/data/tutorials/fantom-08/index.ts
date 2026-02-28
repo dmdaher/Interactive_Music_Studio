@@ -17,6 +17,7 @@ import { snPianoEditing } from './sn-piano-editing';
 import { drumKitEditing } from './drum-kit-editing';
 import { snAcousticEditing } from './sn-acoustic-editing';
 import { modelJp8Editing } from './model-jp8-editing';
+import { toneExpansionFavorites } from './tone-expansion-favorites';
 import { sceneLevelEditing } from './scene-level-editing';
 import { effectsRouting } from './effects-routing';
 import { sequencerPatterns } from './sequencer-patterns';
@@ -63,6 +64,7 @@ export const fantom08Tutorials: Tutorial[] = [
   drumKitEditing,
   snAcousticEditing,
   modelJp8Editing,
+  toneExpansionFavorites,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,
@@ -109,6 +111,7 @@ export {
   drumKitEditing,
   snAcousticEditing,
   modelJp8Editing,
+  toneExpansionFavorites,
   sceneLevelEditing,
   effectsRouting,
   sequencerPatterns,
