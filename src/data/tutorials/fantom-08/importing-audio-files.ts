@@ -151,9 +151,7 @@ export const importingAudioFiles: Tutorial = {
       details:
         'Create Tone automatically generates a playable tone after import. Normalize raises all samples to equal volume. Emphasis boosts high frequencies. The multisample name can be edited with RENAME. Each file keeps its Original Key for proper keyboard mapping.',
       highlightControls: ['value-dial'],
-      panelStateChanges: {
-        shift: { active: false },
-      },
+      panelStateChanges: {},
       displayState: {
         screenType: 'menu',
         title: 'IMPORT SAMPLE TO MULTISAMPLE (SETTING)',

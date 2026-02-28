@@ -66,7 +66,7 @@ const expectedStepCounts: Record<string, number> = {
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 44 tutorials', () => {
+  it('has 53 tutorials', () => {
     expect(fantom08Tutorials).toHaveLength(53);
   });
 
