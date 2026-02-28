@@ -46,6 +46,7 @@ import { velocityLayersZones } from './velocity-layers-zones';
 import { pedalWheelSetup } from './pedal-wheel-setup';
 import { sceneSearchNavigation } from './scene-search-navigation';
 import { advancedPadModes } from './advanced-pad-modes';
+import { toneRemainPerformance } from './tone-remain-performance';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -87,6 +88,7 @@ export const fantom08Tutorials: Tutorial[] = [
   sceneChainSmf,
   systemAndFileManagement,
   advancedPadModes,
+  toneRemainPerformance,
   midiConcepts,
   midiBasics,
   midiCcMapping,
@@ -138,6 +140,7 @@ export {
   sceneChainSmf,
   systemAndFileManagement,
   advancedPadModes,
+  toneRemainPerformance,
   midiConcepts,
   midiBasics,
   midiCcMapping,
