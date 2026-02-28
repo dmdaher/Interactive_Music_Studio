@@ -1,9 +1,9 @@
 # Comprehensive Tutorial Gap Analysis — Fantom 08 Reference Manual
 
-> **Date:** 2026-02-28 (updated post-Batch F)
-> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch F)
+> **Date:** 2026-02-28 (updated post-Batch G)
+> **Trigger:** Post-Batch C completion + comprehensive manual audit (updated after Batch G)
 > **Manual:** Roland Fantom-0 Series Reference Manual (173 pages)
-> **Current state:** 49 implemented tutorials, 8 planned (Batches G-H)
+> **Current state:** 53 implemented tutorials, 4 planned (Batch H)
 
 ---
 
@@ -75,9 +75,9 @@
 | Each Zone MFX | 66-67 | COVERED | `editing-mfx` |
 | Effects Signal Flow | 66-67 | COVERED | `effects-routing` |
 | IFX/Chorus/Reverb | 68-69 | COVERED | `effects-routing` |
-| TFX (Total Effect) | 70 | PLANNED | Batch G: `master-effects-output` |
+| TFX (Total Effect) | 70 | COVERED | `master-effects-output` (Batch G) |
 | Sampling Input FX | 70 | COVERED | `vocoder-audio-input` (Batch D) |
-| Output Destinations | 71 | PLANNED | Batch G: `master-effects-output` |
+| Output Destinations | 71 | COVERED | `master-effects-output` (Batch G) |
 | Mixer (Pan/Vol/EQ) | 72-73 | COVERED | `understanding-the-mixer` |
 | Scene Chain | 74-78 | COVERED | `scene-chain-smf` |
 
@@ -86,19 +86,19 @@
 | Section | Pages | Status | Mapped To |
 |---|---|---|---|
 | Sampling to Keyboard | 81-82 | COVERED | `sampling-basics` |
-| Sampling to Storage | 83 | **GAP** → Fixed | Added to `advanced-keyboard-sampling` (Batch G) |
-| Sampling to Pad | 83 | PLANNED | Batch G: `pad-sampler-deep-dive` |
-| Import to Keyboard | 84 | PLANNED | Batch G: `importing-audio-files` |
-| Import to Pad | 84 | PLANNED | Batch G: `pad-sampler-deep-dive` |
-| Import Multiple → Multisample | 85 | PARTIAL | `multisample-creation` covers building but not the auto-map wizard |
+| Sampling to Storage | 83 | COVERED | `advanced-keyboard-sampling` (Batch G, GAP CLOSURE) |
+| Sampling to Pad | 83 | COVERED | `pad-sampler-deep-dive` (Batch G) |
+| Import to Keyboard | 84 | COVERED | `importing-audio-files` (Batch G) |
+| Import to Pad | 84 | COVERED | `pad-sampler-deep-dive` (Batch G) |
+| Import Multiple → Multisample | 85 | COVERED | `importing-audio-files` (Batch G, auto-map wizard) + `multisample-creation` |
 | Multisample Manager | 87 | COVERED | `multisample-creation` |
-| KBD Sample Utility | 89 | PLANNED | Batch G: `advanced-keyboard-sampling` |
-| Sample MODIFY | 90 | PLANNED | Batch G: `advanced-keyboard-sampling` |
-| Memory Info | 91 | PLANNED | Batch G: `advanced-keyboard-sampling` |
-| Pad Banks/Hold/Move | 93-94 | PLANNED | Batch G: `pad-sampler-deep-dive` |
-| Recording to Pad | 95-97 | PLANNED | Batch G: `pad-sampler-deep-dive` |
-| Pad Quick/Wave Edit | 99-100 | PLANNED | Batch G: `pad-sampler-deep-dive` |
-| Pad Utility/Export WAV | 101-102 | PLANNED | Batch G: `pad-sampler-deep-dive` |
+| KBD Sample Utility | 89 | COVERED | `advanced-keyboard-sampling` (Batch G) |
+| Sample MODIFY | 90 | COVERED | `advanced-keyboard-sampling` (Batch G) |
+| Memory Info | 91 | COVERED | `advanced-keyboard-sampling` (Batch G) |
+| Pad Banks/Hold/Move | 93-94 | COVERED | `pad-sampler-deep-dive` (Batch G) |
+| Recording to Pad | 95-97 | COVERED | `pad-sampler-deep-dive` (Batch G) |
+| Pad Quick/Wave Edit | 99-100 | COVERED | `pad-sampler-deep-dive` (Batch G) |
+| Pad Utility/Export WAV | 101-102 | COVERED | `pad-sampler-deep-dive` (Batch G) |
 
 ### Ch 06: Pads (pp. 103-107)
 
@@ -198,15 +198,17 @@
 
 ---
 
-## Coverage Summary (Post-Batch F)
+## Coverage Summary (Post-Batch G)
 
 | Status | Manual Sections | % |
 |---|---|---|
-| Fully Covered (49 existing tutorials) | ~90 | 77% |
-| Planned (Batches G-H, 8 tutorials) | ~12 | 10% |
-| Partial (exists but needs depth) | ~10 | 9% |
+| Fully Covered (53 existing tutorials) | ~102 | 87% |
+| Planned (Batch H, 4 tutorials) | ~8 | 7% |
+| Partial (exists but needs depth) | ~5 | 4% |
 | Gap (LOW, still open) | 3 | 3% |
 | N/A (appendix reference material) | ~4 | 3% |
+
+**Batch G additions (4 tutorials):** advanced-keyboard-sampling (KBD sampling, Sampling to Storage GAP CLOSURE, KBD Sample Utility/MODIFY/Memory Info), pad-sampler-deep-dive (4 banks, HOLD, Move/Copy, sampling modes, import to pad, Quick/Wave Edit, Sample Utility/Export WAV), importing-audio-files (Import to Keyboard, Import Multiple to Multisample auto-map wizard, .svz sample data import), master-effects-output (Master Comp/EQ/TFX, pad FX routing, USB/Click/Output destinations, Zone Out Assign GAP CLOSURE). Full sampler chapter now covered. All master effects documented.
 
 **Batch F additions (5 tutorials):** velocity-layers-zones (Zone Utility GAP CLOSURE), pedal-wheel-setup (PEDAL/WHEEL/S1-S2 system tabs), scene-search-navigation (scene/tone search, rating, appearance, single tone), advanced-pad-modes (Note Pad, Partial Sw/Sel, Zone Mute/Solo, Kbd Sw Group, Pattern/Variation/Group Play), tone-remain-performance (Scene Remain, Tone Remain, Master Tune, Key Shift, Scale Tune). All pad modes now covered. System settings tabs significantly expanded.
 
@@ -214,6 +216,6 @@
 
 **New partial gap found in Batch D:** Realtime Automation Recording (p.124-125) — `sequencer-power-tools` covers editing automation events in Microscope but does not walk through the realtime automation recording workflow (pressing REC on a playing pattern and moving knobs). Consider adding to a future tutorial or expanding `sequencer-power-tools`.
 
-**After all batches + gap fixes: ~96% coverage** (remaining ~4% is reference material or low-priority items).
+**After all batches + gap fixes: ~97% coverage** (remaining ~3% is reference material or low-priority items).
 
-**Tutorial target: 57** (49 existing + 8 planned).
+**Tutorial target: 57** (53 existing + 4 planned in Batch H).
