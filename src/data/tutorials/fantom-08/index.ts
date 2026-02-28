@@ -53,6 +53,7 @@ import { importingAudioFiles } from './importing-audio-files';
 import { masterEffectsOutput } from './master-effects-output';
 import { usbAudioInterface } from './usb-audio-interface';
 import { fileManagementDeepDive } from './file-management-deep-dive';
+import { backupFactoryReset } from './backup-factory-reset';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -98,6 +99,7 @@ export const fantom08Tutorials: Tutorial[] = [
   sceneChainSmf,
   systemAndFileManagement,
   fileManagementDeepDive,
+  backupFactoryReset,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
@@ -156,6 +158,7 @@ export {
   sceneChainSmf,
   systemAndFileManagement,
   fileManagementDeepDive,
+  backupFactoryReset,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
