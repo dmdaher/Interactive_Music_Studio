@@ -23,6 +23,7 @@ import { padModeSetup } from './pad-mode-setup';
 import { multisampleCreation } from './multisample-creation';
 import { arpeggioSetup } from './arpeggio-setup';
 import { chordMemoryMotional } from './chord-memory-motional';
+import { sceneChainSmf } from './scene-chain-smf';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -51,6 +52,7 @@ export const fantom08Tutorials: Tutorial[] = [
   multisampleCreation,
   arpeggioSetup,
   chordMemoryMotional,
+  sceneChainSmf,
 ];
 
 export {
@@ -79,4 +81,5 @@ export {
   multisampleCreation,
   arpeggioSetup,
   chordMemoryMotional,
+  sceneChainSmf,
 };
