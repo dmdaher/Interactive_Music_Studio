@@ -48,6 +48,7 @@ import { sceneSearchNavigation } from './scene-search-navigation';
 import { advancedPadModes } from './advanced-pad-modes';
 import { toneRemainPerformance } from './tone-remain-performance';
 import { advancedKeyboardSampling } from './advanced-keyboard-sampling';
+import { padSamplerDeepDive } from './pad-sampler-deep-dive';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -85,6 +86,7 @@ export const fantom08Tutorials: Tutorial[] = [
   padModeSetup,
   multisampleCreation,
   advancedKeyboardSampling,
+  padSamplerDeepDive,
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,
@@ -138,6 +140,7 @@ export {
   padModeSetup,
   multisampleCreation,
   advancedKeyboardSampling,
+  padSamplerDeepDive,
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,

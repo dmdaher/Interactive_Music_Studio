@@ -60,11 +60,12 @@ const expectedStepCounts: Record<string, number> = {
   'advanced-pad-modes': 12,
   'tone-remain-performance': 10,
   'advanced-keyboard-sampling': 12,
+  'pad-sampler-deep-dive': 12,
 };
 
 describe('Fantom 08 tutorial collection', () => {
   it('has 44 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(50);
+    expect(fantom08Tutorials).toHaveLength(51);
   });
 
   it('all tutorials have unique IDs', () => {
