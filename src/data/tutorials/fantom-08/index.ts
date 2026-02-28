@@ -52,6 +52,7 @@ import { padSamplerDeepDive } from './pad-sampler-deep-dive';
 import { importingAudioFiles } from './importing-audio-files';
 import { masterEffectsOutput } from './master-effects-output';
 import { usbAudioInterface } from './usb-audio-interface';
+import { fileManagementDeepDive } from './file-management-deep-dive';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -96,6 +97,7 @@ export const fantom08Tutorials: Tutorial[] = [
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  fileManagementDeepDive,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
@@ -153,6 +155,7 @@ export {
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  fileManagementDeepDive,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
