@@ -26,7 +26,7 @@ interface FantomPanelProps {
 }
 
 // Design size — the "native" size of the panel (wider to match the real Fantom 08)
-const PANEL_NATURAL_WIDTH = 2600;
+const PANEL_NATURAL_WIDTH = 2670;
 const PANEL_NATURAL_HEIGHT = 580;
 
 const toneCategories = [

@@ -34,7 +34,7 @@ export default function SynthModeSection({
           id="synth-mode-osc"
           label="OSC"
           variant="function"
-          size="sm"
+          size="md"
           labelPosition="above"
           active={panelState['synth-mode-osc']?.active ?? false}
           highlighted={highlightedControls.includes('synth-mode-osc')}
@@ -49,7 +49,7 @@ export default function SynthModeSection({
           id="synth-mode-amp"
           label="AMP"
           variant="function"
-          size="sm"
+          size="md"
           labelPosition="above"
           active={panelState['synth-mode-amp']?.active ?? false}
           highlighted={highlightedControls.includes('synth-mode-amp')}
@@ -60,7 +60,7 @@ export default function SynthModeSection({
           id="synth-mode-fx"
           label="FX"
           variant="function"
-          size="sm"
+          size="md"
           labelPosition="above"
           active={panelState['synth-mode-fx']?.active ?? false}
           highlighted={highlightedControls.includes('synth-mode-fx')}
@@ -71,7 +71,7 @@ export default function SynthModeSection({
           id="synth-mode-lfo"
           label="LFO"
           variant="function"
-          size="sm"
+          size="md"
           labelPosition="above"
           active={panelState['synth-mode-lfo']?.active ?? false}
           highlighted={highlightedControls.includes('synth-mode-lfo')}
@@ -124,7 +124,7 @@ export default function SynthModeSection({
               id="synth-param"
               label="PARAM"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               active={panelState['synth-param']?.active ?? false}
               highlighted={highlightedControls.includes('synth-param')}
@@ -134,7 +134,7 @@ export default function SynthModeSection({
               id="synth-mode-filter"
               label="FILTER TYPE"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               active={panelState['synth-mode-filter']?.active ?? false}
               highlighted={highlightedControls.includes('synth-mode-filter')}
@@ -196,7 +196,7 @@ export default function SynthModeSection({
                 className="w-full h-px"
                 style={{ backgroundImage: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 3px, transparent 3px, transparent 7px)' }}
               />
-              <span className="text-[7px] font-medium tracking-widest uppercase text-neutral-500">
+              <span className="text-[8px] font-medium tracking-widest uppercase text-neutral-500">
                 WORKFLOW
               </span>
             </div>

@@ -86,7 +86,7 @@ This is an **Interactive Music Studio** — a browser-based educational platform
 
 ### File Structure
 ```
-interactive-music-studio/src/
+askmiyagi/src/
 ├── app/              # Next.js pages (home, tutorial/[deviceId]/[tutorialId])
 ├── components/
 │   ├── ui/           # Shared: DeviceCard, TutorialCard, CategoryFilter, BrandingHeader

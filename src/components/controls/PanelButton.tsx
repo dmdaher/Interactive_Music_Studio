@@ -17,9 +17,9 @@ interface PanelButtonProps {
 }
 
 const sizeClasses: Record<string, { button: string; text: string; led: string }> = {
-  sm: { button: 'w-8 h-6', text: 'text-[7px]', led: 'w-1.5 h-1.5' },
-  md: { button: 'w-10 h-7', text: 'text-[8px]', led: 'w-2 h-2' },
-  lg: { button: 'w-14 h-9', text: 'text-[9px]', led: 'w-2.5 h-2.5' },
+  sm: { button: 'w-8 h-6', text: 'text-[8px]', led: 'w-2 h-2' },
+  md: { button: 'w-10 h-7', text: 'text-[9px]', led: 'w-2.5 h-2.5' },
+  lg: { button: 'w-14 h-9', text: 'text-[10px]', led: 'w-3 h-3' },
 };
 
 const variantStyles: Record<string, { base: string; active: string }> = {

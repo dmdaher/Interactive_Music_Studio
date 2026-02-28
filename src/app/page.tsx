@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import BrandingHeader from '@/components/ui/BrandingHeader';
@@ -24,8 +24,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.03,
+      delayChildren: 0.05,
     },
   },
 };
@@ -35,7 +35,7 @@ const itemVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: 'easeOut' as const },
+    transition: { duration: 0.25, ease: 'easeOut' as const },
   },
 };
 
@@ -44,6 +44,7 @@ export default function HomePage() {
   const [selectedDevice, setSelectedDevice] = useState<DeviceInfo | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const tutorialSectionRef = useRef<HTMLDivElement>(null);
+  const hasAnimatedTutorials = useRef(false);
 
   const devices = getAvailableDevices();
 
@@ -56,6 +57,20 @@ export default function HomePage() {
     if (!selectedCategory) return tutorials;
     return tutorials.filter((t) => t.category === selectedCategory);
   }, [tutorials, selectedCategory]);
+
+  // After initial tutorial grid animation completes, skip re-animation on category changes
+  useEffect(() => {
+    if (selectedDevice && !hasAnimatedTutorials.current) {
+      // Allow time for the initial stagger animation to play, then mark as animated
+      const timer = setTimeout(() => {
+        hasAnimatedTutorials.current = true;
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+    if (!selectedDevice) {
+      hasAnimatedTutorials.current = false;
+    }
+  }, [selectedDevice]);
 
   const relevantCategories = useMemo(() => {
     if (!selectedDevice) return [];
@@ -71,7 +86,7 @@ export default function HomePage() {
     // Scroll to tutorial section after a short delay to allow render
     setTimeout(() => {
       tutorialSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
+    }, 50);
   }
 
   function handleTutorialSelect(tutorial: Tutorial) {
@@ -127,13 +142,13 @@ export default function HomePage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
             >
               <div className="mx-auto max-w-7xl px-6 py-12">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.4 }}
+                  transition={{ delay: 0.1, duration: 0.25 }}
                 >
                   <div className="mb-6 flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-gray-100">
@@ -162,9 +177,10 @@ export default function HomePage() {
                   {/* Tutorial Grid */}
                   {filteredTutorials.length > 0 ? (
                     <motion.div
+                      key={selectedCategory ?? 'all'}
                       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
                       variants={containerVariants}
-                      initial="hidden"
+                      initial={hasAnimatedTutorials.current ? false : 'hidden'}
                       animate="visible"
                     >
                       {filteredTutorials.map((tutorial) => (

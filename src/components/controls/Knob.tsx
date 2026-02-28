@@ -11,8 +11,8 @@ interface KnobProps {
 }
 
 const sizeConfig = {
-  sm: { outer: 26, inner: 20, indicator: 8, label: 'text-[7px]' },
-  md: { outer: 34, inner: 28, indicator: 11, label: 'text-[8px]' },
+  sm: { outer: 26, inner: 20, indicator: 8, label: 'text-[8px]' },
+  md: { outer: 34, inner: 28, indicator: 11, label: 'text-[9px]' },
 };
 
 const highlightAnimation = {

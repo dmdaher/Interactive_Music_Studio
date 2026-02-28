@@ -44,7 +44,7 @@ const sliders = Array.from({ length: 8 }, (_, i) => ({
 }));
 
 // Fixed width for left 3 columns
-const LEFT_WIDTH = 130;
+const LEFT_WIDTH = 168;
 
 export default function ZoneSection({
   panelState,
@@ -68,7 +68,7 @@ export default function ZoneSection({
             id="pan-level"
             label="Pan/Lvl"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             hasLed
             ledOn={getState('pan-level').ledOn ?? false}
@@ -81,7 +81,7 @@ export default function ZoneSection({
             id="ctrl"
             label="Ctrl"
             variant="function"
-            size="sm"
+            size="md"
             labelPosition="above"
             hasLed
             ledOn={getState('ctrl').ledOn ?? false}
@@ -99,7 +99,7 @@ export default function ZoneSection({
               label=""
               value={panelState[knob.id]?.value ?? knob.defaultValue}
               highlighted={isHighlighted(knob.id)}
-              size="sm"
+              size="md"
             />
           ))}
         </div>
@@ -111,7 +111,7 @@ export default function ZoneSection({
         <div className="flex items-center gap-3">
           <div className="flex items-center" style={{ width: LEFT_WIDTH }}>
             <div className="flex flex-col items-center gap-0.5">
-              <span className="text-[7px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
+              <span className="text-[8px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
                 Master Volume
               </span>
               <Knob
@@ -119,13 +119,13 @@ export default function ZoneSection({
                 label=""
                 value={panelState['master-volume']?.value ?? 100}
                 highlighted={isHighlighted('master-volume')}
-                size="sm"
+                size="md"
               />
             </div>
           </div>
           <div className="grid grid-cols-8 gap-3 flex-1">
             {knobLabels.map((lbl) => (
-              <span key={lbl} className="text-[7px] font-bold text-neutral-300 uppercase tracking-wider text-center">
+              <span key={lbl} className="text-[8px] font-bold text-neutral-300 uppercase tracking-wider text-center">
                 {lbl}
               </span>
             ))}
@@ -139,7 +139,7 @@ export default function ZoneSection({
               id="assign"
               label="Assign"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               active={getState('assign').active}
               highlighted={isHighlighted('assign')}
@@ -155,7 +155,7 @@ export default function ZoneSection({
                   id={btn.id}
                   label={btn.label}
                   variant="zone"
-                  size="sm"
+                  size="md"
                   labelPosition="above"
                   hasLed
                   ledOn={state?.ledOn ?? false}
@@ -181,7 +181,7 @@ export default function ZoneSection({
               id="zone-9-16"
               label="Z 9-16"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               active={getState('zone-9-16').active}
               highlighted={isHighlighted('zone-9-16')}
@@ -191,7 +191,7 @@ export default function ZoneSection({
               id="zone-select"
               label="Z Select"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               active={getState('zone-select').active}
               highlighted={isHighlighted('zone-select')}
@@ -205,7 +205,7 @@ export default function ZoneSection({
               id="split"
               label="Split"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               hasLed
               ledOn={getState('split').ledOn ?? false}
@@ -218,7 +218,7 @@ export default function ZoneSection({
               id="chord-memory"
               label="Chord"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               hasLed
               ledOn={getState('chord-memory').ledOn ?? false}
@@ -231,7 +231,7 @@ export default function ZoneSection({
               id="arpeggio"
               label="Arp"
               variant="function"
-              size="sm"
+              size="md"
               labelPosition="above"
               hasLed
               ledOn={getState('arpeggio').ledOn ?? false}
@@ -247,7 +247,7 @@ export default function ZoneSection({
             <div className="grid grid-cols-3 gap-2">
               <div /> {/* spacer for Trans column */}
               <div className="col-span-2 flex flex-col items-center">
-                <span className="text-[7px] font-bold tracking-widest uppercase text-neutral-300">
+                <span className="text-[8px] font-bold tracking-widest uppercase text-neutral-300">
                   OCTAVE
                 </span>
                 <div className="border-t border-neutral-600 w-full mb-0.5" />
@@ -259,7 +259,7 @@ export default function ZoneSection({
                 id="transpose"
                 label="Trans"
                 variant="standard"
-                size="sm"
+                size="md"
                 labelPosition="above"
                 active={getState('transpose').active}
                 highlighted={isHighlighted('transpose')}
@@ -270,25 +270,25 @@ export default function ZoneSection({
                   id="octave-down"
                   label="Down"
                   variant="standard"
-                  size="sm"
+                  size="md"
                   labelPosition="above"
                   active={getState('octave-down').active}
                   highlighted={isHighlighted('octave-down')}
                   onClick={() => onButtonClick?.('octave-down')}
                 />
-                <span className="text-[8px] text-neutral-500 font-bold">-</span>
+                <span className="text-[9px] text-neutral-500 font-bold">-</span>
               </div>
               <div className="flex flex-col items-center">
                 <PanelButton
                   id="octave-up"
                   label="Up"
                   variant="standard"
-                  size="sm"
+                  size="md"
                   labelPosition="above"
                   active={getState('octave-up').active}
                   highlighted={isHighlighted('octave-up')}
                 />
-                <span className="text-[8px] text-neutral-500 font-bold">+</span>
+                <span className="text-[9px] text-neutral-500 font-bold">+</span>
               </div>
             </div>
           </div>

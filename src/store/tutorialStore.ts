@@ -19,12 +19,18 @@ interface TutorialStore {
   highlightedControls: string[];
   zones: ZoneConfig[];
 
+  // Autoplay state
+  autoplay: boolean;
+  autoplaySpeed: number; // seconds per step (4, 8, 15)
+
   // Actions
   loadTutorial: (tutorial: Tutorial) => void;
   goToStep: (index: number) => void;
   nextStep: () => void;
   prevStep: () => void;
   reset: () => void;
+  toggleAutoplay: () => void;
+  setAutoplaySpeed: (speed: number) => void;
 
   // Computed
   currentStep: () => TutorialStep | null;
@@ -48,6 +54,10 @@ export const useTutorialStore = create<TutorialStore>((set, get) => ({
   displayState: defaultDisplayState,
   highlightedControls: [],
   zones: [],
+
+  // Autoplay state
+  autoplay: false,
+  autoplaySpeed: 8,
 
   // Actions
   loadTutorial: (tutorial: Tutorial) => {
@@ -118,7 +128,17 @@ export const useTutorialStore = create<TutorialStore>((set, get) => ({
       displayState: defaultDisplayState,
       highlightedControls: [],
       zones: [],
+      autoplay: false,
+      autoplaySpeed: 8,
     });
+  },
+
+  toggleAutoplay: () => {
+    set((state) => ({ autoplay: !state.autoplay }));
+  },
+
+  setAutoplaySpeed: (speed: number) => {
+    set({ autoplaySpeed: speed });
   },
 
   // Computed

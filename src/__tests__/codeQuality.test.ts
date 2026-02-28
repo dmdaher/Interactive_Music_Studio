@@ -14,6 +14,7 @@ import * as path from 'path';
  *   2. Display component conventions
  *   3. Shared constant usage (no hardcoded colors)
  *   4. No duplicate utility definitions
+ *   7. Tutorial performance guards
  */
 
 const SRC_DIR = path.resolve(__dirname, '..');
@@ -284,5 +285,83 @@ describe('Shared display component conventions', () => {
         `Hardcoded hex colors found in shared components. Use DISPLAY_COLORS, ZONE_COLORS, or ZONE_COLOR_MAP from @/lib/constants:\n${details}`
       ).toHaveLength(0);
     }
+  });
+});
+
+// ─────────────────────────────────────────────────
+// 7. Tutorial performance guards
+// ─────────────────────────────────────────────────
+
+describe('Tutorial performance guards', () => {
+  const TUTORIAL_DIR = path.join(SRC_DIR, 'components/tutorial');
+
+  function getTutorialComponentFiles(): string[] {
+    return fs.readdirSync(TUTORIAL_DIR).filter((f) => f.endsWith('.tsx'));
+  }
+
+  it('no backdrop-filter in tutorial components (GPU-heavy)', () => {
+    const violations: string[] = [];
+
+    getTutorialComponentFiles().forEach((file) => {
+      const content = fs.readFileSync(path.join(TUTORIAL_DIR, file), 'utf-8');
+      if (content.includes('backdropFilter') || content.includes('backdrop-filter')) {
+        violations.push(file);
+      }
+    });
+
+    expect(
+      violations,
+      `backdrop-filter found in: ${violations.join(', ')}. ` +
+      'backdrop-filter blur re-composites every pixel behind the element on every frame. ' +
+      'With ~1,000 DOM nodes in the panel, this causes visible lag during zoom transitions. ' +
+      'Use a solid semi-transparent background instead.'
+    ).toHaveLength(0);
+  });
+
+  it('willChange must be conditional in tutorial components', () => {
+    const violations: { file: string; lines: string[] }[] = [];
+
+    getTutorialComponentFiles().forEach((file) => {
+      const content = fs.readFileSync(path.join(TUTORIAL_DIR, file), 'utf-8');
+      const lines = content.split('\n');
+      const badLines: string[] = [];
+
+      lines.forEach((line, i) => {
+        if (line.includes('willChange') && !line.includes('?')) {
+          badLines.push(`L${i + 1}: ${line.trim()}`);
+        }
+      });
+
+      if (badLines.length > 0) {
+        violations.push({ file, lines: badLines });
+      }
+    });
+
+    if (violations.length > 0) {
+      const details = violations
+        .map((v) => `  ${v.file}: ${v.lines.join('; ')}`)
+        .join('\n');
+      expect(
+        violations,
+        `Unconditional willChange found — it must use a ternary (?) to activate only during transitions. ` +
+        `Static willChange wastes VRAM (~6MB per layer at 2x retina):\n${details}`
+      ).toHaveLength(0);
+    }
+  });
+
+  it('no infinite animations in TutorialRunner zoom container', () => {
+    const runnerFile = path.join(TUTORIAL_DIR, 'TutorialRunner.tsx');
+    const content = fs.readFileSync(runnerFile, 'utf-8');
+
+    const infinityCount = (content.match(/repeat:\s*Infinity/g) || []).length;
+    const negativeOneCount = (content.match(/repeat:\s*-1/g) || []).length;
+    const total = infinityCount + negativeOneCount;
+
+    expect(
+      total,
+      `TutorialRunner.tsx has ${total} infinite animation(s) (repeat: Infinity or repeat: -1). ` +
+      'Infinite animations in the zoom container force constant GPU recalculation during transform transitions. ' +
+      'Move infinite animations to individual control components instead.'
+    ).toBe(0);
   });
 });

@@ -214,6 +214,39 @@ describe('tutorialStore', () => {
     });
   });
 
+  describe('autoplay', () => {
+    it('defaults to false with speed 8', () => {
+      const state = useTutorialStore.getState();
+      expect(state.autoplay).toBe(false);
+      expect(state.autoplaySpeed).toBe(8);
+    });
+
+    it('toggleAutoplay flips the boolean', () => {
+      useTutorialStore.getState().toggleAutoplay();
+      expect(useTutorialStore.getState().autoplay).toBe(true);
+      useTutorialStore.getState().toggleAutoplay();
+      expect(useTutorialStore.getState().autoplay).toBe(false);
+    });
+
+    it('setAutoplaySpeed updates the speed', () => {
+      useTutorialStore.getState().setAutoplaySpeed(15);
+      expect(useTutorialStore.getState().autoplaySpeed).toBe(15);
+      useTutorialStore.getState().setAutoplaySpeed(4);
+      expect(useTutorialStore.getState().autoplaySpeed).toBe(4);
+    });
+
+    it('reset clears autoplay state', () => {
+      useTutorialStore.getState().toggleAutoplay();
+      useTutorialStore.getState().setAutoplaySpeed(15);
+      expect(useTutorialStore.getState().autoplay).toBe(true);
+      expect(useTutorialStore.getState().autoplaySpeed).toBe(15);
+
+      useTutorialStore.getState().reset();
+      expect(useTutorialStore.getState().autoplay).toBe(false);
+      expect(useTutorialStore.getState().autoplaySpeed).toBe(8);
+    });
+  });
+
   describe('empty tutorial (0 steps)', () => {
     it('handles gracefully', () => {
       const tutorial: Tutorial = {

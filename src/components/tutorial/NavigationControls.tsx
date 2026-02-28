@@ -7,6 +7,8 @@ interface NavigationControlsProps {
   onNext: () => void;
   isPrevDisabled: boolean;
   isNextDisabled: boolean;
+  autoplay?: boolean;
+  onToggleAutoplay?: () => void;
 }
 
 export default function NavigationControls({
@@ -14,9 +16,11 @@ export default function NavigationControls({
   onNext,
   isPrevDisabled,
   isNextDisabled,
+  autoplay = false,
+  onToggleAutoplay,
 }: NavigationControlsProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       {/* Back button */}
       <motion.button
         type="button"
@@ -45,6 +49,36 @@ export default function NavigationControls({
         </svg>
         Back
       </motion.button>
+
+      {/* Autoplay toggle */}
+      {onToggleAutoplay && (
+        <motion.button
+          type="button"
+          onClick={onToggleAutoplay}
+          className={[
+            'flex items-center justify-center w-9 h-9 rounded-lg',
+            'border transition-colors duration-150 cursor-pointer',
+            autoplay
+              ? 'border-[#00aaff]/40 bg-[#00aaff]/20 text-[#00ccff]'
+              : 'border-white/20 text-white/60 hover:bg-white/10 hover:border-white/30',
+          ].join(' ')}
+          whileTap={{ scale: 0.92 }}
+          aria-label={autoplay ? 'Pause autoplay' : 'Start autoplay'}
+        >
+          {autoplay ? (
+            /* Pause icon */
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1" />
+              <rect x="14" y="4" width="4" height="16" rx="1" />
+            </svg>
+          ) : (
+            /* Play icon */
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5.14v14.72a1 1 0 001.5.86l11-7.36a1 1 0 000-1.72l-11-7.36A1 1 0 008 5.14z" />
+            </svg>
+          )}
+        </motion.button>
+      )}
 
       {/* Next button */}
       <motion.button

@@ -186,7 +186,7 @@ export default function CommonSection({
               highlighted={isHighlighted('exit')}
               onClick={() => onButtonClick?.('exit')}
             />
-            <span className="text-[7px] tracking-wide text-neutral-300 uppercase font-bold">
+            <span className="text-[8px] tracking-wide text-neutral-300 uppercase font-bold">
               [PANIC]
             </span>
           </div>
@@ -201,7 +201,7 @@ export default function CommonSection({
               highlighted={isHighlighted('enter')}
               onClick={() => onButtonClick?.('enter')}
             />
-            <span className="text-[7px] tracking-wide text-neutral-300 uppercase font-bold">
+            <span className="text-[8px] tracking-wide text-neutral-300 uppercase font-bold">
               [NUMERIC]
             </span>
           </div>

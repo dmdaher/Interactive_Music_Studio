@@ -25,14 +25,28 @@ describe('TutorialOverlay', () => {
     isFirst: false,
     isLast: false,
     progress: 30,
+    autoplay: false,
+    autoplaySpeed: 8,
+    onToggleAutoplay: vi.fn(),
+    onSetAutoplaySpeed: vi.fn(),
   };
 
-  it('renders step title, instruction, details, tipText', () => {
+  it('renders step title, instruction, tipText (details collapsed by default)', () => {
     render(<TutorialOverlay {...defaultProps} />);
     expect(screen.getByText('Test Step Title')).toBeInTheDocument();
     expect(screen.getByText('Test instruction text')).toBeInTheDocument();
-    expect(screen.getByText('Some extra details')).toBeInTheDocument();
+    // Details are collapsed by default
+    expect(screen.queryByText('Some extra details')).not.toBeInTheDocument();
+    expect(screen.getByText('Show details')).toBeInTheDocument();
     expect(screen.getByText('A helpful tip')).toBeInTheDocument();
+  });
+
+  it('expands details when "Show details" is clicked', () => {
+    render(<TutorialOverlay {...defaultProps} />);
+    expect(screen.queryByText('Some extra details')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('Show details'));
+    expect(screen.getByText('Some extra details')).toBeInTheDocument();
+    expect(screen.getByText('Hide details')).toBeInTheDocument();
   });
 
   it('Back/Next navigation buttons present', () => {
@@ -109,10 +123,22 @@ describe('TutorialOverlay', () => {
     expect(screen.getByText('Test instruction text')).toBeInTheDocument();
   });
 
-  it('is not fixed positioned (in-flow)', () => {
+  it('is fixed positioned (floating panel)', () => {
     const { container } = render(<TutorialOverlay {...defaultProps} />);
     const root = container.firstElementChild as HTMLElement;
-    expect(root.className).toContain('w-full');
-    expect(root.className).not.toContain('fixed');
+    expect(root.className).toContain('fixed');
+    expect(root.className).toContain('z-50');
+  });
+
+  it('shows autoplay button', () => {
+    render(<TutorialOverlay {...defaultProps} />);
+    expect(screen.getByLabelText('Start autoplay')).toBeInTheDocument();
+  });
+
+  it('shows speed controls when autoplay is on', () => {
+    render(<TutorialOverlay {...defaultProps} autoplay={true} />);
+    expect(screen.getByText('Slow')).toBeInTheDocument();
+    expect(screen.getByText('Medium')).toBeInTheDocument();
+    expect(screen.getByText('Fast')).toBeInTheDocument();
   });
 });
