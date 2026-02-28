@@ -63,11 +63,15 @@ const expectedStepCounts: Record<string, number> = {
   'pad-sampler-deep-dive': 12,
   'importing-audio-files': 10,
   'master-effects-output': 12,
+  'usb-audio-interface': 10,
+  'file-management-deep-dive': 12,
+  'backup-factory-reset': 10,
+  'display-customization': 8,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 53 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(53);
+  it('has 57 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(57);
   });
 
   it('all tutorials have unique IDs', () => {

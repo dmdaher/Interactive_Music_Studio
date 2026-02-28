@@ -51,6 +51,10 @@ import { advancedKeyboardSampling } from './advanced-keyboard-sampling';
 import { padSamplerDeepDive } from './pad-sampler-deep-dive';
 import { importingAudioFiles } from './importing-audio-files';
 import { masterEffectsOutput } from './master-effects-output';
+import { usbAudioInterface } from './usb-audio-interface';
+import { fileManagementDeepDive } from './file-management-deep-dive';
+import { backupFactoryReset } from './backup-factory-reset';
+import { displayCustomization } from './display-customization';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -67,6 +71,7 @@ export const fantom08Tutorials: Tutorial[] = [
   quickEditFunctionKnobs,
   pedalWheelSetup,
   sceneSearchNavigation,
+  displayCustomization,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
@@ -95,6 +100,8 @@ export const fantom08Tutorials: Tutorial[] = [
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  fileManagementDeepDive,
+  backupFactoryReset,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
@@ -102,6 +109,7 @@ export const fantom08Tutorials: Tutorial[] = [
   midiCcMapping,
   dawController,
   midiSyncClock,
+  usbAudioInterface,
   rhythmPatterns,
   stepRecording,
   trRecDrums,
@@ -123,6 +131,7 @@ export {
   quickEditFunctionKnobs,
   pedalWheelSetup,
   sceneSearchNavigation,
+  displayCustomization,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
@@ -151,6 +160,8 @@ export {
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  fileManagementDeepDive,
+  backupFactoryReset,
   advancedPadModes,
   toneRemainPerformance,
   midiConcepts,
@@ -158,6 +169,7 @@ export {
   midiCcMapping,
   dawController,
   midiSyncClock,
+  usbAudioInterface,
   rhythmPatterns,
   stepRecording,
   trRecDrums,
