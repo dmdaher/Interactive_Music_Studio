@@ -47,6 +47,7 @@ import { pedalWheelSetup } from './pedal-wheel-setup';
 import { sceneSearchNavigation } from './scene-search-navigation';
 import { advancedPadModes } from './advanced-pad-modes';
 import { toneRemainPerformance } from './tone-remain-performance';
+import { advancedKeyboardSampling } from './advanced-keyboard-sampling';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -83,6 +84,7 @@ export const fantom08Tutorials: Tutorial[] = [
   waveEditing,
   padModeSetup,
   multisampleCreation,
+  advancedKeyboardSampling,
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,
@@ -135,6 +137,7 @@ export {
   waveEditing,
   padModeSetup,
   multisampleCreation,
+  advancedKeyboardSampling,
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,
