@@ -36,11 +36,12 @@ const expectedStepCounts: Record<string, number> = {
   'arpeggio-setup': 9,
   'chord-memory-motional': 10,
   'scene-chain-smf': 10,
+  'system-and-file-management': 11,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 26 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(26);
+  it('has 27 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(27);
   });
 
   it('all tutorials have unique IDs', () => {

@@ -24,6 +24,7 @@ import { multisampleCreation } from './multisample-creation';
 import { arpeggioSetup } from './arpeggio-setup';
 import { chordMemoryMotional } from './chord-memory-motional';
 import { sceneChainSmf } from './scene-chain-smf';
+import { systemAndFileManagement } from './system-and-file-management';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -53,6 +54,7 @@ export const fantom08Tutorials: Tutorial[] = [
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,
+  systemAndFileManagement,
 ];
 
 export {
@@ -82,4 +84,5 @@ export {
   arpeggioSetup,
   chordMemoryMotional,
   sceneChainSmf,
+  systemAndFileManagement,
 };
