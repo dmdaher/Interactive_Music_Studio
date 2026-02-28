@@ -22,6 +22,7 @@ import { waveEditing } from './wave-editing';
 import { padModeSetup } from './pad-mode-setup';
 import { multisampleCreation } from './multisample-creation';
 import { arpeggioSetup } from './arpeggio-setup';
+import { chordMemoryMotional } from './chord-memory-motional';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -49,6 +50,7 @@ export const fantom08Tutorials: Tutorial[] = [
   padModeSetup,
   multisampleCreation,
   arpeggioSetup,
+  chordMemoryMotional,
 ];
 
 export {
@@ -76,4 +78,5 @@ export {
   padModeSetup,
   multisampleCreation,
   arpeggioSetup,
+  chordMemoryMotional,
 };

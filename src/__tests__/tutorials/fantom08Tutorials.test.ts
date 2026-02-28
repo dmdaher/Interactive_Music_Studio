@@ -34,11 +34,12 @@ const expectedStepCounts: Record<string, number> = {
   'pad-mode-setup': 10,
   'multisample-creation': 11,
   'arpeggio-setup': 9,
+  'chord-memory-motional': 10,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 24 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(24);
+  it('has 25 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(25);
   });
 
   it('all tutorials have unique IDs', () => {
