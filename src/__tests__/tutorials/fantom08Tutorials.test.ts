@@ -57,11 +57,12 @@ const expectedStepCounts: Record<string, number> = {
   'velocity-layers-zones': 10,
   'pedal-wheel-setup': 10,
   'scene-search-navigation': 10,
+  'advanced-pad-modes': 12,
 };
 
 describe('Fantom 08 tutorial collection', () => {
   it('has 44 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(47);
+    expect(fantom08Tutorials).toHaveLength(48);
   });
 
   it('all tutorials have unique IDs', () => {

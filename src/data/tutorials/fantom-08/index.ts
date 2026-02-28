@@ -45,6 +45,7 @@ import { vocoderAudioInput } from './vocoder-audio-input';
 import { velocityLayersZones } from './velocity-layers-zones';
 import { pedalWheelSetup } from './pedal-wheel-setup';
 import { sceneSearchNavigation } from './scene-search-navigation';
+import { advancedPadModes } from './advanced-pad-modes';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -85,6 +86,7 @@ export const fantom08Tutorials: Tutorial[] = [
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  advancedPadModes,
   midiConcepts,
   midiBasics,
   midiCcMapping,
@@ -135,6 +137,7 @@ export {
   chordMemoryMotional,
   sceneChainSmf,
   systemAndFileManagement,
+  advancedPadModes,
   midiConcepts,
   midiBasics,
   midiCcMapping,
