@@ -66,6 +66,7 @@ export const multisampleCreation: Tutorial = {
         'The Multisample Edit screen has several regions: the area bar at the top shows colored segments representing sample-to-key-range assignments. Below that are two keyboard rows — a zoomed view and a full 128-note overview. Red keys indicate the currently selected note, and green keys show the selected range. The bottom-right shows an area list table with key ranges and assigned samples.',
       highlightControls: ['enter'],
       panelStateChanges: {
+        menu: { active: false },
         enter: { active: true },
       },
       displayState: {
