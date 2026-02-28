@@ -54,6 +54,7 @@ import { masterEffectsOutput } from './master-effects-output';
 import { usbAudioInterface } from './usb-audio-interface';
 import { fileManagementDeepDive } from './file-management-deep-dive';
 import { backupFactoryReset } from './backup-factory-reset';
+import { displayCustomization } from './display-customization';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -70,6 +71,7 @@ export const fantom08Tutorials: Tutorial[] = [
   quickEditFunctionKnobs,
   pedalWheelSetup,
   sceneSearchNavigation,
+  displayCustomization,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,
@@ -129,6 +131,7 @@ export {
   quickEditFunctionKnobs,
   pedalWheelSetup,
   sceneSearchNavigation,
+  displayCustomization,
   editingMfx,
   understandingTheMixer,
   toneEditingZoom,

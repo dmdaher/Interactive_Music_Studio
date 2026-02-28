@@ -66,11 +66,12 @@ const expectedStepCounts: Record<string, number> = {
   'usb-audio-interface': 10,
   'file-management-deep-dive': 12,
   'backup-factory-reset': 10,
+  'display-customization': 8,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 56 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(56);
+  it('has 57 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(57);
   });
 
   it('all tutorials have unique IDs', () => {
