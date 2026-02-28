@@ -159,7 +159,7 @@ export default function ZoneSection({
                   labelPosition="above"
                   hasLed
                   ledOn={state?.ledOn ?? false}
-                  ledColor={btn.ledColor}
+                  ledColor={state?.ledColor ?? btn.ledColor}
                   active={state?.active ?? false}
                   highlighted={isHighlighted(btn.id)}
                   onClick={() => onButtonClick?.(btn.id)}

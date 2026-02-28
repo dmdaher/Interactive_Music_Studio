@@ -42,11 +42,16 @@ const expectedStepCounts: Record<string, number> = {
   'midi-cc-mapping': 10,
   'daw-controller': 11,
   'midi-sync-clock': 11,
+  'rhythm-patterns': 8,
+  'step-recording': 10,
+  'tr-rec-drums': 10,
+  'sequencer-power-tools': 12,
+  'vocoder-audio-input': 10,
 };
 
 describe('Fantom 08 tutorial collection', () => {
-  it('has 32 tutorials', () => {
-    expect(fantom08Tutorials).toHaveLength(32);
+  it('has 37 tutorials', () => {
+    expect(fantom08Tutorials).toHaveLength(37);
   });
 
   it('all tutorials have unique IDs', () => {

@@ -30,6 +30,11 @@ import { midiBasics } from './midi-basics';
 import { midiCcMapping } from './midi-cc-mapping';
 import { dawController } from './daw-controller';
 import { midiSyncClock } from './midi-sync-clock';
+import { rhythmPatterns } from './rhythm-patterns';
+import { stepRecording } from './step-recording';
+import { trRecDrums } from './tr-rec-drums';
+import { sequencerPowerTools } from './sequencer-power-tools';
+import { vocoderAudioInput } from './vocoder-audio-input';
 import { Tutorial } from '@/types/tutorial';
 
 export const fantom08Tutorials: Tutorial[] = [
@@ -65,6 +70,11 @@ export const fantom08Tutorials: Tutorial[] = [
   midiCcMapping,
   dawController,
   midiSyncClock,
+  rhythmPatterns,
+  stepRecording,
+  trRecDrums,
+  sequencerPowerTools,
+  vocoderAudioInput,
 ];
 
 export {
@@ -100,4 +110,9 @@ export {
   midiCcMapping,
   dawController,
   midiSyncClock,
+  rhythmPatterns,
+  stepRecording,
+  trRecDrums,
+  sequencerPowerTools,
+  vocoderAudioInput,
 };

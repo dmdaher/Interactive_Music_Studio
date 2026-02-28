@@ -123,6 +123,7 @@ export const midiConcepts: Tutorial = {
       highlightControls: ['zone-1', 'zone-2', 'shift'],
       panelStateChanges: {
         shift: { active: true },
+        'zone-2': { active: true, ledOn: true, ledColor: '#22C55E' },
       },
       displayState: {
         screenType: 'zone-view',

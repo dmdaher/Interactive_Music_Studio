@@ -136,6 +136,7 @@ This project has formal quality gates in `docs/quality-gates.md`. **You must fol
 | After any user correction | **CORRECTION** | Document the mistake, identify root cause, write prevention rule, add automated test if possible |
 | When writing any data shown in the UI | **CROSS-REFERENCE** | Verify tone names, parameter ranges, control IDs, E-knob assignments against manual/existing data |
 | After completing a major feature | **SELF-IMPROVEMENT** | Reflect on what went well/poorly, update docs, check if gates need new questions |
+| After completing any tutorial batch | **GAP-ANALYSIS** | Cross-reference implemented tutorials against the reference manual TOC. Verify every manual section maps to an existing or planned tutorial. Document any new gaps and add them to the batch plan. Update MEMORY.md with current counts. |
 
 The automated quality tests in `src/__tests__/codeQuality.test.ts` enforce structural consistency:
 - All ScreenType values registered in DisplayScreen.tsx and test validScreenTypes
