@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { Tutorial } from '@/types/tutorial';
 import { useTutorialEngine } from '@/hooks/useTutorialEngine';
+import { PANEL_NATURAL_WIDTH, PANEL_NATURAL_HEIGHT } from '@/lib/constants';
 import TutorialOverlay from './TutorialOverlay';
 import KeyboardZoneOverlay from './KeyboardZoneOverlay';
 
@@ -18,6 +19,24 @@ export default function TutorialRunner({
   DevicePanel,
 }: TutorialRunnerProps) {
   const store = useTutorialEngine(tutorial);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(() => {
+    const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
+    return Math.min(w / PANEL_NATURAL_WIDTH, 1);
+  });
+
+  const updateScale = useCallback((width: number) => {
+    if (width > 0) setScale(Math.min(width / PANEL_NATURAL_WIDTH, 1));
+  }, []);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => updateScale(entries[0].contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [updateScale]);
 
   const step = store.currentStep();
   const totalSteps = store.totalSteps();
@@ -79,30 +98,28 @@ export default function TutorialRunner({
 
       {/* Main content area — scrollable, panel + overlay in flow */}
       <div className="flex-1 flex flex-col items-center overflow-auto p-3">
-        {/* Device Panel */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key="device-panel"
-            className="w-full"
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-          >
+        {/* Device Panel — scaled to fit container width */}
+        <div ref={containerRef} className="w-full overflow-hidden rounded-lg"
+             style={{ height: PANEL_NATURAL_HEIGHT * scale }}>
+          <div style={{
+            width: PANEL_NATURAL_WIDTH,
+            height: PANEL_NATURAL_HEIGHT,
+            transformOrigin: 'top left',
+            transform: `scale(${scale})`,
+          }}>
             <DevicePanel
               panelState={store.panelState}
               displayState={store.displayState}
               highlightedControls={store.highlightedControls}
               zones={store.zones}
             />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Keyboard zone overlay */}
-        {store.zones.length > 0 && (
-          <div className="w-full mt-2">
-            <KeyboardZoneOverlay zones={store.zones} />
+            {store.zones.length > 0 && (
+              <div className="w-full mt-2">
+                <KeyboardZoneOverlay zones={store.zones} />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Floating tutorial overlay — position: fixed, rendered outside flow */}
