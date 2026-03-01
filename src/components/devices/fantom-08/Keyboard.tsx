@@ -43,23 +43,6 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
 
   const totalWhiteKeys = whiteNotes.length;
 
-  // Calculate zone label positions
-  const zoneLabels = useMemo(() => {
-    return zones.map((zone) => {
-      const lowWhiteIdx = findNearestWhiteKeyIndex(zone.lowNote, whiteNotes);
-      const highWhiteIdx = findNearestWhiteKeyIndex(zone.highNote, whiteNotes);
-      const centerPct = ((lowWhiteIdx + highWhiteIdx) / 2 / totalWhiteKeys) * 100;
-      const widthPct = ((highWhiteIdx - lowWhiteIdx + 1) / totalWhiteKeys) * 100;
-      const color = zoneColorByNumber[zone.zoneNumber] ?? '#888888';
-      return {
-        ...zone,
-        centerPct,
-        widthPct,
-        color,
-      };
-    });
-  }, [zones, whiteNotes, totalWhiteKeys]);
-
   return (
     <motion.div
       className="flex flex-col w-full"
@@ -68,7 +51,7 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
       transition={{ duration: 0.4, delay: 0.35 }}
     >
       {/* Keyboard container — taller for proper proportions */}
-      <div className="relative w-full h-44 select-none">
+      <div className="relative w-full h-32 select-none">
         {/* White keys */}
         <div className="flex h-full">
           {whiteNotes.map((note) => {
@@ -159,41 +142,8 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
         })}
       </div>
 
-      {/* Zone labels below the keyboard */}
-      {zoneLabels.length > 0 && (
-        <div className="relative w-full h-4 mt-0.5">
-          {zoneLabels.map((zl) => (
-            <div
-              key={zl.zoneNumber}
-              className="absolute flex items-center justify-center"
-              style={{
-                left: `${zl.centerPct}%`,
-                transform: 'translateX(-50%)',
-                width: `${Math.max(zl.widthPct, 3)}%`,
-              }}
-            >
-              <span
-                className="text-[7px] font-mono font-bold tracking-wide px-1 rounded-sm"
-                style={{
-                  color: zl.color,
-                  backgroundColor: `${zl.color}18`,
-                }}
-              >
-                {zl.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
     </motion.div>
   );
-}
-
-function findNearestWhiteKeyIndex(midi: number, whiteNotes: { midiNote: number }[]): number {
-  for (let i = whiteNotes.length - 1; i >= 0; i--) {
-    if (whiteNotes[i].midiNote <= midi) return i;
-  }
-  return 0;
 }
 
 function findPrecedingWhiteKeyIndex(

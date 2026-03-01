@@ -68,5 +68,5 @@ export const TUTORIAL_CATEGORIES: { id: string; label: string; icon: string }[] 
 ];
 
 // Panel design dimensions (px) — the "native" size of the Fantom 08 panel
-export const PANEL_NATURAL_WIDTH = 2670;
-export const PANEL_NATURAL_HEIGHT = 788;
+export const PANEL_NATURAL_WIDTH = 2700;
+export const PANEL_NATURAL_HEIGHT = 580;

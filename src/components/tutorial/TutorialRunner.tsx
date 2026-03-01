@@ -113,13 +113,13 @@ export default function TutorialRunner({
               highlightedControls={store.highlightedControls}
               zones={store.zones}
             />
-            {store.zones.length > 0 && (
-              <div className="w-full mt-2">
-                <KeyboardZoneOverlay zones={store.zones} />
-              </div>
-            )}
           </div>
         </div>
+        {store.zones.length > 0 && (
+          <div className="w-full mt-2">
+            <KeyboardZoneOverlay zones={store.zones} />
+          </div>
+        )}
       </div>
 
       {/* Floating tutorial overlay — position: fixed, rendered outside flow */}

@@ -143,20 +143,21 @@ describe('computeZoomTransform', () => {
     const ch = 1440;
     const target = { x: 50, y: 50, sectionKey: 'display' };
     const result = computeZoomTransform(target, cw, ch);
-    const baseScale = cw / PANEL_NATURAL_WIDTH; // ~0.9588
-    // baseScale * 1.6 = ~1.534, min(1.534, 0.8) = 0.8, max(0.9588, 0.8) = 0.9588
+    const baseScale = cw / PANEL_NATURAL_WIDTH; // ~0.948
+    // baseScale * 1.6 = ~1.517, min(1.517, 0.8) = 0.8, max(0.948, 0.8) = 0.948
     expect(result.scale).toBeCloseTo(baseScale, 4);
   });
 
-  it('very large screen (2670px+): baseScale >= 1.0', () => {
-    const cw = 2670;
+  it('very large screen (2800px+): baseScale >= 1.0', () => {
+    const cw = 2800;
     const ch = 1500;
     const result = computeZoomTransform(null, cw, ch);
-    expect(result.scale).toBeCloseTo(1.0, 4);
+    const baseScale = cw / PANEL_NATURAL_WIDTH; // 2800/2700 ≈ 1.037
+    expect(result.scale).toBeCloseTo(baseScale, 4);
     // When zoomed on a very large screen
     const target = { x: 50, y: 50, sectionKey: 'display' };
     const zoomed = computeZoomTransform(target, cw, ch);
-    // max(1.0, min(1.6, 0.8)) = max(1.0, 0.8) = 1.0
-    expect(zoomed.scale).toBeCloseTo(1.0, 4);
+    // baseScale > 1 so max(baseScale, ...) = baseScale
+    expect(zoomed.scale).toBeCloseTo(baseScale, 4);
   });
 });

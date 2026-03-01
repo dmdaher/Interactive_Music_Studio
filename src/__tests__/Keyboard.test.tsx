@@ -15,9 +15,9 @@ describe('Keyboard', () => {
     expect(blackKeys.length).toBe(36);
   });
 
-  it('height class is h-44 (176px)', () => {
+  it('height class is h-32 (128px)', () => {
     const { container } = render(<Keyboard />);
-    const keyboardContainer = container.querySelector('.h-44');
+    const keyboardContainer = container.querySelector('.h-32');
     expect(keyboardContainer).toBeInTheDocument();
   });
 
@@ -41,12 +41,12 @@ describe('Keyboard', () => {
     expect(cTexts.length).toBeGreaterThan(0);
   });
 
-  it('zone labels rendered below keyboard when zones provided', () => {
+  it('no zone labels rendered in Keyboard (handled by KeyboardZoneOverlay)', () => {
     const zones = [
       { zoneNumber: 1, color: '#3B82F6', lowNote: 21, highNote: 59, label: 'Zone 1 (Bass)' },
     ];
     const { container } = render(<Keyboard zones={zones} />);
     const label = container.querySelector('.font-mono.font-bold');
-    expect(label?.textContent).toContain('Zone 1');
+    expect(label).toBeNull();
   });
 });
