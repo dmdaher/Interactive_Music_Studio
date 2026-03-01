@@ -99,7 +99,7 @@ export default function TutorialRunner({
       {/* Main content area — scrollable, panel + overlay in flow */}
       <div className="flex-1 flex flex-col items-center overflow-auto p-3">
         {/* Device Panel — scaled to fit container width */}
-        <div ref={containerRef} className="w-full overflow-hidden rounded-lg"
+        <div ref={containerRef} className="w-full overflow-x-auto rounded-lg"
              style={{ height: PANEL_NATURAL_HEIGHT * scale }}>
           <div style={{
             width: PANEL_NATURAL_WIDTH,
