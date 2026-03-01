@@ -15,9 +15,9 @@ describe('Keyboard', () => {
     expect(blackKeys.length).toBe(36);
   });
 
-  it('height class is h-32 (128px)', () => {
+  it('height class is h-44 (176px)', () => {
     const { container } = render(<Keyboard />);
-    const keyboardContainer = container.querySelector('.h-32');
+    const keyboardContainer = container.querySelector('.h-44');
     expect(keyboardContainer).toBeInTheDocument();
   });
 

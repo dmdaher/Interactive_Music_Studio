@@ -68,7 +68,7 @@ export default function Keyboard({ zones = [], highlightedKeys = [] }: KeyboardP
       transition={{ duration: 0.4, delay: 0.35 }}
     >
       {/* Keyboard container — taller for proper proportions */}
-      <div className="relative w-full h-32 select-none">
+      <div className="relative w-full h-44 select-none">
         {/* White keys */}
         <div className="flex h-full">
           {whiteNotes.map((note) => {

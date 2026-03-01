@@ -59,7 +59,7 @@ describe('FantomPanel', () => {
 
   it('keyboard rendered below control row', () => {
     const { container } = render(<FantomPanel {...defaultProps} />);
-    const keyboard = container.querySelector('.h-32');
+    const keyboard = container.querySelector('.h-44');
     expect(keyboard).toBeInTheDocument();
   });
 
