@@ -99,20 +99,25 @@ export default function TutorialRunner({
       {/* Main content area — scrollable, panel + overlay in flow */}
       <div className="flex-1 flex flex-col items-center overflow-auto p-3">
         {/* Device Panel — scaled to fit container width */}
-        <div ref={containerRef} className="w-full overflow-x-auto rounded-lg"
-             style={{ height: PANEL_NATURAL_HEIGHT * scale }}>
+        <div ref={containerRef} className="w-full overflow-x-auto rounded-lg">
           <div style={{
-            width: PANEL_NATURAL_WIDTH,
-            height: PANEL_NATURAL_HEIGHT,
-            transformOrigin: 'top left',
-            transform: `scale(${scale})`,
+            width: PANEL_NATURAL_WIDTH * scale,
+            height: PANEL_NATURAL_HEIGHT * scale,
+            overflow: 'hidden',
           }}>
-            <DevicePanel
-              panelState={store.panelState}
-              displayState={store.displayState}
-              highlightedControls={store.highlightedControls}
-              zones={store.zones}
-            />
+            <div style={{
+              width: PANEL_NATURAL_WIDTH,
+              height: PANEL_NATURAL_HEIGHT,
+              transformOrigin: 'top left',
+              transform: `scale(${scale})`,
+            }}>
+              <DevicePanel
+                panelState={store.panelState}
+                displayState={store.displayState}
+                highlightedControls={store.highlightedControls}
+                zones={store.zones}
+              />
+            </div>
           </div>
         </div>
         {store.zones.length > 0 && (
