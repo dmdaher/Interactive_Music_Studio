@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Tutorial } from '@/types/tutorial';
 import { useTutorialEngine } from '@/hooks/useTutorialEngine';
 import { PANEL_NATURAL_WIDTH, PANEL_NATURAL_HEIGHT } from '@/lib/constants';
-import TutorialOverlay from './TutorialOverlay';
+import StepContent from './StepContent';
+import NavigationControls from './NavigationControls';
+import ProgressBar from './ProgressBar';
 import KeyboardZoneOverlay from './KeyboardZoneOverlay';
 
 interface TutorialRunnerProps {
@@ -13,6 +15,12 @@ interface TutorialRunnerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   DevicePanel: React.ComponentType<any>;
 }
+
+const SPEED_OPTIONS = [
+  { label: 'Slow', value: 15 },
+  { label: 'Medium', value: 8 },
+  { label: 'Fast', value: 4 },
+] as const;
 
 export default function TutorialRunner({
   tutorial,
@@ -58,7 +66,7 @@ export default function TutorialRunner({
   return (
     <div className="fixed inset-0 z-40 flex flex-col bg-[#0a0a14]">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0f0f1a]/80 backdrop-blur-md flex-shrink-0">
+      <header className="flex items-center justify-between px-4 py-2.5 border-b border-white/10 bg-[#0f0f1a] flex-shrink-0">
         <div className="flex items-center gap-3">
           <button
             type="button"
@@ -96,9 +104,8 @@ export default function TutorialRunner({
         </div>
       </header>
 
-      {/* Main content area — scrollable, panel + overlay in flow */}
-      <div className="flex-1 flex flex-col items-center overflow-auto p-3">
-        {/* Device Panel — scaled to fit container width */}
+      {/* Pinned panel area */}
+      <div className="flex-shrink-0 flex flex-col items-center p-3 pb-0">
         <div ref={containerRef} className="w-full overflow-x-auto rounded-lg">
           <div style={{
             width: PANEL_NATURAL_WIDTH * scale,
@@ -127,26 +134,71 @@ export default function TutorialRunner({
         )}
       </div>
 
-      {/* Floating tutorial overlay — position: fixed, rendered outside flow */}
-      <AnimatePresence>
-        {step && (
-          <TutorialOverlay
-            step={step}
-            stepNumber={store.currentStepIndex + 1}
-            totalSteps={totalSteps}
-            onNext={store.nextStep}
-            onPrev={store.prevStep}
-            onClose={handleClose}
-            isFirst={isFirst}
-            isLast={isLast}
+      {/* Controls bar */}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-y border-white/10 bg-[#0f0f1a]/60">
+        <NavigationControls
+          onPrev={store.prevStep}
+          onNext={store.nextStep}
+          isPrevDisabled={isFirst}
+          isNextDisabled={isLast}
+          autoplay={store.autoplay}
+          onToggleAutoplay={store.toggleAutoplay}
+        />
+
+        <div className="flex-1 mx-4">
+          <ProgressBar
             progress={progress}
-            autoplay={store.autoplay}
-            autoplaySpeed={store.autoplaySpeed}
-            onToggleAutoplay={store.toggleAutoplay}
-            onSetAutoplaySpeed={store.setAutoplaySpeed}
+            steps={totalSteps}
+            currentStep={store.currentStepIndex}
           />
+        </div>
+
+        {/* Keyboard shortcut hints */}
+        <div className="flex items-center gap-1.5 text-white/25 text-[10px]">
+          <kbd className="px-1.5 py-0.5 rounded border border-white/15 bg-white/5 font-mono">&larr;</kbd>
+          <kbd className="px-1.5 py-0.5 rounded border border-white/15 bg-white/5 font-mono">&rarr;</kbd>
+          <kbd className="px-1.5 py-0.5 rounded border border-white/15 bg-white/5 font-mono text-[9px]">Space</kbd>
+        </div>
+      </div>
+
+      {/* Speed controls (only when autoplay is on) */}
+      <AnimatePresence>
+        {store.autoplay && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="overflow-hidden flex-shrink-0"
+          >
+            <div className="px-4 py-2 flex items-center gap-2 border-b border-white/10 bg-[#0f0f1a]/40">
+              <span className="text-[10px] text-white/30">Speed</span>
+              <div className="flex items-center gap-1">
+                {SPEED_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => store.setAutoplaySpeed(option.value)}
+                    className={[
+                      'px-3 py-1 rounded text-xs font-medium transition-colors cursor-pointer',
+                      store.autoplaySpeed === option.value
+                        ? 'bg-[#00aaff]/20 text-[#00ccff] border border-[#00aaff]/30'
+                        : 'text-white/40 hover:text-white/60 hover:bg-white/5 border border-transparent',
+                    ].join(' ')}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Scrollable step content */}
+      <div className="flex-1 overflow-y-auto">
+        <StepContent step={step} />
+      </div>
     </div>
   );
 }

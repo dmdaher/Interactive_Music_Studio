@@ -78,9 +78,7 @@ describe('TutorialRunner', () => {
   it('close button calls reset + history.back', () => {
     const historyBack = vi.spyOn(window.history, 'back').mockImplementation(() => {});
     render(<TutorialRunner tutorial={testTutorial} DevicePanel={MockDevicePanel} />);
-    // There are two close buttons (header + overlay), click the header one
-    const closeBtns = screen.getAllByLabelText('Close tutorial');
-    fireEvent.click(closeBtns[0]);
+    fireEvent.click(screen.getByLabelText('Close tutorial'));
     expect(historyBack).toHaveBeenCalled();
     historyBack.mockRestore();
   });
