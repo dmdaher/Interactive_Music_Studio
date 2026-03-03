@@ -17,7 +17,7 @@ const expectedStepCounts: Record<string, number> = {
   'split-keyboard-zones': 10,
   'layering-zones': 9,
   'four-zone-setup': 12,
-  'transpose-octave': 7,
+  'transpose-octave': 8,
   'using-sliders-knobs': 13,
   'editing-mfx': 8,
   'understanding-the-mixer': 8,

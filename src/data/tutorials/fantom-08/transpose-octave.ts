@@ -176,62 +176,31 @@ export const transposeOctave: Tutorial = {
       id: 'step-5',
       title: 'Using Transpose',
       instruction:
-        'Press the Transpose button. This opens the transpose setting where you can shift by individual semitones using the Value dial.',
+        'Hold down the [TRANSPOSE] button and press Octave [UP] to transpose up by one semitone. Each press of Octave Up/Down shifts by one semitone while Transpose is held.',
       details:
-        'Transpose range is -5 to +6 semitones. This is perfect for changing the key of a song without relearning fingerings.',
-      highlightControls: ['transpose'],
+        'Transpose range is -5 to +6 semitones. This is perfect for changing the key of a song without relearning fingerings. The screen briefly shows the current transpose value.',
+      highlightControls: ['transpose', 'octave-up'],
       panelStateChanges: {
         'octave-up': { active: false },
-        transpose: { active: true },
       },
       displayState: {
-        screenType: 'menu',
-        title: 'TRANSPOSE',
+        screenType: 'home',
+        sceneNumber: 'A001',
+        sceneName: 'Concert Grand',
         tempo: 120,
         beatSignature: '4/4',
-        menuItems: [
-          { label: 'Transpose: 0', selected: true },
-          { label: 'Range: -5 to +6' },
-        ],
-        selectedIndex: 0,
-        parameterName: 'Transpose',
-        parameterValue: '0',
+        statusText: 'Transpose: +1',
       },
+      tipText:
+        'The transpose value flashes briefly on screen then disappears — this is normal.',
     },
     {
       id: 'step-6',
-      title: 'Set Transpose',
+      title: 'Transpose Up Again',
       instruction:
-        'Turn the Value dial to set the transpose value. For example, set it to +2 to transpose up a whole step (e.g., play in C and hear in D).',
-      highlightControls: ['value-dial'],
+        'While still holding [TRANSPOSE], press Octave [UP] once more. The display flashes "Transpose: +2" — you are now transposed up a whole step (e.g., play in C and hear in D).',
+      highlightControls: ['transpose', 'octave-up'],
       panelStateChanges: {},
-      displayState: {
-        screenType: 'menu',
-        title: 'TRANSPOSE',
-        tempo: 120,
-        beatSignature: '4/4',
-        menuItems: [
-          { label: 'Transpose: +2', selected: true },
-          { label: 'Range: -5 to +6' },
-        ],
-        selectedIndex: 0,
-        parameterName: 'Transpose',
-        parameterValue: '+2',
-      },
-      tipText:
-        'Common transpose values: +2 (whole step up), -3 (minor third down), +5 (perfect fourth up).',
-    },
-    {
-      id: 'step-7',
-      title: 'Transpose & Octave Complete!',
-      instruction:
-        'You now know how to shift the keyboard pitch. Press Exit to return to the main screen. Remember to save your scene if you want to keep the transpose setting.',
-      details:
-        'Transpose and octave settings are saved per-zone within a scene. Different zones can have different transpose values — useful for creating harmonized layers.',
-      highlightControls: ['exit'],
-      panelStateChanges: {
-        transpose: { active: false },
-      },
       displayState: {
         screenType: 'home',
         sceneNumber: 'A001',
@@ -241,7 +210,44 @@ export const transposeOctave: Tutorial = {
         statusText: 'Transpose: +2',
       },
       tipText:
-        'The status bar shows the active transpose value so you always know when transposition is active.',
+        'Common transpose values: +2 (whole step up), -3 (minor third down), +5 (perfect fourth up).',
+    },
+    {
+      id: 'step-7',
+      title: 'Toggle and Reset Transpose',
+      instruction:
+        'Release Transpose, then press it once to toggle transpose off. Press it again to re-enable the previously set value. To reset to 0, hold [TRANSPOSE] and press Octave [DOWN] + [UP] simultaneously.',
+      details:
+        'Transpose and octave settings are saved per-zone within a scene. Different zones can have different transpose values — useful for creating harmonized layers.',
+      highlightControls: ['transpose'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'home',
+        sceneNumber: 'A001',
+        sceneName: 'Concert Grand',
+        tempo: 120,
+        beatSignature: '4/4',
+        statusText: 'Transpose: off',
+      },
+      tipText:
+        'Pressing Transpose toggles it on/off without losing the value. Hold Transpose + press both Octave buttons to reset to 0.',
+    },
+    {
+      id: 'step-8',
+      title: 'Transpose & Octave Complete!',
+      instruction:
+        'You now know how to shift the keyboard pitch using both octave and transpose. Remember to save your scene if you want to keep these settings.',
+      highlightControls: ['exit'],
+      panelStateChanges: {},
+      displayState: {
+        screenType: 'home',
+        sceneNumber: 'A001',
+        sceneName: 'Concert Grand',
+        tempo: 120,
+        beatSignature: '4/4',
+      },
+      tipText:
+        'Save your scene with [WRITE] to preserve transpose and octave settings.',
     },
   ],
 };
