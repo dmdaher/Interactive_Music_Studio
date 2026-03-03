@@ -222,7 +222,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-6">
           <div className="flex items-center justify-between">
             <p className="text-xs text-gray-500">
-              Ask Miyagi &mdash; Learn your gear, one step at a time.
+              Ask Miyagi &mdash; Step-by-step interactive tutorials using a replica of your synth.
             </p>
             <p className="text-xs text-gray-600">
               Not affiliated with Roland or Boss.
