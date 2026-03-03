@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Interactive Music Studio',
-  description: 'Interactive tutorials for Roland Fantom 08 and Boss RC-505 MK2',
+  title: 'Ask Miyagi — Master Your Instrument',
+  description: 'Step-by-step interactive tutorials using a replica of your synth.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
