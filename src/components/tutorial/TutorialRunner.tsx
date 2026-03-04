@@ -178,6 +178,11 @@ export default function TutorialRunner({
         </div>
       </div>
 
+      {/* Panel hint (first step only) */}
+      <div className="text-center text-xs text-[#66ccff] font-medium py-2" style={{ background: 'rgba(0, 170, 255, 0.08)' }}>
+        ↑ Your instrument updates in real time — watch the highlighted controls above as you navigate
+      </div>
+
       {/* Speed controls (only when autoplay is on) */}
       <AnimatePresence>
         {store.autoplay && (
