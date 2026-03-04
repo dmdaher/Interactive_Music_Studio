@@ -34,10 +34,10 @@ export const waveEditing: Tutorial = {
       id: 'step-2',
       title: 'Open the Sample Pad Screen',
       instruction:
-        'Press the Sampling button to open the Sample Pad screen. This shows the 4x4 pad grid where your recorded samples are assigned.',
+        'Hold SHIFT and press the Sampling button to open the Sample Pad screen. This shows the 4x4 pad grid where your recorded samples are assigned.',
       details:
-        'Before you can edit a waveform, you need to navigate to a recorded sample. The Sample Pad screen displays all 16 pads and their assigned samples. We will select a sample from here to enter the Wave Edit screen.',
-      highlightControls: ['sampling'],
+        'The SAMPLE PAD screen is accessed by holding [SHIFT] and pressing [SAMPLING]. This is different from just pressing [SAMPLING], which opens the Sampling Menu for new recordings. The Sample Pad screen displays all 16 pads and their assigned samples.',
+      highlightControls: ['shift', 'sampling'],
       panelStateChanges: {
         sampling: { active: true, ledOn: true },
       },
@@ -59,10 +59,10 @@ export const waveEditing: Tutorial = {
       id: 'step-3',
       title: 'Enter Wave Edit Mode',
       instruction:
-        'With Pad 1 selected, press the E6 knob (EDIT) to enter the KBD SAMPLE WAVE EDIT screen for the selected sample.',
+        'With Pad 1 selected, press the E1 knob (WAVE EDIT) to enter the KBD SAMPLE WAVE EDIT screen for the selected sample.',
       details:
-        'The E6 knob acts as the EDIT function when viewing the Sample Pad screen. Pressing it opens the full waveform editor where you can see the sample waveform and adjust all playback parameters.',
-      highlightControls: ['function-e6'],
+        'On the SAMPLE PAD screen, E1 opens WAVE EDIT and E2 opens QUICK EDIT. WAVE EDIT gives you full control over start/end/loop points, waveform visualization, and sample parameters.',
+      highlightControls: ['function-e1'],
       panelStateChanges: {
         'pad-1': { active: true, ledOn: true, ledColor: '#00ff44' },
       },

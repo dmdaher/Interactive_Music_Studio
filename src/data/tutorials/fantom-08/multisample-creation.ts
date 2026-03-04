@@ -112,10 +112,10 @@ export const multisampleCreation: Tutorial = {
       id: 'step-5',
       title: 'Add a New Area with UTILITY',
       instruction:
-        'Press the E6 knob to open the UTILITY tab menu. Select ADD to create a new area. A new empty area will appear in the area list, ready for sample assignment and key range configuration.',
+        'Touch the <UTILITY> tab at the top of the display to open the utility menu. Select ADD to create a new area. A new empty area will appear in the area list, ready for sample assignment and key range configuration.',
       details:
         'The UTILITY menu provides area management functions: ADD (create new area), DELETE (remove selected area), COPY (duplicate an area), and SORT (reorder areas by key range). When you ADD a new area, it is created with a default single-key range at the current cursor position. You will expand it in the next steps.',
-      highlightControls: ['function-e6'],
+      highlightControls: ['display'],
       panelStateChanges: {},
       displayState: {
         screenType: 'multisample-edit',

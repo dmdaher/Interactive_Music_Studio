@@ -32,9 +32,9 @@ export const samplingBasics: Tutorial = {
       id: 'step-2',
       title: 'Open the Sampling Screen',
       instruction:
-        'Press the Sampling button (in the Pad section) to open the Sampling Standby screen.',
+        'Press the Sampling button (in the Pad section) to open the Sampling Menu. Touch "To Pad" to open the Sampling Standby screen.',
       details:
-        'The Sampling button launches the sampler workflow. The standby screen shows input parameters, a time counter, and a level meter so you can prepare before recording.',
+        'The Sampling button opens the Sampling Menu with three destinations: To Pad (record to a pad), To Keyboard (record to the keyboard), and To Storage (record directly to USB). Touch "To Pad" to enter the Sampling Standby screen, which shows input parameters, a time counter, and a level meter.',
       highlightControls: ['sampling'],
       panelStateChanges: {
         sampling: { active: true, ledOn: true },
@@ -56,11 +56,11 @@ export const samplingBasics: Tutorial = {
     },
     {
       id: 'step-3',
-      title: 'Select the Input Source',
+      title: 'Configure Input Mode',
       instruction:
-        'Turn the E1 knob to choose your input source. Select MIC to sample from an external microphone connected to the rear panel.',
+        'Turn the E1 knob to switch to IN mode. This lets you configure the audio input for recording from an external source.',
       details:
-        'The E1 knob scrolls through sampling modes and source options. Available sources include MIC (external microphone), LINE (line-level input), and DIGITAL (USB audio). Make sure your mic or audio source is connected before proceeding.',
+        'E1 toggles between TRIG mode (auto-trigger recording when input exceeds a threshold) and IN mode (manual recording with audio input configuration). In IN mode, the other E-knobs let you select input source and adjust recording level.',
       highlightControls: ['function-e1'],
       panelStateChanges: {},
       displayState: {
@@ -80,12 +80,12 @@ export const samplingBasics: Tutorial = {
     },
     {
       id: 'step-4',
-      title: 'Adjust Input Gain',
+      title: 'Select Input Source and Level',
       instruction:
-        'Turn the E2 knob to adjust the input level. Watch the level meter on the right side of the display and aim for a strong signal that does not clip (stay out of the red).',
+        'Turn E2 to select your input source — choose MIC for a connected microphone or LINE for a line-level input. Turn E4 to adjust the recording level. Watch the level meter and aim for a strong signal that does not clip.',
       details:
-        'Setting proper gain is critical for a clean sample. The level meter shows L/R channel levels in real time. The signal should peak in the yellow zone without hitting red. Too low and the sample will be noisy; too high and it will distort.',
-      highlightControls: ['function-e2', 'value-dial'],
+        'In IN mode, E2 selects the input source (MIC or LINE), E3 toggles AUDIO IN on/off, and E4 adjusts the recording level. The level meter shows real-time input levels. Keep the signal in the yellow zone — too low and the sample will be noisy, too high and it will distort.',
+      highlightControls: ['function-e2', 'function-e4'],
       panelStateChanges: {},
       displayState: {
         screenType: 'sampling',
@@ -100,23 +100,21 @@ export const samplingBasics: Tutorial = {
         selectedIndex: 3,
       },
       tipText:
-        'Speak or play into the mic while adjusting gain. Use the Value dial or E2 knob — the meter responds in real time so you can dial in the right level before recording.',
+        'Speak or play into the mic while adjusting E4. The meter responds in real time so you can dial in the right level before recording.',
     },
     {
       id: 'step-5',
-      title: 'Arm Recording',
+      title: 'Start Recording',
       instruction:
-        'Press the REC button on the transport controls. The REC LED lights up red, indicating the sampler is armed and ready to record.',
+        'Touch <START> on the display to begin recording. The screen changes to NOW SAMPLING and the time counter starts.',
       details:
-        'Arming sets the sampler into a ready state. It will not begin recording yet. This gives you a moment to prepare your sound source. The next step will actually start the recording.',
-      highlightControls: ['rec'],
-      panelStateChanges: {
-        rec: { active: true, ledOn: true, ledColor: '#ff2222' },
-      },
+        'Touching <START> immediately begins recording audio from your configured input. The time counter advances in real time. You can also use TRIG mode (E1) to enable auto-trigger, which starts recording automatically when the input level exceeds a threshold.',
+      highlightControls: ['display'],
+      panelStateChanges: {},
       displayState: {
         screenType: 'sampling',
-        title: 'SAMPLING STANDBY',
-        statusText: 'ARMED',
+        title: 'NOW SAMPLING',
+        statusText: 'NOW SAMPLING',
         menuItems: [
           { label: 'Sampling Mode: MONO' },
           { label: 'Format: WAV 44.1kHz' },
@@ -126,23 +124,21 @@ export const samplingBasics: Tutorial = {
         selectedIndex: 0,
       },
       tipText:
-        'The REC LED glows red when armed. You can also set Auto Trigger to start recording automatically when the input level exceeds a threshold.',
+        'Enable AUTO TRIGGER via TRIG mode (E1) for hands-free recording — the Fantom starts recording automatically when it detects audio above the threshold.',
     },
     {
       id: 'step-6',
-      title: 'Start and Stop Recording',
+      title: 'Stop Recording',
       instruction:
-        'Press PLAY to begin recording. Perform your sound, then press STOP when finished. The time counter on the display advances while recording.',
+        'When you have captured your audio, touch <STOP> on the display. The time counter stops and a preview dialog appears showing your recorded waveform.',
       details:
-        'Once you press PLAY, the status changes to NOW SAMPLING and the timer starts counting. Record your sound — a vocal phrase, a guitar riff, or any audio. Press STOP when done. The Fantom can record up to several minutes depending on available sample memory.',
-      highlightControls: ['play', 'stop'],
-      panelStateChanges: {
-        play: { active: true, ledOn: true, ledColor: '#00ff44' },
-      },
+        'The Fantom can record up to several minutes depending on available sample memory. Touch <STOP> whenever you are done. The recorded audio is held in temporary memory until you accept or discard it in the preview dialog.',
+      highlightControls: ['display'],
+      panelStateChanges: {},
       displayState: {
         screenType: 'sampling',
-        title: 'NOW SAMPLING',
-        statusText: 'NOW SAMPLING',
+        title: 'SAMPLING COMPLETE',
+        statusText: 'Recording stopped',
         menuItems: [
           { label: 'Time: 000:03:42' },
           { label: 'Format: WAV 44.1kHz' },
@@ -152,7 +148,7 @@ export const samplingBasics: Tutorial = {
         selectedIndex: 0,
       },
       tipText:
-        'Keep an eye on the level meter while recording. If it clips into the red, stop and redo with lower gain.',
+        'Keep an eye on the level meter while recording. If it clips into the red, re-record with a lower level (E4).',
     },
     {
       id: 'step-7',
@@ -162,11 +158,7 @@ export const samplingBasics: Tutorial = {
       details:
         'The preview dialog shows the waveform of your recorded audio. Use PREVIEW to audition it. If you are not satisfied, press E4 (RETRY) to record again, or E5 (CANCEL) to discard. Pressing OK saves the sample and proceeds to pad assignment.',
       highlightControls: ['function-e1', 'function-e6'],
-      panelStateChanges: {
-        play: { active: false, ledOn: false },
-        rec: { active: false, ledOn: false },
-        stop: { active: true },
-      },
+      panelStateChanges: {},
       displayState: {
         screenType: 'sampling',
         title: 'SAMPLING COMPLETE',

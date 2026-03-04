@@ -37,7 +37,7 @@ export const padModeSetup: Tutorial = {
         'The Pad Mode button launches a popup screen showing all available pad functions. Each grid position corresponds to a physical pad — press a pad or touch a mode icon to select it.',
       highlightControls: ['pad-mode'],
       panelStateChanges: {
-        'pad-mode': { active: true, ledOn: true },
+        'pad-mode': { active: true },
       },
       displayState: {
         screenType: 'pad-mode',
@@ -116,7 +116,7 @@ export const padModeSetup: Tutorial = {
         selectedIndex: 0,
       },
       tipText:
-        'Sample Pad mode is the default mode. Samples are stored per pad bank, so you can have up to 32 samples across Bank A and Bank B.',
+        'Sample Pad mode is the default mode. Samples are stored per pad bank, so you can have up to 64 samples across Bank 1 through Bank 4.',
     },
     {
       id: 'step-5',
@@ -236,20 +236,20 @@ export const padModeSetup: Tutorial = {
       id: 'step-9',
       title: 'Switch Pad Bank',
       instruction:
-        'Press the Bank button to switch from Bank A to Bank B. Each bank holds a separate set of pad assignments, giving you 32 pads total across two banks.',
+        'Press the Bank button to cycle through pad banks. The Fantom has 4 pad banks (Bank 1-4), each holding a separate set of 16 pad assignments — 64 pads total.',
       details:
-        'The Bank button toggles between Bank A and Bank B. Each bank stores independent pad mode assignments and sample mappings. Use Bank A for drum samples and Bank B for sound effects, or configure them however you like.',
+        'The Bank button cycles through Bank 1, Bank 2, Bank 3, and Bank 4. Each bank stores independent pad mode assignments and sample mappings. Use different banks for different sample sets or pad configurations.',
       highlightControls: ['bank'],
       panelStateChanges: {
         'pad-1': { active: false, ledOn: false },
-        bank: { active: true, ledOn: true },
+        bank: { active: true },
       },
       displayState: {
         screenType: 'pad-mode',
         title: 'PAD MODE',
-        statusText: 'Bank B selected',
+        statusText: 'Bank 2 selected',
         menuItems: [
-          { label: 'Bank: B', selected: true },
+          { label: 'Bank: 2', selected: true },
           { label: '1: Sample Pad' },
           { label: '2: Note Pad' },
           { label: '3: Partial Sw/Sel' },
@@ -259,7 +259,7 @@ export const padModeSetup: Tutorial = {
         selectedIndex: 0,
       },
       tipText:
-        'Bank A and Bank B each have their own pad mode and sample assignments. Switching banks does not affect the keyboard zones.',
+        'Each of the 4 pad banks has its own pad mode and sample assignments. Switching banks does not affect the keyboard zones.',
     },
     {
       id: 'step-10',
@@ -270,8 +270,8 @@ export const padModeSetup: Tutorial = {
         'You now know how to switch between pad modes, edit pad settings, and use pad banks. Try Zone Solo mode for live sound isolation, Rhythm Pattern mode for triggering drum patterns, or DAW Control mode to control your recording software directly from the pads.',
       highlightControls: ['exit'],
       panelStateChanges: {
-        bank: { active: false, ledOn: false },
-        'pad-mode': { active: false, ledOn: false },
+        bank: { active: false },
+        'pad-mode': { active: false },
         exit: { active: true },
       },
       displayState: {
