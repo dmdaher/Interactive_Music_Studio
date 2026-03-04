@@ -9,6 +9,7 @@ import StepContent from './StepContent';
 import NavigationControls from './NavigationControls';
 import ProgressBar from './ProgressBar';
 import KeyboardZoneOverlay from './KeyboardZoneOverlay';
+import ReportModal from './ReportModal';
 
 interface TutorialRunnerProps {
   tutorial: Tutorial;
@@ -29,6 +30,7 @@ export default function TutorialRunner({
   const store = useTutorialEngine(tutorial);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const [scale, setScale] = useState(() => {
     const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
     return Math.min(w / PANEL_NATURAL_WIDTH, 1) * 0.99;
@@ -99,8 +101,23 @@ export default function TutorialRunner({
           </div>
         </div>
 
-        <div className="text-xs text-white/40 font-medium">
-          {store.currentStepIndex + 1} / {totalSteps}
+        <div className="flex items-center gap-3">
+          <div className="text-xs text-white/40 font-medium">
+            {store.currentStepIndex + 1} / {totalSteps}
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsReportOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-amber-400 bg-amber-400/10 border border-amber-400/20 hover:bg-amber-400/20 hover:border-amber-400/30 transition-colors cursor-pointer"
+            aria-label="Report an issue"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+              <path d="M9 18h6" />
+              <path d="M10 22h4" />
+            </svg>
+            Help Us Improve
+          </button>
         </div>
       </header>
 
@@ -199,6 +216,20 @@ export default function TutorialRunner({
       <div className="flex-1 overflow-y-auto">
         <StepContent step={step} />
       </div>
+
+      {/* Report modal */}
+      <ReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        tutorialTitle={tutorial.title}
+        tutorialId={tutorial.id}
+        deviceId={tutorial.deviceId}
+        category={tutorial.category}
+        difficulty={tutorial.difficulty}
+        currentStepIndex={store.currentStepIndex}
+        stepTitles={tutorial.steps.map((s) => s.title)}
+        totalSteps={totalSteps}
+      />
     </div>
   );
 }

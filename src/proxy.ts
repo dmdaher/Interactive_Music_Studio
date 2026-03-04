@@ -3,23 +3,9 @@ import type { NextRequest } from 'next/server';
 
 const PUBLIC_PATHS = ['/preview', '/legal'];
 
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Allow public paths through without auth
-  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
-    return NextResponse.next();
-  }
-
-  // Check for preview access cookie
-  const previewAccess = request.cookies.get('preview_access');
-  if (previewAccess?.value) {
-    return NextResponse.next();
-  }
-
-  // Redirect to preview entry page
-  const previewUrl = new URL('/preview', request.url);
-  return NextResponse.redirect(previewUrl);
+export function proxy(_request: NextRequest) {
+  // Access gate disabled — allow everyone through
+  return NextResponse.next();
 }
 
 export const config = {
