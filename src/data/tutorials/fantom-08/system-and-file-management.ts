@@ -59,7 +59,7 @@ export const systemAndFileManagement: Tutorial = {
       instruction:
         'The SYSTEM screen displays 17 tabs on the left sidebar. Use the E1 knob to scroll through tabs. The currently selected tab\'s parameters appear in the main area on the right.',
       details:
-        'The 17 tabs are: GENERAL, KEYBOARD, PEDAL, WHEEL 1/2, S1/S2, CONTROL, MIDI, SYNC/TEMPO, USB/BLUETOOTH, DISPLAY, CLICK, METRONOME, SYSTEM, ASSIGN1, ASSIGN2, TONE EDIT, and BANK. Each tab contains related global parameters. Press WRITE to save any changes.',
+        'The 17 tabs are: GENERAL, KEYBOARD, PEDAL, WHEEL 1/2, S1/S2, SLIDER, KNOB, USB, MIDI, SOUND, SYNC/TEMPO, SEQUENCER, CLICK, NOTE PAD, CONTROL, LICENSE, and INFO. Each tab contains related global parameters. Press WRITE to save any changes.',
       highlightControls: ['function-e1'],
       panelStateChanges: {
         menu: { active: false },
@@ -113,9 +113,9 @@ export const systemAndFileManagement: Tutorial = {
       id: 'step-5',
       title: 'Browse MIDI Tab',
       instruction:
-        'Turn E1 to scroll the tab sidebar and select the MIDI tab. This shows MIDI channel assignments and transmit/receive settings for each zone.',
+        'Turn E1 to scroll the tab sidebar and select the MIDI tab. This shows global MIDI communication settings including device ID and transmit/receive options.',
       details:
-        'The MIDI tab controls how the Fantom communicates with external MIDI devices. Parameters include the global MIDI channel, per-zone Tx/Rx channels, and device ID. These settings are critical when integrating with DAWs, external synths, or MIDI controllers.',
+        'The MIDI tab controls how the Fantom communicates with external MIDI devices. Parameters include Device ID (17–32), Scene Control Channel (1–16 or OFF), USB-MIDI Thru, Remote Keyboard Switch, and Transmit/Receive settings. These settings are critical when integrating with DAWs, external synths, or MIDI controllers.',
       highlightControls: ['function-e1'],
       panelStateChanges: {},
       displayState: {
@@ -123,17 +123,16 @@ export const systemAndFileManagement: Tutorial = {
         title: 'SYSTEM',
         activeTab: 'MIDI',
         menuItems: [
-          { label: 'MIDI Ch', value: '1', selected: true },
-          { label: 'Zone 1 Tx Ch', value: '1' },
-          { label: 'Zone 1 Rx Ch', value: '1' },
-          { label: 'Zone 2 Tx Ch', value: '2' },
-          { label: 'Zone 2 Rx Ch', value: '2' },
-          { label: 'Device ID', value: '17' },
+          { label: 'Device ID', value: '17', selected: true },
+          { label: 'Scene Ctrl Ch', value: '1' },
+          { label: 'USB-MIDI Thru', value: 'OFF' },
+          { label: 'Remote Kbd Sw', value: 'OFF' },
+          { label: 'Soft Through', value: 'OFF' },
         ],
         selectedIndex: 0,
-        statusText: 'MIDI tab — 6 of 17',
+        statusText: 'MIDI tab — 9 of 17',
       },
-      tipText: 'MIDI channel assignments determine which zones respond to external MIDI input.',
+      tipText: 'Device ID identifies this Fantom when multiple MIDI devices are connected.',
     },
     {
       id: 'step-6',

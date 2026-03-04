@@ -37,7 +37,7 @@ export const sceneChainSmf: Tutorial = {
         'The Scene Chain screen displays a chain set name at the top (e.g., "001:My Chain 1"), a horizontal row of 16 scene icons per page, and the selected scene\'s name and description below. You can also access UTILITY and EDIT from this screen.',
       highlightControls: ['scene-chain'],
       panelStateChanges: {
-        'scene-chain': { active: true, ledOn: true },
+        'scene-chain': { active: true },
       },
       displayState: {
         screenType: 'scene-chain',
@@ -164,7 +164,7 @@ export const sceneChainSmf: Tutorial = {
         'The SMF Player is found under Menu > UTILITY > SMF PLAYER. It allows playback of Standard MIDI Files loaded from a USB drive. This is useful for playing along with backing tracks during practice or performance.',
       highlightControls: ['exit', 'menu'],
       panelStateChanges: {
-        'scene-chain': { active: false, ledOn: false },
+        'scene-chain': { active: false },
         menu: { active: true },
       },
       displayState: {

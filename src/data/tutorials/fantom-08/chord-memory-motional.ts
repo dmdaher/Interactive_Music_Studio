@@ -196,10 +196,10 @@ export const chordMemoryMotional: Tutorial = {
       id: 'step-9',
       title: 'Enable HOLD and AUTO',
       instruction:
-        'Press the E5 function button to enable HOLD — this locks the pointer at its current position. Then press the E6 function button to enable AUTO — the pointer moves automatically in a pattern for hands-free morphing.',
+        'Touch the <HOLD> button on the display to lock the pointer at its current position. Then touch the <AUTO> button to make the pointer move automatically in a pattern for hands-free morphing.',
       details:
-        'HOLD keeps the current volume blend locked so you can play with both hands. AUTO makes the pointer orbit automatically, creating evolving textures without any manual input. You can combine both: enable AUTO for movement and toggle HOLD to freeze at any moment.',
-      highlightControls: ['function-e5', 'function-e6'],
+        'HOLD and AUTO are touchscreen buttons on the Motional Pad display. HOLD keeps the current volume blend locked so you can play with both hands. AUTO makes the pointer orbit automatically, creating evolving textures without any manual input. You can combine both: enable AUTO for movement and toggle HOLD to freeze at any moment.',
+      highlightControls: ['display'],
       panelStateChanges: {},
       displayState: {
         screenType: 'motional-pad',
