@@ -102,11 +102,12 @@ export const fourZoneSetup: Tutorial = {
       id: 'step-4',
       title: 'Set Bass Key Range',
       instruction:
-        "Press Split to open the key range editor, then set Zone 1 range to A0\u2013B2 using the Value dial. This gives bass the lowest two octaves.",
-      highlightControls: ['split', 'value-dial'],
+        'Hold [SHIFT] and press [SPLIT] to open the Key Range editor for Zone 1. Use the Value dial to set the upper limit to B2, giving bass the lowest two octaves.',
+      details:
+        'SHIFT+SPLIT opens the KEY RANGE screen of ZONE EDIT, where you can set KEYBOARD RANGE LOWER and UPPER for the selected zone.',
+      highlightControls: ['shift', 'split', 'value-dial'],
       panelStateChanges: {
         'tone-cat-6': { active: false },
-        split: { active: true, ledOn: true, ledColor: '#00ff44' },
       },
       displayState: {
         screenType: 'key-range',
@@ -126,7 +127,7 @@ export const fourZoneSetup: Tutorial = {
         },
       ],
       tipText:
-        'B2 is a natural bass cutoff — most bass sounds work best below C3.',
+        'B2 is a natural bass cutoff — most bass sounds work best below C3. The Split LED lights up automatically when any zone has a non-default key range.',
     },
     {
       id: 'step-5',
@@ -135,7 +136,6 @@ export const fourZoneSetup: Tutorial = {
         'Press Zone 2 to activate it, then press the A.Piano category button to assign a piano tone.',
       highlightControls: ['zone-2', 'tone-cat-1'],
       panelStateChanges: {
-        split: { active: false, ledOn: false },
         'zone-2': { active: true, ledOn: true, ledColor: '#EF4444' },
         'zone-1': { active: false, ledOn: true, ledColor: '#3B82F6' },
         'tone-cat-1': { active: true },

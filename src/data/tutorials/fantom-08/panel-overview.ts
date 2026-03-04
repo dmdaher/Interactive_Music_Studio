@@ -88,7 +88,7 @@ export const panelOverview: Tutorial = {
       instruction:
         'The large LCD display shows scene info, zone settings, menus, and more. Use the Value dial to scroll through options and the cursor buttons to navigate.',
       details:
-        'The Dec and Inc buttons make fine adjustments. Enter confirms selections and Exit goes back. The six E-knobs below the display control on-screen parameters.',
+        'The Dec and Inc buttons make fine adjustments. Enter confirms selections and Exit goes back. The six E-knobs below the display control on-screen parameters. The Menu screen includes: Tone Edit, Effects Edit, Zone Edit, Scene Edit, Mixer, System, Arpeggio, Chord Memory, and File Utility.',
       highlightControls: [
         'display',
         'value-dial',
@@ -106,10 +106,10 @@ export const panelOverview: Tutorial = {
         screenType: 'menu',
         title: 'MENU',
         menuItems: [
-          { label: 'Zone Edit', selected: true },
-          { label: 'Effects' },
-          { label: 'Arpeggio' },
-          { label: 'System' },
+          { label: 'TONE EDIT', selected: true },
+          { label: 'EFFECTS EDIT' },
+          { label: 'ZONE EDIT' },
+          { label: 'SCENE EDIT' },
         ],
         selectedIndex: 0,
         tempo: 120,
@@ -120,7 +120,7 @@ export const panelOverview: Tutorial = {
       id: 'step-5',
       title: 'Synth Control Knobs',
       instruction:
-        "To the right of the display are dedicated synth controls \u2014 Cutoff, Resonance, and quick-access buttons for OSC, Filter, Amp, LFO, and FX editing.",
+        'To the right of the display are dedicated synth controls — Cutoff and Resonance knobs, plus quick-access buttons for OSC, Filter Type, Param, Amp, FX, and LFO editing.',
       details:
         "These let you tweak the currently selected zone's tone in real time without diving into menus. The Cutoff and Resonance knobs are the most commonly used.",
       highlightControls: [
