@@ -13,6 +13,7 @@ interface ChatContext {
 interface ChatStore {
   isOpen: boolean;
   messages: ChatMessage[];
+  lastResults: SearchResult[];
   context: ChatContext;
 
   toggle: () => void;
@@ -32,6 +33,7 @@ function nextId(): string {
 export const useChatStore = create<ChatStore>((set) => ({
   isOpen: false,
   messages: [],
+  lastResults: [],
   context: {},
 
   toggle: () => set((s) => ({ isOpen: !s.isOpen })),
@@ -60,10 +62,11 @@ export const useChatStore = create<ChatStore>((set) => ({
         timestamp: Date.now(),
         tutorials,
       }],
+      lastResults: tutorials ?? s.lastResults,
     }));
   },
 
-  clearMessages: () => set({ messages: [] }),
+  clearMessages: () => set({ messages: [], lastResults: [] }),
 
   setContext: (ctx: Partial<ChatContext>) => {
     set((s) => ({ context: { ...s.context, ...ctx } }));

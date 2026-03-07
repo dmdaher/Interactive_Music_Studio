@@ -34,9 +34,9 @@ describe('searchTutorials', () => {
     expect(results.length).toBe(0);
   });
 
-  it('returns at most 5 results', () => {
+  it('returns at most 10 results', () => {
     const results = searchTutorials('zone', 'fantom-08');
-    expect(results.length).toBeLessThanOrEqual(5);
+    expect(results.length).toBeLessThanOrEqual(10);
   });
 
   it('includes matchReasons', () => {

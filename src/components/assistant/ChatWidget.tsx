@@ -3,6 +3,8 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChatStore } from '@/store/chatStore';
+import { resolveFollowUp } from '@/lib/assistant/followUpResolver';
+import { buildResponse } from '@/lib/assistant/responseBuilder';
 import ChatInput from './ChatInput';
 import ChatMessageComponent from './ChatMessage';
 
@@ -78,6 +80,34 @@ export default function ChatWidget() {
   const handleSearch = useCallback(async (query: string) => {
     addUserMessage(query);
 
+    // 1. Check if this is a follow-up reference to previous results
+    const { lastResults } = useChatStore.getState();
+    const followUp = resolveFollowUp(query, lastResults);
+
+    if (followUp?.type === 'resolved') {
+      if (followUp.action === 'navigate') {
+        addAssistantMessage(
+          `Got it! Opening **${followUp.tutorial.tutorial.title}** for you.`,
+          [followUp.tutorial]
+        );
+        return;
+      }
+      if (followUp.action === 'detail') {
+        const t = followUp.tutorial.tutorial;
+        addAssistantMessage(
+          `**${t.title}** is ${t.difficulty === 'beginner' ? 'a beginner' : t.difficulty === 'intermediate' ? 'an intermediate' : 'an advanced'} tutorial with ${t.stepCount} steps (~${t.estimatedTime}). Tags: ${t.tags.join(', ')}.`,
+          [followUp.tutorial]
+        );
+        return;
+      }
+    }
+
+    if (followUp?.type === 'clarify') {
+      addAssistantMessage(followUp.message);
+      return;
+    }
+
+    // 2. Normal search
     const deviceId = context.deviceId || 'fantom-08';
     try {
       const res = await fetch(`/api/assistant/search?q=${encodeURIComponent(query)}&device=${encodeURIComponent(deviceId)}`);
@@ -88,14 +118,9 @@ export default function ChatWidget() {
       }
       const data = await res.json();
 
-      if (data.results && data.results.length > 0) {
-        addAssistantMessage(
-          `Found ${data.results.length} tutorial${data.results.length === 1 ? '' : 's'} matching your search:`,
-          data.results
-        );
-      } else {
-        addAssistantMessage('No tutorials match your search. Try rephrasing or ask a different question.');
-      }
+      // 3. Build conversational response with smart result filtering
+      const { text, tutorials } = buildResponse(data.results ?? [], query);
+      addAssistantMessage(text, tutorials.length > 0 ? tutorials : undefined);
     } catch {
       addAssistantMessage('Something went wrong. Please try again.');
     }

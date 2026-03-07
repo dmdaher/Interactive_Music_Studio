@@ -183,7 +183,7 @@ export function searchTutorials(query: string, deviceId: string): SearchResult[]
       controlResult.score * weights.control +
       keywordResult.score * weights.keyword;
 
-    if (totalScore >= 0.05) {
+    if (totalScore >= 0.08) {
       const allReasons = [
         ...titleResult.reasons,
         ...tagResult.reasons,
@@ -201,5 +201,5 @@ export function searchTutorials(query: string, deviceId: string): SearchResult[]
   }
 
   scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, 5);
+  return scored.slice(0, 10);
 }
