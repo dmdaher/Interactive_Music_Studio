@@ -59,11 +59,13 @@ export default function ChatWidget() {
     return () => panel.removeEventListener('keydown', handleTab);
   }, [isOpen]);
 
-  // Return focus to FAB on close
+  // Return focus to FAB on close (but not on initial mount)
+  const wasOpenRef = useRef(false);
   useEffect(() => {
-    if (!isOpen && fabRef.current) {
+    if (wasOpenRef.current && !isOpen && fabRef.current) {
       fabRef.current.focus();
     }
+    wasOpenRef.current = isOpen;
   }, [isOpen]);
 
   // Auto-scroll to bottom when new messages arrive
@@ -79,6 +81,11 @@ export default function ChatWidget() {
     const deviceId = context.deviceId || 'fantom-08';
     try {
       const res = await fetch(`/api/assistant/search?q=${encodeURIComponent(query)}&device=${encodeURIComponent(deviceId)}`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => null);
+        addAssistantMessage(errData?.error || 'Something went wrong. Please try again.');
+        return;
+      }
       const data = await res.json();
 
       if (data.results && data.results.length > 0) {
@@ -105,7 +112,7 @@ export default function ChatWidget() {
         ref={fabRef}
         type="button"
         onClick={() => (isOpen ? close() : open())}
-        className="fixed bottom-6 right-6 z-42 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#00aaff] to-[#0088dd] text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer sm:h-12 sm:w-12"
+        className="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-[#00aaff] to-[#0088dd] text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all cursor-pointer sm:h-12 sm:w-12"
         aria-expanded={isOpen}
         aria-label="Ask Miyagi assistant"
         style={{ zIndex: 42 }}
