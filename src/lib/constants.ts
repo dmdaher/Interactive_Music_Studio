@@ -67,6 +67,34 @@ export const TUTORIAL_CATEGORIES: { id: string; label: string; icon: string }[] 
   { id: 'sampling', label: 'Sampling', icon: '🎙️' },
 ];
 
+export const CATEGORY_LABELS: Record<string, string> = {
+  basics: 'Basics',
+  'zones-splits': 'Zones & Splits',
+  'sound-design': 'Sound Design',
+  effects: 'Effects',
+  midi: 'MIDI',
+  performance: 'Performance',
+  sequencer: 'Sequencer',
+  sampling: 'Sampling',
+};
+
+export const CATEGORY_PROGRESSION = [
+  'basics',
+  'zones-splits',
+  'sound-design',
+  'effects',
+  'performance',
+  'sequencer',
+  'sampling',
+  'midi',
+] as const;
+
+export const DIFFICULTY_COLORS: Record<string, { dot: string }> = {
+  beginner: { dot: '#10B981' },
+  intermediate: { dot: '#F59E0B' },
+  advanced: { dot: '#EF4444' },
+};
+
 // Panel design dimensions (px) — the "native" size of the Fantom 08 panel
 export const PANEL_NATURAL_WIDTH = 2700;
 export const PANEL_NATURAL_HEIGHT = 580;

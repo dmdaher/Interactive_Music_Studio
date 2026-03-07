@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Tutorial } from '@/types/tutorial';
+import { CATEGORY_LABELS } from '@/lib/constants';
 
 interface TutorialCardProps {
   tutorial: Tutorial;
@@ -12,17 +13,6 @@ const DIFFICULTY_COLORS: Record<string, { bg: string; text: string; border: stri
   beginner: { bg: 'rgba(16, 185, 129, 0.12)', text: '#10B981', border: 'rgba(16, 185, 129, 0.3)' },
   intermediate: { bg: 'rgba(245, 158, 11, 0.12)', text: '#F59E0B', border: 'rgba(245, 158, 11, 0.3)' },
   advanced: { bg: 'rgba(239, 68, 68, 0.12)', text: '#EF4444', border: 'rgba(239, 68, 68, 0.3)' },
-};
-
-const CATEGORY_LABELS: Record<string, string> = {
-  basics: 'Basics',
-  'zones-splits': 'Zones & Splits',
-  'sound-design': 'Sound Design',
-  effects: 'Effects',
-  midi: 'MIDI',
-  performance: 'Performance',
-  sequencer: 'Sequencer',
-  sampling: 'Sampling',
 };
 
 export default function TutorialCard({ tutorial, onClick }: TutorialCardProps) {
