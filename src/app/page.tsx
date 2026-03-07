@@ -10,6 +10,7 @@ import CategoryFilter from '@/components/ui/CategoryFilter';
 import { getAvailableDevices } from '@/data/devices';
 import { fantom08Tutorials } from '@/data/tutorials/fantom-08';
 import { rc505mk2Tutorials } from '@/data/tutorials/rc505-mk2';
+import { ddjFlx4Tutorials } from '@/data/tutorials/ddj-flx4';
 import { TUTORIAL_CATEGORIES } from '@/lib/constants';
 import { DeviceInfo } from '@/types/device';
 import { Tutorial } from '@/types/tutorial';
@@ -17,6 +18,7 @@ import { Tutorial } from '@/types/tutorial';
 const allTutorials: Record<string, Tutorial[]> = {
   'fantom-08': fantom08Tutorials,
   'rc505-mk2': rc505mk2Tutorials,
+  'ddj-flx4': ddjFlx4Tutorials,
 };
 
 const containerVariants = {
@@ -246,7 +248,7 @@ function HomePageContent() {
               Ask Miyagi &mdash; Step-by-step interactive tutorials using a replica of your synth.
             </p>
             <p className="text-xs text-gray-600">
-              Not affiliated with Roland or Boss.
+              Not affiliated with Roland, Boss, or Pioneer DJ.
             </p>
           </div>
           <div className="mt-3 flex items-center gap-4">

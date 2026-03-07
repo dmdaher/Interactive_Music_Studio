@@ -10,7 +10,11 @@ export type TutorialCategory =
   | 'midi'
   | 'performance'
   | 'sequencer'
-  | 'sampling';
+  | 'sampling'
+  | 'looping'
+  | 'performance-pads'
+  | 'mixing'
+  | 'advanced';
 
 export interface TutorialStep {
   id: string;
