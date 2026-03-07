@@ -23,6 +23,7 @@ function stem(word: string): string {
   if (word.endsWith('er') && word.length > 4) return word.slice(0, -2);
   if (word.endsWith('es') && word.length > 4) return word.slice(0, -2);
   if (word.endsWith('s') && !word.endsWith('ss') && word.length > 3) return word.slice(0, -1);
+  if (word.endsWith('e') && word.length > 4) return word.slice(0, -1);
   return word;
 }
 
@@ -35,20 +36,20 @@ function tokenize(text: string): string[] {
     .map(stem);
 }
 
-function scoreTitleMatch(tokens: string[], summary: TutorialSummary): { score: number; reasons: string[] } {
+function scoreTitleMatch(tokens: string[], summary: TutorialSummary, rawQuery: string): { score: number; reasons: string[] } {
   const titleLower = summary.title.toLowerCase();
   const descLower = summary.description.toLowerCase();
   const reasons: string[] = [];
   let score = 0;
 
-  // Check if the full query phrase appears in title
-  const queryPhrase = tokens.join(' ');
-  if (titleLower.includes(queryPhrase)) {
+  // Check if the raw (unstemmed) query phrase appears in title/description
+  const rawLower = rawQuery.toLowerCase().trim();
+  if (rawLower && titleLower.includes(rawLower)) {
     score = 1.0;
-    reasons.push(`Title contains "${queryPhrase}"`);
-  } else if (descLower.includes(queryPhrase)) {
+    reasons.push(`Title contains "${rawLower}"`);
+  } else if (rawLower && descLower.includes(rawLower)) {
     score = 0.7;
-    reasons.push(`Description contains "${queryPhrase}"`);
+    reasons.push(`Description contains "${rawLower}"`);
   } else {
     // Check individual stemmed token matches in title + description
     const titleTokens = tokenize(summary.title);
@@ -169,7 +170,7 @@ export function searchTutorials(query: string, deviceId: string): SearchResult[]
   const scored: SearchResult[] = [];
 
   for (const summary of index) {
-    const titleResult = scoreTitleMatch(tokens, summary);
+    const titleResult = scoreTitleMatch(tokens, summary, query);
     const tagResult = scoreTagMatch(tokens, summary);
     const categoryResult = scoreCategoryMatch(tokens, summary);
     const controlResult = scoreControlMatch(tokens, summary);

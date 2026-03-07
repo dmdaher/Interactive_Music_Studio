@@ -33,6 +33,13 @@ describe('tutorialIndex', () => {
     expect(splitTutorial!.controlsReferenced).toContain('split');
   });
 
+  it('screensReferenced extracts screen types from steps', () => {
+    const splitTutorial = index.find(s => s.tutorialId === 'split-keyboard-zones');
+    expect(splitTutorial).toBeDefined();
+    expect(splitTutorial!.screensReferenced.length).toBeGreaterThan(0);
+    expect(splitTutorial!.screensReferenced).toContain('home');
+  });
+
   it('getTutorialIndex returns cached singleton', () => {
     const a = getTutorialIndex('fantom-08');
     const b = getTutorialIndex('fantom-08');
