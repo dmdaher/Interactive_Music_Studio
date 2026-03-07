@@ -108,12 +108,11 @@ export default function MixerFX({ panelState, highlightedControls, onButtonClick
         </div>
       </div>
 
-      {/* Headphone Section */}
+      {/* Headphone + Mic Section */}
       <div className="flex flex-col gap-2 px-2">
         <Knob id="mic-level" label="MIC LEVEL" value={panelState['mic-level']?.value ?? 0} highlighted={highlightedControls.includes('mic-level')} size="sm" />
-        <Knob id="hp-cue" label="CUE/MIX" value={panelState['hp-cue']?.value ?? 64} highlighted={highlightedControls.includes('hp-cue')} size="sm" />
-        <Knob id="hp-mix" label="MIX" value={panelState['hp-mix']?.value ?? 64} highlighted={highlightedControls.includes('hp-mix')} size="sm" />
-        <Knob id="hp-level" label="LEVEL" value={panelState['hp-level']?.value ?? 80} highlighted={highlightedControls.includes('hp-level')} size="sm" />
+        <Knob id="hp-mix" label="HP MIX" value={panelState['hp-mix']?.value ?? 64} highlighted={highlightedControls.includes('hp-mix')} size="sm" />
+        <Knob id="hp-level" label="HP LEVEL" value={panelState['hp-level']?.value ?? 80} highlighted={highlightedControls.includes('hp-level')} size="sm" />
       </div>
     </div>
   );

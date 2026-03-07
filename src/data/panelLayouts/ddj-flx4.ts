@@ -100,11 +100,10 @@ const mixerControls: PanelControl[] = [
   { id: 'cfx-2', type: 'knob', label: 'CFX', section: 'mixer', defaultValue: 64, minValue: 0, maxValue: 127 },
   // Smart CFX
   { id: 'smart-cfx', type: 'button', label: 'SMART CFX', section: 'mixer', variant: 'function', size: 'sm', hasLed: true, ledColor: '#F57C00' },
-  // Headphone
+  // Headphone + Mic
   { id: 'mic-level', type: 'knob', label: 'MIC LEVEL', section: 'mixer', defaultValue: 0, minValue: 0, maxValue: 127 },
-  { id: 'hp-cue', type: 'knob', label: 'CUE/MIX', section: 'mixer', defaultValue: 64, minValue: 0, maxValue: 127 },
-  { id: 'hp-mix', type: 'knob', label: 'MIX', section: 'mixer', defaultValue: 64, minValue: 0, maxValue: 127 },
-  { id: 'hp-level', type: 'knob', label: 'LEVEL', section: 'mixer', defaultValue: 80, minValue: 0, maxValue: 127 },
+  { id: 'hp-mix', type: 'knob', label: 'HEADPHONES MIX', section: 'mixer', defaultValue: 64, minValue: 0, maxValue: 127 },
+  { id: 'hp-level', type: 'knob', label: 'HEADPHONES LEVEL', section: 'mixer', defaultValue: 80, minValue: 0, maxValue: 127 },
   // Channel CUE buttons
   { id: 'ch1-cue', type: 'button', label: 'CUE', section: 'mixer', variant: 'function', size: 'sm', hasLed: true, ledColor: '#F57C00' },
   { id: 'ch2-cue', type: 'button', label: 'CUE', section: 'mixer', variant: 'function', size: 'sm', hasLed: true, ledColor: '#F57C00' },

@@ -1,8 +1,24 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Knob from '@/components/controls/Knob';
 import PanelButton from '@/components/controls/PanelButton';
 import { PanelState } from '@/types/panel';
+
+const highlightAnimation = {
+  animate: {
+    boxShadow: [
+      '0 0 8px 2px rgba(0,170,255,0.4)',
+      '0 0 20px 8px rgba(0,170,255,0.8)',
+      '0 0 8px 2px rgba(0,170,255,0.4)',
+    ],
+  },
+  transition: {
+    duration: 1.5,
+    repeat: Infinity,
+    ease: 'easeInOut' as const,
+  },
+};
 
 interface MixerEQProps {
   panelState: PanelState;
@@ -27,12 +43,13 @@ export default function MixerEQ({ panelState, highlightedControls, onButtonClick
         />
         {/* Browse encoder */}
         <div className="flex flex-col items-center gap-0.5" data-control-id="browse">
-          <div
+          <motion.div
             className="w-8 h-8 rounded-full cursor-pointer"
             style={{
               background: 'radial-gradient(circle at 35% 30%, #666 0%, #444 40%, #333 70%, #222 100%)',
               boxShadow: '0 2px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1)',
             }}
+            {...(highlightedControls.includes('browse') ? highlightAnimation : {})}
           />
         </div>
         <PanelButton
