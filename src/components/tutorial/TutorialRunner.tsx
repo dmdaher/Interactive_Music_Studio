@@ -13,6 +13,7 @@ import KeyboardZoneOverlay from './KeyboardZoneOverlay';
 import ReportModal from './ReportModal';
 import TutorialIntroModal from '@/components/ui/TutorialIntroModal';
 import TutorialListDrawer from './TutorialListDrawer';
+import { useChatStore } from '@/store/chatStore';
 
 interface TutorialRunnerProps {
   tutorial: Tutorial;
@@ -74,6 +75,24 @@ export default function TutorialRunner({
       }
     }
   }, [store.currentStepIndex, store.autoplay]);
+
+  // Sync tutorial context to chatStore for context-aware assistant
+  useEffect(() => {
+    useChatStore.getState().setContext({
+      deviceId: tutorial.deviceId,
+      tutorialId: tutorial.id,
+      currentStepIndex: store.currentStepIndex,
+      currentStepTitle: store.currentStep()?.title,
+    });
+    return () => {
+      useChatStore.getState().setContext({
+        deviceId: undefined,
+        tutorialId: undefined,
+        currentStepIndex: undefined,
+        currentStepTitle: undefined,
+      });
+    };
+  }, [tutorial.id, tutorial.deviceId, store.currentStepIndex]);
 
   const step = store.currentStep();
   const totalSteps = store.totalSteps();
