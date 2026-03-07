@@ -61,9 +61,16 @@ export default function TutorialPage() {
     );
   }
 
+  const allTutorials = tutorialsByDevice[deviceId] ?? [];
+
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--background)]">
-      <TutorialRunner tutorial={tutorial} DevicePanel={DevicePanel} />
+      <TutorialRunner
+        tutorial={tutorial}
+        DevicePanel={DevicePanel}
+        allTutorials={allTutorials}
+        deviceName={device.name}
+      />
     </div>
   );
 }
