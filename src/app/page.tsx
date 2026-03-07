@@ -11,8 +11,12 @@ import { getAvailableDevices } from '@/data/devices';
 import { fantom08Tutorials } from '@/data/tutorials/fantom-08';
 import { rc505mk2Tutorials } from '@/data/tutorials/rc505-mk2';
 import { TUTORIAL_CATEGORIES } from '@/lib/constants';
+import { searchTutorials } from '@/lib/assistant/search';
+import { buildResponse } from '@/lib/assistant/responseBuilder';
+import { resolveFollowUp } from '@/lib/assistant/followUpResolver';
 import { DeviceInfo } from '@/types/device';
 import { Tutorial } from '@/types/tutorial';
+import { SearchResult } from '@/types/assistant';
 
 const allTutorials: Record<string, Tutorial[]> = {
   'fantom-08': fantom08Tutorials,
@@ -57,6 +61,10 @@ function HomePageContent() {
     return null;
   });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResponse, setSearchResponse] = useState<string | null>(null);
+  const [searchMatchIds, setSearchMatchIds] = useState<Set<string> | null>(null);
+  const [lastSearchResults, setLastSearchResults] = useState<SearchResult[]>([]);
   const tutorialSectionRef = useRef<HTMLDivElement>(null);
   const hasAnimatedTutorials = useRef(false);
 
@@ -75,9 +83,15 @@ function HomePageContent() {
   }, [selectedDevice]);
 
   const filteredTutorials = useMemo(() => {
-    if (!selectedCategory) return tutorials;
-    return tutorials.filter((t) => t.category === selectedCategory);
-  }, [tutorials, selectedCategory]);
+    let result = tutorials;
+    if (searchMatchIds) {
+      result = result.filter((t) => searchMatchIds.has(t.id));
+    }
+    if (selectedCategory) {
+      result = result.filter((t) => t.category === selectedCategory);
+    }
+    return result;
+  }, [tutorials, selectedCategory, searchMatchIds]);
 
   // After initial tutorial grid animation completes, skip re-animation on category changes
   useEffect(() => {
@@ -99,10 +113,50 @@ function HomePageContent() {
     return TUTORIAL_CATEGORIES.filter((cat) => categoryIds.has(cat.id as typeof tutorials[number]['category']));
   }, [selectedDevice, tutorials]);
 
+  function handleSearchSubmit(query: string) {
+    if (!selectedDevice || !query.trim()) return;
+
+    // Check for follow-up references first
+    const followUp = resolveFollowUp(query, lastSearchResults);
+    if (followUp?.type === 'resolved') {
+      const t = followUp.tutorial.tutorial;
+      if (followUp.action === 'detail') {
+        setSearchResponse(`**${t.title}** is ${t.difficulty === 'beginner' ? 'a beginner' : t.difficulty === 'intermediate' ? 'an intermediate' : 'an advanced'} tutorial with ${t.stepCount} steps (~${t.estimatedTime}). Tags: ${t.tags.join(', ')}.`);
+      } else {
+        router.push(`/tutorial/${t.deviceId}/${t.tutorialId}`);
+        return;
+      }
+      setSearchMatchIds(new Set([t.tutorialId]));
+      setLastSearchResults([followUp.tutorial]);
+      setSelectedCategory(null);
+      return;
+    }
+    if (followUp?.type === 'clarify') {
+      setSearchResponse(followUp.message);
+      return;
+    }
+
+    // Normal search
+    const raw = searchTutorials(query, selectedDevice.id);
+    const { text, tutorials: picked } = buildResponse(raw, query);
+    setSearchResponse(text);
+    setLastSearchResults(picked);
+    setSearchMatchIds(picked.length > 0 ? new Set(picked.map(r => r.tutorial.tutorialId)) : null);
+    setSelectedCategory(null);
+  }
+
+  function clearSearch() {
+    setSearchQuery('');
+    setSearchResponse(null);
+    setSearchMatchIds(null);
+    setLastSearchResults([]);
+  }
+
   function handleDeviceSelect(device: DeviceInfo) {
     if (!device.available) return;
     setSelectedDevice(device);
     setSelectedCategory(null);
+    clearSearch();
 
     // Scroll to tutorial section after a short delay to allow render
     setTimeout(() => {
@@ -184,8 +238,59 @@ function HomePageContent() {
                     </button>
                   </div>
 
+                  {/* Search Bar */}
+                  <div className="mb-6">
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        handleSearchSubmit(searchQuery);
+                      }}
+                      className="relative"
+                    >
+                      <svg
+                        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500"
+                        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                      </svg>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search tutorials... try &quot;how do I add reverb?&quot;"
+                        className="w-full rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] py-2.5 pl-10 pr-10 text-sm text-gray-200 placeholder-gray-500 outline-none transition-colors focus:border-[var(--accent)]/50 focus:ring-1 focus:ring-[var(--accent)]/30"
+                      />
+                      {searchQuery && (
+                        <button
+                          type="button"
+                          onClick={clearSearch}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-500 hover:text-gray-300 transition-colors"
+                          aria-label="Clear search"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                          </svg>
+                        </button>
+                      )}
+                    </form>
+
+                    {/* Conversational response */}
+                    {searchResponse && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-3 text-sm text-gray-300 leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: searchResponse.replace(/\*\*(.+?)\*\*/g, '<strong class="text-white">$1</strong>'),
+                        }}
+                      />
+                    )}
+                  </div>
+
                   {/* Category Filter */}
-                  {relevantCategories.length > 0 && (
+                  {relevantCategories.length > 0 && !searchMatchIds && (
                     <div className="mb-8">
                       <CategoryFilter
                         categories={relevantCategories}
