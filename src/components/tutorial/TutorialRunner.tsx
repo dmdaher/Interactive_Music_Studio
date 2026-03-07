@@ -4,6 +4,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tutorial } from '@/types/tutorial';
+import { GlossaryTerm } from '@/types/glossary';
 import { useTutorialEngine } from '@/hooks/useTutorialEngine';
 import { PANEL_NATURAL_WIDTH, PANEL_NATURAL_HEIGHT } from '@/lib/constants';
 import StepContent from './StepContent';
@@ -20,6 +21,7 @@ interface TutorialRunnerProps {
   DevicePanel: React.ComponentType<any>;
   allTutorials?: Tutorial[];
   deviceName?: string;
+  glossary?: GlossaryTerm[];
 }
 
 const SPEED_OPTIONS = [
@@ -33,6 +35,7 @@ export default function TutorialRunner({
   DevicePanel,
   allTutorials,
   deviceName,
+  glossary,
 }: TutorialRunnerProps) {
   const store = useTutorialEngine(tutorial);
   const router = useRouter();
@@ -309,6 +312,7 @@ export default function TutorialRunner({
           currentTutorialId={tutorial.id}
           deviceId={tutorial.deviceId}
           deviceName={deviceName}
+          glossary={glossary}
         />
       )}
     </div>

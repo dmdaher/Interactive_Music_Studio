@@ -7,6 +7,7 @@ import { getDevice } from '@/data/devices';
 import { fantom08Tutorials } from '@/data/tutorials/fantom-08';
 import { rc505mk2Tutorials } from '@/data/tutorials/rc505-mk2';
 import { Tutorial } from '@/types/tutorial';
+import { getGlossary } from '@/data/glossary';
 import TutorialRunner from '@/components/tutorial/TutorialRunner';
 import FantomPanel from '@/components/devices/fantom-08/FantomPanel';
 import RC505Panel from '@/components/devices/rc505-mk2/RC505Panel';
@@ -62,6 +63,7 @@ export default function TutorialPage() {
   }
 
   const allTutorials = tutorialsByDevice[deviceId] ?? [];
+  const glossary = getGlossary(deviceId);
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[var(--background)]">
@@ -70,6 +72,7 @@ export default function TutorialPage() {
         DevicePanel={DevicePanel}
         allTutorials={allTutorials}
         deviceName={device.name}
+        glossary={glossary}
       />
     </div>
   );
