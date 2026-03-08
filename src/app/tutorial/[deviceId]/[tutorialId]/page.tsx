@@ -7,23 +7,32 @@ import { getDevice } from '@/data/devices';
 import { fantom08Tutorials } from '@/data/tutorials/fantom-08';
 import { rc505mk2Tutorials } from '@/data/tutorials/rc505-mk2';
 import { ddjFlx4Tutorials } from '@/data/tutorials/ddj-flx4';
+import { cdj3000Tutorials } from '@/data/tutorials/cdj-3000';
 import { Tutorial } from '@/types/tutorial';
 import { getGlossary } from '@/data/glossary';
 import TutorialRunner from '@/components/tutorial/TutorialRunner';
 import FantomPanel from '@/components/devices/fantom-08/FantomPanel';
 import RC505Panel from '@/components/devices/rc505-mk2/RC505Panel';
 import DDJFlx4Panel from '@/components/devices/ddj-flx4/DDJFlx4Panel';
+import DataDrivenPanel from '@/components/devices/DataDrivenPanel';
+import { cdj3000Layout } from '@/data/panelLayouts/cdj-3000';
 
 const tutorialsByDevice: Record<string, Tutorial[]> = {
   'fantom-08': fantom08Tutorials,
   'rc505-mk2': rc505mk2Tutorials,
   'ddj-flx4': ddjFlx4Tutorials,
+  'cdj-3000': cdj3000Tutorials,
 };
+
+function CDJ3000PanelWrapper(props: any) {
+  return <DataDrivenPanel layout={cdj3000Layout} {...props} />;
+}
 
 const panelComponents: Record<string, React.ComponentType<any>> = {
   'fantom-08': FantomPanel,
   'rc505-mk2': RC505Panel,
   'ddj-flx4': DDJFlx4Panel,
+  'cdj-3000': CDJ3000PanelWrapper,
 };
 
 export default function TutorialPage() {
