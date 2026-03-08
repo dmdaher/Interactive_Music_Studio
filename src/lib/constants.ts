@@ -98,3 +98,16 @@ export const DIFFICULTY_COLORS: Record<string, { dot: string }> = {
 // Panel design dimensions (px) — the "native" size of the Fantom 08 panel
 export const PANEL_NATURAL_WIDTH = 2700;
 export const PANEL_NATURAL_HEIGHT = 580;
+
+export const PANEL_DIMENSIONS: Record<string, { width: number; height: number }> = {
+  'fantom-08': { width: PANEL_NATURAL_WIDTH, height: PANEL_NATURAL_HEIGHT },
+  'ddj-flx4': { width: 2400, height: 1400 },
+};
+
+export const DDJ_FLX4_COLORS = {
+  accent: '#F57C00',       // orange — real hardware LED color
+  accentDim: '#7D3E00',    // dimmed orange for inactive LEDs
+  body: 'var(--surface)',  // app dark theme
+  knobCap: '#888888',      // metallic silver
+  padInactive: '#2a2a2e',  // dark gray
+} as const;

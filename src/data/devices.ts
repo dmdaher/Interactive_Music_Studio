@@ -17,6 +17,14 @@ export const devices: DeviceRegistry = {
     available: false,
     categories: ['basics', 'effects', 'performance', 'midi'],
   },
+  'ddj-flx4': {
+    id: 'ddj-flx4',
+    name: 'Pioneer DDJ-FLX4',
+    manufacturer: 'Pioneer DJ',
+    description: '2-channel DJ controller for rekordbox and Serato DJ Lite with jog wheels, performance pads, and Beat FX.',
+    available: true,
+    categories: ['basics', 'mixing', 'effects', 'performance', 'performance-pads'],
+  },
 };
 
 export function getDevice(deviceId: string): DeviceInfo | undefined {
