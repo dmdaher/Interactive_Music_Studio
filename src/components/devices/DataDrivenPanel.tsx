@@ -167,9 +167,9 @@ function renderControl(
           style={{
             width: '100%',
             height: control.position?.height ?? 240,
-            backgroundColor: '#0a0a12',
+            backgroundColor: 'var(--background, #0a0a0f)',
             borderRadius: 4,
-            border: '1px solid #333',
+            border: '1px solid var(--card-border, #333)',
             boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.8)',
           }}
         />
@@ -182,7 +182,7 @@ function renderControl(
           style={{
             fontFamily: 'monospace',
             fontSize: 10,
-            color: '#aaa',
+            color: 'var(--text-secondary, #999)',
             textTransform: 'uppercase',
             letterSpacing: '0.05em',
           }}
@@ -213,18 +213,6 @@ function renderControl(
     default:
       return null;
   }
-}
-
-/**
- * Determines whether a control component already renders its own data-control-id.
- * These components should NOT get an extra wrapper with data-control-id.
- */
-function controlRendersOwnId(type: PanelControl['type']): boolean {
-  // PadButton, LEDIndicator, JogWheel render data-control-id on their own root element.
-  // PanelButton, Knob, Slider, TransportButton, ValueDial, Lever, Wheel also render it
-  // on their own wrapper div. display and text are inline elements we add the attr to.
-  // So ALL controls already have data-control-id — we don't need a wrapper for the attr.
-  return true;
 }
 
 /** Build the style for a control layout container */

@@ -87,7 +87,7 @@ const leftControls: PanelControl[] = [
 // --- Jog Area Controls (Row 4 Center) ---
 const jogAreaControls: PanelControl[] = [
   { id: 'jog-wheel', type: 'jog-wheel', label: 'Jog Wheel', section: 'jog-area', position: { x: 0, y: 0, width: 360 } },
-  { id: 'jog-display', type: 'display', label: 'Jog Display', section: 'jog-area' },
+  { id: 'jog-display', type: 'display', label: 'Jog Display', section: 'jog-area', position: { x: 80, y: 370, width: 240, height: 24 } },
 ];
 
 // --- Right Controls: Jog Mode + Sync + Tempo (Row 4 Right) ---
