@@ -43,18 +43,21 @@ export default function LoopControls({ deck, panelState, highlightedControls, on
       </div>
       <div className="flex flex-col items-center gap-0.5 ml-2">
         <span className="text-[8px] text-gray-400 whitespace-nowrap">CUE/LOOP CALL</span>
-        <div className="flex gap-1">
+        <div className="flex gap-1 items-end">
           <div className="flex flex-col items-center">
             <PanelButton id={`${d}-cue-loop-left`} label="◀" variant="standard" size="sm"
               active={getState(`${d}-cue-loop-left`).active} highlighted={isHl(`${d}-cue-loop-left`)}
               onClick={() => onButtonClick?.(`${d}-cue-loop-left`)} />
             <span className="text-[7px] text-gray-500">1/2X</span>
+            <span className="text-[6px] text-gray-600">DEL</span>
           </div>
+          <span className="text-[7px] text-gray-500 pb-4">LOOP</span>
           <div className="flex flex-col items-center">
             <PanelButton id={`${d}-cue-loop-right`} label="▶" variant="standard" size="sm"
               active={getState(`${d}-cue-loop-right`).active} highlighted={isHl(`${d}-cue-loop-right`)}
               onClick={() => onButtonClick?.(`${d}-cue-loop-right`)} />
             <span className="text-[7px] text-gray-500">2X</span>
+            <span className="text-[6px] text-gray-600">MEMORY</span>
           </div>
         </div>
       </div>

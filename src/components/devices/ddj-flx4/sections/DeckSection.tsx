@@ -34,7 +34,7 @@ export default function DeckSection({ deck, panelState, highlightedControls, onB
       <div className="flex items-center gap-3 justify-center px-2 flex-1">
         {deck === 1 ? (
           <>
-            <JogWheel id={`${d}-jog`} highlighted={isHl(`${d}-jog`)} size={220} />
+            <JogWheel id={`${d}-jog`} highlighted={isHl(`${d}-jog`)} size={220} onButtonClick={onButtonClick} />
             <div className="flex flex-col items-center gap-1 ml-2">
               <Slider id={`${d}-tempo`} label="TEMPO"
                 value={panelState[`${d}-tempo`]?.value ?? 64}
@@ -48,7 +48,7 @@ export default function DeckSection({ deck, panelState, highlightedControls, onB
                 value={panelState[`${d}-tempo`]?.value ?? 64}
                 highlighted={isHl(`${d}-tempo`)} />
             </div>
-            <JogWheel id={`${d}-jog`} highlighted={isHl(`${d}-jog`)} size={220} />
+            <JogWheel id={`${d}-jog`} highlighted={isHl(`${d}-jog`)} size={220} onButtonClick={onButtonClick} />
           </>
         )}
       </div>

@@ -15,7 +15,6 @@ export default function EQChannel({ channel, panelState, highlightedControls }: 
   const getValue = (id: string) => panelState[id]?.value ?? 64;
 
   const knobs = [
-    { id: `${ch}-trim`, label: 'TRIM' },
     { id: `${ch}-hi`, label: 'HI' },
     { id: `${ch}-mid`, label: 'MID' },
     { id: `${ch}-low`, label: 'LOW' },

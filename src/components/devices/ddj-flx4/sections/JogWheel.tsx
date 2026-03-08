@@ -7,14 +7,15 @@ interface JogWheelProps {
   id: string;
   highlighted?: boolean;
   size?: number;
+  onButtonClick?: (id: string) => void;
 }
 
 const highlightAnimation = {
-  animate: { boxShadow: ['0 0 0px rgba(59,130,246,0)', '0 0 20px rgba(59,130,246,0.6)', '0 0 0px rgba(59,130,246,0)'] },
+  animate: { boxShadow: ['0 0 0px rgba(0,170,255,0)', '0 0 20px rgba(0,170,255,0.6)', '0 0 0px rgba(0,170,255,0)'] },
   transition: { duration: 1.5, repeat: Infinity },
 };
 
-export default function JogWheel({ id, highlighted = false, size = 240 }: JogWheelProps) {
+export default function JogWheel({ id, highlighted = false, size = 240, onButtonClick }: JogWheelProps) {
   const [rotation, setRotation] = useState(0);
   const isDragging = useRef(false);
   const lastAngle = useRef(0);
@@ -72,6 +73,7 @@ export default function JogWheel({ id, highlighted = false, size = 240 }: JogWhe
           boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.6), 0 2px 4px rgba(255,255,255,0.05)',
         }}
         onMouseDown={handleMouseDown}
+        onClick={() => onButtonClick?.(id)}
       >
         {Array.from({ length: dotCount }, (_, i) => {
           const angle = (i / dotCount) * 360;

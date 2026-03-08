@@ -137,7 +137,7 @@ export default function MixerSection({ panelState, highlightedControls, onButton
           <div
             className="absolute top-0.5 bottom-0.5 w-10 rounded-full"
             style={{
-              left: `calc(${((getValue('crossfader')) / 127) * 100}% - 20px)`,
+              left: `clamp(0px, calc(${((getValue('crossfader')) / 127) * 100}% - 20px), calc(100% - 40px))`,
               background: 'linear-gradient(180deg, #666 0%, #444 100%)',
               boxShadow: '0 1px 3px rgba(0,0,0,0.5)',
             }}
