@@ -98,3 +98,13 @@ export const DIFFICULTY_COLORS: Record<string, { dot: string }> = {
 // Panel design dimensions (px) — the "native" size of the Fantom 08 panel
 export const PANEL_NATURAL_WIDTH = 2700;
 export const PANEL_NATURAL_HEIGHT = 580;
+
+// DeepMind 12 panel dimensions
+export const DEEPMIND12_PANEL_WIDTH = 4200;
+export const DEEPMIND12_PANEL_HEIGHT = 620;
+
+// Per-device panel dimensions lookup
+export const DEVICE_PANEL_DIMENSIONS: Record<string, { width: number; height: number }> = {
+  'fantom-08': { width: PANEL_NATURAL_WIDTH, height: PANEL_NATURAL_HEIGHT },
+  'deepmind-12': { width: DEEPMIND12_PANEL_WIDTH, height: DEEPMIND12_PANEL_HEIGHT },
+};

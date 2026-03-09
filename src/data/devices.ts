@@ -9,6 +9,14 @@ export const devices: DeviceRegistry = {
     available: true,
     categories: ['basics', 'zones-splits', 'sound-design', 'effects', 'midi', 'performance', 'sequencer'],
   },
+  'deepmind-12': {
+    id: 'deepmind-12',
+    name: 'Behringer DeepMind 12',
+    manufacturer: 'Behringer',
+    description: '12-voice polyphonic analog synthesizer with 2 OSCs per voice, 4 FX engines, 32-step sequencer, and Wi-Fi for wireless control.',
+    available: true,
+    categories: ['basics', 'sound-design', 'effects', 'performance'],
+  },
   'rc505-mk2': {
     id: 'rc505-mk2',
     name: 'Boss RC-505 MK2',
