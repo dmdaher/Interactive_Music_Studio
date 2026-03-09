@@ -151,6 +151,7 @@ export const DEEPMIND_12_SECTIONS: DeepMindSection[] = [
       { id: 'dec-no', type: 'button', label: '\u2212/No', size: 'sm' },
       { id: 'data-entry', type: 'dial', label: 'Data Entry' },
       { id: 'data-entry-fader', type: 'slider', label: 'Data Entry' },
+      { id: 'mod-matrix', type: 'button', label: 'Mod' },
     ],
   },
 

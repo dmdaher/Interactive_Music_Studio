@@ -179,8 +179,8 @@ describe('DeepMindPanel', () => {
   });
 
   it('data file has correct total control count', () => {
-    // Performance: 13, ARP: 7, LFO1: 9, LFO2: 9, OSC: 11, Display: 11, Poly: 3, VCF: 8, VCA: 2, HPF: 2, Env: 8, Voices: 12 = 95
-    expect(allDeepMind12ControlIds.length).toBe(95);
+    // Performance: 13, ARP: 7, LFO1: 9, LFO2: 9, OSC: 11, Display: 12, Poly: 3, VCF: 8, VCA: 2, HPF: 2, Env: 8, Voices: 12 = 96
+    expect(allDeepMind12ControlIds.length).toBe(96);
   });
 
   it('all control IDs are unique', () => {

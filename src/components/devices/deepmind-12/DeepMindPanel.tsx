@@ -221,7 +221,7 @@ export default function DeepMindPanel({
 
     // Split buttons into functional groups
     const topRow = ['prog', 'fx-btn', 'global'];
-    const midRow = ['compare', 'write'];
+    const midRow = ['compare', 'write', 'mod-matrix'];
     const navRow = ['bank-up', 'bank-down', 'inc-yes', 'dec-no'];
 
     const topButtons = getControlsById(section, topRow);
