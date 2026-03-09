@@ -7,12 +7,12 @@ interface WheelProps {
   label: string;
   value?: number;
   highlighted?: boolean;
+  wheelHeight?: number;
 }
 
-const WHEEL_HEIGHT = 80;
+const DEFAULT_WHEEL_HEIGHT = 80;
 const WHEEL_WIDTH = 20;
 const THUMB_HEIGHT = 14;
-const TRAVEL = WHEEL_HEIGHT - THUMB_HEIGHT;
 
 const highlightAnimation = {
   animate: {
@@ -34,7 +34,10 @@ export default function Wheel({
   label,
   value = 64,
   highlighted = false,
+  wheelHeight = DEFAULT_WHEEL_HEIGHT,
 }: WheelProps) {
+  const WHEEL_HEIGHT = wheelHeight;
+  const TRAVEL = WHEEL_HEIGHT - THUMB_HEIGHT;
   const clampedValue = Math.max(0, Math.min(127, value));
   // Map 0 (bottom) to 127 (top)
   const thumbOffset = TRAVEL - (clampedValue / 127) * TRAVEL;

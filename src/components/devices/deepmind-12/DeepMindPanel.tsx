@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { PanelState } from '@/types/panel';
 import { DisplayState } from '@/types/display';
-import { PANEL_COLORS } from '@/lib/constants';
+import { PANEL_COLORS, DEEPMIND12_PANEL_WIDTH, DEEPMIND12_PANEL_HEIGHT } from '@/lib/constants';
 import {
   DEEPMIND_12_SECTIONS,
   DeepMindSection,
@@ -18,9 +18,8 @@ import Wheel from '@/components/controls/Wheel';
 import ValueDial from '@/components/controls/ValueDial';
 import LEDIndicator from '@/components/controls/LEDIndicator';
 
-// Panel dimensions matching constants.ts
-const PANEL_W = 4200;
-const PANEL_H = 620;
+const PANEL_W = DEEPMIND12_PANEL_WIDTH;
+const PANEL_H = DEEPMIND12_PANEL_HEIGHT;
 
 // DeepMind 12 specific colors
 const DM_COLORS = {
@@ -61,6 +60,7 @@ export default function DeepMindPanel({
             label={ctrl.label}
             value={state?.value ?? 64}
             highlighted={highlighted}
+            trackHeight={200}
           />
         );
       case 'knob':
@@ -99,6 +99,7 @@ export default function DeepMindPanel({
             label={ctrl.label}
             value={state?.value ?? 64}
             highlighted={highlighted}
+            wheelHeight={140}
           />
         );
       case 'dial':

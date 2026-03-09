@@ -7,11 +7,11 @@ interface SliderProps {
   label: string;
   value?: number;
   highlighted?: boolean;
+  trackHeight?: number;
 }
 
-const TRACK_HEIGHT = 120;
+const DEFAULT_TRACK_HEIGHT = 120;
 const THUMB_HEIGHT = 14;
-const TRAVEL = TRACK_HEIGHT - THUMB_HEIGHT;
 
 const highlightAnimation = {
   animate: {
@@ -33,7 +33,10 @@ export default function Slider({
   label,
   value = 0,
   highlighted = false,
+  trackHeight = DEFAULT_TRACK_HEIGHT,
 }: SliderProps) {
+  const TRACK_HEIGHT = trackHeight;
+  const TRAVEL = TRACK_HEIGHT - THUMB_HEIGHT;
   const clampedValue = Math.max(0, Math.min(127, value));
   // Map 0 (bottom) to 127 (top) -- bottom offset is max when value=0
   const thumbOffset = TRAVEL - (clampedValue / 127) * TRAVEL;
