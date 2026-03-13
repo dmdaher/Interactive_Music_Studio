@@ -10,6 +10,7 @@ interface SliderProps {
   trackHeight?: number;
   trackWidth?: number;
   thumbHeight?: number;
+  showScale?: boolean;
 }
 
 const highlightAnimation = {
@@ -35,6 +36,7 @@ export default function Slider({
   trackHeight = 120,
   trackWidth = 16,
   thumbHeight = 14,
+  showScale = false,
 }: SliderProps) {
   const travel = trackHeight - thumbHeight;
   const clampedValue = Math.max(0, Math.min(127, value));
@@ -83,6 +85,28 @@ export default function Slider({
           />
         ))}
 
+        {/* Scale numbers (0, 5, 10) — matches hardware silkscreen */}
+        {showScale && [
+          { pct: 1, text: '10' },
+          { pct: 0.5, text: '5' },
+          { pct: 0, text: '0' },
+        ].map(({ pct, text }) => (
+          <span
+            key={text}
+            className="absolute pointer-events-none select-none"
+            style={{
+              right: -14,
+              top: 6 + (trackHeight - 12) * (1 - pct) - 4,
+              fontSize: 6,
+              color: '#555',
+              fontFamily: 'system-ui, sans-serif',
+              lineHeight: 1,
+            }}
+          >
+            {text}
+          </span>
+        ))}
+
         {/* Thumb / fader cap */}
         <div
           className="absolute left-1/2 rounded-sm cursor-pointer"
@@ -109,7 +133,7 @@ export default function Slider({
       </motion.div>
 
       {/* Label */}
-      <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
+      <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider text-center leading-none">
         {label}
       </span>
     </div>

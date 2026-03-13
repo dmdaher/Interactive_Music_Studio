@@ -12,7 +12,7 @@ interface PanelButtonProps {
   ledOn?: boolean;
   ledColor?: string;
   highlighted?: boolean;
-  labelPosition?: 'on' | 'above';
+  labelPosition?: 'on' | 'above' | 'below';
   onClick?: () => void;
 }
 
@@ -95,7 +95,7 @@ export default function PanelButton({
 
       {/* Label above button (panel-printed text) */}
       {labelPosition === 'above' && (
-        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-tight text-center tracking-wide uppercase`}>
+        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-none text-center tracking-wide uppercase`}>
           {label}
         </span>
       )}
@@ -122,11 +122,18 @@ export default function PanelButton({
         whileTap={{ scale: 0.95, y: 2 }}
       >
         {labelPosition === 'on' && (
-          <span className={`${sizeStyle.text} font-medium text-gray-200 leading-tight text-center px-1 tracking-wide uppercase`}>
+          <span className={`${sizeStyle.text} font-medium text-gray-200 leading-none text-center px-1 tracking-wide uppercase`}>
             {label}
           </span>
         )}
       </motion.button>
+
+      {/* Label below button (panel-printed text) */}
+      {labelPosition === 'below' && (
+        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-none text-center tracking-wide uppercase`}>
+          {label}
+        </span>
+      )}
     </div>
   );
 }

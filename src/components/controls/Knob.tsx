@@ -97,7 +97,7 @@ export default function Knob({
       </motion.div>
 
       {/* Label */}
-      <span className={`${cfg.label} font-medium text-gray-400 uppercase tracking-wider text-center leading-tight`}>
+      <span className={`${cfg.label} font-medium text-gray-400 uppercase tracking-wider text-center leading-none`}>
         {label}
       </span>
     </div>

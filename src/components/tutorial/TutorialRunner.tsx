@@ -180,7 +180,7 @@ export default function TutorialRunner({
       </header>
 
       {/* Full-page scrollable area */}
-      <div className="flex-1 overflow-y-auto" ref={scrollRef}>
+      <div className="flex-1 overflow-auto" ref={scrollRef}>
         {/* Panel area */}
         <div className="flex flex-col items-center p-3 pb-0">
           <div ref={containerRef} className="w-full overflow-x-auto rounded-lg">
