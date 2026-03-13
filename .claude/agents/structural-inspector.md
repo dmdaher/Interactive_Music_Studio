@@ -62,9 +62,11 @@ Read the Gatekeeper's Section Topology Maps from `.claude/agent-memory/gatekeepe
 2. **Row Contents:** For each row, verify the correct controls are present in the correct order. If the Gatekeeper says "Row 3: [ON/OFF btn] [TAP/HOLD btn] [EDIT btn]" and the DOM has those buttons in Row 1, flag as **Row Position Error**.
 3. **Clustering Verification:** If the Gatekeeper says "buttons clustered at bottom," measure the Y-coordinates of all buttons in the section. If they are distributed evenly across the full section height instead of clustered, flag as **Clustering Mismatch**.
 4. **Cross-Section Elements:** If the Gatekeeper documents a control that spans across multiple sections (e.g., VOICES LED strip below POLY through ENVELOPES), verify it is NOT embedded inside a single section's container.
+5. **Vertical Span Check:** If the Gatekeeper marks a section as `Span: full-height (alongside keyboard)`, verify that the section's rendered bottom edge aligns with the keyboard's bottom edge (within 5px tolerance), NOT with the control surface sections above the keyboard. Measure both the section's `bottom` and the keyboard container's `bottom` via `getBoundingClientRect()`. If a full-height section ends above the keyboard, flag as **Vertical Span Error**.
 
 Scoring:
 - **(-2.0) Topology Mismatch:** Wrong number of rows/columns or controls in wrong rows
+- **(-1.0) Vertical Span Error:** Full-height section does not extend alongside keyboard as documented
 - **(-1.0) Clustering Mismatch:** Controls distributed vertically when they should be clustered (or vice versa)
 - **(-0.5) Row Position Error:** Correct controls but in the wrong row order
 
@@ -77,11 +79,11 @@ A section can have perfect internal topology but be shifted as a group within it
 
 ```javascript
 // Anchor/Centroid Audit — run inside page.evaluate()
-const sections = document.querySelectorAll('.rounded-lg'); // section containers
+const sections = document.querySelectorAll('[data-section-id]'); // section containers — ensure each section has a data-section-id attribute in the panel code
 const anchorResults = [];
 sections.forEach(section => {
   const box = section.getBoundingClientRect();
-  if (box.height < 100) return; // skip non-section elements
+  if (box.height < 50) return; // skip tiny elements (threshold may vary by instrument scale)
   const parentBox = section.parentElement.getBoundingClientRect();
 
   // Horizontal centroid drift
@@ -161,6 +163,7 @@ Deductions (minimum score: 0.0):
 - (-1.0) Aspect Ratio Distortion: Section is "stretched" vertically compared to hardware
 - (-1.0) Any component overlap or "collision"
 - (-2.0) Topology Mismatch (wrong row/column count or controls in wrong rows)
+- (-1.0) Vertical Span Error (full-height section does not extend alongside keyboard)
 - (-1.0) Clustering Mismatch (buttons distributed when should be clustered, or vice versa)
 - (-1.0) Unintentional wrapping (e.g., Row of 4 becoming 3+1)
 - (-0.5) Row Position Error (correct controls but in wrong row order)
