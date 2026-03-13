@@ -21,7 +21,11 @@ Generate a structured Markdown table of every single control identified:
 - **ID:** (e.g., `vcf-cutoff-slider`)
 - **Verbatim Label:** (Exactly as printed on the hardware silkscreen)
 - **Type:** (Slider, Knob, Button, Switch, LED, Screen)
-- **Relative Position:** (Section name and Grid/X-Y Coordinate)
+- **Section:** (Which section this control belongs to — or "cross-section: X–Y" if it spans multiple sections)
+- **Hardware Position:** (Precise location on the physical hardware. NOT just "PROGRAMMER" — include row, column, and spatial relationship to neighbors. E.g., "PROGRAMMER, Row 3, below LCD display, between COMPARE and WRITE buttons")
+- **Neighbors:** (What is directly adjacent to this element on the hardware? E.g., "Above: ENVELOPES bottom buttons. Below: Keyboard. Left: VCA/HPF bottom buttons. Right: panel edge." This is a separate field from Hardware Position because it serves a different purpose — it gives downstream agents a verifiable spatial assertion they can confirm by measuring bounding box adjacency in the rendered DOM.)
+
+**POSITIONAL TRUTH RULE (MANDATORY):** Every element in the manifest MUST have an unambiguous hardware position derived from the manual diagrams and reference photos. "Relative Position" is not enough — you must specify the SECTION, the ROW/COLUMN within that section, and what it sits NEXT TO. If an element is between two sections, above the keyboard, or in any non-obvious position, document it with extreme precision. Downstream agents use this to verify that the code puts every element in the CORRECT location — not just that it exists.
 
 ### DENSITY ANCHOR (MANDATORY):
 At the top of the Manifest, define the device's Expected Density Index:
@@ -80,7 +84,7 @@ All subsequent agents (Inspector, Questioner, Critic) MUST use these topology ma
 ### KEY COMPONENT PROPORTIONS (MANDATORY):
 Some components have distinctive proportions that are critical to visual accuracy — particularly displays, screens, and any non-standard-sized controls. For each such component, record its **aspect ratio** as observed on the hardware.
 
-Measure from the hardware photos or manual diagrams:
+Derive proportions from the **Physical Specifications** section of the manual FIRST (mm dimensions are authoritative). Manual diagrams are illustrative, not dimensionally accurate — use them only as a fallback when specs don't cover a component. Measure from the hardware photos or manual diagrams:
 - **Displays/Screens:** Width-to-height ratio (e.g., "LCD Display: ~1.3:1 landscape, roughly 40% of PROGRAMMER section height")
 - **Oversized controls:** Any knob, slider, or wheel that is visually larger or differently proportioned than the standard controls (e.g., "Data Entry knob: ~1.5x diameter of standard knobs")
 - **Non-rectangular elements:** Wheels, curved panels, grouped LED arrays — note their approximate proportions relative to their containing section
@@ -121,6 +125,8 @@ Start at 10.0. Deductions (minimum score: 0.0):
 - (-0.5) Missing Key Component Proportions
 - (-0.5) Low-res assets used without "Heuristic Reconstruction" math
 - (-0.5) Manifest missing any control found in the documentation
+- (-1.0) Manifest entries missing precise hardware position (Section + Row/Column + Neighbors) — "Positional Truth" violation
+- (-1.0) Cross-section or non-standard elements not documented with exact spanning range and physical location
 
 **PASS/FAIL:** Score < 9.5 triggers REJECTED status.
 

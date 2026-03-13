@@ -97,7 +97,7 @@ export default function DeepMindDisplay({ highlighted = false }: DeepMindDisplay
     <motion.div
       style={{
         width: 340,
-        height: 204,
+        height: 142,
         boxSizing: 'border-box' as const,
         flexShrink: 0,
         position: 'relative',

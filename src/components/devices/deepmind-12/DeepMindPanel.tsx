@@ -42,12 +42,12 @@ interface DeepMindPanelProps {
 }
 
 /* ───── Section Header Bar ───── */
-function SectionHeader({ label, width }: { label: string; width?: string }) {
+function SectionHeader({ label, width, colorTop, colorBottom }: { label: string; width?: string; colorTop?: string; colorBottom?: string }) {
   return (
     <div
       className="flex items-center justify-center rounded-t-sm px-1.5 py-px select-none"
       style={{
-        background: `linear-gradient(to bottom, ${DM_COLORS.sectionHeader}, ${DM_COLORS.sectionHeaderDark})`,
+        background: `linear-gradient(to bottom, ${colorTop ?? DM_COLORS.sectionHeader}, ${colorBottom ?? DM_COLORS.sectionHeaderDark})`,
         minWidth: width,
         boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
       }}
@@ -144,8 +144,8 @@ function EnvelopeCurveIcons({ panelState, highlightedControls }: {
           <div key={c.id} className="flex items-center gap-1" data-control-id={c.id}>
             <LED on={isActive} color={DM_COLORS.ledOrange} size={LED_SIZE} />
             <svg
-              width="16"
-              height="16"
+              width="36"
+              height="36"
               viewBox="0 0 16 16"
               style={isHighlighted ? { filter: 'drop-shadow(0 0 3px rgba(0,170,255,0.8))' } : undefined}
             >
@@ -260,7 +260,7 @@ export default function DeepMindPanel({
               {/* Top: Octave LEDs + buttons */}
               <div className="flex flex-col items-center gap-0.5">
                 <div className="flex items-center gap-1">
-                  <span className="text-[7px] text-gray-500 font-bold tracking-wider uppercase leading-none">Octave</span>
+                  <span className="text-[7px] text-gray-500 font-bold tracking-wider uppercase leading-none">OCTAVE</span>
                 </div>
                 <div className="flex items-center gap-1">
                   {[-2, -1, 0, 1, 2].map((oct) => (
@@ -295,14 +295,14 @@ export default function DeepMindPanel({
               <div className="flex items-center justify-center gap-2">
                 <Knob
                   id="volume"
-                  label="Volume"
+                  label="VOLUME"
                   value={ps('volume')?.value ?? 100}
                   highlighted={hl('volume')}
                   size="md"
                 />
                 <Knob
                   id="portamento"
-                  label="Portamento"
+                  label="PORTAMENTO"
                   value={ps('portamento')?.value ?? 0}
                   highlighted={hl('portamento')}
                   size="md"
@@ -312,7 +312,7 @@ export default function DeepMindPanel({
               <div className="flex items-end justify-center gap-2">
                 <Wheel
                   id="pitch-bend"
-                  label="Pitch"
+                  label="PITCH"
                   value={ps('pitch-bend')?.value ?? 64}
                   highlighted={hl('pitch-bend')}
                   width={WHEEL_WIDTH}
@@ -320,7 +320,7 @@ export default function DeepMindPanel({
                 />
                 <Wheel
                   id="mod-wheel"
-                  label="Mod"
+                  label="MOD"
                   value={ps('mod-wheel')?.value ?? 0}
                   highlighted={hl('mod-wheel')}
                   width={WHEEL_WIDTH}
@@ -343,8 +343,8 @@ export default function DeepMindPanel({
               <div className="flex flex-col items-center gap-0.5 px-1 py-0.5 flex-1">
                 <div className="flex items-center gap-1">
                   {[
-                    { id: 'arp-chord', label: 'Chord' },
-                    { id: 'arp-poly', label: 'Poly Chord' },
+                    { id: 'arp-chord', label: 'CHORD' },
+                    { id: 'arp-poly', label: 'POLY CHORD' },
                   ].map((b) => (
                     <PanelButton key={b.id} id={b.id} label={b.label} variant="function" size="sm"
                       active={ps(b.id)?.active ?? false} highlighted={hl(b.id)}
@@ -353,16 +353,16 @@ export default function DeepMindPanel({
                   ))}
                 </div>
                 <div className="flex items-end gap-1">
-                  <Slider id="arp-rate" label="Rate" value={ps('arp-rate')?.value ?? 64}
+                  <Slider id="arp-rate" label="RATE" value={ps('arp-rate')?.value ?? 64}
                     highlighted={hl('arp-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="arp-gate" label="Gate Time" value={ps('arp-gate')?.value ?? 64}
+                  <Slider id="arp-gate" label="GATE TIME" value={ps('arp-gate')?.value ?? 64}
                     highlighted={hl('arp-gate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
                 <div className="flex items-center gap-1 mt-auto">
                   {[
-                    { id: 'arp-on', label: 'On/Off', hasLed: true },
-                    { id: 'arp-tap', label: 'Tap/Hold' },
-                    { id: 'arp-edit', label: 'Edit' },
+                    { id: 'arp-on', label: 'ON/OFF', hasLed: true },
+                    { id: 'arp-tap', label: 'TAP/HOLD' },
+                    { id: 'arp-edit', label: 'EDIT' },
                   ].map((b) => (
                     <PanelButton key={b.id} id={b.id} label={b.label} variant="function" size="sm"
                       active={ps(b.id)?.active ?? false} highlighted={hl(b.id)}
@@ -389,17 +389,17 @@ export default function DeepMindPanel({
                   <WaveformLEDs prefix="lfo1" panelState={panelState} highlightedControls={highlightedControls} />
                 </div>
                 <div className="flex items-end gap-1">
-                  <Slider id="lfo1-rate" label="Rate" value={ps('lfo1-rate')?.value ?? 64}
+                  <Slider id="lfo1-rate" label="RATE" value={ps('lfo1-rate')?.value ?? 64}
                     highlighted={hl('lfo1-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="lfo1-delay" label="Delay Time" value={ps('lfo1-delay')?.value ?? 0}
+                  <Slider id="lfo1-delay" label="DELAY TIME" value={ps('lfo1-delay')?.value ?? 0}
                     highlighted={hl('lfo1-delay')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
                 <div className="flex items-center gap-1 mt-auto">
-                  <PanelButton id="lfo1-sync" label="Sync" variant="function" size="sm"
+                  <PanelButton id="lfo1-sync" label="SYNC" variant="function" size="sm"
                     active={ps('lfo1-sync')?.active ?? false} highlighted={hl('lfo1-sync')}
                     hasLed ledOn={ps('lfo1-sync')?.ledOn ?? false} ledColor={DM_COLORS.ledGreen}
                     labelPosition="above" onClick={() => onButtonClick?.('lfo1-sync')} />
-                  <PanelButton id="lfo1-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="lfo1-edit" label="EDIT" variant="function" size="sm"
                     active={ps('lfo1-edit')?.active ?? false} highlighted={hl('lfo1-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('lfo1-edit')} />
                 </div>
@@ -422,17 +422,17 @@ export default function DeepMindPanel({
                   <WaveformLEDs prefix="lfo2" panelState={panelState} highlightedControls={highlightedControls} />
                 </div>
                 <div className="flex items-end gap-1">
-                  <Slider id="lfo2-rate" label="Rate" value={ps('lfo2-rate')?.value ?? 64}
+                  <Slider id="lfo2-rate" label="RATE" value={ps('lfo2-rate')?.value ?? 64}
                     highlighted={hl('lfo2-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="lfo2-delay" label="Delay Time" value={ps('lfo2-delay')?.value ?? 0}
+                  <Slider id="lfo2-delay" label="DELAY TIME" value={ps('lfo2-delay')?.value ?? 0}
                     highlighted={hl('lfo2-delay')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
                 <div className="flex items-center gap-1 mt-auto">
-                  <PanelButton id="lfo2-sync" label="Sync" variant="function" size="sm"
+                  <PanelButton id="lfo2-sync" label="SYNC" variant="function" size="sm"
                     active={ps('lfo2-sync')?.active ?? false} highlighted={hl('lfo2-sync')}
                     hasLed ledOn={ps('lfo2-sync')?.ledOn ?? false} ledColor={DM_COLORS.ledGreen}
                     labelPosition="above" onClick={() => onButtonClick?.('lfo2-sync')} />
-                  <PanelButton id="lfo2-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="lfo2-edit" label="EDIT" variant="function" size="sm"
                     active={ps('lfo2-edit')?.active ?? false} highlighted={hl('lfo2-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('lfo2-edit')} />
                 </div>
@@ -454,18 +454,18 @@ export default function DeepMindPanel({
                 {/* All sliders in single row with waveform buttons interspersed */}
                 <div className="flex items-end gap-1">
                   {/* OSC 1 controls */}
-                  <Slider id="osc1-pitch-mod" label="Pitch Mod" value={ps('osc1-pitch-mod')?.value ?? 0}
+                  <Slider id="osc1-pitch-mod" label="PITCH MOD" value={ps('osc1-pitch-mod')?.value ?? 0}
                     highlighted={hl('osc1-pitch-mod')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <div className="flex flex-col items-center gap-1 self-center">
-                    <PanelButton id="osc1-square" label="Square" variant="function" size="sm"
+                  <div className="flex flex-col items-center gap-1 self-start mt-4">
+                    <PanelButton id="osc1-square" label="SQUARE" variant="function" size="sm"
                       active={ps('osc1-square')?.active ?? false} highlighted={hl('osc1-square')}
                       hasLed ledOn={ps('osc1-square')?.ledOn ?? true} ledColor={DM_COLORS.ledGreen}
                       labelPosition="above" onClick={() => onButtonClick?.('osc1-square')} />
                   </div>
                   <Slider id="osc1-pwm" label="PWM" value={ps('osc1-pwm')?.value ?? 0}
                     highlighted={hl('osc1-pwm')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <div className="flex flex-col items-center gap-1 self-center">
-                    <PanelButton id="osc1-saw" label="Sawtooth" variant="function" size="sm"
+                  <div className="flex flex-col items-center gap-1 self-start mt-4">
+                    <PanelButton id="osc1-saw" label="SAWTOOTH" variant="function" size="sm"
                       active={ps('osc1-saw')?.active ?? false} highlighted={hl('osc1-saw')}
                       hasLed ledOn={ps('osc1-saw')?.ledOn ?? true} ledColor={DM_COLORS.ledGreen}
                       labelPosition="above" onClick={() => onButtonClick?.('osc1-saw')} />
@@ -473,21 +473,21 @@ export default function DeepMindPanel({
                   {/* Divider */}
                   <div className="w-px self-center opacity-20" style={{ height: OSC_DIVIDER_HEIGHT, backgroundColor: DM_COLORS.labelDim }} />
                   {/* OSC 2 controls */}
-                  <Slider id="osc2-tone-mod" label="Tone Mod" value={ps('osc2-tone-mod')?.value ?? 0}
+                  <Slider id="osc2-tone-mod" label="TONE MOD" value={ps('osc2-tone-mod')?.value ?? 0}
                     highlighted={hl('osc2-tone-mod')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="osc2-pitch" label="Pitch" value={ps('osc2-pitch')?.value ?? 64}
+                  <Slider id="osc2-pitch" label="PITCH" value={ps('osc2-pitch')?.value ?? 64}
                     highlighted={hl('osc2-pitch')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="osc2-level" label="Level" value={ps('osc2-level')?.value ?? 100}
+                  <Slider id="osc2-level" label="LEVEL" value={ps('osc2-level')?.value ?? 100}
                     highlighted={hl('osc2-level')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="osc-noise" label="Noise Level" value={ps('osc-noise')?.value ?? 0}
+                  <Slider id="osc-noise" label="NOISE LEVEL" value={ps('osc-noise')?.value ?? 0}
                     highlighted={hl('osc-noise')} trackHeight={SLIDER_TRACK_HEIGHT_OSC} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
                 <div className="flex items-center gap-1 mt-auto">
-                  <PanelButton id="osc-sync" label="Sync" variant="function" size="sm"
+                  <PanelButton id="osc-sync" label="SYNC" variant="function" size="sm"
                     active={ps('osc-sync')?.active ?? false} highlighted={hl('osc-sync')}
                     hasLed ledOn={ps('osc-sync')?.ledOn ?? false} ledColor={DM_COLORS.ledRed}
                     labelPosition="above" onClick={() => onButtonClick?.('osc-sync')} />
-                  <PanelButton id="osc-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="osc-edit" label="EDIT" variant="function" size="sm"
                     active={ps('osc-edit')?.active ?? false} highlighted={hl('osc-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('osc-edit')} />
                 </div>
@@ -501,7 +501,7 @@ export default function DeepMindPanel({
               style={{ flex: `${SECTION_FLEX.prog} 1 0%`, minWidth: PROGRAMMER_MIN_WIDTH, background: DM_COLORS.sectionBg, boxShadow: `inset 0 1px 3px ${DM_COLORS.sectionShadow}` }}
             >
               <SectionHeader label="PROGRAMMER" />
-              <div className="flex flex-col items-center gap-1 px-1.5 py-0.5 flex-1">
+              <div className="flex flex-col items-center justify-between gap-1 px-1.5 py-0.5 flex-1">
                 {/* Display + Navigation + Data Entry row */}
                 <div className="flex items-stretch gap-2">
                   {/* LCD Display + menu buttons directly below (matches hardware layout) */}
@@ -510,11 +510,11 @@ export default function DeepMindPanel({
                     {/* Menu buttons row — directly below display like real hardware */}
                     <div className="flex items-center gap-1">
                       {[
-                        { id: 'prog', label: 'Prog', defaultActive: true, color: DM_COLORS.buttonOrange },
+                        { id: 'prog', label: 'PROG', defaultActive: true, color: DM_COLORS.buttonOrange },
                         { id: 'fx', label: 'FX', color: DM_COLORS.buttonOrange },
-                        { id: 'global', label: 'Global' },
-                        { id: 'compare', label: 'Compare' },
-                        { id: 'write', label: 'Write' },
+                        { id: 'global', label: 'GLOBAL' },
+                        { id: 'compare', label: 'COMPARE' },
+                        { id: 'write', label: 'WRITE' },
                       ].map((b) => (
                         <PanelButton
                           key={b.id}
@@ -536,29 +536,29 @@ export default function DeepMindPanel({
 
                   {/* Navigation cluster (Bank/Up, -/No + Knob + +/Yes, Bank/Down) */}
                   <div className="flex flex-col items-center justify-between">
-                    <PanelButton id="bank-up" label="Bank/Up" variant="function" size="sm"
+                    <PanelButton id="bank-up" label="BANK/UP" variant="function" size="sm"
                       active={ps('bank-up')?.active ?? false} highlighted={hl('bank-up')}
                       labelPosition="above" onClick={() => onButtonClick?.('bank-up')} />
                     <div className="flex items-center gap-2">
-                      <PanelButton id="nav-no" label="-/No" variant="function" size="sm"
+                      <PanelButton id="nav-no" label="-/NO" variant="function" size="sm"
                         active={ps('nav-no')?.active ?? false} highlighted={hl('nav-no')}
                         onClick={() => onButtonClick?.('nav-no')} />
-                      <Knob id="data-entry-knob" label="Data Entry" value={ps('data-entry-knob')?.value ?? 64}
+                      <Knob id="data-entry-knob" label="DATA ENTRY" value={ps('data-entry-knob')?.value ?? 64}
                         highlighted={hl('data-entry-knob')} outerSize={46} />
-                      <PanelButton id="nav-yes" label="+/Yes" variant="function" size="sm"
+                      <PanelButton id="nav-yes" label="+/YES" variant="function" size="sm"
                         active={ps('nav-yes')?.active ?? false} highlighted={hl('nav-yes')}
                         onClick={() => onButtonClick?.('nav-yes')} />
                     </div>
-                    <PanelButton id="bank-down" label="Bank/Down" variant="function" size="sm"
+                    <PanelButton id="bank-down" label="BANK/DOWN" variant="function" size="sm"
                       active={ps('bank-down')?.active ?? false} highlighted={hl('bank-down')}
                       labelPosition="below" onClick={() => onButtonClick?.('bank-down')} />
                   </div>
 
                   {/* Data entry slider + Mod (standalone right column) */}
                   <div className="flex flex-col items-center gap-1">
-                    <Slider id="data-entry-slider" label="Data Entry" value={ps('data-entry-slider')?.value ?? 64}
+                    <Slider id="data-entry-slider" label="DATA ENTRY" value={ps('data-entry-slider')?.value ?? 64}
                       highlighted={hl('data-entry-slider')} trackHeight={SLIDER_TRACK_HEIGHT_DATA} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                    <PanelButton id="mod-btn" label="Mod" variant="function" size="sm"
+                    <PanelButton id="mod-btn" label="MOD" variant="function" size="sm"
                       active={ps('mod-btn')?.active ?? false} highlighted={hl('mod-btn')}
                       labelPosition="above" onClick={() => onButtonClick?.('mod-btn')} />
                   </div>
@@ -581,10 +581,10 @@ export default function DeepMindPanel({
             >
               <SectionHeader label="POLY" />
               <div className="flex flex-col items-center gap-1 px-1 py-0.5 flex-1">
-                <Slider id="poly-detune" label="Unison Detune" value={ps('poly-detune')?.value ?? 0}
+                <Slider id="poly-detune" label="UNISON DETUNE" value={ps('poly-detune')?.value ?? 0}
                   highlighted={hl('poly-detune')} trackHeight={SLIDER_TRACK_HEIGHT_POLY} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 <div className="mt-auto">
-                  <PanelButton id="poly-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="poly-edit" label="EDIT" variant="function" size="sm"
                     active={ps('poly-edit')?.active ?? false} highlighted={hl('poly-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('poly-edit')} />
                 </div>
@@ -599,26 +599,26 @@ export default function DeepMindPanel({
               <SectionHeader label="VCF" />
               <div className="flex flex-col items-center gap-1 px-1 py-0.5 flex-1">
                 <div className="flex items-end gap-1">
-                  <Slider id="vcf-freq" label="Freq" value={ps('vcf-freq')?.value ?? 127}
+                  <Slider id="vcf-freq" label="FREQ" value={ps('vcf-freq')?.value ?? 127}
                     highlighted={hl('vcf-freq')} trackHeight={SLIDER_TRACK_HEIGHT_VCF} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="vcf-res" label="Res" value={ps('vcf-res')?.value ?? 0}
+                  <Slider id="vcf-res" label="RES" value={ps('vcf-res')?.value ?? 0}
                     highlighted={hl('vcf-res')} trackHeight={SLIDER_TRACK_HEIGHT_VCF} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="vcf-env" label="Env" value={ps('vcf-env')?.value ?? 64}
+                  <Slider id="vcf-env" label="ENV" value={ps('vcf-env')?.value ?? 64}
                     highlighted={hl('vcf-env')} trackHeight={SLIDER_TRACK_HEIGHT_VCF} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                   <Slider id="vcf-lfo" label="LFO" value={ps('vcf-lfo')?.value ?? 0}
                     highlighted={hl('vcf-lfo')} trackHeight={SLIDER_TRACK_HEIGHT_VCF} trackWidth={SLIDER_TRACK_WIDTH} showScale />
-                  <Slider id="vcf-kybd" label="Kybd" value={ps('vcf-kybd')?.value ?? 64}
+                  <Slider id="vcf-kybd" label="KYBD" value={ps('vcf-kybd')?.value ?? 64}
                     highlighted={hl('vcf-kybd')} trackHeight={SLIDER_TRACK_HEIGHT_VCF} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
                 <div className="flex items-center gap-1 mt-auto">
-                  <PanelButton id="vcf-2pole" label="2-Pole" variant="function" size="sm"
+                  <PanelButton id="vcf-2pole" label="2-POLE" variant="function" size="sm"
                     active={ps('vcf-2pole')?.active ?? false} highlighted={hl('vcf-2pole')}
                     hasLed ledOn={ps('vcf-2pole')?.ledOn ?? false} ledColor={DM_COLORS.ledGreen}
                     labelPosition="above" onClick={() => onButtonClick?.('vcf-2pole')} />
-                  <PanelButton id="vcf-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="vcf-edit" label="EDIT" variant="function" size="sm"
                     active={ps('vcf-edit')?.active ?? false} highlighted={hl('vcf-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('vcf-edit')} />
-                  <PanelButton id="vcf-invert" label="Invert" variant="function" size="sm"
+                  <PanelButton id="vcf-invert" label="INVERT" variant="function" size="sm"
                     active={ps('vcf-invert')?.active ?? false} highlighted={hl('vcf-invert')}
                     hasLed ledOn={ps('vcf-invert')?.ledOn ?? false} ledColor={DM_COLORS.ledRed}
                     labelPosition="above" onClick={() => onButtonClick?.('vcf-invert')} />
@@ -633,10 +633,10 @@ export default function DeepMindPanel({
             >
               <SectionHeader label="VCA" />
               <div className="flex flex-col items-center gap-1 px-0.5 py-0.5 flex-1">
-                <Slider id="vca-level" label="Level" value={ps('vca-level')?.value ?? 100}
+                <Slider id="vca-level" label="LEVEL" value={ps('vca-level')?.value ?? 100}
                   highlighted={hl('vca-level')} trackHeight={SLIDER_TRACK_HEIGHT_VCA} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 <div className="mt-auto">
-                  <PanelButton id="vca-edit" label="Edit" variant="function" size="sm"
+                  <PanelButton id="vca-edit" label="EDIT" variant="function" size="sm"
                     active={ps('vca-edit')?.active ?? false} highlighted={hl('vca-edit')}
                     labelPosition="above" onClick={() => onButtonClick?.('vca-edit')} />
                 </div>
@@ -648,12 +648,12 @@ export default function DeepMindPanel({
               data-section-id="hpf"
               style={{ flex: `${SECTION_FLEX.hpf} 1 0%`, minWidth: SINGLE_SLIDER_SECTION_MIN_WIDTH, background: DM_COLORS.sectionBg, boxShadow: `inset 0 1px 3px ${DM_COLORS.sectionShadow}` }}
             >
-              <SectionHeader label="HPF" />
+              <SectionHeader label="HPF" colorTop={DM_COLORS.hpfHeader} colorBottom={DM_COLORS.hpfHeaderDark} />
               <div className="flex flex-col items-center gap-1 px-0.5 py-0.5 flex-1">
-                <Slider id="hpf-freq" label="Freq" value={ps('hpf-freq')?.value ?? 0}
+                <Slider id="hpf-freq" label="FREQ" value={ps('hpf-freq')?.value ?? 0}
                   highlighted={hl('hpf-freq')} trackHeight={SLIDER_TRACK_HEIGHT_TALL} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 <div className="mt-auto">
-                  <PanelButton id="hpf-boost" label="Boost" variant="function" size="sm"
+                  <PanelButton id="hpf-boost" label="BOOST" variant="function" size="sm"
                     active={ps('hpf-boost')?.active ?? false} highlighted={hl('hpf-boost')}
                     hasLed ledOn={ps('hpf-boost')?.ledOn ?? false} ledColor={DM_COLORS.ledOrange}
                     labelPosition="above" onClick={() => onButtonClick?.('hpf-boost')} />
@@ -679,21 +679,24 @@ export default function DeepMindPanel({
                   <Slider id="env-release" label="R" value={ps('env-release')?.value ?? 30}
                     highlighted={hl('env-release')} trackHeight={SLIDER_TRACK_HEIGHT_ENV} trackWidth={SLIDER_TRACK_WIDTH} showScale />
                 </div>
-                {/* Envelope type buttons + curve icons — clustered per hardware */}
-                <div className="flex flex-col items-center gap-1.5">
-                  {[
-                    { id: 'env-vca', label: 'VCA', defaultActive: true },
-                    { id: 'env-vcf', label: 'VCF' },
-                    { id: 'env-mod', label: 'MOD' },
-                    { id: 'env-curves', label: 'Curves' },
-                  ].map((b) => (
-                    <PanelButton key={b.id} id={b.id} label={b.label} variant="function" size="sm"
-                      active={ps(b.id)?.active ?? (b.defaultActive ?? false)} highlighted={hl(b.id)}
-                      hasLed ledOn={ps(b.id)?.ledOn ?? (b.defaultActive ?? false)}
-                      ledColor={DM_COLORS.ledOrange}
-                      labelPosition="above" onClick={() => onButtonClick?.(b.id)} />
-                  ))}
-                  {/* Curve shape icons */}
+                {/* Envelope type buttons (top) + curve icons (bottom) — hardware: buttons cluster top, curves at bottom */}
+                <div className="flex flex-col items-center justify-between flex-1">
+                  {/* Button cluster — top-aligned */}
+                  <div className="flex flex-col items-center gap-0.5">
+                    {[
+                      { id: 'env-vca', label: 'VCA', defaultActive: true },
+                      { id: 'env-vcf', label: 'VCF' },
+                      { id: 'env-mod', label: 'MOD' },
+                      { id: 'env-curves', label: 'CURVES' },
+                    ].map((b) => (
+                      <PanelButton key={b.id} id={b.id} label={b.label} variant="function" size="sm"
+                        active={ps(b.id)?.active ?? (b.defaultActive ?? false)} highlighted={hl(b.id)}
+                        hasLed ledOn={ps(b.id)?.ledOn ?? (b.defaultActive ?? false)}
+                        ledColor={DM_COLORS.ledOrange}
+                        labelPosition="above" onClick={() => onButtonClick?.(b.id)} />
+                    ))}
+                  </div>
+                  {/* Curve shape icons — bottom-aligned */}
                   <EnvelopeCurveIcons panelState={panelState} highlightedControls={highlightedControls} />
                 </div>
               </div>
@@ -701,15 +704,15 @@ export default function DeepMindPanel({
 
               </div>
 
-              {/* ═══════ VOICES LED strip ═══════ */}
-              <div className="flex items-center justify-center gap-1 mt-0.5">
-                <span className="text-[7px] text-gray-500 font-bold tracking-wider leading-none mr-1">VOICES</span>
+              {/* ═══════ VOICES LED strip (manual item 13) — spans POLY→ENV per hardware ═══════ */}
+              <div className="flex items-center justify-evenly gap-2 mt-0.5 ml-auto pr-1" style={{ minWidth: 720 }}>
+                <span className="text-[8px] text-gray-400 font-bold tracking-[0.15em] leading-none mr-0.5">VOICES</span>
                 {Array.from({ length: 12 }, (_, i) => {
                   const id = `voice-${i + 1}`;
                   return (
-                    <div key={i} className="flex flex-col items-center gap-0.5">
-                      <LED on={ps(id)?.ledOn ?? false} color={DM_COLORS.ledGreen} size={LED_SIZE_LARGE} />
-                      <span className="text-[5px] text-gray-600 leading-none">{i + 1}</span>
+                    <div key={i} className="flex flex-col items-center gap-0.5" data-control-id={id}>
+                      <LED on={ps(id)?.ledOn ?? false} color={DM_COLORS.ledGreen} size={12} />
+                      <span className="text-[6px] text-gray-500 leading-none">{i + 1}</span>
                     </div>
                   );
                 })}

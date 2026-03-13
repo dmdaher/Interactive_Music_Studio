@@ -37,7 +37,7 @@ export const SLIDER_TRACK_HEIGHT_VCA = 295; // VCA (single-slider section)
 export const SLIDER_TRACK_HEIGHT_POLY = 290; // POLY (single-slider with button)
 export const SLIDER_TRACK_HEIGHT_DATA = 250; // data-entry slider (inside nav cluster)
 export const SLIDER_TRACK_WIDTH = 14; // universal slider track width
-export const WHEEL_WIDTH = 32; // pitch bend / mod wheel width
+export const WHEEL_WIDTH = 36; // pitch bend / mod wheel width (hardware ratio ~1:5.5)
 export const WHEEL_HEIGHT = 200; // pitch bend / mod wheel height
 export const LED_SIZE = 4; // small LED indicator diameter
 export const LED_SIZE_LARGE = LED_SIZE + 2; // larger LED (LFO rate indicator)
@@ -49,6 +49,8 @@ export const DM_COLORS = {
   bodyLight: '#242424',
   sectionHeader: '#6A1520',
   sectionHeaderDark: '#4E0E14',
+  hpfHeader: '#1A4A7A',
+  hpfHeaderDark: '#0E2E4E',
   headerText: '#ffffff',
   labelText: '#cccccc',
   labelDim: '#999999',
