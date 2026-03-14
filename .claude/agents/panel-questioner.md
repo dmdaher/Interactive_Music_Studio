@@ -60,10 +60,10 @@ For each section, you must perform a **Relational Squint** — a directed visual
 2. **For each section, ask the Relational Squint Question:**
    - Read the Gatekeeper's grid definition. It tells you WHAT should be WHERE.
    - Look at the screenshot. Ask the directed question that tests the topology.
-   - **Examples of Relational Squint Questions:**
-     - ENVELOPES: "Squint at the BOTTOM of the ADSR sliders. Do you see a horizontal row of buttons (VCA, VCF, MOD, CURVES)? If the buttons are to the RIGHT of the sliders in a vertical column instead, the build is a **Macro-Failure**."
-     - ARP/SEQ: "Squint at the TOP of the section. Do you see buttons (CHORD, POLY CHORD) in a horizontal row ABOVE the sliders? If the buttons are below the sliders, or mixed in with them, it's a Structural Layout Error."
-     - OSC: "Are the SQUARE and SAWTOOTH buttons at the TOP of the slider area, or floating in the middle?"
+   - **Examples of Relational Squint Questions** (replace placeholder names with actual control names from the Gatekeeper's manifest):
+     - "Squint at the BOTTOM of the sliders in SECTION-B. Do you see a horizontal row of buttons? If the buttons are to the RIGHT in a vertical column instead, the build is a **Macro-Failure**."
+     - "Squint at the TOP of SECTION-A. Do you see buttons in a horizontal row ABOVE the sliders? If they're below or mixed in, it's a Structural Layout Error."
+     - "Are the toggle buttons in SECTION-D at the TOP of the slider area, or floating in the middle?"
    - Generate a Relational Squint Question for EVERY section by reading its topology and forming a visual test.
 3. **For each section, verify against the hardware reference:**
    - **Orientation match:** Are groups arranged horizontally or vertically? If the hardware shows a horizontal row of buttons at the bottom and the code shows a vertical column on the right, that is a **(-3.0) Structural Layout Error**.
@@ -103,7 +103,7 @@ You are forbidden from scoring the "Overall Layout" until you have performed a z
 
    **Protocol:** Before you can assign ANY score to a section, you must:
    - **(a) List the top 3 visual differences** between the hardware crop and the code crop. These can be differences in component count, arrangement, label position, scale, density, spacing, or visual weight. If you genuinely find fewer than 3 differences, state "Only N differences found" — but you MUST look hard enough to justify that claim.
-   - **(b) Neighbor Verification:** Cross-reference the Gatekeeper's Manifest "Neighbors" field for every element in this section. For each element, confirm its neighbors match. E.g., if the Manifest says "VOICES strip — Above: ENVELOPES bottom buttons, Below: Keyboard", verify that's what the screenshot shows. Any neighbor mismatch is a **Positional Failure**.
+   - **(b) Neighbor Verification:** Cross-reference the Gatekeeper's Manifest "Neighbors" field for every element in this section. For each element, confirm its neighbors match. E.g., if the Manifest says "element-X — Above: SECTION-E bottom buttons, Below: play surface", verify that's what the screenshot shows. Any neighbor mismatch is a **Positional Failure**.
    - **(c) Visual Weight Comparison:** Identify the 3 most visually prominent features in the HARDWARE crop of this section (largest, most contrasty, most central). Are those same features equally prominent in the CODE crop? If a feature is dominant on hardware but tiny/invisible in code, it is a **Visual Weight Failure**.
 
    **What counts as a "difference":**
@@ -115,8 +115,8 @@ You are forbidden from scoring the "Overall Layout" until you have performed a z
    - Spacing/density mismatch between hardware and code
 
 4. **Batch reporting (MANDATORY):** For sections with zero differences, batch into one line: `CLEAN: LFO1, LFO2, VCA, HPF (0 differences each)`
-   For sections with differences, one line per difference: `DELTA: ENVELOPES — (1) VOICES strip is full-width, should be right-aligned below ENVELOPES per Neighbor field (2) VOICES LEDs are 6px, hardware shows ~15px prominence (3) no other differences`
-   **Identical sub-element batching:** If a section contains N identical repeated elements (e.g., 12 voice LEDs, 7 waveform icons), verify the FIRST element at full detail (position, scale, neighbors), then batch-confirm the remaining N-1: `BATCH: voice-led-2 through voice-led-12 — identical to voice-led-1, confirmed by visual scan.` This prevents context bloat on complex instruments without sacrificing rigor.
+   For sections with differences, one line per difference: `DELTA: SECTION-E — (1) cross-section strip is full-width, should be right-aligned per Neighbor field (2) LED elements are 6px, hardware shows ~15px prominence (3) no other differences`
+   **Identical sub-element batching:** If a section contains N identical repeated elements (e.g., 12 status LEDs, 8 step buttons), verify the FIRST element at full detail (position, scale, neighbors), then batch-confirm the remaining N-1: `BATCH: led-2 through led-12 — identical to led-1, confirmed by visual scan.` This prevents context bloat on complex instruments without sacrificing rigor.
 
 **Scoring:**
 - **(-3.0) per element** in the wrong section entirely (Positional Failure) — most severe because it means the hardware reference was not consulted

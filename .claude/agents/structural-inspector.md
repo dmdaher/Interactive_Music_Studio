@@ -26,7 +26,7 @@ You must measure the RENDERED layout, not guess from code. Use Playwright to get
 
 1. **Read the Gatekeeper's Section Topology Maps** (including Grid Notation and DOM assertions) from `.claude/agent-memory/gatekeeper/checkpoint.md`.
 2. **DOM Sibling & Ancestor Audit (MANDATORY per section):** This is not a visual check — it is a DOM structure check. For each section, run `page.evaluate()` to verify:
-   - **Sibling verification:** If the Gatekeeper's DOM assertion says "VCA-button MUST be a sibling of VCF-button in the same flex-row container," query both elements and verify `elementA.parentElement === elementB.parentElement`. If they are NOT siblings, this is an automatic **(-3.0) Topological Mismatch**.
+   - **Sibling verification:** If the Gatekeeper's DOM assertion says "btn-X MUST be a sibling of btn-Y in the same flex-row container," query both elements and verify `elementA.parentElement === elementB.parentElement`. If they are NOT siblings, this is an automatic **(-3.0) Topological Mismatch**.
    - **Flex-direction verification:** For each container that holds a group of controls, read `getComputedStyle(container).flexDirection`. If the Gatekeeper says "orientation: HORIZONTAL" but the computed flex-direction is `column`, this is an automatic **(-3.0) Structural Layout Error**.
    - **Parent structure verification:** Verify the nesting matches the Gatekeeper's CSS expectation (e.g., "outer flex-col, each row is flex-row"). Walk up the DOM from each control to its section container and verify the flex-direction at each level.
    ```javascript
@@ -80,7 +80,7 @@ Most layout failures are horizontal. Always complete this audit before vertical 
 Generate a text-based horizontal density map from the measured X-coordinates. Example format:
 
 ```
-|--PERF(0-120)--|--ARP(122-260)--|--LFO1(262-380)--|  ...  |--ENV(1900-2200)--|
+|--SEC-A(0-120)--|--SEC-B(122-260)--|--SEC-C(262-380)--|  ...  |--SEC-N(1900-2200)--|
 Fill: 88% | Max gap: 12px | Avg gap: 6px | Variance: 4.2px
 Target fill: ≥95% | Target max gap: ≤20px
 VERDICT: [PASS/FAIL]
@@ -103,17 +103,17 @@ Read the Gatekeeper's Section Topology Maps from `.claude/agent-memory/gatekeepe
 1. **Row/Column Count:** Count the number of distinct horizontal rows (or vertical columns) of controls in the rendered DOM. Compare to the Gatekeeper's topology. If the Gatekeeper says "3 rows" and the DOM has 2 rows (controls merged into one row), flag as **Topology Mismatch**.
 2. **Row Contents:** For each row, verify the correct controls are present in the correct order. If the Gatekeeper says "Row 3: [ON/OFF btn] [TAP/HOLD btn] [EDIT btn]" and the DOM has those buttons in Row 1, flag as **Row Position Error**.
 3. **Clustering Verification:** If the Gatekeeper says "buttons clustered at bottom," measure the Y-coordinates of all buttons in the section. If they are distributed evenly across the full section height instead of clustered, flag as **Clustering Mismatch**.
-4. **Cross-Section Elements (CRITICAL — HIGH-WEIGHT CHECK):** If the Gatekeeper documents a control that spans across multiple sections (e.g., VOICES LED strip below POLY through ENVELOPES), verify:
+4. **Cross-Section Elements (CRITICAL — HIGH-WEIGHT CHECK):** If the Gatekeeper documents a control that spans across multiple sections (e.g., an LED strip or label bar spanning several sections), verify:
    - It is NOT embedded inside a single section's container when it should span multiple sections
    - It IS positioned at the correct vertical and horizontal location on the panel
    - Its rendered width/span matches the Gatekeeper's documented spanning range
    - Its visual scale matches the hardware's prominence (a prominent hardware feature rendered as a tiny afterthought is a Scale Mismatch)
-5. **Vertical Span Check:** If the Gatekeeper marks a section as `Span: full-height (alongside keyboard)`, verify that the section's rendered bottom edge aligns with the keyboard's bottom edge (within 5px tolerance), NOT with the control surface sections above the keyboard. Measure both the section's `bottom` and the keyboard container's `bottom` via `getBoundingClientRect()`. If a full-height section ends above the keyboard, flag as **Vertical Span Error**.
+5. **Vertical Span Check:** If the Gatekeeper marks a section as `Span: full-height`, verify that the section's rendered bottom edge aligns with the bottom of the instrument's play surface (keyboard, pad grid, or panel bottom edge) within 5px tolerance, NOT with the control surface sections above it. Measure both via `getBoundingClientRect()`. If a full-height section ends short, flag as **Vertical Span Error**.
 6. **Manifest Position Audit (MANDATORY):** For EVERY element in the Gatekeeper's Manifest, verify it is rendered inside the correct section container. Use `document.querySelector('[data-control-id="ID"]')` and check which `[data-section-id]` ancestor it belongs to. Compare against the Manifest's "Section" field. An element in the wrong section is a **Positional Failure** — the most severe topology error because it means the hardware reference was not consulted for placement.
 7. **Neighbor Verification (MANDATORY):** For every element that has a "Neighbors" field in the Gatekeeper's Manifest, measure the bounding boxes of the element AND its documented neighbors. Verify adjacency:
-   - If Manifest says "Above: ENVELOPES bottom buttons" — confirm the element's `top` is within 20px of the ENVELOPES bottom buttons' `bottom`
-   - If Manifest says "Below: Keyboard" — confirm the element's `bottom` is within 20px of the Keyboard's `top`
-   - If Manifest says "Left: VCA section" — confirm the element's `left` is near VCA's boundary
+   - If Manifest says "Above: SECTION-E bottom buttons" — confirm the element's `top` is within 20px of those buttons' `bottom`
+   - If Manifest says "Below: keyboard/pads" — confirm the element's `bottom` is within 20px of that area's `top`
+   - If Manifest says "Left: SECTION-D" — confirm the element's `left` is near that section's boundary
    - Any neighbor that is NOT adjacent (gap > 20px or wrong relative position) is a **Neighbor Mismatch**
 
 Scoring:
@@ -196,10 +196,10 @@ You are not an accountant checking "does element X exist." You are an industrial
 **Protocol:**
 1. **Build the Ratio Table:** For each section, measure the height (or width) of every control element. Then compute the ratio of each element to its largest neighbor within the same section. Do the same for the hardware reference (using the Gatekeeper's proportions or measuring from reference photos).
 2. **Compare Ratios:** For each element pair, compare the code ratio to the hardware ratio. Example:
-   - Hardware: VOICES LED strip height = 1/3 of ENVELOPES slider height
-   - Code: VOICES LED strip height = 1/10 of ENVELOPES slider height
+   - Hardware: cross-section element height = 1/3 of adjacent slider height
+   - Code: cross-section element height = 1/10 of adjacent slider height
    - Ratio deviation: 3.3x — this is a **Scale Violation**
-3. **Cross-Section Ratio Check:** For elements that span multiple sections or sit between sections, measure their size relative to the sections they're adjacent to. A strip that is 13px tall between 373px sections has a 3.5% ratio — if the hardware shows it at ~10-15% ratio, that's a Scale Violation.
+3. **Cross-Section Ratio Check:** For elements that span multiple sections or sit between sections, measure their size relative to the sections they're adjacent to. An element that is 13px tall between 373px sections has a 3.5% ratio — if the hardware shows it at ~10-15% ratio, that's a Scale Violation.
 4. **The "Would You Notice?" Test:** If you scaled both the hardware photo and the code screenshot to the same width, would the element be at approximately the same visual size? If not, it fails.
 
 **Scoring:**

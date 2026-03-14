@@ -22,8 +22,8 @@ Generate a structured Markdown table of every single control identified:
 - **Verbatim Label:** (Exactly as printed on the hardware silkscreen)
 - **Type:** (Slider, Knob, Button, Switch, LED, Screen)
 - **Section:** (Which section this control belongs to — or "cross-section: X–Y" if it spans multiple sections)
-- **Hardware Position:** (Precise location on the physical hardware. NOT just "PROGRAMMER" — include row, column, and spatial relationship to neighbors. E.g., "PROGRAMMER, Row 3, below LCD display, between COMPARE and WRITE buttons")
-- **Neighbors:** (What is directly adjacent to this element on the hardware? E.g., "Above: ENVELOPES bottom buttons. Below: Keyboard. Left: VCA/HPF bottom buttons. Right: panel edge." This is a separate field from Hardware Position because it serves a different purpose — it gives downstream agents a verifiable spatial assertion they can confirm by measuring bounding box adjacency in the rendered DOM.)
+- **Hardware Position:** (Precise location on the physical hardware. NOT just the section name — include row, column, and spatial relationship to neighbors. E.g., "SECTION-C, Row 3, below display, between button-X and button-Y")
+- **Neighbors:** (What is directly adjacent to this element on the hardware? E.g., "Above: SECTION-E bottom buttons. Below: keyboard/pads/bottom edge. Left: SECTION-D buttons. Right: panel edge." This is a separate field from Hardware Position because it serves a different purpose — it gives downstream agents a verifiable spatial assertion they can confirm by measuring bounding box adjacency in the rendered DOM.)
 
 **POSITIONAL TRUTH RULE (MANDATORY):** Every element in the manifest MUST have an unambiguous hardware position derived from the manual diagrams and reference photos. "Relative Position" is not enough — you must specify the SECTION, the ROW/COLUMN within that section, and what it sits NEXT TO. If an element is between two sections, above the keyboard, or in any non-obvious position, document it with extreme precision. Downstream agents use this to verify that the code puts every element in the CORRECT location — not just that it exists.
 
@@ -35,7 +35,7 @@ At the top of the Manifest, define the device's Expected Density Index:
 
 ### LAYOUT ARCHITECTURE (MANDATORY):
 Classify the instrument's panel into one of these layout types:
-- **Uniform Row:** Sections arranged left-to-right in a single row (e.g., most analog synths). Requires **Equalized Horizontal Distribution** — sections must use proportional widths (flex-grow or percentage) that match the hardware's proportions. No section may shrink to only its natural content width.
+- **Uniform Row:** Sections arranged left-to-right in a single row (e.g., many synthesizers, channel strips). Requires **Equalized Horizontal Distribution** — sections must use proportional widths (flex-grow or percentage) that match the hardware's proportions. No section may shrink to only its natural content width.
 - **Grid:** Controls in a 2D grid arrangement. Requires column/row alignment math. Sections in different columns may have intentionally different gap sizes.
 - **Asymmetric:** Irregular groupings. Requires explicit width ratios derived from the hardware manual.
 
@@ -46,7 +46,7 @@ For each section identified in the manifest, calculate its target width as a per
 
 Example format:
 ```
-PERF: 5.5% | ARP: 8.2% | LFO1: 7.0% | LFO2: 7.0% | OSC: 12.5% | PROG: 22.8% | POLY: 5.0% | VCF: 12.0% | VCA: 3.5% | HPF: 3.5% | ENV: 13.0%
+SECTION-A: 6% | SECTION-B: 8% | SECTION-C: 7% | SECTION-D: 15% | SECTION-E: 23% | SECTION-F: 12% | SECTION-G: 3% | SECTION-H: 13%
 ```
 
 These ratios are the reference target for the Structural Inspector's Proportional Width Check.
@@ -59,32 +59,32 @@ For each section, specify:
 - **Row contents (top to bottom):** List what is in each row (e.g., "Row 1: 2 buttons | Row 2: 2 sliders | Row 3: 3 buttons")
 - **Grouping pattern:** Are controls in a grid, a single column, side-by-side columns, or an irregular arrangement?
 - **Clustering:** Are buttons clustered together at the top/bottom/side, or distributed evenly across the section height?
-- **Vertical span:** Does the section occupy only the control surface row, or does it extend full-height alongside the keyboard? Many instruments have a left-side performance section (pitch/mod wheels, joystick, ribbon controller) that spans the full panel height — sitting next to the keyboard, not above it. Document this explicitly as `Span: full-height (alongside keyboard)` vs `Span: control-surface-only`.
+- **Vertical span:** Does the section occupy only the control surface row, or does it extend full-height? Some instruments have a performance section (wheels, joystick, ribbon, pads) that spans the full panel height — sitting alongside the keyboard or pad area, not above it. Document this explicitly as `Span: full-height` vs `Span: control-surface-only`. Note: not all instruments have keyboards — adapt this to the device's actual form factor.
 
 **FORMAT: Topological Grid Notation (MANDATORY)**
 
 Each section MUST be defined as a formal grid with explicit row/column assignments and orientation constraints. This is not prose — it is a machine-verifiable specification that downstream agents use to audit the DOM.
 
 ```
-ARP/SEQ — Grid: 3×2
-  Row 1 (top):    [CHORD btn] [POLY CHORD btn]           — orientation: HORIZONTAL
-  Row 2 (middle): [RATE slider] [GATE TIME slider]       — orientation: HORIZONTAL
-  Row 3 (bottom): [ON/OFF btn] [TAP/HOLD btn] [EDIT btn] — orientation: HORIZONTAL
+SECTION-A — Grid: 3×2
+  Row 1 (top):    [btn-1] [btn-2]                   — orientation: HORIZONTAL
+  Row 2 (middle): [slider-1] [slider-2]             — orientation: HORIZONTAL
+  Row 3 (bottom): [btn-3] [btn-4] [btn-5]           — orientation: HORIZONTAL
   CSS expectation: outer flex-col, each row is flex-row
 
-ENVELOPES — Grid: 2×5 (+ far-right icon column)
-  Row 1 (top, fills most height): [A slider] [D slider] [S slider] [R slider] + [3 curve icons col] — orientation: HORIZONTAL (sliders side-by-side)
-  Row 2 (bottom, below sliders):  [VCA btn] [VCF btn] [MOD btn] [CURVES btn] — orientation: HORIZONTAL
-  Far-right column (alongside Row 1): [exp icon] [lin icon] [rev icon] — orientation: VERTICAL
+SECTION-B — Grid: 2×5 (+ far-right icon column)
+  Row 1 (top, fills most height): [slider-A] [slider-B] [slider-C] [slider-D] + [3 icons col] — orientation: HORIZONTAL (sliders side-by-side)
+  Row 2 (bottom, below sliders):  [btn-X] [btn-Y] [btn-Z] [btn-W] — orientation: HORIZONTAL
+  Far-right column (alongside Row 1): [icon-1] [icon-2] [icon-3] — orientation: VERTICAL
   CSS expectation: outer flex-col, Row 1 is flex-row (sliders + icons), Row 2 is flex-row (buttons)
-  DOM assertion: VCA-button MUST be a sibling of VCF-button in the same flex-row container
+  DOM assertion: btn-X MUST be a sibling of btn-Y in the same flex-row container
 ```
 
 **CRITICAL: TOPOLOGY DESCRIBES ARRANGEMENT, NOT JUST CONTENT.** When documenting topology, you must specify:
 - **Grid dimensions:** Rows × Columns (e.g., "3×2 grid")
 - **Orientation per row/column:** HORIZONTAL or VERTICAL — this is the single most important field
 - **CSS expectation:** What flex/grid structure the DOM should use (e.g., "outer flex-col, each row is flex-row")
-- **DOM assertions:** Explicit sibling/parent relationships that downstream agents MUST verify (e.g., "VCA-button MUST be a sibling of VCF-button in the same flex-row container")
+- **DOM assertions:** Explicit sibling/parent relationships that downstream agents MUST verify (e.g., "btn-X MUST be a sibling of btn-Y in the same flex-row container")
 - **Position within section:** top/middle/bottom for rows, left/center/right for columns
 - **Adjacency relationships:** what is next to what, what is above/below what
 
@@ -107,9 +107,9 @@ Derive proportions from the **Physical Specifications** section of the manual FI
 Example format:
 ```
 KEY PROPORTIONS:
-  LCD Display: ~1.3:1 (wider than tall), occupies ~40% of PROGRAMMER section height
-  Data Entry Knob: ~1.5x standard knob diameter
-  Pitch/Mod Wheels: ~5:1 height-to-width ratio, occupy ~60% of PERF section height
+  Display: ~1.3:1 (wider than tall), occupies ~40% of its section height
+  Large Knob: ~1.5x standard knob diameter
+  Performance Controls: ~5:1 height-to-width ratio, occupy ~60% of their section height
 ```
 
 The Structural Inspector must verify these proportions in the rendered DOM. The Panel Questioner must flag any component that looks visually disproportionate compared to the hardware reference.
