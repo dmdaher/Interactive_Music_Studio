@@ -52,8 +52,8 @@ export const SECTION_FLEX = {
 } as const;
 
 // Slider dimensions
-export const SLIDER_TRACK_HEIGHT = 150;
-export const SLIDER_TRACK_HEIGHT_ENV = 170;
+export const SLIDER_TRACK_HEIGHT = 260;
+export const SLIDER_TRACK_HEIGHT_ENV = 280;
 export const SLIDER_TRACK_HEIGHT_PERF = 100;
 export const SLIDER_TRACK_WIDTH = 14;
 

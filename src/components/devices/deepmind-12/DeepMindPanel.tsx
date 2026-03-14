@@ -42,7 +42,7 @@ function SectionHeader({ label, variant }: { label: string; variant?: 'default' 
           ? 'linear-gradient(to bottom, #1a2a4a, #111111)'
           : `linear-gradient(to bottom, ${DM_COLORS.headerBg}, ${DM_COLORS.sectionBg})`,
         borderBottom: `1px solid ${isBlue ? '#2a3a5a' : DM_COLORS.sectionBorder}`,
-        lineHeight: 1.2,
+        lineHeight: 1.0,
       }}
     >
       {label}
@@ -268,14 +268,14 @@ export default function DeepMindPanel({
               <div className="flex items-end gap-1 flex-1">
                 <Slider id="arp-rate" label="RATE" value={ps('arp-rate')?.value ?? 64}
                   highlighted={hl('arp-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="arp-gate-time" label="GATE" value={ps('arp-gate-time')?.value ?? 80}
+                <Slider id="arp-gate-time" label="GATE TIME" value={ps('arp-gate-time')?.value ?? 80}
                   highlighted={hl('arp-gate-time')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
               </div>
               {/* Bottom row: ON/OFF, TAP/HOLD, EDIT buttons — HORIZONTAL */}
               <div className="flex items-center gap-0.5">
                 {[
                   { id: 'arp-on-off', label: 'ON/OFF' },
-                  { id: 'arp-tap-hold', label: 'TAP' },
+                  { id: 'arp-tap-hold', label: 'TAP/HOLD' },
                   { id: 'arp-edit', label: 'EDIT' },
                 ].map((b) => (
                   <PanelButton key={b.id} id={b.id} label={b.label} variant="function" size="sm"
@@ -301,7 +301,7 @@ export default function DeepMindPanel({
               <div className="flex items-end gap-1 flex-1">
                 <Slider id="lfo1-rate" label="RATE" value={ps('lfo1-rate')?.value ?? 40}
                   highlighted={hl('lfo1-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="lfo1-delay" label="DELAY" value={ps('lfo1-delay')?.value ?? 0}
+                <Slider id="lfo1-delay" label="DELAY TIME" value={ps('lfo1-delay')?.value ?? 0}
                   highlighted={hl('lfo1-delay')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
               </div>
               {/* EDIT button */}
@@ -324,7 +324,7 @@ export default function DeepMindPanel({
               <div className="flex items-end gap-1 flex-1">
                 <Slider id="lfo2-rate" label="RATE" value={ps('lfo2-rate')?.value ?? 40}
                   highlighted={hl('lfo2-rate')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="lfo2-delay" label="DELAY" value={ps('lfo2-delay')?.value ?? 0}
+                <Slider id="lfo2-delay" label="DELAY TIME" value={ps('lfo2-delay')?.value ?? 0}
                   highlighted={hl('lfo2-delay')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
               </div>
               <PanelButton id="lfo2-edit" label="EDIT" variant="function" size="sm"
@@ -357,15 +357,15 @@ export default function DeepMindPanel({
               <div className="flex items-end gap-0.5 flex-1">
                 <Slider id="osc-pwm" label="PWM" value={ps('osc-pwm')?.value ?? 64}
                   highlighted={hl('osc-pwm')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="osc-pitch-mod" label="P.MOD" value={ps('osc-pitch-mod')?.value ?? 0}
+                <Slider id="osc-pitch-mod" label="PITCH MOD" value={ps('osc-pitch-mod')?.value ?? 0}
                   highlighted={hl('osc-pitch-mod')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="osc-tone-mod" label="T.MOD" value={ps('osc-tone-mod')?.value ?? 0}
+                <Slider id="osc-tone-mod" label="TONE MOD" value={ps('osc-tone-mod')?.value ?? 0}
                   highlighted={hl('osc-tone-mod')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
                 <Slider id="osc-pitch" label="PITCH" value={ps('osc-pitch')?.value ?? 64}
                   highlighted={hl('osc-pitch')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
                 <Slider id="osc-level" label="LEVEL" value={ps('osc-level')?.value ?? 100}
                   highlighted={hl('osc-level')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                <Slider id="osc-noise" label="NOISE" value={ps('osc-noise')?.value ?? 0}
+                <Slider id="osc-noise" label="NOISE LEVEL" value={ps('osc-noise')?.value ?? 0}
                   highlighted={hl('osc-noise')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
               </div>
               {/* Bottom row: SYNC + EDIT buttons — HORIZONTAL */}
@@ -389,38 +389,34 @@ export default function DeepMindPanel({
             style={{ flex: `${SECTION_FLEX.prog} 1 0%`, background: DM_COLORS.sectionBg, boxShadow: `inset 0 1px 3px ${DM_COLORS.sectionShadow}` }}
           >
             <div className="flex flex-col items-center gap-0.5 px-2 py-1 flex-1 w-full">
-              {/* Top area: display + nav + data entry */}
+              {/* Top area: display + data entry + bank buttons */}
               <div className="flex gap-2 w-full flex-1">
-                {/* Left column: DATA ENTRY slider + rotary knob */}
-                <div className="flex flex-col items-center gap-1">
-                  <Slider id="prog-data-entry" label="DATA" value={ps('prog-data-entry')?.value ?? 64}
-                    highlighted={hl('prog-data-entry')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
-                  <Knob id="prog-rotary" label="" value={ps('prog-rotary')?.value ?? 64}
-                    highlighted={hl('prog-rotary')} outerSize={28} />
-                </div>
-
-                {/* Center: Display */}
+                {/* Left: Display + nav cluster with rotary */}
                 <div className="flex-1 flex flex-col items-center">
                   <DeepMindDisplay displayState={displayState} highlighted={hl('display')} />
-                  {/* Navigation buttons */}
+                  {/* Navigation: ▲ ▼ -/NO [rotary] +/YES — matches hardware layout */}
                   <div className="flex items-center gap-0.5 mt-1">
                     <PanelButton id="prog-nav-up" label="▲" variant="function" size="sm"
                       highlighted={hl('prog-nav-up')} onClick={() => onButtonClick?.('prog-nav-up')} />
                     <PanelButton id="prog-nav-down" label="▼" variant="function" size="sm"
                       highlighted={hl('prog-nav-down')} onClick={() => onButtonClick?.('prog-nav-down')} />
-                    <PanelButton id="prog-nav-no" label="-NO" variant="function" size="sm"
+                    <PanelButton id="prog-nav-no" label="-/NO" variant="function" size="sm"
                       highlighted={hl('prog-nav-no')} onClick={() => onButtonClick?.('prog-nav-no')} />
-                    <PanelButton id="prog-nav-yes" label="+YES" variant="function" size="sm"
+                    <Knob id="prog-rotary" label="" value={ps('prog-rotary')?.value ?? 64}
+                      highlighted={hl('prog-rotary')} outerSize={28} />
+                    <PanelButton id="prog-nav-yes" label="+/YES" variant="function" size="sm"
                       highlighted={hl('prog-nav-yes')} onClick={() => onButtonClick?.('prog-nav-yes')} />
                   </div>
                 </div>
 
-                {/* Right column: BANK buttons */}
+                {/* Right column: BANK buttons + DATA ENTRY slider */}
                 <div className="flex flex-col items-center gap-1">
                   <PanelButton id="prog-bank-up" label="BANK ▲" variant="function" size="sm"
                     highlighted={hl('prog-bank-up')} hasLed ledOn={ps('prog-bank-up')?.ledOn}
                     ledColor={DM_COLORS.ledOrange} labelPosition="above"
                     onClick={() => onButtonClick?.('prog-bank-up')} />
+                  <Slider id="prog-data-entry" label="DATA" value={ps('prog-data-entry')?.value ?? 64}
+                    highlighted={hl('prog-data-entry')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
                   <PanelButton id="prog-bank-down" label="BANK ▼" variant="function" size="sm"
                     highlighted={hl('prog-bank-down')} hasLed ledOn={ps('prog-bank-down')?.ledOn}
                     ledColor={DM_COLORS.ledOrange} labelPosition="above"
@@ -466,7 +462,7 @@ export default function DeepMindPanel({
             <SectionHeader label="POLY" />
             <div className="flex flex-col items-center gap-0.5 px-1 py-0.5 flex-1">
               <div className="flex items-end flex-1">
-                <Slider id="poly-unison" label="UNIS" value={ps('poly-unison')?.value ?? 0}
+                <Slider id="poly-unison" label="UNISON DETUNE" value={ps('poly-unison')?.value ?? 0}
                   highlighted={hl('poly-unison')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
               </div>
               <PanelButton id="poly-edit" label="EDIT" variant="function" size="sm"
@@ -581,7 +577,7 @@ export default function DeepMindPanel({
                 <EnvelopeCurveIcons panelState={panelState} highlightedControls={highlightedControls} />
               </div>
               {/* Bottom row: VCA, VCF, MOD, CURVES buttons in HORIZONTAL row per hardware */}
-              <div className="flex items-center justify-evenly gap-0.5">
+              <div className="flex items-center justify-start gap-1">
                 {[
                   { id: 'env-vca', label: 'VCA', defaultActive: true },
                   { id: 'env-vcf', label: 'VCF' },
@@ -615,6 +611,7 @@ export default function DeepMindPanel({
           {Array.from({ length: 12 }, (_, i) => {
             const id = `voice-led-${i + 1}`;
             const isOn = ps(id)?.ledOn;
+            const isHighlighted = hl(id);
             return (
               <div key={id} className="flex flex-col items-center" data-control-id={id}>
                 <div
@@ -623,7 +620,13 @@ export default function DeepMindPanel({
                     width: 6,
                     height: 6,
                     background: isOn ? DM_COLORS.ledGreen : DM_COLORS.ledOff,
-                    boxShadow: isOn ? `0 0 4px ${DM_COLORS.ledGreen}` : 'none',
+                    boxShadow: isOn && isHighlighted
+                      ? `0 0 4px ${DM_COLORS.ledGreen}, 0 0 8px 3px rgba(0,170,255,0.5)`
+                      : isOn
+                      ? `0 0 4px ${DM_COLORS.ledGreen}`
+                      : isHighlighted
+                      ? '0 0 8px 3px rgba(0,170,255,0.5)'
+                      : 'none',
                   }}
                 />
                 <span style={{ fontSize: 5, color: DM_COLORS.voicesLabelText }}>{i + 1}</span>
