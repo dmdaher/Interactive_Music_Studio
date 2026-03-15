@@ -137,14 +137,14 @@ function EnvelopeCurveIcons({ panelState, highlightedControls }: { panelState: P
   );
 }
 
-function WheelControl({ id, label, highlighted }: { id: string; label: string; highlighted: boolean }) {
+function WheelControl({ id, label, highlighted, height = 80 }: { id: string; label: string; highlighted: boolean; height?: number }) {
   return (
     <div className="flex flex-col items-center gap-0.5" data-control-id={id}>
       <div
         className="relative rounded-md cursor-pointer"
         style={{
           width: 30,
-          height: 80,
+          height,
           background: `linear-gradient(to right, #1a1a1a, #222, #1a1a1a)`,
           border: '1px solid #333',
           boxShadow: highlighted
@@ -250,10 +250,10 @@ function PerfSection({ ps, hl, onButtonClick }: {
           highlighted={hl('perf-oct-up')} onClick={() => onButtonClick?.('perf-oct-up')} />
       </div>
 
-      {/* Pitch & Mod wheels — adjacent below OCT buttons, no large gap */}
-      <div className="flex gap-2 mt-2">
-        <WheelControl id="perf-pitch" label="PITCH" highlighted={hl('perf-pitch')} />
-        <WheelControl id="perf-mod" label="MOD" highlighted={hl('perf-mod')} />
+      {/* Pitch & Mod wheels — fill remaining column height per hardware */}
+      <div className="flex gap-2 mt-2 flex-1 items-stretch">
+        <WheelControl id="perf-pitch" label="PITCH" highlighted={hl('perf-pitch')} height={200} />
+        <WheelControl id="perf-mod" label="MOD" highlighted={hl('perf-mod')} height={200} />
       </div>
     </div>
   );
