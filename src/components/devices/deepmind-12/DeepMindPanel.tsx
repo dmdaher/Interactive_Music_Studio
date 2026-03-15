@@ -280,7 +280,7 @@ type EnvSectionProps = SectionProps & {
 
 function SectionArpContent({ ps, hl, onButtonClick }: SectionProps) {
   return (
-    <div className="flex flex-col items-center gap-0 px-1 py-0 flex-1">
+    <div className="flex flex-col items-center gap-0 px-1 py-0 flex-1 w-full">
       {/* Row 1: Sliders (RATE, GATE TIME) */}
       <div className="flex items-end gap-1 flex-1">
         <Slider id="arp-rate" label="RATE" value={ps('arp-rate')?.value ?? 64}
@@ -289,7 +289,7 @@ function SectionArpContent({ ps, hl, onButtonClick }: SectionProps) {
           highlighted={hl('arp-gate-time')} trackHeight={230} trackWidth={SLIDER_TRACK_WIDTH} />
       </div>
       {/* Row 2: All buttons — ON/OFF, TAP/HOLD, CHORD, POLY CHORD, EDIT */}
-      <div className="flex items-center gap-0 flex-nowrap justify-center">
+      <div className="flex items-center w-full justify-between px-0.5">
         {[
           { id: 'arp-on-off', label: 'ON/OFF' },
           { id: 'arp-tap-hold', label: 'TAP/HOLD' },
@@ -343,7 +343,7 @@ function SectionLfo2Content({ ps, hl, onButtonClick }: SectionProps) {
 
 function SectionOscContent({ ps, hl, onButtonClick }: SectionProps) {
   return (
-    <div className="flex flex-col items-center gap-0 px-1 py-0 flex-1">
+    <div className="flex flex-col items-center gap-0 px-1 py-0 flex-1 w-full">
       {/* Row 1: Sliders with sub-group labels */}
       <div className="flex items-end gap-0.5 flex-1">
         {/* PITCH MOD — shared by both OSCs, leftmost per manual [7] listing order */}
@@ -377,7 +377,7 @@ function SectionOscContent({ ps, hl, onButtonClick }: SectionProps) {
           highlighted={hl('osc-noise')} trackHeight={220} trackWidth={SLIDER_TRACK_WIDTH} />
       </div>
       {/* Row 2: All buttons — SYNC, SQUAREWAVE, SAWTOOTH, EDIT (per manual hardware layout) */}
-      <div className="flex items-center gap-0.5">
+      <div className="flex items-center gap-2">
         <PanelButton id="osc-sync" label="SYNC" variant="function" size="sm"
           active={ps('osc-sync')?.active} highlighted={hl('osc-sync')}
           hasLed ledOn={ps('osc-sync')?.ledOn} ledColor={DM_COLORS.ledRed}
@@ -438,7 +438,7 @@ function SectionProgContent({ ps, hl, onButtonClick, displayState }: ProgSection
       </div>
       {/* Menu row [3]: PROG/FX/GLOBAL/COMPARE/WRITE left, MOD far right */}
       <div className="flex items-center justify-between w-full shrink-0">
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-1.5">
           {[
             { id: 'prog-menu-prog', label: 'PROG' },
             { id: 'prog-menu-fx', label: 'FX' },
@@ -493,7 +493,7 @@ function SectionVcfContent({ ps, hl, onButtonClick }: SectionProps) {
         <Slider id="vcf-kybd" label="KYBD" value={ps('vcf-kybd')?.value ?? 64}
           highlighted={hl('vcf-kybd')} trackHeight={SLIDER_TRACK_HEIGHT} trackWidth={SLIDER_TRACK_WIDTH} />
       </div>
-      <div className="flex items-center justify-center w-full gap-0.5">
+      <div className="flex items-center justify-center w-full gap-2">
         <PanelButton id="vcf-2pole" label="2-POLE" variant="function" size="sm"
           active={ps('vcf-2pole')?.active} highlighted={hl('vcf-2pole')}
           hasLed ledOn={ps('vcf-2pole')?.ledOn} ledColor={DM_COLORS.ledOrange}
@@ -555,7 +555,7 @@ function SectionEnvContent({ ps, hl, onButtonClick, panelState, highlightedContr
           highlighted={hl('env-release')} trackHeight={SLIDER_TRACK_HEIGHT_ENV} trackWidth={SLIDER_TRACK_WIDTH} />
         <EnvelopeCurveIcons panelState={panelState} highlightedControls={highlightedControls} />
       </div>
-      <div className="flex items-center justify-center w-full gap-0.5">
+      <div className="flex items-center justify-center w-full gap-2">
         {[
           { id: 'env-vca', label: 'VCA', defaultActive: true },
           { id: 'env-vcf', label: 'VCF' },
@@ -651,7 +651,7 @@ export default function DeepMindPanel({
         height: DM_PANEL_HEIGHT,
         background: DM_COLORS.panelBg,
         fontFamily: 'system-ui, -apple-system, sans-serif',
-        overflow: 'hidden',
+        overflow: 'visible',
         borderRadius: 6,
         border: `1px solid #222`,
       }}

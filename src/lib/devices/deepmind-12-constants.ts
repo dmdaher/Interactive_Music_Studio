@@ -41,14 +41,14 @@ export const DM_COLORS = {
 // Section flex ratios — derived from hardware front panel proportions
 // These are relative values used with flex-grow
 export const SECTION_FLEX = {
-  arp: 8,
+  arp: 12,      // +4 from 8 — 5 buttons with above-labels need ~270px for legible gaps
   lfo1: 5.5,
   lfoWave: 2, // shared waveform column between LFO 1 and LFO 2
   lfo2: 5.5,
-  osc: 14,
-  prog: 22,
+  osc: 12,      // -2 from 14 — 6 sliders (84px) still fit comfortably at ~270px
+  prog: 21,     // -1 from 22 — display flexes to absorb; nav+fader unchanged
   poly: 4,
-  vcf: 13,
+  vcf: 12,      // -1 from 13 — 5 sliders (70px) still fit at ~270px
   vca: 3.5,
   hpf: 3.5,
   env: 12,
