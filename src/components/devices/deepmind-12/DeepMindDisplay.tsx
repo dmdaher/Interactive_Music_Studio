@@ -20,8 +20,7 @@ export default function DeepMindDisplay({ displayState, highlighted }: DeepMindD
       className="relative rounded-sm overflow-hidden"
       style={{
         width: '100%',
-        aspectRatio: '1.33',
-        maxHeight: 120,
+        aspectRatio: '5 / 3',
         background: DM_COLORS.displayBg,
         border: `1px solid ${DM_COLORS.displayBorder}`,
         boxShadow: highlighted

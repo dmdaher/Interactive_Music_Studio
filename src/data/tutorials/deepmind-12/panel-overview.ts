@@ -136,8 +136,6 @@ export const panelOverview: Tutorial = {
         'display',
         'prog-data-entry',
         'prog-rotary',
-        'prog-nav-up',
-        'prog-nav-down',
         'prog-nav-no',
         'prog-nav-yes',
         'prog-bank-up',

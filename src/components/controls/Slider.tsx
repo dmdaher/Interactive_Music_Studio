@@ -10,6 +10,7 @@ interface SliderProps {
   trackHeight?: number;
   trackWidth?: number;
   thumbHeight?: number;
+  labelPosition?: 'above' | 'below';
 }
 
 const highlightAnimation = {
@@ -35,6 +36,7 @@ export default function Slider({
   trackHeight = 120,
   trackWidth = 16,
   thumbHeight = 14,
+  labelPosition = 'below',
 }: SliderProps) {
   const travel = trackHeight - thumbHeight;
   const clampedValue = Math.max(0, Math.min(127, value));
@@ -43,6 +45,11 @@ export default function Slider({
 
   return (
     <div className="flex flex-col items-center gap-1" data-control-id={id}>
+      {labelPosition === 'above' && (
+        <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
+          {label}
+        </span>
+      )}
       {/* Fader assembly */}
       <motion.div
         className="relative rounded-md"
@@ -109,9 +116,11 @@ export default function Slider({
       </motion.div>
 
       {/* Label */}
-      <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
-        {label}
-      </span>
+      {labelPosition !== 'above' && (
+        <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider text-center leading-tight">
+          {label}
+        </span>
+      )}
     </div>
   );
 }
