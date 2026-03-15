@@ -143,7 +143,7 @@ function WheelControl({ id, label, highlighted }: { id: string; label: string; h
       <div
         className="relative rounded-md cursor-pointer flex-1"
         style={{
-          width: 30,
+          width: 38,
           background: `linear-gradient(to right, #1a1a1a, #222, #1a1a1a)`,
           border: '1px solid #333',
           boxShadow: highlighted
@@ -410,7 +410,7 @@ function SectionProgContent({ ps, hl, onButtonClick, displayState }: ProgSection
         </div>
         {/* CENTER COLUMN: Navigation [2] + Rotary [4] */}
         {/* BANK/UP (top) → -/NO | ROTARY | +/YES (middle) → BANK/DOWN (bottom) */}
-        <div className="shrink-0 flex flex-col items-center justify-center gap-0.5">
+        <div className="shrink-0 flex flex-col items-center justify-between py-1">
           <PanelButton id="prog-bank-up" label="BANK/UP" variant="function" size="sm"
             highlighted={hl('prog-bank-up')} hasLed ledOn={ps('prog-bank-up')?.ledOn}
             ledColor={DM_COLORS.ledOrange} labelPosition="above"
@@ -689,7 +689,7 @@ export default function DeepMindPanel({
         <ContinuousHeaderStrip />
 
         {/* ── CONTROL SURFACE ROW ── */}
-        <div className="flex min-w-0" style={{ height: DM_CONTROL_SURFACE_HEIGHT }}>
+        <div className="flex min-w-0" style={{ height: DM_CONTROL_SURFACE_HEIGHT, gap: 1 }}>
 
           {/* ── SECTION: ARP/SEQ ── */}
           {/* VAULT_START: arp */}
