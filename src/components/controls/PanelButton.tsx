@@ -12,7 +12,7 @@ interface PanelButtonProps {
   ledOn?: boolean;
   ledColor?: string;
   highlighted?: boolean;
-  labelPosition?: 'on' | 'above';
+  labelPosition?: 'on' | 'above' | 'below';
   onClick?: () => void;
 }
 
@@ -81,7 +81,14 @@ export default function PanelButton({
   const variantStyle = variantStyles[variant];
 
   return (
-    <div className="flex flex-col items-center gap-0.5" data-control-id={id}>
+    <div className="flex flex-col items-center" data-control-id={id}>
+      {/* Label above button (panel-printed text) — rendered before LED per hardware layout */}
+      {labelPosition === 'above' && (
+        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-none text-center tracking-wide uppercase whitespace-nowrap`}>
+          {label}
+        </span>
+      )}
+
       {/* LED indicator */}
       {hasLed && (
         <div
@@ -91,13 +98,6 @@ export default function PanelButton({
             boxShadow: ledOn ? `0 0 6px 2px ${ledColor}` : 'inset 0 1px 2px rgba(0,0,0,0.5)',
           }}
         />
-      )}
-
-      {/* Label above button (panel-printed text) */}
-      {labelPosition === 'above' && (
-        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-tight text-center tracking-wide uppercase`}>
-          {label}
-        </span>
       )}
 
       {/* Button */}
@@ -127,6 +127,13 @@ export default function PanelButton({
           </span>
         )}
       </motion.button>
+
+      {/* Label below button (panel-printed text) */}
+      {labelPosition === 'below' && (
+        <span className={`${sizeStyle.text} font-bold text-neutral-300 leading-none text-center tracking-wide uppercase whitespace-nowrap`}>
+          {label}
+        </span>
+      )}
     </div>
   );
 }
