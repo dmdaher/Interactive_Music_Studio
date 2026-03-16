@@ -50,3 +50,83 @@ Always check, validate, and confirm before acting. Measure twice, cut once.
 2. **Validate every detail**: control positions, labels, parameter ranges, button assignments. Check the manual's diagrams and parameter tables.
 3. **Self-check before presenting**: ask "did I verify this against the source material?" If not, go back and verify.
 4. **Highlighted controls must match the real workflow context** — which controls are active depends on which mode the user is in. Verify per the manual.
+
+---
+
+## Pipeline Runner (`scripts/pipeline-runner.ts`)
+
+The pipeline runner orchestrates instrument builds by spawning Claude CLI agents through 12 phases. Each agent gets a scoped prompt and runs in an isolated git worktree.
+
+### CLI Requirements (CRITICAL)
+
+The `claude` CLI has three non-obvious requirements when spawned from Node.js:
+
+```ts
+// In src/lib/pipeline/runner.ts — invokeAgent()
+const args = ['-p', prompt, '--output-format', 'stream-json', '--verbose'];
+//                                                              ^^^^^^^^^^
+// --verbose is REQUIRED with stream-json. Without it, the CLI exits with an
+// error that gets swallowed silently. The agent appears to run but produces
+// zero output.
+
+const proc = spawn('claude', args, {
+  stdio: ['ignore', 'pipe', 'pipe'],
+//        ^^^^^^^^
+// stdin MUST be 'ignore', not 'pipe'. When stdin is a pipe, the claude CLI
+// blocks indefinitely waiting for input. The process appears alive but does
+// nothing. This wasted 1.5 hours of debugging.
+});
+```
+
+### Agent Tool Sandboxing (CRITICAL)
+
+All pipeline agents are restricted to a specific tool set:
+
+```ts
+const PIPELINE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash'];
+```
+
+**Why this exists:** Each `claude -p` session loads the full Claude Code environment — hooks, skills, plugins. The SessionStart hook injects superpowers that demand "you MUST invoke skills." Agents can see `launch-instrument`, `build-instrument`, and `new-instrument` skills, plus the `Agent` and `Skill` tools. Without tool restrictions, agents will invoke these skills and try to build the entire instrument themselves — bypassing the pipeline orchestration ("Inception loop").
+
+**What's excluded and why:**
+- `Skill` — prevents agents from invoking orchestration skills
+- `Agent` — prevents agents from spawning subagents (avoids recursive fork bombs)
+- `WebSearch` / `WebFetch` — manuals are local; `Bash` + `curl` covers localhost
+- All other tools are unnecessary for pipeline work
+
+**Bash escape hatch risk:** An agent could theoretically run `claude -p "..."` via Bash to bypass restrictions. Monitor agent logs in the admin diagnostics panel for this. If detected, add command filtering to the runner.
+
+### Starting / Recovering the Pipeline
+
+```bash
+# Start via API (admin panel does this):
+curl -X POST http://localhost:3000/api/pipeline/<device-id>/start
+
+# Start directly:
+npx tsx scripts/pipeline-runner.ts <device-id>
+
+# Check health:
+curl http://localhost:3000/api/pipeline/<device-id>/health
+
+# Recovery (via API):
+# fix-stale: process dead but status says running
+# reset-failed: reset to last good phase
+# kill-restart: graceful SIGTERM → SIGKILL, reset to paused
+curl -X POST http://localhost:3000/api/pipeline/<device-id>/recover \
+  -H 'Content-Type: application/json' \
+  -d '{"action": "fix-stale"}'
+```
+
+### Pipeline State
+
+- State: `.pipeline/<device-id>/state.json` (atomic writes, survives crashes)
+- Logs: `.pipeline/<device-id>/runner.log` (append-only)
+- Cost: `.pipeline/<device-id>/cost.json`
+- Worktree: `.worktrees/<device-id>/` (isolated git checkout)
+- All gitignored — not committed to the repo
+
+### Admin Panel
+
+- Dashboard: `http://localhost:3000/admin`
+- Pipeline detail: `http://localhost:3000/admin/pipeline/<device-id>`
+- Features: live log stream, phase timeline, agent scores, cost breakdown, diagnostics with auto-recovery
