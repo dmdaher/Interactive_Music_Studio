@@ -18,7 +18,7 @@ const server = new McpServer({
 
 server.tool(
   'download_device_manual',
-  'Search known sources and download a synthesizer/music equipment manual PDF. Tries manufacturer sites, SynthManuals, archive.org, etc.',
+  'Search for and download a synthesizer/music equipment manual PDF. Crawls manufacturer support pages for PDF links, tries aggregator sites (SynthManuals, ManualsLib, archive.org), and scores results by relevance. Returns pdfLinksFound even on failure so you can try them with download_pdf_from_url.',
   {
     manufacturer: z.string().describe('Equipment manufacturer (e.g. Behringer, Roland, Korg, Moog)'),
     model: z.string().describe('Equipment model name (e.g. DeepMind 12, JD-Xi, Minilogue)'),
