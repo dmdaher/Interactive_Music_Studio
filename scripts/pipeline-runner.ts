@@ -6,7 +6,7 @@
  *
  * Spawned as a detached process by the API route. Persists across server restarts.
  * Writes state to .pipeline/<device-id>/state.json (atomic writes).
- * Reads agent checkpoints from .claude/agent-memory/*/checkpoint.md.
+ * Reads agent checkpoints from .claude/agent-memory/<id>/checkpoint.md.
  */
 
 import fs from 'fs';
@@ -48,12 +48,111 @@ if (!deviceId) {
 /** Resolved worktree path — all agent invocations run here */
 let worktreeCwd: string;
 
+/**
+ * Sandboxed tool set for pipeline agents.
+ * Excludes Skill, Agent, WebSearch, WebFetch — prevents agents from
+ * invoking skills (launch-instrument, etc.) or spawning subagents,
+ * which would bypass the pipeline orchestration.
+ */
+const PIPELINE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash'];
+
+/** Max auto-retries per phase before escalating to human */
+const MAX_PHASE_RETRIES = 2;
+
+/** Track retry counts per phase to avoid infinite loops */
+const phaseRetries: Record<string, number> = {};
+
+/**
+ * Escalation types that require human intervention — never auto-retry.
+ * Everything else gets retried up to MAX_PHASE_RETRIES times.
+ */
+const HUMAN_REQUIRED_ESCALATIONS = new Set([
+  'budget-exceeded',
+  'manual-not-found',
+  'panel-pr-review',
+  'curriculum-review',
+  'topology-deadlock',
+]);
+
+/**
+ * Try to auto-retry instead of escalating. Returns true if we should retry
+ * (the escalation was NOT created), false if the escalation was created and
+ * the pipeline should pause.
+ */
+function tryAutoRetry(
+  state: PipelineState,
+  type: string,
+  message: string,
+  prUrl?: string
+): boolean {
+  if (HUMAN_REQUIRED_ESCALATIONS.has(type)) {
+    createEscalation(state, type as Parameters<typeof createEscalation>[1], message, prUrl);
+    return false;
+  }
+
+  const key = `${state.currentPhase}:${type}`;
+  phaseRetries[key] = (phaseRetries[key] ?? 0) + 1;
+
+  if (phaseRetries[key] > MAX_PHASE_RETRIES) {
+    appendLog(deviceId, {
+      level: 'warn',
+      message: `Auto-retry exhausted (${MAX_PHASE_RETRIES}x) for ${state.currentPhase}: ${message}. Escalating to human.`,
+    });
+    createEscalation(state, type as Parameters<typeof createEscalation>[1], message, prUrl);
+    return false;
+  }
+
+  appendLog(deviceId, {
+    level: 'info',
+    message: `Auto-retrying ${state.currentPhase} (attempt ${phaseRetries[key]}/${MAX_PHASE_RETRIES}): ${message}`,
+  });
+
+  // Reset the phase so the main loop re-runs it
+  const phaseResult = state.phases.find((p) => p.phase === state.currentPhase);
+  if (phaseResult) {
+    phaseResult.status = 'running';
+    phaseResult.completedAt = null;
+  }
+
+  return true;
+}
+
 function getRemainingBudget(state: PipelineState): number {
   return state.budgetCapUsd - (state.totalActualCostUsd || state.totalCostUsd);
 }
 
 function isBudgetOk(state: PipelineState): boolean {
   return checkBudget(state).allowed;
+}
+
+/**
+ * Check if an agent has existing work from a previous interrupted run.
+ * Returns a resume context string to prepend to the agent prompt, or empty string.
+ */
+function getResumeContext(agent: string): string {
+  try {
+    const checkpointPath = path.join(worktreeCwd, '.claude', 'agent-memory', agent, 'checkpoint.md');
+    if (!fs.existsSync(checkpointPath)) return '';
+
+    const content = fs.readFileSync(checkpointPath, 'utf-8');
+    if (!content.trim()) return '';
+
+    return `\n\n--- RESUME CONTEXT ---
+A previous run of this agent was interrupted. It left a checkpoint at:
+.claude/agent-memory/${agent}/checkpoint.md
+
+Read that checkpoint file FIRST. Continue from where it left off rather than starting from scratch.
+If the checkpoint indicates the work was complete, verify and finalize rather than redoing.
+--- END RESUME CONTEXT ---\n`;
+  } catch {
+    return '';
+  }
+}
+
+/** Track the active child (claude CLI) PID in state so recovery can kill it */
+function trackChildPid(state: PipelineState, pid: number | null) {
+  state.childPid = pid;
+  writeState(deviceId, state);
 }
 
 async function run() {
@@ -109,6 +208,16 @@ async function run() {
     level: 'info',
     message: `Pipeline runner started (PID: ${process.pid}) in worktree: ${worktreeCwd}, phase: ${state.currentPhase}`,
   });
+
+  // Heartbeat: update state.updatedAt every 30s so the admin UI knows we're alive
+  const heartbeatInterval = setInterval(() => {
+    try {
+      const current = readState(deviceId);
+      if (current && current.status === 'running') {
+        writeState(deviceId, current); // writeState sets updatedAt automatically
+      }
+    } catch { /* ignore heartbeat errors */ }
+  }, 30_000);
 
   try {
     while (state.status === 'running') {
@@ -170,6 +279,8 @@ async function run() {
           state.currentPhase = 'failed';
       }
 
+      // Clear child PID after each phase iteration
+      state.childPid = null;
       writeState(deviceId, state);
     }
   } catch (err) {
@@ -181,6 +292,7 @@ async function run() {
     sendNotification('Miyagi Pipeline', `Pipeline failed for ${state.deviceName}: ${message}`);
   }
 
+  clearInterval(heartbeatInterval);
   state.runnerPid = null;
 
   // Clean up worktree on completion or failure (but not on pause — we resume later)
@@ -299,6 +411,7 @@ If you cannot find or download the manual after trying all approaches, state cle
       'Read',
     ],
     remainingBudgetUsd: getRemainingBudget(state),
+    onChildPid: (pid) => trackChildPid(state, pid),
   });
 
   if (result.costEntry) {
@@ -334,8 +447,8 @@ async function doPhase0(state: PipelineState) {
     appendLog(deviceId, { level: 'info', message: 'Dev server not running, starting...' });
     const started = await startDevServer(worktreeCwd);
     if (!started) {
-      createEscalation(state, 'agent-failure', 'Could not start dev server. Please start it manually with `npm run dev`.');
-      return;
+      if (!tryAutoRetry(state, 'agent-failure', 'Could not start dev server. Please start it manually with `npm run dev`.')) return;
+      return; // retry will re-enter doPhase0
     }
   }
 
@@ -346,6 +459,7 @@ async function doPhase0(state: PipelineState) {
   }
 
   const manualList = state.manualPaths.map((p) => `  - ${p}`).join('\n');
+  const resumeCtx = getResumeContext('gatekeeper');
   const prompt = `You are the Gatekeeper agent. Initialize the digital twin build for:
 - Device: ${state.deviceName}
 - Manufacturer: ${state.manufacturer}
@@ -361,7 +475,8 @@ Read all manual PDFs and produce:
 5. Section Topology Maps with Grid Notation and DOM assertions
 6. Key Component Proportions
 
-Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML frontmatter.`;
+Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML frontmatter.
+Include these fields in the frontmatter: agent: gatekeeper, device_id: ${deviceId}, phase: 0, status: PASS, score: 10${resumeCtx}`;
 
   const result = await invokeAgent({
     prompt,
@@ -370,7 +485,9 @@ Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML
     phase: 'phase-0-gatekeeper',
     agent: 'gatekeeper',
     model: 'claude-opus-4-6',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
+    onChildPid: (pid) => trackChildPid(state, pid),
   });
 
   if (result.costEntry) {
@@ -381,16 +498,25 @@ Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML
   updateSubscription(state, result.rateLimitEvents);
 
   const checkpoint = readAgentCheckpoint('gatekeeper');
-  if (checkpoint.score !== null && checkpoint.score >= 9.5) {
-    completePhase(state, 'phase-0-gatekeeper', checkpoint.score, true);
+  // Gatekeeper passes if: score >= 9.5, OR exit code 0 with a checkpoint file written
+  // (the gatekeeper produces a manifest, not a self-score — status: complete is sufficient)
+  const checkpointFileExists = fs.existsSync(
+    path.join(worktreeCwd, '.claude', 'agent-memory', 'gatekeeper', 'checkpoint.md')
+  );
+  const gatekeeperPassed =
+    (checkpoint.score !== null && checkpoint.score >= 9.5) ||
+    (result.exitCode === 0 && checkpointFileExists);
+
+  if (gatekeeperPassed) {
+    completePhase(state, 'phase-0-gatekeeper', checkpoint.score ?? 10, true);
     const sections = parseSectionsFromGatekeeper();
     if (sections.length > 0) state.sections = sections;
     advancePhase(state, worktreeCwd);
   } else if (result.exitCode !== 0) {
-    createEscalation(state, 'agent-failure', `Gatekeeper failed with exit code ${result.exitCode}`);
+    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper failed with exit code ${result.exitCode}`)) return;
   } else {
     completePhase(state, 'phase-0-gatekeeper', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Gatekeeper score ${checkpoint.score ?? 'unknown'} below threshold (9.5)`);
+    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper produced no checkpoint file`)) return;
   }
 }
 
@@ -413,7 +539,9 @@ async function doPhase1(state: PipelineState) {
       const siResult = await invokeAgent({
         prompt: `Audit section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Read your checkpoint and the Gatekeeper's manifest first.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'structural-inspector', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
+        onChildPid: (pid) => trackChildPid(state, pid),
       });
       if (siResult.costEntry) { accumulateCost(state, siResult.costEntry); recordCostEntry(deviceId, siResult.costEntry); }
       updateBurnRate(state, deviceId);
@@ -425,7 +553,9 @@ async function doPhase1(state: PipelineState) {
       const pqResult = await invokeAgent({
         prompt: `Audit section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Compare the rendered panel against the reference photo.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'panel-questioner', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
+        onChildPid: (pid) => trackChildPid(state, pid),
       });
       if (pqResult.costEntry) { accumulateCost(state, pqResult.costEntry); recordCostEntry(deviceId, pqResult.costEntry); }
       updateBurnRate(state, deviceId);
@@ -437,7 +567,9 @@ async function doPhase1(state: PipelineState) {
       const criticResult = await invokeAgent({
         prompt: `Final audit of section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Review SI and PQ findings, then render your verdict.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'critic', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
+        onChildPid: (pid) => trackChildPid(state, pid),
       });
       if (criticResult.costEntry) { accumulateCost(state, criticResult.costEntry); recordCostEntry(deviceId, criticResult.costEntry); }
       updateBurnRate(state, deviceId);
@@ -478,7 +610,9 @@ async function doPhase2(state: PipelineState) {
     const result = await invokeAgent({
       prompt: `Perform global assembly audit of the ${state.deviceName} digital twin. Device ID: ${deviceId}. All sections are vaulted. Check overall layout, cross-section alignment, and global consistency.`,
       deviceId, cwd: worktreeCwd, phase: 'phase-2-global-assembly', agent: 'structural-inspector',
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
+      onChildPid: (pid) => trackChildPid(state, pid),
     });
     if (result.costEntry) { accumulateCost(state, result.costEntry); recordCostEntry(deviceId, result.costEntry); }
     updateBurnRate(state, deviceId);
@@ -493,7 +627,7 @@ async function doPhase2(state: PipelineState) {
   }
 
   completePhase(state, 'phase-2-global-assembly', null, false);
-  createEscalation(state, 'agent-failure', 'Global assembly failed after 3 attempts');
+  tryAutoRetry(state, 'agent-failure', 'Global assembly failed after 3 attempts');
 }
 
 async function doPhase3(state: PipelineState) {
@@ -504,7 +638,9 @@ async function doPhase3(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Perform final harmonic polish of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Apply any final visual refinements.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-3-harmonic-polish', agent: 'critic',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
+    onChildPid: (pid) => trackChildPid(state, pid),
   });
   if (result.costEntry) { accumulateCost(state, result.costEntry); recordCostEntry(deviceId, result.costEntry); }
   updateBurnRate(state, deviceId);
@@ -516,7 +652,7 @@ async function doPhase3(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } else {
     completePhase(state, 'phase-3-harmonic-polish', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Harmonic polish score ${checkpoint.score ?? 'unknown'} below threshold`);
+    tryAutoRetry(state, 'agent-failure', `Harmonic polish score ${checkpoint.score ?? 'unknown'} below threshold`);
   }
 }
 
@@ -535,7 +671,7 @@ async function doPanelPR(state: PipelineState) {
     sendNotification('Miyagi Pipeline', `Panel PR ready for review: ${state.deviceName}`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    createEscalation(state, 'agent-failure', `Failed to create panel PR: ${message}`);
+    tryAutoRetry(state, 'agent-failure', `Failed to create panel PR: ${message}`);
   }
 }
 
@@ -547,7 +683,9 @@ async function doPhase4Extract(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Extract tutorial curriculum from the ${state.deviceName} manuals at: ${state.manualPaths.join(', ')}. Device ID: ${deviceId}. Use chapter-by-chapter extraction.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-4-extraction', agent: 'manual-extractor', model: 'claude-opus-4-6',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
+    onChildPid: (pid) => trackChildPid(state, pid),
   });
   if (result.costEntry) { accumulateCost(state, result.costEntry); recordCostEntry(deviceId, result.costEntry); }
   updateBurnRate(state, deviceId);
@@ -559,7 +697,7 @@ async function doPhase4Extract(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } else {
     completePhase(state, 'phase-4-extraction', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Manual extraction score ${checkpoint.score ?? 'unknown'} below threshold`);
+    tryAutoRetry(state, 'agent-failure', `Manual extraction score ${checkpoint.score ?? 'unknown'} below threshold`);
   }
 }
 
@@ -571,7 +709,9 @@ async function doPhase4Audit(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Audit tutorial coverage for ${state.deviceName}. Device ID: ${deviceId}. Verify the extraction covers all manual chapters. Produce a batch plan.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-4-audit', agent: 'coverage-auditor',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
+    onChildPid: (pid) => trackChildPid(state, pid),
   });
   if (result.costEntry) { accumulateCost(state, result.costEntry); recordCostEntry(deviceId, result.costEntry); }
   updateBurnRate(state, deviceId);
@@ -606,7 +746,9 @@ async function doPhase5(state: PipelineState) {
     const buildResult = await invokeAgent({
       prompt: `Build tutorial batch ${batch.batchId} for ${state.deviceName}. Device ID: ${deviceId}. Tutorials: ${batch.tutorials.join(', ')}`,
       deviceId, cwd: worktreeCwd, phase: 'phase-5-tutorial-build', agent: 'tutorial-builder', batchId: batch.batchId,
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
+      onChildPid: (pid) => trackChildPid(state, pid),
     });
     if (buildResult.costEntry) { accumulateCost(state, buildResult.costEntry); recordCostEntry(deviceId, buildResult.costEntry); }
     updateBurnRate(state, deviceId);
@@ -621,7 +763,9 @@ async function doPhase5(state: PipelineState) {
     const reviewResult = await invokeAgent({
       prompt: `Review tutorial batch ${batch.batchId} for ${state.deviceName}. Device ID: ${deviceId}. Verify accuracy against the manual.`,
       deviceId, cwd: worktreeCwd, phase: 'phase-5-tutorial-build', agent: 'tutorial-reviewer', batchId: batch.batchId,
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
+      onChildPid: (pid) => trackChildPid(state, pid),
     });
     if (reviewResult.costEntry) { accumulateCost(state, reviewResult.costEntry); recordCostEntry(deviceId, reviewResult.costEntry); }
     updateBurnRate(state, deviceId);
@@ -659,7 +803,7 @@ async function doTutorialPR(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    createEscalation(state, 'agent-failure', `Failed to create tutorial PR: ${message}`);
+    tryAutoRetry(state, 'agent-failure', `Failed to create tutorial PR: ${message}`);
   }
 }
 

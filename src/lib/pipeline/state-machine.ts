@@ -31,6 +31,7 @@ export function migrateState(state: PipelineState): PipelineState {
   if (state.totalActualCostUsd === undefined) state.totalActualCostUsd = 0;
   if (state.subscription === undefined) state.subscription = null;
   if (state.burnRate === undefined) state.burnRate = null;
+  if ((state as Record<string, unknown>).childPid === undefined) (state as Record<string, unknown>).childPid = null;
 
   // TokenUsage migration: add cacheCreation/cacheRead if missing
   const migrateTokens = (t: { input: number; output: number; cacheCreation?: number; cacheRead?: number }) => {
@@ -106,6 +107,7 @@ export function createInitialState(opts: {
     subscription: null,
     burnRate: null,
     runnerPid: null,
+    childPid: null,
     worktreePath: null,
     lastCheckpoint: {
       phase: 'pending',
@@ -134,6 +136,17 @@ const PHASE_ORDER: PipelinePhase[] = [
 export function startPhase(state: PipelineState, phase: PipelinePhase): void {
   state.currentPhase = phase;
   state.lastCheckpoint = { phase, subStep: 'start' };
+
+  // Clear active escalation when entering a new phase — stale escalations
+  // from previous phases shouldn't block the UI
+  if (state.activeEscalation) {
+    const esc = state.escalations.find((e) => e.id === state.activeEscalation);
+    if (esc && esc.phase !== phase) {
+      esc.resolvedAt = esc.resolvedAt ?? new Date().toISOString();
+      esc.resolution = esc.resolution ?? 'auto-resolved: pipeline advanced to next phase';
+      state.activeEscalation = null;
+    }
+  }
 
   const existing = state.phases.find((p) => p.phase === phase);
   if (!existing) {
