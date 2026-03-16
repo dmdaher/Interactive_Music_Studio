@@ -202,7 +202,7 @@ function RightTempoSection({
             flexDirection: 'column',
             gap: 5,
             flex: 1,
-            alignItems: 'center',
+            alignItems: 'flex-end',
           }}
         >
           {/* Item 41 — MASTER button */}
