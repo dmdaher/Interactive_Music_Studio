@@ -80,6 +80,19 @@ async function run() {
   }
 
   worktreeCwd = state.worktreePath!;
+
+  // Copy uploaded manuals into worktree (they're in the project root, not in the git checkout)
+  for (const manualPath of state.manualPaths) {
+    const absSource = path.resolve(manualPath);
+    const destInWorktree = path.join(worktreeCwd, manualPath);
+    const destDir = path.dirname(destInWorktree);
+    if (fs.existsSync(absSource) && !fs.existsSync(destInWorktree)) {
+      fs.mkdirSync(destDir, { recursive: true });
+      fs.copyFileSync(absSource, destInWorktree);
+      appendLog(deviceId, { level: 'info', message: `Copied manual to worktree: ${manualPath}` });
+    }
+  }
+
   writeState(deviceId, state);
 
   appendLog(deviceId, {
@@ -102,6 +115,9 @@ async function run() {
       switch (state.currentPhase) {
         case 'pending':
           await doPending(state);
+          break;
+        case 'phase-preflight':
+          await doPreflight(state);
           break;
         case 'phase-0-gatekeeper':
           await doPhase0(state);
@@ -181,6 +197,91 @@ async function run() {
 async function doPending(state: PipelineState) {
   appendLog(deviceId, { level: 'info', message: 'Transitioning from pending...' });
   advancePhase(state);
+}
+
+async function doPreflight(state: PipelineState) {
+  startPhase(state, 'phase-preflight');
+  appendLog(deviceId, { level: 'info', message: 'Starting Phase Preflight: Auto-download manual' });
+  if (!checkBudget(state)) return;
+
+  const outputDir = path.join(worktreeCwd, 'docs', state.manufacturer, deviceId);
+
+  // Install MCP server deps if needed
+  const mcpDir = path.resolve('mcp-servers/synth-manual-mcp');
+  if (!fs.existsSync(path.join(mcpDir, 'node_modules'))) {
+    appendLog(deviceId, { level: 'info', message: 'Installing MCP server dependencies...' });
+    execSync('npm install', { cwd: mcpDir, stdio: 'pipe' });
+  }
+
+  // Write MCP config to worktree so Claude CLI discovers the server
+  const settingsPath = path.join(worktreeCwd, '.claude', 'settings.json');
+  const mcpServerPath = path.resolve('mcp-servers/synth-manual-mcp/index.ts');
+  let settings: Record<string, unknown> = {};
+  try {
+    settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+  } catch {
+    // No existing settings
+  }
+  settings.mcpServers = {
+    ...(settings.mcpServers as Record<string, unknown> ?? {}),
+    'synth-manual-mcp': {
+      command: 'npx',
+      args: ['tsx', mcpServerPath],
+    },
+  };
+  fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+
+  const result = await invokeAgent({
+    prompt: `Find and download the product manual PDF for:
+- Manufacturer: ${state.manufacturer}
+- Device: ${state.deviceName}
+
+Use the download_device_manual tool with outputDir: "${outputDir}"
+
+If the automated search doesn't find it, try:
+1. Use WebSearch to find "${state.manufacturer} ${state.deviceName} manual PDF download"
+2. Look for direct PDF links in the results
+3. Use download_pdf_from_url to download any PDF you find
+
+Save all manuals to: ${outputDir}
+
+If you cannot find or download the manual after trying all approaches, state clearly that the manual was not found.`,
+    deviceId,
+    cwd: worktreeCwd,
+    phase: 'phase-preflight',
+    agent: 'preflight',
+    allowedTools: [
+      'mcp__synth-manual-mcp__download_device_manual',
+      'mcp__synth-manual-mcp__download_pdf_from_url',
+      'WebSearch',
+      'WebFetch',
+      'Bash',
+      'Write',
+      'Read',
+    ],
+  });
+
+  if (result.costEntry) {
+    accumulateCost(state, result.costEntry);
+    recordCostEntry(deviceId, result.costEntry);
+  }
+
+  // Check if any PDFs were downloaded
+  const downloadedPdfs = findPdfsInDir(outputDir);
+
+  if (downloadedPdfs.length > 0) {
+    // Store paths relative to worktree for agent prompts
+    state.manualPaths = downloadedPdfs.map((p) => path.relative(worktreeCwd, p));
+    completePhase(state, 'phase-preflight', null, true);
+    appendLog(deviceId, { level: 'info', message: `Manual downloaded: ${state.manualPaths.join(', ')}` });
+    advancePhase(state);
+  } else {
+    completePhase(state, 'phase-preflight', null, false);
+    createEscalation(state, 'manual-not-found',
+      `Could not find manual for ${state.manufacturer} ${state.deviceName}. Please upload manually via the admin UI.`);
+    sendNotification('Miyagi Pipeline', `Manual not found for ${state.deviceName} — please upload manually`);
+  }
 }
 
 async function doPhase0(state: PipelineState) {
@@ -546,6 +647,17 @@ function parseBatchesFromAuditor() {
       if (tutorials.length > 0) batches.push({ batchId, tutorials });
     }
     return batches.map((b) => ({ ...b, status: 'pending' as const, builderScore: null, reviewerVerdict: null }));
+  } catch {
+    return [];
+  }
+}
+
+function findPdfsInDir(dir: string): string[] {
+  try {
+    if (!fs.existsSync(dir)) return [];
+    return fs.readdirSync(dir)
+      .filter((f) => f.toLowerCase().endsWith('.pdf'))
+      .map((f) => path.join(dir, f));
   } catch {
     return [];
   }

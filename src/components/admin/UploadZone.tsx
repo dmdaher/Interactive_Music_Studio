@@ -117,9 +117,14 @@ export default function UploadZone({ onCreated }: UploadZoneProps) {
             className="hidden"
           />
           {files.length === 0 ? (
-            <span className="text-sm text-gray-400">
-              Drop manual PDFs here or click to browse
-            </span>
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-sm text-gray-400">
+                Drop manual PDFs here or click to browse
+              </span>
+              <span className="text-xs text-gray-600">
+                Or skip — the pipeline will auto-download from the web
+              </span>
+            </div>
           ) : (
             <div className="flex w-full flex-col gap-1.5">
               {files.map((f) => (
@@ -183,7 +188,7 @@ export default function UploadZone({ onCreated }: UploadZoneProps) {
           disabled={isSubmitting || !deviceName || !manufacturer}
           className="w-full rounded-lg bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-40"
         >
-          {isSubmitting ? 'Creating...' : 'Create Pipeline'}
+          {isSubmitting ? 'Creating...' : files.length > 0 ? 'Create Pipeline' : 'Create Pipeline (Auto-Download)'}
         </button>
       </form>
     </motion.div>

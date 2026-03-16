@@ -155,7 +155,7 @@ export function getNextPhase(
 }
 
 export function advancePhase(state: PipelineState): void {
-  const hasManual = state.manualPaths.length > 0 && state.manualPaths.some((p) => fs.existsSync(p));
+  const hasManual = state.manualPaths.length > 0;
   const next = getNextPhase(state.currentPhase, hasManual);
 
   if (next === 'completed') {
