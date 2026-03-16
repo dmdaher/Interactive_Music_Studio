@@ -112,11 +112,14 @@ const expectedStepCounts: Record<string, number> = {
   'display-navigation': 7,
   'selecting-programs': 7,
   'keyboard-performance': 7,
+  'oscillator-fundamentals': 8,
+  'filter-fundamentals': 8,
+  'envelope-shaping': 8,
 };
 
 describe('DeepMind 12 tutorial collection', () => {
-  it('has 4 tutorials', () => {
-    expect(deepmind12Tutorials).toHaveLength(4);
+  it('has 7 tutorials', () => {
+    expect(deepmind12Tutorials).toHaveLength(7);
   });
 
   it('all tutorials have unique IDs', () => {
