@@ -48,6 +48,14 @@ if (!deviceId) {
 /** Resolved worktree path — all agent invocations run here */
 let worktreeCwd: string;
 
+/**
+ * Sandboxed tool set for pipeline agents.
+ * Excludes Skill, Agent, WebSearch, WebFetch — prevents agents from
+ * invoking skills (launch-instrument, etc.) or spawning subagents,
+ * which would bypass the pipeline orchestration.
+ */
+const PIPELINE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash'];
+
 function getRemainingBudget(state: PipelineState): number {
   return state.budgetCapUsd - (state.totalActualCostUsd || state.totalCostUsd);
 }
@@ -415,6 +423,7 @@ Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML
     phase: 'phase-0-gatekeeper',
     agent: 'gatekeeper',
     model: 'claude-opus-4-6',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
     onChildPid: (pid) => trackChildPid(state, pid),
   });
@@ -459,6 +468,7 @@ async function doPhase1(state: PipelineState) {
       const siResult = await invokeAgent({
         prompt: `Audit section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Read your checkpoint and the Gatekeeper's manifest first.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'structural-inspector', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
         onChildPid: (pid) => trackChildPid(state, pid),
       });
@@ -472,6 +482,7 @@ async function doPhase1(state: PipelineState) {
       const pqResult = await invokeAgent({
         prompt: `Audit section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Compare the rendered panel against the reference photo.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'panel-questioner', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
         onChildPid: (pid) => trackChildPid(state, pid),
       });
@@ -485,6 +496,7 @@ async function doPhase1(state: PipelineState) {
       const criticResult = await invokeAgent({
         prompt: `Final audit of section "${section.id}" of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Review SI and PQ findings, then render your verdict.`,
         deviceId, cwd: worktreeCwd, phase: 'phase-1-section-loop', agent: 'critic', sectionId: section.id,
+        allowedTools: PIPELINE_TOOLS,
         remainingBudgetUsd: getRemainingBudget(state),
         onChildPid: (pid) => trackChildPid(state, pid),
       });
@@ -527,6 +539,7 @@ async function doPhase2(state: PipelineState) {
     const result = await invokeAgent({
       prompt: `Perform global assembly audit of the ${state.deviceName} digital twin. Device ID: ${deviceId}. All sections are vaulted. Check overall layout, cross-section alignment, and global consistency.`,
       deviceId, cwd: worktreeCwd, phase: 'phase-2-global-assembly', agent: 'structural-inspector',
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
       onChildPid: (pid) => trackChildPid(state, pid),
     });
@@ -554,6 +567,7 @@ async function doPhase3(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Perform final harmonic polish of the ${state.deviceName} digital twin. Device ID: ${deviceId}. Apply any final visual refinements.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-3-harmonic-polish', agent: 'critic',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
     onChildPid: (pid) => trackChildPid(state, pid),
   });
@@ -598,6 +612,7 @@ async function doPhase4Extract(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Extract tutorial curriculum from the ${state.deviceName} manuals at: ${state.manualPaths.join(', ')}. Device ID: ${deviceId}. Use chapter-by-chapter extraction.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-4-extraction', agent: 'manual-extractor', model: 'claude-opus-4-6',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
     onChildPid: (pid) => trackChildPid(state, pid),
   });
@@ -623,6 +638,7 @@ async function doPhase4Audit(state: PipelineState) {
   const result = await invokeAgent({
     prompt: `Audit tutorial coverage for ${state.deviceName}. Device ID: ${deviceId}. Verify the extraction covers all manual chapters. Produce a batch plan.`,
     deviceId, cwd: worktreeCwd, phase: 'phase-4-audit', agent: 'coverage-auditor',
+    allowedTools: PIPELINE_TOOLS,
     remainingBudgetUsd: getRemainingBudget(state),
     onChildPid: (pid) => trackChildPid(state, pid),
   });
@@ -659,6 +675,7 @@ async function doPhase5(state: PipelineState) {
     const buildResult = await invokeAgent({
       prompt: `Build tutorial batch ${batch.batchId} for ${state.deviceName}. Device ID: ${deviceId}. Tutorials: ${batch.tutorials.join(', ')}`,
       deviceId, cwd: worktreeCwd, phase: 'phase-5-tutorial-build', agent: 'tutorial-builder', batchId: batch.batchId,
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
       onChildPid: (pid) => trackChildPid(state, pid),
     });
@@ -675,6 +692,7 @@ async function doPhase5(state: PipelineState) {
     const reviewResult = await invokeAgent({
       prompt: `Review tutorial batch ${batch.batchId} for ${state.deviceName}. Device ID: ${deviceId}. Verify accuracy against the manual.`,
       deviceId, cwd: worktreeCwd, phase: 'phase-5-tutorial-build', agent: 'tutorial-reviewer', batchId: batch.batchId,
+      allowedTools: PIPELINE_TOOLS,
       remainingBudgetUsd: getRemainingBudget(state),
       onChildPid: (pid) => trackChildPid(state, pid),
     });
