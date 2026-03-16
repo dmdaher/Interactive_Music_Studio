@@ -56,6 +56,67 @@ let worktreeCwd: string;
  */
 const PIPELINE_TOOLS = ['Read', 'Write', 'Edit', 'Glob', 'Grep', 'Bash'];
 
+/** Max auto-retries per phase before escalating to human */
+const MAX_PHASE_RETRIES = 2;
+
+/** Track retry counts per phase to avoid infinite loops */
+const phaseRetries: Record<string, number> = {};
+
+/**
+ * Escalation types that require human intervention — never auto-retry.
+ * Everything else gets retried up to MAX_PHASE_RETRIES times.
+ */
+const HUMAN_REQUIRED_ESCALATIONS = new Set([
+  'budget-exceeded',
+  'manual-not-found',
+  'panel-pr-review',
+  'curriculum-review',
+  'topology-deadlock',
+]);
+
+/**
+ * Try to auto-retry instead of escalating. Returns true if we should retry
+ * (the escalation was NOT created), false if the escalation was created and
+ * the pipeline should pause.
+ */
+function tryAutoRetry(
+  state: PipelineState,
+  type: string,
+  message: string,
+  prUrl?: string
+): boolean {
+  if (HUMAN_REQUIRED_ESCALATIONS.has(type)) {
+    createEscalation(state, type as Parameters<typeof createEscalation>[1], message, prUrl);
+    return false;
+  }
+
+  const key = `${state.currentPhase}:${type}`;
+  phaseRetries[key] = (phaseRetries[key] ?? 0) + 1;
+
+  if (phaseRetries[key] > MAX_PHASE_RETRIES) {
+    appendLog(deviceId, {
+      level: 'warn',
+      message: `Auto-retry exhausted (${MAX_PHASE_RETRIES}x) for ${state.currentPhase}: ${message}. Escalating to human.`,
+    });
+    createEscalation(state, type as Parameters<typeof createEscalation>[1], message, prUrl);
+    return false;
+  }
+
+  appendLog(deviceId, {
+    level: 'info',
+    message: `Auto-retrying ${state.currentPhase} (attempt ${phaseRetries[key]}/${MAX_PHASE_RETRIES}): ${message}`,
+  });
+
+  // Reset the phase so the main loop re-runs it
+  const phaseResult = state.phases.find((p) => p.phase === state.currentPhase);
+  if (phaseResult) {
+    phaseResult.status = 'running';
+    phaseResult.completedAt = null;
+  }
+
+  return true;
+}
+
 function getRemainingBudget(state: PipelineState): number {
   return state.budgetCapUsd - (state.totalActualCostUsd || state.totalCostUsd);
 }
@@ -386,8 +447,8 @@ async function doPhase0(state: PipelineState) {
     appendLog(deviceId, { level: 'info', message: 'Dev server not running, starting...' });
     const started = await startDevServer(worktreeCwd);
     if (!started) {
-      createEscalation(state, 'agent-failure', 'Could not start dev server. Please start it manually with `npm run dev`.');
-      return;
+      if (!tryAutoRetry(state, 'agent-failure', 'Could not start dev server. Please start it manually with `npm run dev`.')) return;
+      return; // retry will re-enter doPhase0
     }
   }
 
@@ -452,10 +513,10 @@ Include these fields in the frontmatter: agent: gatekeeper, device_id: ${deviceI
     if (sections.length > 0) state.sections = sections;
     advancePhase(state, worktreeCwd);
   } else if (result.exitCode !== 0) {
-    createEscalation(state, 'agent-failure', `Gatekeeper failed with exit code ${result.exitCode}`);
+    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper failed with exit code ${result.exitCode}`)) return;
   } else {
     completePhase(state, 'phase-0-gatekeeper', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Gatekeeper produced no checkpoint file`);
+    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper produced no checkpoint file`)) return;
   }
 }
 
@@ -566,7 +627,7 @@ async function doPhase2(state: PipelineState) {
   }
 
   completePhase(state, 'phase-2-global-assembly', null, false);
-  createEscalation(state, 'agent-failure', 'Global assembly failed after 3 attempts');
+  tryAutoRetry(state, 'agent-failure', 'Global assembly failed after 3 attempts');
 }
 
 async function doPhase3(state: PipelineState) {
@@ -591,7 +652,7 @@ async function doPhase3(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } else {
     completePhase(state, 'phase-3-harmonic-polish', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Harmonic polish score ${checkpoint.score ?? 'unknown'} below threshold`);
+    tryAutoRetry(state, 'agent-failure', `Harmonic polish score ${checkpoint.score ?? 'unknown'} below threshold`);
   }
 }
 
@@ -610,7 +671,7 @@ async function doPanelPR(state: PipelineState) {
     sendNotification('Miyagi Pipeline', `Panel PR ready for review: ${state.deviceName}`);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    createEscalation(state, 'agent-failure', `Failed to create panel PR: ${message}`);
+    tryAutoRetry(state, 'agent-failure', `Failed to create panel PR: ${message}`);
   }
 }
 
@@ -636,7 +697,7 @@ async function doPhase4Extract(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } else {
     completePhase(state, 'phase-4-extraction', checkpoint.score, false);
-    createEscalation(state, 'agent-failure', `Manual extraction score ${checkpoint.score ?? 'unknown'} below threshold`);
+    tryAutoRetry(state, 'agent-failure', `Manual extraction score ${checkpoint.score ?? 'unknown'} below threshold`);
   }
 }
 
@@ -742,7 +803,7 @@ async function doTutorialPR(state: PipelineState) {
     advancePhase(state, worktreeCwd);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
-    createEscalation(state, 'agent-failure', `Failed to create tutorial PR: ${message}`);
+    tryAutoRetry(state, 'agent-failure', `Failed to create tutorial PR: ${message}`);
   }
 }
 
