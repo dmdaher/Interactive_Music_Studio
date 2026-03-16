@@ -132,11 +132,17 @@ const expectedStepCounts: Record<string, number> = {
   'saving-programs': 8,
   'compare-fader-match': 8,
   'program-management': 8,
+  // Batch G — Performance + MIDI
+  'chord-poly-chord': 7,
+  'control-sequencer': 7,
+  'portamento-glide': 7,
+  'vca-level-pan': 6,
+  'midi-setup': 7,
 };
 
 describe('DeepMind 12 tutorial collection', () => {
-  it('has 21 tutorials', () => {
-    expect(deepmind12Tutorials).toHaveLength(21);
+  it('has 26 tutorials', () => {
+    expect(deepmind12Tutorials).toHaveLength(26);
   });
 
   it('all tutorials have unique IDs', () => {

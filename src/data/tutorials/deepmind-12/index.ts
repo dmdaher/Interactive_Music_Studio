@@ -19,6 +19,11 @@ import { programManagement } from './program-management';
 import { effectsOverview } from './effects-overview';
 import { effectsRouting } from './effects-routing';
 import { effectsDeepDive } from './effects-deep-dive';
+import { chordPolyChord } from './chord-poly-chord';
+import { controlSequencer } from './control-sequencer';
+import { portamentoGlide } from './portamento-glide';
+import { vcaLevelPan } from './vca-level-pan';
+import { midiSetup } from './midi-setup';
 import { Tutorial } from '@/types/tutorial';
 
 export const deepmind12Tutorials: Tutorial[] = [
@@ -43,6 +48,11 @@ export const deepmind12Tutorials: Tutorial[] = [
   effectsOverview,
   effectsRouting,
   effectsDeepDive,
+  chordPolyChord,
+  controlSequencer,
+  portamentoGlide,
+  vcaLevelPan,
+  midiSetup,
 ];
 
 export { panelOverview };
@@ -66,3 +76,8 @@ export { programManagement };
 export { effectsOverview };
 export { effectsRouting };
 export { effectsDeepDive };
+export { chordPolyChord };
+export { controlSequencer };
+export { portamentoGlide };
+export { vcaLevelPan };
+export { midiSetup };
