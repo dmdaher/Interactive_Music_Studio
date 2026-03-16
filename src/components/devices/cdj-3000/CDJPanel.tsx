@@ -165,7 +165,7 @@ function RightTempoSection({
             textAlign: 'center',
           }}
         >
-          VINYL / CDJ
+          VINYL/CDJ
         </span>
       </div>
 
@@ -173,7 +173,7 @@ function RightTempoSection({
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Knob
           id={ids.jogAdjustKnob}
-          label="JOG ADJ"
+          label="JOG ADJUST"
           size="sm"
           value={panelState[ids.jogAdjustKnob]?.value ?? 64}
           highlighted={isHighlighted(ids.jogAdjustKnob)}
@@ -236,7 +236,7 @@ function RightTempoSection({
           {/* Item 43 — BEAT SYNC/INST.DOUBLES button */}
           <PanelButton
             id={ids.beatSyncInstDoublesBtn}
-            label="BEAT SYNC"
+            label="BEAT SYNC/INST.DOUBLES"
             size="sm"
             variant="standard"
             active={beatSync.active}
@@ -250,7 +250,7 @@ function RightTempoSection({
           {/* Item 44 — TEMPO ±6/±10/±16/WIDE button */}
           <PanelButton
             id={ids.tempoRangeBtn}
-            label="RANGE"
+            label="±6/±10/±16/WIDE"
             size="sm"
             variant="function"
             active={getButtonState(panelState, ids.tempoRangeBtn).active}
@@ -261,7 +261,7 @@ function RightTempoSection({
           {/* Item 45 — MASTER TEMPO button */}
           <PanelButton
             id={ids.masterTempoBtn}
-            label="M.TEMPO"
+            label="MASTER TEMPO"
             size="sm"
             variant="standard"
             active={masterTempo.active}
@@ -272,50 +272,6 @@ function RightTempoSection({
             onClick={() => onControlClick?.(ids.masterTempoBtn)}
           />
 
-          {/* Spacer to push bottom pair to align with slider base */}
-          <div style={{ flex: 1 }} />
-
-          {/* Item 47 — TEMPO RESET indicator */}
-          <div
-            data-control-id={ids.tempoResetIndicator}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 2,
-            }}
-          >
-            <LEDIndicator
-              id={ids.tempoResetIndicator}
-              on={tempoResetLed}
-              color={CDJ_COLORS.ledRed}
-              highlighted={isHighlighted(ids.tempoResetIndicator)}
-              size={6}
-            />
-            <span
-              style={{
-                fontSize: 6,
-                color: CDJ_COLORS.labelText,
-                textTransform: 'uppercase',
-                letterSpacing: '0.03em',
-                textAlign: 'center',
-                lineHeight: 1,
-              }}
-            >
-              RESET
-            </span>
-          </div>
-
-          {/* Item 48 — TEMPO RESET button */}
-          <PanelButton
-            id={ids.tempoResetBtn}
-            label="RESET"
-            size="sm"
-            variant="function"
-            active={getButtonState(panelState, ids.tempoResetBtn).active}
-            highlighted={isHighlighted(ids.tempoResetBtn)}
-            onClick={() => onControlClick?.(ids.tempoResetBtn)}
-          />
         </div>
 
         {/* Right sub-column: TEMPO slider (item 46) */}
@@ -324,7 +280,7 @@ function RightTempoSection({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
             paddingTop: 4,
             paddingBottom: 4,
           }}
@@ -340,6 +296,58 @@ function RightTempoSection({
             labelPosition="below"
           />
         </div>
+      </div>
+
+      {/* Items 47-48 — TEMPO RESET indicator + button (horizontal row, full width) */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          paddingTop: 4,
+        }}
+      >
+        <div
+          data-control-id={ids.tempoResetIndicator}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2,
+          }}
+        >
+          <LEDIndicator
+            id={ids.tempoResetIndicator}
+            on={tempoResetLed}
+            color={CDJ_COLORS.ledRed}
+            highlighted={isHighlighted(ids.tempoResetIndicator)}
+            size={6}
+          />
+          <span
+            style={{
+              fontSize: 6,
+              color: CDJ_COLORS.labelText,
+              textTransform: 'uppercase',
+              letterSpacing: '0.03em',
+              textAlign: 'center',
+              lineHeight: 1,
+            }}
+          >
+            TEMPO RESET
+          </span>
+        </div>
+
+        <PanelButton
+          id={ids.tempoResetBtn}
+          label="TEMPO RESET"
+          size="sm"
+          variant="function"
+          active={getButtonState(panelState, ids.tempoResetBtn).active}
+          highlighted={isHighlighted(ids.tempoResetBtn)}
+          onClick={() => onControlClick?.(ids.tempoResetBtn)}
+        />
       </div>
     </div>
   );
@@ -398,7 +406,8 @@ export default function CDJPanel({
     return (
       <div
         style={{
-          display: 'inline-flex',
+          display: 'flex',
+          width: Math.round((SECTION_WIDTH_PCT.rightTempo / 100) * CDJ_PANEL_WIDTH),
           backgroundColor: CDJ_COLORS.panelBg,
           borderRadius: 4,
           overflow: 'hidden',
