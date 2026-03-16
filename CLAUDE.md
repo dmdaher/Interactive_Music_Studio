@@ -53,6 +53,91 @@ Always check, validate, and confirm before acting. Measure twice, cut once.
 
 ---
 
+## Visual Constraints
+
+### Containment Veto
+Any text or icon that spills outside its logical container (button face, screen bezel, section border) is a **(-1.0) Boundary Violation**. Physical hardware never has CSS overflow — a label wider than its button is a physical impossibility. "Still legible" is never sufficient. Fix options: resize container, reduce font, use multi-line treatment.
+
+> **Origin:** PQ scored 10/10 on CDJ-3000 despite "BEAT SYNC/INST.DOUBLES" overflowing a 32px button. The rubric lacked an explicit deduction for overflow.
+
+### Structural Layout First
+Verify layout **topology** (horizontal vs vertical, which components are adjacent, column vs row) BEFORE any spacing or formatting checks. Never optimize gap sizes inside a structurally incorrect layout — it wastes iterations.
+
+**Check order:**
+1. Is the layout TOPOLOGY correct? (horizontal vs vertical, adjacency)
+2. Is the POSITION correct? (top/bottom, left/right within section)
+3. ONLY THEN: spacing, sizing, visual polish
+
+> **Origin:** ENVELOPES section had buttons in a vertical column when hardware has them in a horizontal row. Survived 5+ QA iterations because agents were polishing spacing on a wrong layout.
+
+---
+
+## Agent Orchestration
+
+### Agent Scope Isolation
+Agents must not produce output outside their scope. Cross-contamination causes anchoring bias.
+
+- **Panel agents** (gatekeeper, SI, PQ, critic): derive layout from hardware photos and manual diagrams ONLY. Never read tutorial agent checkpoints.
+- **Tutorial agents** (extractor, auditor, builder, reviewer): scope is curriculum and content. NO layout diagrams, ASCII art, or spatial descriptions.
+- Agent memory directories are scoped — tutorial pipeline agents read tutorial checkpoints, panel pipeline agents read panel checkpoints. Never cross-read.
+
+> **Origin:** Coverage auditor checkpoints containing ASCII layout art could bias panel builder into wrong spatial arrangements.
+
+### Sieve Extraction Strategy (Anti-Hallucination)
+Manual extraction must separate **Perception** from **Cognition**. Never read and interpret in the same step.
+
+1. **Sieve** — Process manual in 5-10 page buckets. Output ONLY raw CSV/JSON of every parameter, button, menu item — exact string + page number. No interpretation.
+2. **Verify** — Re-read those same pages focused solely on finding omissions or typos in the table.
+3. **Anchor** — Cross-reference verified table against `panel-constants.ts`. Flag discrepancies.
+4. **Assembly** — Only after the ENTIRE manual is sieved into a verified master table does curriculum design begin.
+
+Additional rules: chapter-by-chapter extraction with immediate checkpointing. Constants file re-read before each chapter as grounding anchor. Diagrams, parameter tables, and signal flowcharts must be explicitly analyzed (text-only extraction misses visual content).
+
+> **Origin:** Hallucinations happen when an agent perceives and cognizes simultaneously over large volumes — paraphrased parameter names, invented menu structures, fabricated access paths.
+
+### Agent Architecture Rules
+- **Chapter-by-chapter extraction** with checkpoints — NOT the whole manual at once. Middle chapters get skimmed ("Lost in the Middle" amnesia).
+- **Mechanical state verification** — Tutorial Reviewer must use a script to compute cumulative panel state, not simulate mentally. LLMs hallucinate button deactivations.
+- **JSON deps alongside ASCII DAG** — Manual Extractor must output JSON dependency array alongside any ASCII tree. LLMs make formatting errors in ASCII; JSON is mechanically verifiable.
+- **Diagram analysis mandatory** — Extractor and Auditor must explicitly analyze diagrams, parameter tables, signal flowcharts. Synth manuals rely heavily on visual content.
+
+---
+
+## Process Gates
+
+### Enforce QA Pipeline
+The full panel QA pipeline must run before tutorial building. No exceptions, no "we can QA later."
+
+```
+Manual Extractor → Coverage Auditor → Panel Build
+→ GATE: Gatekeeper (Master Manifest)
+→ GATE: Structural Inspector + Panel Questioner (parallel)
+→ GATE: Critic (adversarial, veto power)
+→ GATE: User Design Review (visual approval in browser)
+→ Tutorial Builder (only after ALL gates pass)
+```
+
+Each gate agent writes a checkpoint with PASS/FAIL. Tutorial-builder pre-conditions must check for gatekeeper manifest and critic approval. If any gate scores below threshold, HALT and fix.
+
+> **Origin:** CDJ-3000 build skipped all QA gates, went straight to tutorials. 18 tutorials built against an unvalidated panel.
+
+### Design Before Tutorials
+Visual design review is a **hard gate** before tutorial building. The user must approve the panel in browser first. Tutorials reference control IDs, highlights, and panel state — if the panel is wrong, all tutorials are invalid.
+
+**Ask explicitly:** "Panel is ready for review. Want me to start the dev server?"
+
+### Known Anti-Pattern: Circular Validation (PROG Blindspot)
+Agents can score a section 10/10 while the layout is fundamentally wrong. This happens when the Gatekeeper template is wrong and all downstream agents validate against it instead of independently checking the hardware reference.
+
+**Prevention:**
+- Panel Questioner must do a "Position Map" audit: for each control, verify its relative position to neighbors matches the hardware photo — not just "is it present?"
+- Any section with >5 controls in complex spatial arrangements gets flagged for extra scrutiny
+- Agents must validate against the manual/hardware photo, never just against another agent's checkpoint
+
+> **Origin:** PROG section scored 10/10 from both Phase 1 agents. Rotary encoder was below the LCD instead of to the right. All agents validated against a wrong Gatekeeper template.
+
+---
+
 ## Pipeline Runner (`scripts/pipeline-runner.ts`)
 
 The pipeline runner orchestrates instrument builds by spawning Claude CLI agents through 12 phases. Each agent gets a scoped prompt and runs in an isolated git worktree.
