@@ -644,7 +644,6 @@ async function doPhase0LayoutEngine(state: PipelineState) {
 
   // Write manifest to pipeline dir for the layout engine
   const manifestPath = path.join('.pipeline', deviceId, 'manifest.json');
-  const outputPath = path.join('.pipeline', deviceId, 'templates.json');
 
   try {
     // Validate JSON is parseable before writing
