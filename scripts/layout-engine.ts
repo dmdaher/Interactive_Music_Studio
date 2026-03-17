@@ -44,6 +44,18 @@ export interface ManifestSection {
   gridCols?: number;
   /** Controls in this section, ordered top-to-bottom, left-to-right */
   controls: string[];
+  /**
+   * Explicit assignment of controls to sub-containers.
+   * Required for archetypes with multiple containers (cluster-above-anchor,
+   * cluster-below-anchor, anchor-layout, dual-column).
+   *
+   * Keys are container roles (e.g., "cluster", "anchor", "left-column", "right-column").
+   * Values are arrays of control IDs assigned to that container.
+   *
+   * The Layout Engine validates that every control in `controls` appears in exactly
+   * one container, and that no container references controls not in `controls`.
+   */
+  containerAssignment?: Record<string, string[]>;
   /** Proportional height splits for anchor-layout and cluster-above-anchor */
   heightSplits?: {
     cluster: number;
@@ -116,6 +128,8 @@ export interface TemplateSpec {
   };
   componentStructure: string;
   controlSlots: string[];
+  /** Explicit mapping of control IDs to container roles (from manifest containerAssignment) */
+  containerAssignment?: Record<string, string[]>;
   notes: string[];
 }
 
@@ -482,6 +496,7 @@ function validateManifest(manifest: MasterManifest): string[] {
     }
 
     // Check height splits for anchor archetypes
+    const needsContainers = ['cluster-above-anchor', 'cluster-below-anchor', 'anchor-layout', 'dual-column'];
     if (
       (section.archetype === 'cluster-above-anchor' ||
         section.archetype === 'cluster-below-anchor' ||
@@ -491,6 +506,35 @@ function validateManifest(manifest: MasterManifest): string[] {
       errors.push(
         `Section "${section.id}" uses ${section.archetype} but missing heightSplits (will use defaults)`
       );
+    }
+
+    // Validate containerAssignment for multi-container archetypes
+    if (needsContainers.includes(section.archetype)) {
+      if (!section.containerAssignment) {
+        errors.push(
+          `Section "${section.id}" uses ${section.archetype} but missing containerAssignment — ` +
+          `gatekeeper must specify which controls go in each container (e.g., {"cluster": [...], "anchor": [...]}). (will use type-based heuristic)`
+        );
+      } else {
+        // Every control must appear in exactly one container
+        const assigned = new Set<string>();
+        for (const [role, ids] of Object.entries(section.containerAssignment)) {
+          for (const id of ids) {
+            if (!section.controls.includes(id)) {
+              errors.push(`Section "${section.id}" containerAssignment["${role}"] references "${id}" not in controls list`);
+            }
+            if (assigned.has(id)) {
+              errors.push(`Section "${section.id}" control "${id}" assigned to multiple containers`);
+            }
+            assigned.add(id);
+          }
+        }
+        for (const id of section.controls) {
+          if (!assigned.has(id)) {
+            errors.push(`Section "${section.id}" control "${id}" not assigned to any container (will use type-based heuristic)`);
+          }
+        }
+      }
     }
 
     // Check all controls in this section exist in the controls array
@@ -534,9 +578,9 @@ export function runLayoutEngine(manifest: MasterManifest): LayoutEngineOutput {
   const validationErrors = validateManifest(manifest);
   const warnings: string[] = [];
 
-  // Treat missing heightSplits as warnings, not errors
-  const fatalErrors = validationErrors.filter(e => !e.includes('will use defaults'));
-  const nonFatalWarnings = validationErrors.filter(e => e.includes('will use defaults'));
+  // Treat missing heightSplits and containerAssignment as warnings, not fatal errors
+  const fatalErrors = validationErrors.filter(e => !e.includes('will use defaults') && !e.includes('will use type-based heuristic'));
+  const nonFatalWarnings = validationErrors.filter(e => e.includes('will use defaults') || e.includes('will use type-based heuristic'));
   warnings.push(...nonFatalWarnings);
 
   if (fatalErrors.length > 0) {
@@ -551,6 +595,10 @@ export function runLayoutEngine(manifest: MasterManifest): LayoutEngineOutput {
   const templates: TemplateSpec[] = [];
   for (const section of manifest.sections) {
     const template = generateTemplate(section, manifest.controls);
+    // Pass through containerAssignment from manifest if present
+    if (section.containerAssignment) {
+      template.containerAssignment = section.containerAssignment;
+    }
     templates.push(template);
   }
 

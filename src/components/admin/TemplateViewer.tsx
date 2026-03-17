@@ -16,6 +16,7 @@ interface TemplateSpec {
   };
   componentStructure: string;
   controlSlots: string[];
+  containerAssignment?: Record<string, string[]>;
   notes: string[];
 }
 
@@ -187,20 +188,27 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
 
     case 'cluster-above-anchor': {
       const cCols = clusterCols ? parseInt(clusterCols) : 2;
-      // Identify anchor by type: fader/slider/wheel/screen are anchor elements
-      const anchorTypes = new Set(['fader', 'slider', 'wheel', 'screen']);
-      const anchorIdx = manifest
-        ? controlSlots.findIndex(id => {
-            const ctrl = manifest.controls.find(c => c.id === id);
-            return ctrl && anchorTypes.has(ctrl.type);
-          })
-        : controlSlots.length - 1;
-      const actualAnchorIdx = anchorIdx >= 0 ? anchorIdx : controlSlots.length - 1;
-      const clusterSlots = controlSlots.filter((_, i) => i !== actualAnchorIdx);
-      const anchorSlot = controlSlots[actualAnchorIdx];
-      // Include any controls after the anchor (like indicators/buttons near the fader) in a sub-row below the anchor
-      const postAnchorSlots = controlSlots.slice(actualAnchorIdx + 1);
-      const preAnchorSlots = controlSlots.slice(0, actualAnchorIdx);
+      // Use explicit containerAssignment if available, otherwise fall back to type-based heuristic
+      const assignment = template.containerAssignment;
+      let preAnchorSlots: string[];
+      let anchorSlots: string[];
+
+      if (assignment?.cluster && assignment?.anchor) {
+        preAnchorSlots = assignment.cluster;
+        anchorSlots = assignment.anchor;
+      } else {
+        // Fallback: identify anchor by type
+        const anchorTypes = new Set(['fader', 'slider', 'wheel', 'screen']);
+        const anchorIdx = manifest
+          ? controlSlots.findIndex(id => {
+              const ctrl = manifest.controls.find(c => c.id === id);
+              return ctrl && anchorTypes.has(ctrl.type);
+            })
+          : controlSlots.length - 1;
+        const actualAnchorIdx = anchorIdx >= 0 ? anchorIdx : controlSlots.length - 1;
+        preAnchorSlots = controlSlots.slice(0, actualAnchorIdx);
+        anchorSlots = controlSlots.slice(actualAnchorIdx);
+      }
       const cRows = clusterRows ? parseInt(clusterRows) : Math.ceil(preAnchorSlots.length / cCols);
 
       return (
@@ -227,7 +235,7 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
               </div>
             </>
           )}
-          {/* Anchor: the dominant element (fader/slider/wheel) */}
+          {/* Anchor zone: dominant element + associated controls */}
           <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>
             anchor {anchorFlex ? `(${anchorFlex}%)` : ''}
           </div>
@@ -240,17 +248,9 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
               minHeight: '40px',
             }}
           >
-            <ControlSlot name={anchorSlot} index={actualAnchorIdx} manifest={manifest} />
-            {/* Controls after the anchor (e.g., reset indicator + button near the fader) */}
-            {postAnchorSlots.length > 0 && (
-              <div className="flex gap-1 w-full">
-                {postAnchorSlots.map((id, i) => (
-                  <div key={id} className="flex-1">
-                    <ControlSlot name={id} index={actualAnchorIdx + 1 + i} manifest={manifest} />
-                  </div>
-                ))}
-              </div>
-            )}
+            {anchorSlots.map((id, i) => (
+              <ControlSlot key={id} name={id} index={preAnchorSlots.length + i} manifest={manifest} />
+            ))}
           </div>
         </div>
       );
