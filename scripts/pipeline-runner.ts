@@ -43,6 +43,7 @@ import {
   validateDiagramParserOutput,
   preInspectGatekeeper,
   validateGatekeeperManifest,
+  validateNeighborDirections,
 } from '../src/lib/pipeline/checkpoint-validators';
 
 const deviceId = process.argv[2];
@@ -720,23 +721,45 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
       message: `POST-INSPECT: mechanical score ${validation.score.toFixed(1)}/10 (agent self-score: ${checkpoint.score ?? 'none'})`,
     });
 
-    const effectiveScore = validation.score;
+    // 4-Point Validation: check neighbor directions against parser centroids
+    const blueprintPath = path.join(worktreeCwd, '.claude', 'agent-memory', 'diagram-parser', 'spatial-blueprint.json');
+    if (fs.existsSync(blueprintPath)) {
+      const blueprintJson = fs.readFileSync(blueprintPath, 'utf-8');
+      const neighborCheck = validateNeighborDirections(manifestJson, blueprintJson);
+      if (neighborCheck.flippedNeighbors.length > 0) {
+        for (const flip of neighborCheck.flippedNeighbors) {
+          appendLog(deviceId, {
+            level: 'warn', agent: 'gatekeeper',
+            message: `4-POINT: Flipped neighbor — ${flip.control}.${flip.direction} = ${flip.neighbor}, but geometry says ${flip.expected}`,
+          });
+        }
+        appendLog(deviceId, {
+          level: 'warn', agent: 'gatekeeper',
+          message: `4-POINT: ${neighborCheck.flippedNeighbors.length} flipped neighbor direction(s) found. Deducting from score.`,
+        });
+        // Deduct but don't fail entirely — flipped neighbors are correctable
+        validation.score = Math.max(0, validation.score - neighborCheck.flippedNeighbors.length * 0.5);
+        validation.errors.push(...neighborCheck.errors);
+      } else {
+        appendLog(deviceId, { level: 'info', agent: 'gatekeeper', message: '4-POINT: All neighbor directions consistent with parser centroids' });
+      }
+    }
 
-    if (effectiveScore >= 9.0 && validation.valid) {
+    if (validation.score >= 9.0 && validation.valid) {
       // Copy manifest to main pipeline dir if needed
       if (manifestPath === worktreeManifest && !fs.existsSync(mainManifest)) {
         fs.mkdirSync(path.dirname(mainManifest), { recursive: true });
         fs.copyFileSync(worktreeManifest, mainManifest);
       }
-      completePhase(state, 'phase-0-gatekeeper', effectiveScore, true);
+      completePhase(state, 'phase-0-gatekeeper', validation.score, true);
       const sections = parseSectionsFromGatekeeper();
       if (sections.length > 0) state.sections = sections;
       advancePhase(state, worktreeCwd);
     } else {
-      completePhase(state, 'phase-0-gatekeeper', effectiveScore, false);
+      completePhase(state, 'phase-0-gatekeeper', validation.score, false);
       const errorSummary = validation.errors.slice(0, 3).join('; ');
       if (!tryAutoRetry(state, 'agent-failure',
-        `Gatekeeper manifest failed mechanical validation (score: ${effectiveScore.toFixed(1)}). ` +
+        `Gatekeeper manifest failed mechanical validation (score: ${validation.score.toFixed(1)}). ` +
         `Errors: ${errorSummary}`)) return;
     }
   } else if (result.exitCode !== 0) {

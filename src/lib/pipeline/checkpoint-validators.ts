@@ -376,6 +376,99 @@ export function validateGatekeeperManifest(manifestJson: string): ValidationResu
 }
 
 /**
+ * Orchestrator 4-Point Validation: verify gatekeeper's neighbor directions
+ * against parser's centroid coordinates. Catches flipped East/West errors.
+ */
+export function validateNeighborDirections(
+  manifestJson: string,
+  blueprintJson: string
+): ValidationResult & { flippedNeighbors: Array<{ control: string; neighbor: string; direction: string; expected: string }> } {
+  const errors: string[] = [];
+  const flipped: Array<{ control: string; neighbor: string; direction: string; expected: string }> = [];
+
+  let manifest: { sections: Array<{ id: string; controls: string[] }>; controls: Array<{ id: string; spatialNeighbors?: Record<string, string | null> }> };
+  let blueprint: { sections: Array<{ sectionId: string; controls: Array<{ id: number; centroid: { x: number; y: number } }> }> };
+
+  try {
+    manifest = JSON.parse(manifestJson);
+    blueprint = JSON.parse(blueprintJson);
+  } catch {
+    return { valid: false, errors: ['Could not parse manifest or blueprint JSON'], flippedNeighbors: [] };
+  }
+
+  // Build a centroid lookup: control ID → { x, y }
+  // The parser uses numeric IDs, the gatekeeper uses string IDs.
+  // Map them by matching order within each section.
+  const centroidMap = new Map<string, { x: number; y: number }>();
+
+  for (const mSection of manifest.sections) {
+    // Find matching blueprint section
+    const bSection = blueprint.sections.find(bs => {
+      // Match by section ID or by similar naming
+      return bs.sectionId === mSection.id ||
+        bs.sectionId?.toLowerCase().includes(mSection.id.replace(/-/g, '').toLowerCase());
+    });
+
+    if (!bSection) continue;
+
+    // Map by order: manifest controls[i] → blueprint controls[i]
+    for (let i = 0; i < mSection.controls.length && i < bSection.controls.length; i++) {
+      const controlId = mSection.controls[i];
+      const centroid = bSection.controls[i]?.centroid;
+      if (centroid) {
+        centroidMap.set(controlId, centroid);
+      }
+    }
+  }
+
+  // Now check each control's neighbor directions against centroids
+  for (const control of manifest.controls) {
+    const neighbors = control.spatialNeighbors;
+    if (!neighbors) continue;
+
+    const myCentroid = centroidMap.get(control.id);
+    if (!myCentroid) continue;
+
+    // Check each direction
+    const directionChecks: Array<{ dir: string; neighborId: string | null; expectedRelation: (mine: { x: number; y: number }, theirs: { x: number; y: number }) => boolean; correctDir: string }> = [
+      { dir: 'above', neighborId: neighbors.above, expectedRelation: (m, t) => t.y < m.y, correctDir: 'below' },
+      { dir: 'below', neighborId: neighbors.below, expectedRelation: (m, t) => t.y > m.y, correctDir: 'above' },
+      { dir: 'left', neighborId: neighbors.left, expectedRelation: (m, t) => t.x < m.x, correctDir: 'right' },
+      { dir: 'right', neighborId: neighbors.right, expectedRelation: (m, t) => t.x > m.x, correctDir: 'left' },
+    ];
+
+    for (const check of directionChecks) {
+      if (!check.neighborId) continue;
+      const neighborCentroid = centroidMap.get(check.neighborId);
+      if (!neighborCentroid) continue;
+
+      if (!check.expectedRelation(myCentroid, neighborCentroid)) {
+        // Direction is wrong
+        const actualDir = neighborCentroid.x < myCentroid.x ? 'left'
+          : neighborCentroid.x > myCentroid.x ? 'right'
+          : neighborCentroid.y < myCentroid.y ? 'above'
+          : 'below';
+
+        flipped.push({
+          control: control.id,
+          neighbor: check.neighborId,
+          direction: check.dir,
+          expected: actualDir,
+        });
+
+        errors.push(
+          `Neighbor direction flipped: ${control.id}.${check.dir} = ${check.neighborId}, ` +
+          `but centroids show ${check.neighborId} is actually to the ${actualDir} ` +
+          `(${control.id}: x=${myCentroid.x}, y=${myCentroid.y} | ${check.neighborId}: x=${neighborCentroid.x}, y=${neighborCentroid.y})`
+        );
+      }
+    }
+  }
+
+  return { valid: errors.length === 0, errors, flippedNeighbors: flipped };
+}
+
+/**
  * Pre-inspection for Gatekeeper: verify both data streams are available.
  */
 export function preInspectGatekeeper(opts: {
