@@ -232,7 +232,7 @@ export function validateDiagramParserOutput(content: string, blueprintJson?: str
   const hasJsonBlocks = (checkContent.match(/```json/g) ?? []).length;
   const hasCentroids = checkContent.includes('"centroid"');
   const hasTopology = checkContent.includes('"topology"');
-  const hasBoundingBox = checkContent.includes('"boundingBox"');
+  const hasBoundingBox = checkContent.includes('"boundingBox"') || checkContent.includes('"panelBoundingBox"') || checkContent.includes('"bbox"');
 
   if (hasJsonBlocks === 0) {
     errors.push('No JSON code blocks found — output is prose-only. Parser must output spatial-blueprint JSON per section.');
@@ -279,7 +279,8 @@ export function validateDiagramParserOutput(content: string, blueprintJson?: str
   }
 
   // 5. Verify centroid precision (2 decimal places)
-  const centroidMatches = checkContent.match(/"x":\s*([\d.]+)/g) ?? [];
+  // Accept both "x": and "cx": naming conventions
+  const centroidMatches = checkContent.match(/"(?:x|cx)":\s*([\d.]+)/g) ?? [];
   const lowPrecision = centroidMatches.filter(m => {
     const val = m.match(/([\d.]+)/)?.[1] ?? '';
     const decimals = val.includes('.') ? val.split('.')[1].length : 0;
