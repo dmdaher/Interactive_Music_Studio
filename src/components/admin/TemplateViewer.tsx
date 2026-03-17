@@ -34,6 +34,22 @@ interface LayoutEngineOutput {
   warnings: string[];
 }
 
+interface ManifestControl {
+  id: string;
+  verbatimLabel: string;
+  type: string;
+}
+
+interface ManifestSection {
+  id: string;
+  headerLabel: string | null;
+}
+
+interface ManifestData {
+  sections: ManifestSection[];
+  controls: ManifestControl[];
+}
+
 interface TemplateViewerProps {
   deviceId: string;
 }
@@ -62,29 +78,46 @@ const SLOT_BORDERS = [
   'rgba(139, 92, 246, 0.5)',
 ];
 
-function ControlSlot({ name, index }: { name: string; index: number }) {
+const TYPE_ICONS: Record<string, string> = {
+  button: 'BTN',
+  knob: 'KNOB',
+  slider: 'FADER',
+  fader: 'FADER',
+  encoder: 'ENC',
+  led: 'LED',
+  screen: 'SCR',
+  wheel: 'WHEEL',
+  pad: 'PAD',
+  switch: 'SW',
+};
+
+function ControlSlot({ name, index, manifest }: { name: string; index: number; manifest: ManifestData | null }) {
   const colorIdx = index % SLOT_COLORS.length;
-  // Shorten long names for display
-  const shortName = name.length > 14 ? name.slice(0, 12) + '..' : name;
+  const control = manifest?.controls.find(c => c.id === name);
+  const label = control?.verbatimLabel ?? name;
+  const typeTag = control ? TYPE_ICONS[control.type] ?? control.type.toUpperCase() : '';
+  // Shorten long labels for display
+  const shortLabel = label.length > 18 ? label.slice(0, 16) + '..' : label;
   return (
     <div
-      className="rounded flex items-center justify-center text-center px-1"
+      className="rounded flex flex-col items-center justify-center text-center px-1 py-1 gap-0.5"
       style={{
         backgroundColor: SLOT_COLORS[colorIdx],
         border: `1px solid ${SLOT_BORDERS[colorIdx]}`,
-        minHeight: '28px',
-        fontSize: '8px',
+        minHeight: '34px',
         color: '#d1d5db',
-        fontFamily: 'monospace',
       }}
-      title={name}
+      title={`${label} (${name})`}
     >
-      {shortName}
+      <span style={{ fontSize: '9px', fontWeight: 500, lineHeight: 1.1 }}>{shortLabel}</span>
+      {typeTag && (
+        <span style={{ fontSize: '7px', color: '#9ca3af', letterSpacing: '0.05em' }}>{typeTag}</span>
+      )}
     </div>
   );
 }
 
-function LayoutWireframe({ template }: { template: TemplateSpec }) {
+function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manifest: ManifestData | null }) {
   const { archetype, cssArchitecture, controlSlots } = template;
 
   // Parse grid dimensions from CSS properties
@@ -118,7 +151,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
           }}
         >
           {controlSlots.map((id, i) => (
-            <ControlSlot key={id} name={id} index={i} />
+            <ControlSlot key={id} name={id} index={i} manifest={manifest} />
           ))}
         </div>
       );
@@ -132,7 +165,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
         >
           {controlSlots.map((id, i) => (
             <div key={id} className="flex-1">
-              <ControlSlot name={id} index={i} />
+              <ControlSlot name={id} index={i} manifest={manifest} />
             </div>
           ))}
         </div>
@@ -146,7 +179,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
           style={{ backgroundColor: '#0d0d1a', minHeight: '60px', maxWidth: '120px' }}
         >
           {controlSlots.map((id, i) => (
-            <ControlSlot key={id} name={id} index={i} />
+            <ControlSlot key={id} name={id} index={i} manifest={manifest} />
           ))}
         </div>
       );
@@ -175,7 +208,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
             }}
           >
             {clusterSlots.map((id, i) => (
-              <ControlSlot key={id} name={id} index={i} />
+              <ControlSlot key={id} name={id} index={i} manifest={manifest} />
             ))}
           </div>
           {/* Anchor label */}
@@ -191,7 +224,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
               minHeight: '40px',
             }}
           >
-            <ControlSlot name={anchorSlot} index={controlSlots.length - 1} />
+            <ControlSlot name={anchorSlot} index={controlSlots.length - 1} manifest={manifest} />
           </div>
         </div>
       );
@@ -216,7 +249,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
               minHeight: '40px',
             }}
           >
-            <ControlSlot name={anchorSlot2} index={0} />
+            <ControlSlot name={anchorSlot2} index={0} manifest={manifest} />
           </div>
           <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>
             cluster {clusterFlex ? `(${clusterFlex}%)` : ''}
@@ -232,7 +265,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
             }}
           >
             {clusterSlots2.map((id, i) => (
-              <ControlSlot key={id} name={id} index={i + 1} />
+              <ControlSlot key={id} name={id} index={i + 1} manifest={manifest} />
             ))}
           </div>
         </div>
@@ -250,7 +283,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
               <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>secondary</div>
               <div className="flex flex-row gap-1">
                 {secondary.map((id, i) => (
-                  <div key={id} className="flex-1"><ControlSlot name={id} index={i} /></div>
+                  <div key={id} className="flex-1"><ControlSlot name={id} index={i} manifest={manifest} /></div>
                 ))}
               </div>
             </>
@@ -265,7 +298,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
               border: '1px dashed rgba(52, 211, 153, 0.3)',
             }}
           >
-            <ControlSlot name={anchor} index={controlSlots.length - 1} />
+            <ControlSlot name={anchor} index={controlSlots.length - 1} manifest={manifest} />
           </div>
         </div>
       );
@@ -286,7 +319,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
             <div key={ri} className="flex flex-row gap-1">
               {row.map((id, ci) => (
                 <div key={id} className="flex-1">
-                  <ControlSlot name={id} index={ri * rowSize + ci} />
+                  <ControlSlot name={id} index={ri * rowSize + ci} manifest={manifest} />
                 </div>
               ))}
             </div>
@@ -301,6 +334,7 @@ function LayoutWireframe({ template }: { template: TemplateSpec }) {
 
 export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
   const [data, setData] = useState<LayoutEngineOutput | null>(null);
+  const [manifest, setManifest] = useState<ManifestData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'visual' | 'code'>('visual');
@@ -313,6 +347,11 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
       })
       .then(setData)
       .catch((e) => setError(e.message));
+
+    fetch(`/api/pipeline/${deviceId}/manifest`)
+      .then((r) => r.ok ? r.json() : null)
+      .then(setManifest)
+      .catch(() => { /* manifest is optional for display */ });
   }, [deviceId]);
 
   if (error) {
@@ -394,8 +433,9 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium" style={{ color: 'var(--foreground, #e0e0e0)' }}>
-                    {t.sectionId}
+                    {manifest?.sections.find(s => s.id === t.sectionId)?.headerLabel ?? t.sectionId}
                   </span>
+                  <span className="text-[9px]" style={{ color: '#4b5563' }}>{t.sectionId}</span>
                   <span
                     className="text-[9px] px-1.5 py-0.5 rounded font-mono"
                     style={{ backgroundColor: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa' }}
@@ -413,7 +453,7 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
 
               {/* Visual wireframe — always shown */}
               {viewMode === 'visual' && (
-                <LayoutWireframe template={t} />
+                <LayoutWireframe template={t} manifest={manifest} />
               )}
 
               {/* Code view */}
