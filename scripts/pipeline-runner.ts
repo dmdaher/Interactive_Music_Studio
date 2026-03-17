@@ -559,8 +559,12 @@ Unknown layouts = flag for manual review, do NOT invent archetype names.
 
 You DO NOT produce: ASCII maps, CSS, section templates, or component structure.
 The Layout Engine (a deterministic script) will generate templates from your manifest.
+DO NOT run the layout engine yourself. DO NOT execute scripts/layout-engine.ts via Bash.
+The pipeline runner handles layout engine execution after your manifest is validated.
 
-Output the Master Manifest JSON conforming to the MasterManifest interface in scripts/layout-engine.ts.
+Output the Master Manifest JSON in a \`\`\`json code block in your checkpoint.
+The JSON must conform to the MasterManifest interface in scripts/layout-engine.ts.
+Also write the manifest to .pipeline/${deviceId}/manifest.json
 
 Write your checkpoint to .claude/agent-memory/gatekeeper/checkpoint.md with YAML frontmatter.
 Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verdict, timestamp, conflicts${resumeCtx}`;
@@ -621,39 +625,58 @@ async function doPhase0LayoutEngine(state: PipelineState) {
   startPhase(state, 'phase-0-layout-engine');
   appendLog(deviceId, { level: 'info', message: 'Starting Phase 0e: Layout Engine (deterministic template generation)' });
 
-  // Extract manifest JSON from gatekeeper checkpoint
-  const gatekeeperCheckpointPath = path.join(
-    worktreeCwd, '.claude', 'agent-memory', 'gatekeeper', 'checkpoint.md'
-  );
-
-  if (!fs.existsSync(gatekeeperCheckpointPath)) {
-    completePhase(state, 'phase-0-layout-engine', null, false);
-    if (!tryAutoRetry(state, 'agent-failure', 'Gatekeeper checkpoint not found — cannot run Layout Engine')) return;
-    return;
-  }
-
-  // Try to extract JSON manifest from gatekeeper checkpoint
-  const checkpointContent = fs.readFileSync(gatekeeperCheckpointPath, 'utf-8');
-  const jsonMatch = checkpointContent.match(/```json\s*([\s\S]*?)\s*```/);
-
-  if (!jsonMatch) {
-    completePhase(state, 'phase-0-layout-engine', null, false);
-    if (!tryAutoRetry(state, 'agent-failure', 'No JSON manifest found in gatekeeper checkpoint')) return;
-    return;
-  }
-
-  // Write manifest to pipeline dir for the layout engine
   const manifestPath = path.join('.pipeline', deviceId, 'manifest.json');
-  const outputPath = path.join('.pipeline', deviceId, 'templates.json');
 
-  try {
-    // Validate JSON is parseable before writing
-    JSON.parse(jsonMatch[1]);
-    fs.writeFileSync(manifestPath, jsonMatch[1], 'utf-8');
-  } catch (e) {
-    completePhase(state, 'phase-0-layout-engine', null, false);
-    if (!tryAutoRetry(state, 'agent-failure', `Manifest JSON is invalid: ${(e as Error).message}`)) return;
-    return;
+  // Find the manifest JSON — check multiple locations:
+  // 1. Worktree's .pipeline/<deviceId>/manifest.json (gatekeeper may have written it there via Bash)
+  // 2. Main .pipeline/<deviceId>/manifest.json (if already copied)
+  // 3. Embedded in gatekeeper checkpoint as a ```json code block (original approach)
+  const worktreeManifestPath = path.join(worktreeCwd, '.pipeline', deviceId, 'manifest.json');
+
+  if (fs.existsSync(worktreeManifestPath) && !fs.existsSync(manifestPath)) {
+    // Copy from worktree to main pipeline dir
+    fs.mkdirSync(path.dirname(manifestPath), { recursive: true });
+    fs.copyFileSync(worktreeManifestPath, manifestPath);
+    appendLog(deviceId, { level: 'info', message: 'Copied manifest from worktree to pipeline dir' });
+
+    // Also copy templates if the gatekeeper already ran the layout engine
+    const worktreeTemplatesPath = path.join(worktreeCwd, '.pipeline', deviceId, 'templates.json');
+    if (fs.existsSync(worktreeTemplatesPath)) {
+      fs.copyFileSync(worktreeTemplatesPath, outputPath);
+      appendLog(deviceId, { level: 'info', message: 'Copied templates from worktree (gatekeeper pre-ran layout engine)' });
+    }
+  }
+
+  if (!fs.existsSync(manifestPath)) {
+    // Fallback: extract JSON from gatekeeper checkpoint
+    const gatekeeperCheckpointPath = path.join(
+      worktreeCwd, '.claude', 'agent-memory', 'gatekeeper', 'checkpoint.md'
+    );
+
+    if (!fs.existsSync(gatekeeperCheckpointPath)) {
+      completePhase(state, 'phase-0-layout-engine', null, false);
+      if (!tryAutoRetry(state, 'agent-failure', 'No manifest found — checked worktree .pipeline/, main .pipeline/, and gatekeeper checkpoint')) return;
+      return;
+    }
+
+    const checkpointContent = fs.readFileSync(gatekeeperCheckpointPath, 'utf-8');
+    const jsonMatch = checkpointContent.match(/```json\s*([\s\S]*?)\s*```/);
+
+    if (!jsonMatch) {
+      completePhase(state, 'phase-0-layout-engine', null, false);
+      if (!tryAutoRetry(state, 'agent-failure', 'No manifest.json file and no JSON block in gatekeeper checkpoint')) return;
+      return;
+    }
+
+    try {
+      JSON.parse(jsonMatch[1]);
+      fs.mkdirSync(path.dirname(manifestPath), { recursive: true });
+      fs.writeFileSync(manifestPath, jsonMatch[1], 'utf-8');
+    } catch (e) {
+      completePhase(state, 'phase-0-layout-engine', null, false);
+      if (!tryAutoRetry(state, 'agent-failure', `Manifest JSON is invalid: ${(e as Error).message}`)) return;
+      return;
+    }
   }
 
   // Run the deterministic layout engine
