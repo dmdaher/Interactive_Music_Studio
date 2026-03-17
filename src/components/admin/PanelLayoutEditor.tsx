@@ -18,7 +18,7 @@ interface ManifestSection {
   gridRows?: number;
   gridCols?: number;
   controls: string[];
-  containerAssignment?: Record<string, string[]>;
+  containerAssignment?: Record<string, string[] | Record<string, string[]>>;
   heightSplits?: { cluster: number; anchor: number; gap: number };
   widthPercent: number;
   complexity: string;
@@ -37,7 +37,7 @@ interface TemplateSpec {
   sectionId: string;
   archetype: string;
   controlSlots: string[];
-  containerAssignment?: Record<string, string[]>;
+  containerAssignment?: Record<string, string[] | Record<string, string[]>>;
   notes: string[];
 }
 
@@ -159,10 +159,16 @@ function PanelSection({
       {hasContainers && assignment ? (
         // Multi-container: show cluster and anchor zones
         <div className="flex flex-col gap-0.5 flex-1">
-          {Object.entries(assignment).map(([role, ids]) => {
-            const roleControls = ids.map(id => sectionControls.find(c => c.id === id)).filter(Boolean) as ManifestControl[];
+          {Object.entries(assignment).map(([role, value]) => {
             const isAnchor = role === 'anchor';
             const split = section.heightSplits?.[role as 'cluster' | 'anchor'];
+
+            // Handle nested sub-zones (e.g., anchor: { left: [...], right: [...] })
+            const isNested = value && !Array.isArray(value) && typeof value === 'object';
+            const flatIds: string[] = Array.isArray(value)
+              ? value
+              : Object.values(value as Record<string, string[]>).flat();
+            const roleControls = flatIds.map(id => sectionControls.find(c => c.id === id)).filter(Boolean) as ManifestControl[];
 
             return (
               <div
@@ -175,11 +181,26 @@ function PanelSection({
                 }}
               >
                 <span style={{ fontSize: '6px', color: '#4b5563', textTransform: 'uppercase' }}>{role}</span>
-                <div className={isAnchor ? 'flex flex-col gap-0.5' : 'grid gap-0.5'} style={
-                  !isAnchor ? { gridTemplateColumns: `repeat(${section.gridCols ?? 2}, 1fr)` } : {}
-                }>
-                  {roleControls.map(c => <MiniControl key={c.id} control={c} />)}
-                </div>
+                {isNested ? (
+                  // Render sub-zones as columns
+                  <div className="flex gap-0.5 flex-1">
+                    {Object.entries(value as Record<string, string[]>).map(([subRole, subIds]) => {
+                      const subControls = subIds.map(id => sectionControls.find(c => c.id === id)).filter(Boolean) as ManifestControl[];
+                      return (
+                        <div key={subRole} className="flex flex-col gap-0.5 justify-center" style={{ flex: subRole === 'right' ? '1' : '0 0 auto' }}>
+                          <span style={{ fontSize: '5px', color: '#374151', textTransform: 'uppercase' }}>{subRole}</span>
+                          {subControls.map(c => <MiniControl key={c.id} control={c} />)}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className={isAnchor ? 'flex flex-col gap-0.5' : 'grid gap-0.5'} style={
+                    !isAnchor ? { gridTemplateColumns: `repeat(${section.gridCols ?? 2}, 1fr)` } : {}
+                  }>
+                    {roleControls.map(c => <MiniControl key={c.id} control={c} />)}
+                  </div>
+                )}
               </div>
             );
           })}
@@ -421,31 +442,16 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
     );
   }
 
-  // Group sections by vertical zone (approximate: top 0-35%, mid 35-55%, bottom 55-100%)
-  // This is a simplified layout — a proper implementation would use Parser's vertical zones
-  const topSections = manifest.sections.filter(s =>
-    ['navigation-bar'].includes(s.id)
-  );
-  const upperSections = manifest.sections.filter(s =>
-    ['media-inputs', 'touch-display', 'browse-navigation', 'mode-buttons'].includes(s.id)
-  );
-  const midSections = manifest.sections.filter(s =>
-    ['loop-section', 'hot-cue', 'performance-right'].includes(s.id)
-  );
-  const bottomSections = manifest.sections.filter(s =>
-    ['transport', 'jog-wheel', 'jog-controls-sync', 'tempo-section'].includes(s.id)
-  );
-  // Fallback: sections not in any zone
-  const allZoned = new Set([...topSections, ...upperSections, ...midSections, ...bottomSections].map(s => s.id));
-  const unzoned = manifest.sections.filter(s => !allZoned.has(s.id));
-
-  const rows = [
-    { label: 'Top', sections: topSections },
-    { label: 'Upper', sections: upperSections },
-    { label: 'Middle', sections: midSections },
-    { label: 'Bottom', sections: bottomSections },
-    ...(unzoned.length > 0 ? [{ label: 'Other', sections: unzoned }] : []),
-  ].filter(r => r.sections.length > 0);
+  // Group sections into rows of 3-4 for display, ordered as they appear in the manifest.
+  // The manifest section order reflects the panel layout (left-to-right, top-to-bottom).
+  // A future improvement: use Parser's vertical zone data for proper row grouping.
+  const chunkSize = 4;
+  const rows: { label: string; sections: ManifestSection[] }[] = [];
+  for (let i = 0; i < manifest.sections.length; i += chunkSize) {
+    const chunk = manifest.sections.slice(i, i + chunkSize);
+    const rowIndex = Math.floor(i / chunkSize);
+    rows.push({ label: `Row ${rowIndex + 1}`, sections: chunk });
+  }
 
   return (
     <div className="space-y-4">
