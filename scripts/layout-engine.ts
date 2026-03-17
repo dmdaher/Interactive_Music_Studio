@@ -513,7 +513,8 @@ function validateManifest(manifest: MasterManifest): string[] {
       if (!section.containerAssignment) {
         errors.push(
           `Section "${section.id}" uses ${section.archetype} but missing containerAssignment — ` +
-          `gatekeeper must specify which controls go in each container (e.g., {"cluster": [...], "anchor": [...]}). (will use type-based heuristic)`
+          `gatekeeper must specify which controls go in each container (e.g., {"cluster": [...], "anchor": [...]}). ` +
+          `FATAL: ambiguous control placement causes misassignment (Textual Gravity).`
         );
       } else {
         // Every control must appear in exactly one container
