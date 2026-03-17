@@ -38,7 +38,12 @@ import {
   updateSubscription,
 } from '../src/lib/pipeline/cost-tracker';
 import { PipelineState, SectionStatus } from '../src/lib/pipeline/types';
-import * as validators from '../src/lib/pipeline/checkpoint-validators';
+import {
+  preInspectDiagramParser,
+  validateDiagramParserOutput,
+  preInspectGatekeeper,
+  validateGatekeeperManifest,
+} from '../src/lib/pipeline/checkpoint-validators';
 
 const deviceId = process.argv[2];
 if (!deviceId) {
@@ -461,20 +466,41 @@ async function doPhase0DiagramParser(state: PipelineState) {
   appendLog(deviceId, { level: 'info', agent: 'diagram-parser', message: 'Starting Phase 0a: Diagram Parser (vision extraction)' });
   if (!isBudgetOk(state)) return;
 
+  // --- PRE-INSPECTION ---
+  const photoDir = path.join(worktreeCwd, 'docs', state.manufacturer, deviceId, 'photos');
+  let photoPaths: string[] = [];
+  try {
+    photoPaths = fs.readdirSync(photoDir)
+      .filter((f: string) => /\.(jpg|jpeg|png|webp)$/i.test(f))
+      .map((f: string) => path.join(photoDir, f));
+  } catch { /* no photos dir */ }
+
+  const preCheck = preInspectDiagramParser({
+    manualPaths: state.manualPaths,
+    photoPaths,
+  });
+  if (!preCheck.valid) {
+    for (const err of preCheck.errors) {
+      appendLog(deviceId, { level: 'warn', agent: 'diagram-parser', message: `PRE-INSPECT: ${err}` });
+    }
+    // Photos missing is a warning (parser can use manual diagrams), not fatal
+    // Manual missing IS fatal
+    if (state.manualPaths.length === 0) {
+      completePhase(state, 'phase-0-diagram-parser', null, false);
+      createEscalation(state, 'manual-not-found', 'No manual available for Diagram Parser');
+      return;
+    }
+  }
+
   const manualList = state.manualPaths.map((p) => `  - ${p}`).join('\n');
 
-  // Find hardware photos in the device's docs directory
-  const photoDir = path.join('docs', state.manufacturer, deviceId, 'photos');
-  const worktreePhotoDir = path.join(worktreeCwd, photoDir);
+  // Reuse photo paths from pre-inspection for the prompt
+  const relPhotoDir = path.join('docs', state.manufacturer, deviceId, 'photos');
   let photoList = '';
-  try {
-    const photos = fs.readdirSync(worktreePhotoDir)
-      .filter((f: string) => /\.(jpg|jpeg|png|webp)$/i.test(f));
-    if (photos.length > 0) {
-      photoList = '\n- Hardware photos (READ THESE — they are your PRIMARY input):\n' +
-        photos.map((p: string) => `  - ${photoDir}/${p}`).join('\n');
-    }
-  } catch { /* no photos dir */ }
+  if (photoPaths.length > 0) {
+    photoList = '\n- Hardware photos (READ THESE — they are your PRIMARY input):\n' +
+      photoPaths.map((p: string) => `  - ${path.relative(worktreeCwd, p)}`).join('\n');
+  }
 
   const resumeCtx = getResumeContext('diagram-parser');
   const prompt = `You are the Diagram Parser agent. Extract spatial geometry from hardware photos and manual diagrams for:
@@ -527,35 +553,36 @@ Include: agent: diagram-parser, deviceId: ${deviceId}, phase: 0, status, score, 
   const checkpointPath = path.join(worktreeCwd, '.claude', 'agent-memory', 'diagram-parser', 'checkpoint.md');
   const checkpointFileExists = fs.existsSync(checkpointPath);
 
-  // Structural validation: the parser must output spatial-blueprint JSON blocks,
-  // not just prose descriptions. Check for JSON with centroid data.
-  let hasStructuredOutput = false;
+  // --- POST-INSPECTION (mechanical validation) ---
   if (checkpointFileExists) {
     const content = fs.readFileSync(checkpointPath, 'utf-8');
-    // Must contain at least one spatial-blueprint JSON block with centroids
-    hasStructuredOutput = content.includes('"centroid"') || content.includes('"topology"');
-    if (!hasStructuredOutput) {
-      appendLog(deviceId, {
-        level: 'warn',
-        message: 'Diagram Parser checkpoint lacks structured spatial-blueprint JSON (no centroid/topology data found). Output is prose-only.',
-      });
+    const validation = validateDiagramParserOutput(content);
+
+    // Log all mechanical findings
+    for (const err of validation.errors) {
+      appendLog(deviceId, { level: 'warn', agent: 'diagram-parser', message: `POST-INSPECT: ${err}` });
     }
-  }
+    appendLog(deviceId, {
+      level: 'info', agent: 'diagram-parser',
+      message: `POST-INSPECT: mechanical score ${validation.score.toFixed(1)}/10 (agent self-score: ${checkpoint.score ?? 'none'})`,
+    });
 
-  const parserPassed =
-    checkpoint.score !== null && checkpoint.score >= 9.0 && hasStructuredOutput;
+    // Use the LOWER of mechanical score and agent self-score
+    const effectiveScore = Math.min(validation.score, checkpoint.score ?? 0);
 
-  if (parserPassed) {
-    completePhase(state, 'phase-0-diagram-parser', checkpoint.score, true);
-    advancePhase(state, worktreeCwd);
+    if (effectiveScore >= 9.0 && validation.valid) {
+      completePhase(state, 'phase-0-diagram-parser', effectiveScore, true);
+      advancePhase(state, worktreeCwd);
+    } else {
+      completePhase(state, 'phase-0-diagram-parser', effectiveScore, false);
+      // Send specific errors back as retry context
+      const errorSummary = validation.errors.slice(0, 3).join('; ');
+      if (!tryAutoRetry(state, 'agent-failure',
+        `Diagram Parser failed mechanical validation (score: ${effectiveScore.toFixed(1)}). ` +
+        `Errors: ${errorSummary}`)) return;
+    }
   } else if (result.exitCode !== 0) {
     if (!tryAutoRetry(state, 'agent-failure', `Diagram Parser failed with exit code ${result.exitCode}`)) return;
-  } else if (!hasStructuredOutput && checkpointFileExists) {
-    completePhase(state, 'phase-0-diagram-parser', checkpoint.score, false);
-    if (!tryAutoRetry(state, 'agent-failure',
-      `Diagram Parser produced prose but not structured spatial-blueprint JSON. ` +
-      `Checkpoint must contain centroid coordinates and topology classifications per section. ` +
-      `Score: ${checkpoint.score ?? 'unknown'}`)) return;
   } else {
     completePhase(state, 'phase-0-diagram-parser', checkpoint.score, false);
     if (!tryAutoRetry(state, 'agent-failure', `Diagram Parser scored below 9.0`)) return;
@@ -637,25 +664,50 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
   updateSubscription(state, result.rateLimitEvents);
 
   const checkpoint = readAgentCheckpoint('gatekeeper');
-  // Gatekeeper passes if: score >= 9.5, OR exit code 0 with a checkpoint file written
-  // (the gatekeeper produces a manifest, not a self-score — status: complete is sufficient)
-  const checkpointFileExists = fs.existsSync(
-    path.join(worktreeCwd, '.claude', 'agent-memory', 'gatekeeper', 'checkpoint.md')
-  );
-  const gatekeeperPassed =
-    (checkpoint.score !== null && checkpoint.score >= 9.5) ||
-    (result.exitCode === 0 && checkpointFileExists);
 
-  if (gatekeeperPassed) {
-    completePhase(state, 'phase-0-gatekeeper', checkpoint.score ?? 10, true);
-    const sections = parseSectionsFromGatekeeper();
-    if (sections.length > 0) state.sections = sections;
-    advancePhase(state, worktreeCwd);
+  // --- POST-INSPECTION: validate the manifest.json file mechanically ---
+  const worktreeManifest = path.join(worktreeCwd, '.pipeline', deviceId, 'manifest.json');
+  const mainManifest = path.join('.pipeline', deviceId, 'manifest.json');
+  const manifestPath = fs.existsSync(worktreeManifest) ? worktreeManifest
+    : fs.existsSync(mainManifest) ? mainManifest
+    : null;
+
+  if (manifestPath) {
+    const manifestJson = fs.readFileSync(manifestPath, 'utf-8');
+    const validation = validateGatekeeperManifest(manifestJson);
+
+    for (const err of validation.errors) {
+      appendLog(deviceId, { level: 'warn', agent: 'gatekeeper', message: `POST-INSPECT: ${err}` });
+    }
+    appendLog(deviceId, {
+      level: 'info', agent: 'gatekeeper',
+      message: `POST-INSPECT: mechanical score ${validation.score.toFixed(1)}/10 (agent self-score: ${checkpoint.score ?? 'none'})`,
+    });
+
+    const effectiveScore = Math.min(validation.score, checkpoint.score ?? 10);
+
+    if (effectiveScore >= 9.0 && validation.valid) {
+      // Copy manifest to main pipeline dir if needed
+      if (manifestPath === worktreeManifest && !fs.existsSync(mainManifest)) {
+        fs.mkdirSync(path.dirname(mainManifest), { recursive: true });
+        fs.copyFileSync(worktreeManifest, mainManifest);
+      }
+      completePhase(state, 'phase-0-gatekeeper', effectiveScore, true);
+      const sections = parseSectionsFromGatekeeper();
+      if (sections.length > 0) state.sections = sections;
+      advancePhase(state, worktreeCwd);
+    } else {
+      completePhase(state, 'phase-0-gatekeeper', effectiveScore, false);
+      const errorSummary = validation.errors.slice(0, 3).join('; ');
+      if (!tryAutoRetry(state, 'agent-failure',
+        `Gatekeeper manifest failed mechanical validation (score: ${effectiveScore.toFixed(1)}). ` +
+        `Errors: ${errorSummary}`)) return;
+    }
   } else if (result.exitCode !== 0) {
     if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper failed with exit code ${result.exitCode}`)) return;
   } else {
     completePhase(state, 'phase-0-gatekeeper', checkpoint.score, false);
-    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper produced no checkpoint file`)) return;
+    if (!tryAutoRetry(state, 'agent-failure', `Gatekeeper produced no manifest.json file`)) return;
   }
 }
 

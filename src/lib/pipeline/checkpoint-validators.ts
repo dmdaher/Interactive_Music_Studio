@@ -1,8 +1,12 @@
 /**
- * Checkpoint Validators — Structural checks for Sieve protocol output files.
+ * Checkpoint Validators — Mechanical post-inspection for agent output.
  *
- * Each validator looks for required section headers and table markers.
- * Returns { valid, errors } — errors explain what's missing.
+ * These are the "Hard Compiler" for agent behavior. Instead of hoping
+ * agents follow their SOULs' self-check instructions, the pipeline runner
+ * calls these validators after every agent invocation.
+ *
+ * Returns { valid, errors, score } — errors are specific enough to send
+ * back to the agent as a "Compiler Error" for retry.
  */
 
 export interface ValidationResult {
@@ -186,6 +190,208 @@ export function validateIndependentChecklist(content: string): ValidationResult 
       errors.push(`References extractor output ("${ref.source}") — independent checklist must be derived solely from the manual`);
       break;
     }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+// ─── Phase 0: Panel Pipeline Validators ─────────────────────────────────────
+
+/**
+ * Pre-inspection: verify inputs exist before spawning an agent.
+ */
+export function preInspectDiagramParser(opts: {
+  manualPaths: string[];
+  photoPaths: string[];
+}): ValidationResult {
+  const errors: string[] = [];
+
+  if (opts.manualPaths.length === 0) {
+    errors.push('No manual PDFs available — parser needs front-panel diagrams');
+  }
+
+  if (opts.photoPaths.length === 0) {
+    errors.push('No hardware photos found — parser requires photos as PRIMARY input for centroid extraction');
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Post-inspection: validate Diagram Parser output.
+ * Checks for structured spatial-blueprint JSON, not prose.
+ */
+export function validateDiagramParserOutput(content: string): ValidationResult & { score: number } {
+  const errors: string[] = [];
+  let score = 10.0;
+
+  // 1. Must contain spatial-blueprint JSON (not just prose/tables)
+  const hasJsonBlocks = (content.match(/```json/g) ?? []).length;
+  const hasCentroids = content.includes('"centroid"');
+  const hasTopology = content.includes('"topology"');
+  const hasBoundingBox = content.includes('"boundingBox"');
+
+  if (hasJsonBlocks === 0) {
+    errors.push('No JSON code blocks found — output is prose-only. Parser must output spatial-blueprint JSON per section.');
+    score -= 3.0;
+  }
+
+  if (!hasCentroids) {
+    errors.push('No centroid coordinates found. Every control must have { "x": N.NN, "y": N.NN }.');
+    score -= 2.0;
+  }
+
+  if (!hasTopology) {
+    errors.push('No topology classifications found. Every section must have a "topology" field.');
+    score -= 1.0;
+  }
+
+  if (!hasBoundingBox) {
+    errors.push('No bounding boxes found. Every control and section must have a "boundingBox".');
+    score -= 1.0;
+  }
+
+  // 2. Check for containerZones in multi-zone topologies
+  const multiZoneTopologies = ['cluster-above-anchor', 'cluster-below-anchor', 'anchor-layout', 'slider-anchored'];
+  const hasMultiZone = multiZoneTopologies.some(t => content.includes(t));
+  const hasContainerZones = content.includes('"containerZones"');
+
+  if (hasMultiZone && !hasContainerZones) {
+    errors.push('Multi-zone topology detected but no containerZones field. Parser must assign control indices to zones.');
+    score -= 2.0;
+  }
+
+  // 3. Check for neighbor relationships
+  const hasNeighbors = content.includes('"neighbors"') || content.includes('"north"');
+  if (!hasNeighbors) {
+    errors.push('No neighbor relationships found. Every control must have cardinal neighbor references.');
+    score -= 1.0;
+  }
+
+  // 4. Check for aspect ratios
+  const hasAspectRatio = content.includes('"aspectRatio"');
+  if (!hasAspectRatio) {
+    errors.push('No aspect ratios found. Anchor elements and non-square controls must have W:H ratios.');
+    score -= 1.0;
+  }
+
+  // 5. Verify centroid precision (2 decimal places)
+  const centroidMatches = content.match(/"x":\s*([\d.]+)/g) ?? [];
+  const lowPrecision = centroidMatches.filter(m => {
+    const val = m.match(/([\d.]+)/)?.[1] ?? '';
+    const decimals = val.includes('.') ? val.split('.')[1].length : 0;
+    return decimals < 2;
+  });
+  if (centroidMatches.length > 0 && lowPrecision.length > centroidMatches.length * 0.3) {
+    errors.push(`${lowPrecision.length}/${centroidMatches.length} centroids have less than 2 decimal precision.`);
+    score -= 0.5;
+  }
+
+  score = Math.max(0, score);
+  return { valid: errors.length === 0, errors, score };
+}
+
+/**
+ * Post-inspection: validate Gatekeeper manifest JSON.
+ * Checks the actual manifest file, not the checkpoint prose.
+ */
+export function validateGatekeeperManifest(manifestJson: string): ValidationResult & { score: number } {
+  const errors: string[] = [];
+  let score = 10.0;
+
+  // 1. Parse JSON
+  let manifest: Record<string, unknown>;
+  try {
+    manifest = JSON.parse(manifestJson);
+  } catch (e) {
+    return { valid: false, errors: [`Manifest JSON is not parseable: ${(e as Error).message}`], score: 0 };
+  }
+
+  // 2. Required top-level fields
+  const requiredFields = ['deviceId', 'deviceName', 'manufacturer', 'layoutType', 'sections', 'controls'];
+  for (const field of requiredFields) {
+    if (!(field in manifest)) {
+      errors.push(`Missing required field: ${field}`);
+      score -= 1.0;
+    }
+  }
+
+  const sections = (manifest.sections ?? []) as Array<Record<string, unknown>>;
+  const controls = (manifest.controls ?? []) as Array<Record<string, unknown>>;
+
+  // 3. Sections must have archetypes from known library
+  const knownArchetypes = new Set([
+    'grid-NxM', 'single-column', 'single-row', 'anchor-layout',
+    'cluster-above-anchor', 'cluster-below-anchor', 'dual-column', 'stacked-rows',
+  ]);
+  for (const s of sections) {
+    if (!s.archetype) {
+      errors.push(`Section "${s.id}" missing archetype`);
+      score -= 1.0;
+    } else if (!knownArchetypes.has(s.archetype as string)) {
+      errors.push(`Section "${s.id}" has unknown archetype "${s.archetype}". Valid: ${[...knownArchetypes].join(', ')}`);
+      score -= 1.0;
+    }
+  }
+
+  // 4. Multi-container archetypes must have containerAssignment
+  const needsContainers = new Set(['cluster-above-anchor', 'cluster-below-anchor', 'anchor-layout', 'dual-column']);
+  const missingSections: string[] = [];
+  for (const s of sections) {
+    if (needsContainers.has(s.archetype as string) && !s.containerAssignment) {
+      missingSections.push(s.id as string);
+    }
+  }
+  if (missingSections.length > 0) {
+    errors.push(`Missing containerAssignment for: ${missingSections.join(', ')}. Gatekeeper must specify which controls go in each container.`);
+    score -= 2.0;
+  }
+
+  // 5. All controls must be assigned to a section
+  const assignedControls = new Set(sections.flatMap(s => (s.controls ?? []) as string[]));
+  const orphans = controls.filter(c => !assignedControls.has(c.id as string));
+  if (orphans.length > 0) {
+    errors.push(`${orphans.length} orphaned controls not assigned to any section: ${orphans.slice(0, 5).map(c => c.id).join(', ')}`);
+    score -= 1.0;
+  }
+
+  // 6. Controls must have spatialNeighbors
+  const missingNeighbors = controls.filter(c => !c.spatialNeighbors);
+  if (missingNeighbors.length > 0) {
+    errors.push(`${missingNeighbors.length} controls missing spatialNeighbors`);
+    score -= 0.5;
+  }
+
+  // 7. Density targets
+  if (!manifest.densityTargets) {
+    errors.push('Missing densityTargets');
+    score -= 0.5;
+  }
+
+  score = Math.max(0, score);
+  return { valid: errors.length === 0, errors, score };
+}
+
+/**
+ * Pre-inspection for Gatekeeper: verify both data streams are available.
+ */
+export function preInspectGatekeeper(opts: {
+  parserCheckpointExists: boolean;
+  parserScore: number | null;
+  manualPaths: string[];
+}): ValidationResult {
+  const errors: string[] = [];
+
+  if (!opts.parserCheckpointExists) {
+    errors.push('Diagram Parser checkpoint not found — Gatekeeper requires Parser output');
+  }
+
+  if (opts.parserScore !== null && opts.parserScore < 9.0) {
+    errors.push(`Diagram Parser score (${opts.parserScore}) below 9.0 — Gatekeeper should not proceed with low-quality geometry`);
+  }
+
+  if (opts.manualPaths.length === 0) {
+    errors.push('No manual PDFs available — Gatekeeper requires manual text');
   }
 
   return { valid: errors.length === 0, errors };
