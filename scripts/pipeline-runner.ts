@@ -682,6 +682,10 @@ The Layout Engine (a deterministic script) will generate templates from your man
 DO NOT run the layout engine yourself. DO NOT execute scripts/layout-engine.ts via Bash.
 The pipeline runner handles layout engine execution after your manifest is validated.
 
+IMPORTANT: For each section, include panelBoundingBox from the Parser's spatial-blueprint.
+Copy the Parser's bounding box values (x, y, w, h as % of panel) into each section.
+This defines WHERE on the physical panel each section sits — critical for global layout.
+
 Output the Master Manifest JSON in a \`\`\`json code block in your checkpoint.
 The JSON must conform to the MasterManifest interface in scripts/layout-engine.ts.
 Also write the manifest to .pipeline/${deviceId}/manifest.json

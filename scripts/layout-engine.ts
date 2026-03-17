@@ -39,6 +39,10 @@ export interface ManifestSection {
   id: string;
   headerLabel: string | null;
   archetype: LayoutArchetype;
+  /** Position and size on the physical panel as % of total panel dimensions.
+   *  Derived from Parser's section bounding boxes. Used by the Layout tab
+   *  for accurate spatial positioning and by SI for global layout verification. */
+  panelBoundingBox?: { x: number; y: number; w: number; h: number };
   /** Grid dimensions — required for grid-NxM archetype */
   gridRows?: number;
   gridCols?: number;
