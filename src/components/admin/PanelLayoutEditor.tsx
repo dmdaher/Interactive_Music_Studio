@@ -20,6 +20,7 @@ interface ManifestSection {
   controls: string[];
   containerAssignment?: Record<string, string[] | Record<string, string[]>>;
   heightSplits?: { cluster: number; anchor: number; gap: number };
+  panelBoundingBox?: { x: number; y: number; w: number; h: number };
   widthPercent: number;
   complexity: string;
 }
@@ -445,15 +446,50 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
     );
   }
 
-  // Group sections into rows of 3-4 for display, ordered as they appear in the manifest.
-  // The manifest section order reflects the panel layout (left-to-right, top-to-bottom).
-  // A future improvement: use Parser's vertical zone data for proper row grouping.
-  const chunkSize = 4;
+  // Check if sections have panelBoundingBox data for spatial positioning
+  const hasBoundingBoxes = manifest.sections.some(s => s.panelBoundingBox);
+
+  // Group sections into rows by Y-position (if bounding boxes available) or chunks of 4
   const rows: { label: string; sections: ManifestSection[] }[] = [];
-  for (let i = 0; i < manifest.sections.length; i += chunkSize) {
-    const chunk = manifest.sections.slice(i, i + chunkSize);
-    const rowIndex = Math.floor(i / chunkSize);
-    rows.push({ label: `Row ${rowIndex + 1}`, sections: chunk });
+
+  if (hasBoundingBoxes) {
+    // Group by Y-position bands — sections within 10% Y of each other share a row
+    const sorted = [...manifest.sections]
+      .filter(s => s.panelBoundingBox)
+      .sort((a, b) => (a.panelBoundingBox?.y ?? 0) - (b.panelBoundingBox?.y ?? 0));
+
+    let currentRow: ManifestSection[] = [];
+    let currentY = sorted[0]?.panelBoundingBox?.y ?? 0;
+
+    for (const s of sorted) {
+      const sy = s.panelBoundingBox?.y ?? 0;
+      if (sy - currentY > 10 && currentRow.length > 0) {
+        // Sort row by X position (left to right)
+        currentRow.sort((a, b) => (a.panelBoundingBox?.x ?? 0) - (b.panelBoundingBox?.x ?? 0));
+        rows.push({ label: `y=${currentY.toFixed(0)}%`, sections: currentRow });
+        currentRow = [];
+        currentY = sy;
+      }
+      currentRow.push(s);
+    }
+    if (currentRow.length > 0) {
+      currentRow.sort((a, b) => (a.panelBoundingBox?.x ?? 0) - (b.panelBoundingBox?.x ?? 0));
+      rows.push({ label: `y=${currentY.toFixed(0)}%`, sections: currentRow });
+    }
+
+    // Add any sections without bounding boxes
+    const withBoxes = new Set(sorted.map(s => s.id));
+    const without = manifest.sections.filter(s => !withBoxes.has(s.id));
+    if (without.length > 0) {
+      rows.push({ label: 'Unpositioned', sections: without });
+    }
+  } else {
+    // Fallback: chunk into rows of 4
+    const chunkSize = 4;
+    for (let i = 0; i < manifest.sections.length; i += chunkSize) {
+      const chunk = manifest.sections.slice(i, i + chunkSize);
+      rows.push({ label: `Row ${Math.floor(i / chunkSize) + 1}`, sections: chunk });
+    }
   }
 
   return (
@@ -480,53 +516,57 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
         )}
       </div>
 
-      {/* Panel view — full width */}
-      <div
-        className="rounded-xl p-3 space-y-2"
-        style={{
-          backgroundColor: '#0a0a14',
-          border: '2px solid #1a1a2a',
-          minHeight: '300px',
-        }}
-      >
-        {rows.map((row) => (
-          <div key={row.label}>
-            <div className="text-[7px] uppercase tracking-widest mb-1 px-1" style={{ color: '#333' }}>
-              {row.label}
-            </div>
-            <div className="flex gap-1.5" style={{ overflow: 'hidden' }}>
-              {row.sections.map(s => (
-                <PanelSection
-                  key={s.id}
-                  section={s}
-                  controls={manifest.controls}
-                  isSelected={selectedSection === s.id}
-                  onClick={() => setSelectedSection(selectedSection === s.id ? null : s.id)}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Type legend — inline below sections */}
-        <div className="flex flex-wrap gap-3 pt-2 px-1" style={{ borderTop: '1px solid #1a1a2a' }}>
-          {Object.entries(TYPE_COLORS).map(([type, bg]) => (
-            <div key={type} className="flex items-center gap-1">
-              <div className="w-2.5 h-2.5 rounded" style={{ backgroundColor: bg, border: `1px solid ${TYPE_BORDERS[type]}` }} />
-              <span style={{ fontSize: '7px', color: '#6b7280' }}>{type}</span>
+      <div className="flex gap-4">
+        {/* Panel view — grows to fill */}
+        <div
+          className="rounded-xl p-3 space-y-2 flex-1"
+          style={{
+            backgroundColor: '#0a0a14',
+            border: '2px solid #1a1a2a',
+            minHeight: '300px',
+          }}
+        >
+          {rows.map((row) => (
+            <div key={row.label}>
+              <div className="text-[7px] uppercase tracking-widest mb-1 px-1" style={{ color: '#333' }}>
+                {row.label}
+              </div>
+              <div className="flex gap-1.5" style={{ overflow: 'hidden' }}>
+                {row.sections.map(s => (
+                  <PanelSection
+                    key={s.id}
+                    section={s}
+                    controls={manifest.controls}
+                    isSelected={selectedSection === s.id}
+                    onClick={() => setSelectedSection(selectedSection === s.id ? null : s.id)}
+                  />
+                ))}
+              </div>
             </div>
           ))}
-        </div>
-      </div>
 
-      {/* Properties panel — full width, only when section selected */}
-      {selected && (
-        <PropertiesPanel
-          section={selected}
-          controls={manifest.controls}
-          onUpdate={(updates) => handleSectionUpdate(selected.id, updates)}
-        />
-      )}
+          {/* Type legend — inline below sections */}
+          <div className="flex flex-wrap gap-3 pt-2 px-1" style={{ borderTop: '1px solid #1a1a2a' }}>
+            {Object.entries(TYPE_COLORS).map(([type, bg]) => (
+              <div key={type} className="flex items-center gap-1">
+                <div className="w-2.5 h-2.5 rounded" style={{ backgroundColor: bg, border: `1px solid ${TYPE_BORDERS[type]}` }} />
+                <span style={{ fontSize: '7px', color: '#6b7280' }}>{type}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Properties panel — right sidebar, only when section selected */}
+        {selected && (
+          <div className="w-72 flex-shrink-0">
+            <PropertiesPanel
+              section={selected}
+              controls={manifest.controls}
+              onUpdate={(updates) => handleSectionUpdate(selected.id, updates)}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

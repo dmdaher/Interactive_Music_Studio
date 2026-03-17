@@ -371,6 +371,13 @@ export function validateGatekeeperManifest(manifestJson: string): ValidationResu
     score -= 0.5;
   }
 
+  // 8. panelBoundingBox — sections should have global positioning data
+  const missingBBox = sections.filter(s => !s.panelBoundingBox);
+  if (missingBBox.length > 0) {
+    errors.push(`${missingBBox.length} sections missing panelBoundingBox: ${missingBBox.slice(0, 3).map(s => s.id).join(', ')}`);
+    score -= 0.5;
+  }
+
   score = Math.max(0, score);
   return { valid: errors.length === 0, errors, score };
 }
