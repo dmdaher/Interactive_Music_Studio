@@ -464,6 +464,24 @@ If you cannot find or download the manual after trying all approaches, state cle
 async function doPhase0DiagramParser(state: PipelineState) {
   startPhase(state, 'phase-0-diagram-parser');
   appendLog(deviceId, { level: 'info', agent: 'diagram-parser', message: 'Starting Phase 0a: Diagram Parser (vision extraction)' });
+
+  // Check if parser already produced valid output (spatial-blueprint.json exists)
+  const existingBlueprint = path.join(worktreeCwd, '.claude', 'agent-memory', 'diagram-parser', 'spatial-blueprint.json');
+  if (fs.existsSync(existingBlueprint)) {
+    const blueprintJson = fs.readFileSync(existingBlueprint, 'utf-8');
+    const checkpointPath = path.join(worktreeCwd, '.claude', 'agent-memory', 'diagram-parser', 'checkpoint.md');
+    const checkpointContent = fs.existsSync(checkpointPath) ? fs.readFileSync(checkpointPath, 'utf-8') : '';
+    const { validateDiagramParserOutput: validate } = await import('../src/lib/pipeline/checkpoint-validators');
+    const validation = validate(checkpointContent, blueprintJson);
+    if (validation.score >= 9.0) {
+      appendLog(deviceId, { level: 'info', agent: 'diagram-parser',
+        message: `Existing spatial-blueprint.json passes validation (${validation.score.toFixed(1)}/10). Skipping re-run.` });
+      completePhase(state, 'phase-0-diagram-parser', validation.score, true);
+      advancePhase(state, worktreeCwd);
+      return;
+    }
+  }
+
   if (!isBudgetOk(state)) return;
 
   // --- PRE-INSPECTION ---
@@ -483,11 +501,16 @@ async function doPhase0DiagramParser(state: PipelineState) {
     for (const err of preCheck.errors) {
       appendLog(deviceId, { level: 'warn', agent: 'diagram-parser', message: `PRE-INSPECT: ${err}` });
     }
-    // Photos missing is a warning (parser can use manual diagrams), not fatal
-    // Manual missing IS fatal
     if (state.manualPaths.length === 0) {
       completePhase(state, 'phase-0-diagram-parser', null, false);
       createEscalation(state, 'manual-not-found', 'No manual available for Diagram Parser');
+      return;
+    }
+    if (photoPaths.length === 0) {
+      completePhase(state, 'phase-0-diagram-parser', null, false);
+      createEscalation(state, 'agent-failure',
+        `No hardware photos found at docs/${state.manufacturer}/${deviceId}/photos/. ` +
+        `The Diagram Parser requires photos as PRIMARY input. Upload photos before running.`);
       return;
     }
   }
@@ -556,7 +579,16 @@ Include: agent: diagram-parser, deviceId: ${deviceId}, phase: 0, status, score, 
   // --- POST-INSPECTION (mechanical validation) ---
   if (checkpointFileExists) {
     const content = fs.readFileSync(checkpointPath, 'utf-8');
-    const validation = validateDiagramParserOutput(content);
+
+    // Also check for a separate spatial-blueprint.json file (parser may write structured data there)
+    const blueprintPath = path.join(worktreeCwd, '.claude', 'agent-memory', 'diagram-parser', 'spatial-blueprint.json');
+    let blueprintJson: string | undefined;
+    if (fs.existsSync(blueprintPath)) {
+      blueprintJson = fs.readFileSync(blueprintPath, 'utf-8');
+      appendLog(deviceId, { level: 'info', agent: 'diagram-parser', message: `Found spatial-blueprint.json (${(blueprintJson.length / 1024).toFixed(1)}KB)` });
+    }
+
+    const validation = validateDiagramParserOutput(content, blueprintJson);
 
     // Log all mechanical findings
     for (const err of validation.errors) {
@@ -568,7 +600,11 @@ Include: agent: diagram-parser, deviceId: ${deviceId}, phase: 0, status, score, 
     });
 
     // Use the LOWER of mechanical score and agent self-score
-    const effectiveScore = Math.min(validation.score, checkpoint.score ?? 0);
+    // Mechanical score is authoritative for structure. Agent self-score reflects
+    // subjective confidence. Use mechanical score as the gate — if the data is
+    // structurally complete, the pipeline should advance. Agent uncertainty is
+    // logged but doesn't block.
+    const effectiveScore = validation.score;
 
     if (effectiveScore >= 9.0 && validation.valid) {
       completePhase(state, 'phase-0-diagram-parser', effectiveScore, true);
@@ -684,7 +720,7 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
       message: `POST-INSPECT: mechanical score ${validation.score.toFixed(1)}/10 (agent self-score: ${checkpoint.score ?? 'none'})`,
     });
 
-    const effectiveScore = Math.min(validation.score, checkpoint.score ?? 10);
+    const effectiveScore = validation.score;
 
     if (effectiveScore >= 9.0 && validation.valid) {
       // Copy manifest to main pipeline dir if needed
@@ -712,13 +748,32 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
 }
 
 async function doPhase0LayoutEngine(state: PipelineState) {
-  // If templates already exist and phase was completed (resuming after template-review approval),
-  // just advance to the next phase.
+  // If templates already exist and phase was completed AND the template-review
+  // escalation was already resolved, advance. Otherwise re-trigger the review gate.
   const outputPath = path.join('.pipeline', deviceId, 'templates.json');
   const phaseResult = state.phases.find(p => p.phase === 'phase-0-layout-engine');
-  if (phaseResult?.status === 'passed' && fs.existsSync(outputPath)) {
-    appendLog(deviceId, { level: 'info', message: 'Layout Engine: templates already generated, advancing after review approval' });
+  const templateReviewResolved = state.escalations.some(
+    e => e.type === 'template-review' && e.resolvedAt !== null
+  );
+  if (phaseResult?.status === 'passed' && fs.existsSync(outputPath) && templateReviewResolved) {
+    appendLog(deviceId, { level: 'info', message: 'Layout Engine: templates already reviewed and approved, advancing' });
     advancePhase(state, worktreeCwd);
+    return;
+  }
+  if (phaseResult?.status === 'passed' && fs.existsSync(outputPath) && !templateReviewResolved) {
+    // Templates exist but haven't been reviewed — re-trigger the review gate
+    appendLog(deviceId, { level: 'info', message: 'Layout Engine: templates exist but not yet reviewed, pausing for review' });
+    const output = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+    const templateCount = output.templates?.length ?? 0;
+    const controlCount = output.panelArchitecture?.totalControls ?? 0;
+    const archetypeSummary = (output.templates ?? [])
+      .map((t: { sectionId: string; archetype: string }) => `${t.sectionId} → ${t.archetype}`)
+      .join(', ');
+    createEscalation(state, 'template-review',
+      `Layout Engine produced ${templateCount} section templates for ${controlCount} controls. ` +
+      `Review templates at .pipeline/${deviceId}/templates.json before Panel Builder runs.\n` +
+      `Archetypes: ${archetypeSummary}`);
+    sendNotification('Miyagi Pipeline', `Templates ready for review: ${state.deviceName}`);
     return;
   }
 

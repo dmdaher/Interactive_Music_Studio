@@ -219,17 +219,20 @@ export function preInspectDiagramParser(opts: {
 
 /**
  * Post-inspection: validate Diagram Parser output.
- * Checks for structured spatial-blueprint JSON, not prose.
+ * Checks for structured spatial-blueprint JSON in the checkpoint OR a separate JSON file.
+ * The parser may write structured data to spatial-blueprint.json instead of embedding in the checkpoint.
  */
-export function validateDiagramParserOutput(content: string): ValidationResult & { score: number } {
+export function validateDiagramParserOutput(content: string, blueprintJson?: string): ValidationResult & { score: number } {
+  // If a separate blueprint JSON file exists, validate that instead of/alongside the checkpoint
+  const checkContent = blueprintJson ? `${content}\n\`\`\`json\n${blueprintJson}\n\`\`\`` : content;
   const errors: string[] = [];
   let score = 10.0;
 
   // 1. Must contain spatial-blueprint JSON (not just prose/tables)
-  const hasJsonBlocks = (content.match(/```json/g) ?? []).length;
-  const hasCentroids = content.includes('"centroid"');
-  const hasTopology = content.includes('"topology"');
-  const hasBoundingBox = content.includes('"boundingBox"');
+  const hasJsonBlocks = (checkContent.match(/```json/g) ?? []).length;
+  const hasCentroids = checkContent.includes('"centroid"');
+  const hasTopology = checkContent.includes('"topology"');
+  const hasBoundingBox = checkContent.includes('"boundingBox"');
 
   if (hasJsonBlocks === 0) {
     errors.push('No JSON code blocks found — output is prose-only. Parser must output spatial-blueprint JSON per section.');
@@ -253,8 +256,8 @@ export function validateDiagramParserOutput(content: string): ValidationResult &
 
   // 2. Check for containerZones in multi-zone topologies
   const multiZoneTopologies = ['cluster-above-anchor', 'cluster-below-anchor', 'anchor-layout', 'slider-anchored'];
-  const hasMultiZone = multiZoneTopologies.some(t => content.includes(t));
-  const hasContainerZones = content.includes('"containerZones"');
+  const hasMultiZone = multiZoneTopologies.some(t => checkContent.includes(t));
+  const hasContainerZones = checkContent.includes('"containerZones"');
 
   if (hasMultiZone && !hasContainerZones) {
     errors.push('Multi-zone topology detected but no containerZones field. Parser must assign control indices to zones.');
@@ -262,21 +265,21 @@ export function validateDiagramParserOutput(content: string): ValidationResult &
   }
 
   // 3. Check for neighbor relationships
-  const hasNeighbors = content.includes('"neighbors"') || content.includes('"north"');
+  const hasNeighbors = checkContent.includes('"neighbors"') || checkContent.includes('"north"');
   if (!hasNeighbors) {
     errors.push('No neighbor relationships found. Every control must have cardinal neighbor references.');
     score -= 1.0;
   }
 
   // 4. Check for aspect ratios
-  const hasAspectRatio = content.includes('"aspectRatio"');
+  const hasAspectRatio = checkContent.includes('"aspectRatio"');
   if (!hasAspectRatio) {
     errors.push('No aspect ratios found. Anchor elements and non-square controls must have W:H ratios.');
     score -= 1.0;
   }
 
   // 5. Verify centroid precision (2 decimal places)
-  const centroidMatches = content.match(/"x":\s*([\d.]+)/g) ?? [];
+  const centroidMatches = checkContent.match(/"x":\s*([\d.]+)/g) ?? [];
   const lowPrecision = centroidMatches.filter(m => {
     const val = m.match(/([\d.]+)/)?.[1] ?? '';
     const decimals = val.includes('.') ? val.split('.')[1].length : 0;
