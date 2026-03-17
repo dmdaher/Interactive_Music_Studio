@@ -187,36 +187,52 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
 
     case 'cluster-above-anchor': {
       const cCols = clusterCols ? parseInt(clusterCols) : 2;
-      const cRows = clusterRows ? parseInt(clusterRows) : Math.ceil((controlSlots.length - 1) / cCols);
-      const clusterSlots = controlSlots.slice(0, -1); // everything except last (anchor)
-      const anchorSlot = controlSlots[controlSlots.length - 1];
+      // Identify anchor by type: fader/slider/wheel/screen are anchor elements
+      const anchorTypes = new Set(['fader', 'slider', 'wheel', 'screen']);
+      const anchorIdx = manifest
+        ? controlSlots.findIndex(id => {
+            const ctrl = manifest.controls.find(c => c.id === id);
+            return ctrl && anchorTypes.has(ctrl.type);
+          })
+        : controlSlots.length - 1;
+      const actualAnchorIdx = anchorIdx >= 0 ? anchorIdx : controlSlots.length - 1;
+      const clusterSlots = controlSlots.filter((_, i) => i !== actualAnchorIdx);
+      const anchorSlot = controlSlots[actualAnchorIdx];
+      // Include any controls after the anchor (like indicators/buttons near the fader) in a sub-row below the anchor
+      const postAnchorSlots = controlSlots.slice(actualAnchorIdx + 1);
+      const preAnchorSlots = controlSlots.slice(0, actualAnchorIdx);
+      const cRows = clusterRows ? parseInt(clusterRows) : Math.ceil(preAnchorSlots.length / cCols);
 
       return (
         <div className="flex flex-col gap-1 p-2 rounded" style={{ backgroundColor: '#0d0d1a', minHeight: '120px' }}>
-          {/* Cluster label */}
-          <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>
-            cluster {clusterFlex ? `(${clusterFlex}%)` : ''}
-          </div>
-          <div
-            className="gap-1 rounded p-1"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${cCols}, 1fr)`,
-              flex: clusterFlex ? `0 0 ${clusterFlex}%` : '1',
-              backgroundColor: 'rgba(96, 165, 250, 0.05)',
-              border: '1px dashed rgba(96, 165, 250, 0.2)',
-            }}
-          >
-            {clusterSlots.map((id, i) => (
-              <ControlSlot key={id} name={id} index={i} manifest={manifest} />
-            ))}
-          </div>
-          {/* Anchor label */}
+          {/* Cluster: controls before the anchor */}
+          {preAnchorSlots.length > 0 && (
+            <>
+              <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>
+                cluster {clusterFlex ? `(${clusterFlex}%)` : ''}
+              </div>
+              <div
+                className="gap-1 rounded p-1"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${cCols}, 1fr)`,
+                  flex: clusterFlex ? `0 0 ${clusterFlex}%` : '1',
+                  backgroundColor: 'rgba(96, 165, 250, 0.05)',
+                  border: '1px dashed rgba(96, 165, 250, 0.2)',
+                }}
+              >
+                {preAnchorSlots.map((id, i) => (
+                  <ControlSlot key={id} name={id} index={i} manifest={manifest} />
+                ))}
+              </div>
+            </>
+          )}
+          {/* Anchor: the dominant element (fader/slider/wheel) */}
           <div className="text-[7px] uppercase tracking-wider" style={{ color: '#4b5563' }}>
             anchor {anchorFlex ? `(${anchorFlex}%)` : ''}
           </div>
           <div
-            className="rounded p-1 flex items-center justify-center"
+            className="rounded p-1 flex flex-col items-center justify-center gap-1"
             style={{
               flex: anchorFlex ? `0 0 ${anchorFlex}%` : '2',
               backgroundColor: 'rgba(52, 211, 153, 0.08)',
@@ -224,7 +240,17 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
               minHeight: '40px',
             }}
           >
-            <ControlSlot name={anchorSlot} index={controlSlots.length - 1} manifest={manifest} />
+            <ControlSlot name={anchorSlot} index={actualAnchorIdx} manifest={manifest} />
+            {/* Controls after the anchor (e.g., reset indicator + button near the fader) */}
+            {postAnchorSlots.length > 0 && (
+              <div className="flex gap-1 w-full">
+                {postAnchorSlots.map((id, i) => (
+                  <div key={id} className="flex-1">
+                    <ControlSlot name={id} index={actualAnchorIdx + 1 + i} manifest={manifest} />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       );
@@ -232,8 +258,17 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
 
     case 'cluster-below-anchor': {
       const cCols2 = clusterCols ? parseInt(clusterCols) : 2;
-      const anchorSlot2 = controlSlots[0];
-      const clusterSlots2 = controlSlots.slice(1);
+      // Identify anchor by type
+      const anchorTypes2 = new Set(['fader', 'slider', 'wheel', 'screen']);
+      const anchorIdx2 = manifest
+        ? controlSlots.findIndex(id => {
+            const ctrl = manifest.controls.find(c => c.id === id);
+            return ctrl && anchorTypes2.has(ctrl.type);
+          })
+        : 0;
+      const actualAnchorIdx2 = anchorIdx2 >= 0 ? anchorIdx2 : 0;
+      const anchorSlot2 = controlSlots[actualAnchorIdx2];
+      const clusterSlots2 = controlSlots.filter((_, i) => i !== actualAnchorIdx2);
 
       return (
         <div className="flex flex-col gap-1 p-2 rounded" style={{ backgroundColor: '#0d0d1a', minHeight: '120px' }}>
@@ -273,9 +308,17 @@ function LayoutWireframe({ template, manifest }: { template: TemplateSpec; manif
     }
 
     case 'anchor-layout': {
-      // Dominant element with smaller elements around it
-      const secondary = controlSlots.slice(0, -1);
-      const anchor = controlSlots[controlSlots.length - 1];
+      // Dominant element with smaller elements around it — identify by type
+      const anchorTypes3 = new Set(['fader', 'slider', 'wheel', 'screen']);
+      const anchorIdx3 = manifest
+        ? controlSlots.findIndex(id => {
+            const ctrl = manifest.controls.find(c => c.id === id);
+            return ctrl && anchorTypes3.has(ctrl.type);
+          })
+        : controlSlots.length - 1;
+      const actualAnchorIdx3 = anchorIdx3 >= 0 ? anchorIdx3 : controlSlots.length - 1;
+      const secondary = controlSlots.filter((_, i) => i !== actualAnchorIdx3);
+      const anchor = controlSlots[actualAnchorIdx3];
       return (
         <div className="flex flex-col gap-1 p-2 rounded" style={{ backgroundColor: '#0d0d1a', minHeight: '100px' }}>
           {secondary.length > 0 && (
