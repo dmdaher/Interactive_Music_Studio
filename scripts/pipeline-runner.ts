@@ -601,12 +601,19 @@ Include: agent: diagram-parser, deviceId: ${deviceId}, phase: 0, status, score, 
       message: `POST-INSPECT: mechanical score ${validation.score.toFixed(1)}/10 (agent self-score: ${checkpoint.score ?? 'none'})`,
     });
 
-    // Use the LOWER of mechanical score and agent self-score
-    // Mechanical score is authoritative for structure. Agent self-score reflects
-    // subjective confidence. Use mechanical score as the gate — if the data is
-    // structurally complete, the pipeline should advance. Agent uncertainty is
-    // logged but doesn't block.
-    const effectiveScore = validation.score;
+    // Normalize agent self-score: if < 1.0, assume 0-1 scale and multiply by 10
+    const rawSelfScore = checkpoint.score ?? 0;
+    const normalizedSelfScore = rawSelfScore <= 1.0 && rawSelfScore > 0 ? rawSelfScore * 10 : rawSelfScore;
+
+    // Effective score = min(mechanical, normalized self-score)
+    // Mechanical validates structure (fields exist). Self-score validates quality (data correct).
+    // Neither alone is sufficient — structure without quality is garbage in correct format,
+    // quality without structure means the validator has a bug.
+    const effectiveScore = Math.min(validation.score, normalizedSelfScore > 0 ? normalizedSelfScore : validation.score);
+    appendLog(deviceId, {
+      level: 'info', agent: 'diagram-parser',
+      message: `Effective score: ${effectiveScore.toFixed(1)} (mechanical: ${validation.score.toFixed(1)}, self: ${rawSelfScore} → normalized: ${normalizedSelfScore.toFixed(1)})`,
+    });
 
     if (effectiveScore >= 9.0 && validation.valid) {
       completePhase(state, 'phase-0-diagram-parser', effectiveScore, true);
@@ -762,21 +769,30 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
       }
     }
 
-    if (validation.score >= 9.0 && validation.valid) {
+    // Normalize gatekeeper self-score
+    const rawGkScore = checkpoint.score ?? 0;
+    const normalizedGkScore = rawGkScore <= 1.0 && rawGkScore > 0 ? rawGkScore * 10 : rawGkScore;
+    const effectiveGkScore = Math.min(validation.score, normalizedGkScore > 0 ? normalizedGkScore : validation.score);
+    appendLog(deviceId, {
+      level: 'info', agent: 'gatekeeper',
+      message: `Effective score: ${effectiveGkScore.toFixed(1)} (mechanical: ${validation.score.toFixed(1)}, self: ${rawGkScore} → normalized: ${normalizedGkScore.toFixed(1)})`,
+    });
+
+    if (effectiveGkScore >= 9.0 && validation.valid) {
       // Copy manifest to main pipeline dir if needed
       if (manifestPath === worktreeManifest && !fs.existsSync(mainManifest)) {
         fs.mkdirSync(path.dirname(mainManifest), { recursive: true });
         fs.copyFileSync(worktreeManifest, mainManifest);
       }
-      completePhase(state, 'phase-0-gatekeeper', validation.score, true);
+      completePhase(state, 'phase-0-gatekeeper', effectiveGkScore, true);
       const sections = parseSectionsFromGatekeeper();
       if (sections.length > 0) state.sections = sections;
       advancePhase(state, worktreeCwd);
     } else {
-      completePhase(state, 'phase-0-gatekeeper', validation.score, false);
+      completePhase(state, 'phase-0-gatekeeper', effectiveGkScore, false);
       const errorSummary = validation.errors.slice(0, 3).join('; ');
       if (!tryAutoRetry(state, 'agent-failure',
-        `Gatekeeper manifest failed mechanical validation (score: ${validation.score.toFixed(1)}). ` +
+        `Gatekeeper manifest failed validation (score: ${effectiveGkScore.toFixed(1)}). ` +
         `Errors: ${errorSummary}`)) return;
     }
   } else if (result.exitCode !== 0) {
