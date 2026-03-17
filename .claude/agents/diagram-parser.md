@@ -43,6 +43,7 @@ Divide the panel into sections based on physical boundaries, spatial clustering,
 #### Step 2: Control Centroid Extraction (FROM PHOTOS)
 For every control in each section:
 - **Centroid:** `{ x: N.NN, y: N.NN }` — percentage of section, 2 decimal precision
+- If you **cannot clearly see** a control's position in the hardware photos, output `"centroid": null` — do NOT estimate from the manual diagram. A null centroid is better than a wrong one.
 - **Type hint:** `button | knob | slider-v | slider-h | display | led | wheel | pad | encoder`
 - **Bounding box:** `{ x: %, y: %, width: %, height: % }` relative to section
 - **Aspect ratio:** `{ width: N.NN, height: N.NN }` — bounding box W:H ratio
@@ -106,7 +107,7 @@ Never output a flat list. Every control must be in a 2D structure (grid cells or
 ```
 
 ### CHECKPOINTING:
-Include YAML frontmatter: `agent`, `deviceId`, `phase: 0`, `status`, `score`, `verdict`, `timestamp`, `sectionsExtracted`.
+Include YAML frontmatter: `agent`, `deviceId`, `phase: 0`, `status`, `score` (0-10 scale, NOT 0-1), `verdict`, `timestamp`, `sectionsExtracted`.
 
 On startup, read existing checkpoint first. Resume from "Next step" if exists.
 
