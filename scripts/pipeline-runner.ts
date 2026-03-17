@@ -688,17 +688,20 @@ async function doPhase0LayoutEngine(state: PipelineState) {
   }
 
   // Run the deterministic layout engine
+  // Use absolute paths to avoid cwd-relative resolution issues
   try {
     const layoutEnginePath = path.resolve('scripts/layout-engine.ts');
-    appendLog(deviceId, { level: 'info', message: `Running layout engine: ${manifestPath} → ${outputPath}` });
+    const absManifestPath = path.resolve(manifestPath);
+    const absOutputPath = path.resolve(outputPath);
+    appendLog(deviceId, { level: 'info', message: `Running layout engine: ${absManifestPath} → ${absOutputPath}` });
 
     execSync(
-      `npx tsx "${layoutEnginePath}" "${manifestPath}" --output "${outputPath}"`,
-      { cwd: worktreeCwd, stdio: 'pipe', timeout: 30_000 }
+      `npx tsx "${layoutEnginePath}" "${absManifestPath}" --output "${absOutputPath}"`,
+      { stdio: 'pipe', timeout: 30_000 }
     );
 
-    if (fs.existsSync(outputPath)) {
-      const output = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+    if (fs.existsSync(absOutputPath)) {
+      const output = JSON.parse(fs.readFileSync(absOutputPath, 'utf-8'));
       const templateCount = output.templates?.length ?? 0;
       const controlCount = output.panelArchitecture?.totalControls ?? 0;
       appendLog(deviceId, {
