@@ -9,6 +9,7 @@ import SectionProgress from './SectionProgress';
 import BatchProgress from './BatchProgress';
 import CostBreakdown from './CostBreakdown';
 import DiagnosticsPanel from './DiagnosticsPanel';
+import TemplateViewer from './TemplateViewer';
 
 const AGENT_PHASE_MAP: Record<string, string> = {
   'phase-0-diagram-parser': 'diagram-parser',
@@ -48,6 +49,7 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
 
   const isPhase1 = pipeline.currentPhase === 'phase-1-section-loop';
   const isPhase5 = pipeline.currentPhase === 'phase-5-tutorial-build';
+  const isTemplateReview = activeEscalation?.type === 'template-review';
 
   // Extract agent scores and statuses from pipeline phases
   const agentData = ALL_AGENTS.map((agent) => {
@@ -117,6 +119,11 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
               ))}
             </div>
           </div>
+
+          {/* Template Viewer — shown during template review */}
+          {isTemplateReview && (
+            <TemplateViewer deviceId={pipeline.deviceId} />
+          )}
 
           {/* Diagnostics — always visible */}
           <DiagnosticsPanel deviceId={pipeline.deviceId} />

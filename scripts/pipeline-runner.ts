@@ -75,6 +75,7 @@ const HUMAN_REQUIRED_ESCALATIONS = new Set([
   'topology-deadlock',
   'two-strike-halt',
   'physical-impossibility',
+  'template-review',
 ]);
 
 /**
@@ -607,6 +608,16 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
 }
 
 async function doPhase0LayoutEngine(state: PipelineState) {
+  // If templates already exist and phase was completed (resuming after template-review approval),
+  // just advance to the next phase.
+  const outputPath = path.join('.pipeline', deviceId, 'templates.json');
+  const phaseResult = state.phases.find(p => p.phase === 'phase-0-layout-engine');
+  if (phaseResult?.status === 'passed' && fs.existsSync(outputPath)) {
+    appendLog(deviceId, { level: 'info', message: 'Layout Engine: templates already generated, advancing after review approval' });
+    advancePhase(state, worktreeCwd);
+    return;
+  }
+
   startPhase(state, 'phase-0-layout-engine');
   appendLog(deviceId, { level: 'info', message: 'Starting Phase 0e: Layout Engine (deterministic template generation)' });
 
@@ -657,12 +668,26 @@ async function doPhase0LayoutEngine(state: PipelineState) {
 
     if (fs.existsSync(outputPath)) {
       const output = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+      const templateCount = output.templates?.length ?? 0;
+      const controlCount = output.panelArchitecture?.totalControls ?? 0;
       appendLog(deviceId, {
         level: 'info',
-        message: `Layout Engine: ${output.templates?.length ?? 0} templates generated for ${output.panelArchitecture?.totalControls ?? 0} controls`,
+        message: `Layout Engine: ${templateCount} templates generated for ${controlCount} controls`,
       });
       completePhase(state, 'phase-0-layout-engine', 10, true);
-      advancePhase(state, worktreeCwd);
+
+      // --- Template Review Gate ---
+      // Pause so the user can inspect manifest + templates before Panel Builder runs.
+      // Templates: .pipeline/<deviceId>/templates.json
+      // Manifest:  .pipeline/<deviceId>/manifest.json
+      const archetypeSummary = (output.templates ?? [])
+        .map((t: { sectionId: string; archetype: string }) => `${t.sectionId} → ${t.archetype}`)
+        .join(', ');
+      createEscalation(state, 'template-review',
+        `Layout Engine produced ${templateCount} section templates for ${controlCount} controls. ` +
+        `Review templates at .pipeline/${deviceId}/templates.json before Panel Builder runs.\n` +
+        `Archetypes: ${archetypeSummary}`);
+      sendNotification('Miyagi Pipeline', `Templates ready for review: ${state.deviceName}`);
     } else {
       completePhase(state, 'phase-0-layout-engine', null, false);
       if (!tryAutoRetry(state, 'agent-failure', 'Layout Engine produced no output file')) return;

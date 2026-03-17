@@ -83,6 +83,15 @@ const ESCALATION_CONFIG: Record<
       { label: 'Cancel Pipeline', resolution: 'cancel', variant: 'danger' },
     ],
   },
+  'template-review': {
+    bg: 'rgba(59, 130, 246, 0.1)',
+    border: '#3b82f6',
+    buttons: [
+      { label: 'Approve Templates', resolution: 'approved', variant: 'primary' },
+      { label: 'Request Changes', resolution: 'changes-requested', variant: 'secondary' },
+      { label: 'Cancel', resolution: 'cancel', variant: 'danger' },
+    ],
+  },
 };
 
 const BUTTON_STYLES: Record<string, { bg: string; text: string; hover: string }> = {
