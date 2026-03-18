@@ -820,6 +820,9 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
   const [dirty, setDirty] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
+  // View mode state
+  const [spatialMode, setSpatialMode] = useState(false);
+
   // Ghost overlay state
   const [showPhoto, setShowPhoto] = useState(false);
   const [photoMode, setPhotoMode] = useState<'overlay' | 'side-by-side'>('overlay');
@@ -979,9 +982,7 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
     );
   }
 
-  // Spatial mode toggle — row-based is default (cleaner), absolute is optional (more accurate)
   const hasBoundingBoxes = manifest.sections.some(s => s.panelBoundingBox);
-  const [spatialMode, setSpatialMode] = useState(false);
   const useAbsolute = hasBoundingBoxes && spatialMode;
 
   // ── Build row groups for fallback (non-absolute) mode ──
