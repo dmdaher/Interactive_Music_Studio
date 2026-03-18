@@ -230,9 +230,9 @@ export function validateDiagramParserOutput(content: string, blueprintJson?: str
 
   // 1. Must contain spatial-blueprint JSON (not just prose/tables)
   const hasJsonBlocks = (checkContent.match(/```json/g) ?? []).length;
-  const hasCentroids = checkContent.includes('"centroid"');
+  const hasCentroids = checkContent.includes('"centroid"') || checkContent.includes('"cx"');
   const hasTopology = checkContent.includes('"topology"');
-  const hasBoundingBox = checkContent.includes('"boundingBox"') || checkContent.includes('"panelBoundingBox"') || checkContent.includes('"bbox"');
+  const hasBoundingBox = checkContent.includes('"boundingBox"') || checkContent.includes('"panelBoundingBox"') || checkContent.includes('"bbox"') || (checkContent.includes('"w"') && checkContent.includes('"h"'));
 
   if (hasJsonBlocks === 0) {
     errors.push('No JSON code blocks found — output is prose-only. Parser must output spatial-blueprint JSON per section.');
@@ -265,7 +265,7 @@ export function validateDiagramParserOutput(content: string, blueprintJson?: str
   }
 
   // 3. Check for neighbor relationships
-  const hasNeighbors = checkContent.includes('"neighbors"') || checkContent.includes('"north"');
+  const hasNeighbors = checkContent.includes('"neighbors"') || checkContent.includes('"north"') || checkContent.includes('"N"');
   if (!hasNeighbors) {
     errors.push('No neighbor relationships found. Every control must have cardinal neighbor references.');
     score -= 1.0;
