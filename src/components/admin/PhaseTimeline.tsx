@@ -6,7 +6,6 @@ import type { PhaseResult, PipelinePhase } from '@/lib/pipeline/types';
 const PHASE_LABELS: Record<string, string> = {
   'phase-preflight': 'Preflight',
   'phase-0-diagram-parser': 'Parser',
-  'phase-0-control-extractor': 'Extractor',
   'phase-0-gatekeeper': 'Gatekeeper',
   'phase-0-layout-engine': 'Layout',
   'phase-1-section-loop': 'Sections',
@@ -22,7 +21,6 @@ const PHASE_LABELS: Record<string, string> = {
 /** Agents involved in each phase. Phases with 1 agent don't need sub-labels. */
 const PHASE_AGENTS: Record<string, string[]> = {
   'phase-0-diagram-parser': ['diagram-parser'],
-  'phase-0-control-extractor': ['control-extractor'],
   'phase-0-gatekeeper': ['gatekeeper'],
   'phase-1-section-loop': ['structural-inspector', 'panel-questioner', 'critic'],
   'phase-2-global-assembly': ['structural-inspector'],
@@ -34,7 +32,6 @@ const PHASE_AGENTS: Record<string, string[]> = {
 
 const AGENT_SHORT: Record<string, string> = {
   'diagram-parser': 'Parser',
-  'control-extractor': 'Extractor',
   'gatekeeper': 'GK',
   'structural-inspector': 'SI',
   'panel-questioner': 'PQ',
@@ -47,7 +44,6 @@ const AGENT_SHORT: Record<string, string> = {
 
 const AGENT_COLORS: Record<string, string> = {
   'diagram-parser': '#2dd4bf',
-  'control-extractor': '#f97316',
   'gatekeeper': '#facc15',
   'structural-inspector': '#f97316',
   'panel-questioner': '#a855f7',
@@ -61,7 +57,6 @@ const AGENT_COLORS: Record<string, string> = {
 const DISPLAY_PHASES: PipelinePhase[] = [
   'phase-preflight',
   'phase-0-diagram-parser',
-  'phase-0-control-extractor',
   'phase-0-gatekeeper',
   'phase-0-layout-engine',
   'phase-1-section-loop',
