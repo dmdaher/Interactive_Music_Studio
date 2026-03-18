@@ -10,7 +10,6 @@ import SectionProgress from './SectionProgress';
 import BatchProgress from './BatchProgress';
 import CostBreakdown from './CostBreakdown';
 import DiagnosticsPanel from './DiagnosticsPanel';
-import TemplateViewer from './TemplateViewer';
 import ManifestViewer from './ManifestViewer';
 import PanelLayoutEditor from './PanelLayoutEditor';
 
@@ -41,12 +40,11 @@ const ALL_AGENTS = [
   'tutorial-reviewer',
 ];
 
-type DetailTab = 'logs' | 'templates' | 'manifest' | 'layout';
+type DetailTab = 'logs' | 'manifest' | 'layout';
 
 const TABS: { id: DetailTab; label: string }[] = [
   { id: 'logs', label: 'Logs' },
   { id: 'manifest', label: 'Manifest' },
-  { id: 'templates', label: 'Templates' },
   { id: 'layout', label: 'Layout' },
 ];
 
@@ -65,8 +63,8 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
   const isPhase5 = pipeline.currentPhase === 'phase-5-tutorial-build';
   const isTemplateReview = activeEscalation?.type === 'template-review';
 
-  // Default to templates tab when at template review, otherwise logs
-  const [activeTab, setActiveTab] = useState<DetailTab>(isTemplateReview ? 'templates' : 'logs');
+  // Default to layout tab when at template review, otherwise logs
+  const [activeTab, setActiveTab] = useState<DetailTab>(isTemplateReview ? 'layout' : 'logs');
 
   // Check if layout engine has passed (manifest/templates available)
   const layoutEnginePassed = pipeline.phases.some(
@@ -117,7 +115,6 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
       <div className="flex gap-1 rounded-lg p-1" style={{ backgroundColor: 'var(--card-bg, #141420)' }}>
         {TABS.map((tab) => {
           const isDisabled =
-            (tab.id === 'templates' && !layoutEnginePassed) ||
             (tab.id === 'manifest' && !gatekeeperPassed) ||
             (tab.id === 'layout' && !gatekeeperPassed);
 
@@ -134,7 +131,7 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
               }}
             >
               {tab.label}
-              {tab.id === 'templates' && isTemplateReview && (
+              {tab.id === 'layout' && isTemplateReview && (
                 <span className="ml-1.5 w-1.5 h-1.5 rounded-full inline-block" style={{ backgroundColor: '#3b82f6' }} />
               )}
             </button>
@@ -188,10 +185,6 @@ export default function PipelineDetail({ pipeline, logs, onResolve }: PipelineDe
             )}
           </div>
         </div>
-      )}
-
-      {activeTab === 'templates' && (
-        <TemplateViewer deviceId={pipeline.deviceId} />
       )}
 
       {activeTab === 'manifest' && (
