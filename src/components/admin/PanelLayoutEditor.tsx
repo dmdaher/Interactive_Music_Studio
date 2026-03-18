@@ -42,7 +42,7 @@ interface TemplateSpec {
   sectionId: string;
   archetype: string;
   controlSlots: string[];
-  containerAssignment?: Record<string, string[] | Record<string, string[]>>;
+  containerAssignment?: Record<string, string[] | Record<string, SubZone>>;
   notes: string[];
 }
 

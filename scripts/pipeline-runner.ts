@@ -46,6 +46,7 @@ import {
   validateNeighborDirections,
   validateArchetypeGeometry,
 } from '../src/lib/pipeline/checkpoint-validators';
+import * as validators from '../src/lib/pipeline/checkpoint-validators';
 
 const deviceId = process.argv[2];
 if (!deviceId) {

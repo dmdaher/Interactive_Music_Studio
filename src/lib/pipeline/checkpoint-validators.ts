@@ -448,7 +448,6 @@ export function validateArchetypeGeometry(
     // If controls spread more horizontally than vertically, archetype is likely wrong
     // Exception: narrow sections (width < 20%) can have horizontal offset within a vertical stack
     // because controls are small relative to the section width — X-spread is noise, not signal
-    const sectionWidth = bSection.controls.length > 0 ? 100 : 0; // We check spread relative to section
     const isNarrowSection = xSpread < 30; // Less than 30% X-spread in a section = probably vertical
     if ((archetype === 'cluster-above-anchor' || archetype === 'cluster-below-anchor') && hasTwoXClusters && !isNarrowSection) {
       mismatches.push({
@@ -552,10 +551,10 @@ export function validateNeighborDirections(
 
     // Check each direction
     const directionChecks: Array<{ dir: string; neighborId: string | null; expectedRelation: (mine: { x: number; y: number }, theirs: { x: number; y: number }) => boolean; correctDir: string }> = [
-      { dir: 'above', neighborId: neighbors.above, expectedRelation: (m, t) => t.y < m.y, correctDir: 'below' },
-      { dir: 'below', neighborId: neighbors.below, expectedRelation: (m, t) => t.y > m.y, correctDir: 'above' },
-      { dir: 'left', neighborId: neighbors.left, expectedRelation: (m, t) => t.x < m.x, correctDir: 'right' },
-      { dir: 'right', neighborId: neighbors.right, expectedRelation: (m, t) => t.x > m.x, correctDir: 'left' },
+      { dir: 'above', neighborId: neighbors.above ?? neighbors.north ?? neighbors.N, expectedRelation: (m, t) => t.y < m.y, correctDir: 'below' },
+      { dir: 'below', neighborId: neighbors.below ?? neighbors.south ?? neighbors.S, expectedRelation: (m, t) => t.y > m.y, correctDir: 'above' },
+      { dir: 'left', neighborId: neighbors.left ?? neighbors.west ?? neighbors.W, expectedRelation: (m, t) => t.x < m.x, correctDir: 'right' },
+      { dir: 'right', neighborId: neighbors.right ?? neighbors.east ?? neighbors.E, expectedRelation: (m, t) => t.x > m.x, correctDir: 'left' },
     ];
 
     for (const check of directionChecks) {
