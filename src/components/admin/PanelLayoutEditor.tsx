@@ -1239,23 +1239,25 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
             </div>
           ) : (
             // Row-based fallback mode
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {/* Ghost photo overlay for row mode — shown above rows */}
-              {showPhoto && photoUrl && (
-                <div style={{ position: 'relative', width: '100%', paddingBottom: '100%', overflow: 'hidden', borderRadius: '4px', marginBottom: '4px' }}>
-                  <img
-                    src={photoUrl}
-                    alt="Hardware panel reference"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'fill',
-                      opacity: 0.5,
-                    }}
-                  />
-                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', position: 'relative' }}>
+              {/* Ghost photo overlay behind rows */}
+              {showPhoto && photoUrl && photoMode === 'overlay' && (
+                <img
+                  src={photoUrl}
+                  alt="Hardware panel reference"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'top',
+                    opacity: 0.3,
+                    pointerEvents: 'none',
+                    zIndex: 0,
+                    borderRadius: '4px',
+                  }}
+                />
               )}
 
               {rows.map((row) => (
