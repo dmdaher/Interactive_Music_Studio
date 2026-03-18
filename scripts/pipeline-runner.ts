@@ -209,6 +209,17 @@ async function run() {
 
   worktreeCwd = state.worktreePath!;
 
+  // Pull latest code into worktree — ensures SOULs, validators, and scripts are current
+  try {
+    execSync('git fetch origin test && git merge origin/test --no-edit', {
+      cwd: worktreeCwd,
+      stdio: 'pipe',
+    });
+    appendLog(deviceId, { level: 'info', message: 'Worktree updated to latest test' });
+  } catch {
+    appendLog(deviceId, { level: 'warn', message: 'Could not update worktree — using existing code' });
+  }
+
   // Copy uploaded manuals into worktree (they're in the project root, not in the git checkout)
   for (const manualPath of state.manualPaths) {
     const absSource = path.resolve(manualPath);
@@ -643,7 +654,8 @@ async function doPhase0ControlExtractor(state: PipelineState) {
   if (fs.existsSync(inventoryPath)) {
     try {
       const inv = JSON.parse(fs.readFileSync(inventoryPath, 'utf-8'));
-      if (inv.controls && inv.controls.length > 0) {
+      const skipCount = inv.controls?.length ?? inv.topPanel?.length ?? inv.items?.length ?? 0;
+      if (skipCount > 0) {
         appendLog(deviceId, { level: 'info', agent: 'control-extractor',
           message: `Existing control-inventory.json valid (${inv.controls.length} controls). Skipping re-run.` });
         completePhase(state, 'phase-0-control-extractor', 10, true);
@@ -694,7 +706,8 @@ Write checkpoint to .claude/agent-memory/control-extractor/checkpoint.md${resume
   if (fs.existsSync(inventoryPath)) {
     try {
       const inv = JSON.parse(fs.readFileSync(inventoryPath, 'utf-8'));
-      const controlCount = inv.controls?.length ?? 0;
+      // Accept various key names for the controls array
+      const controlCount = inv.controls?.length ?? inv.topPanel?.length ?? inv.items?.length ?? 0;
       appendLog(deviceId, { level: 'info', agent: 'control-extractor',
         message: `POST-INSPECT: ${controlCount} controls extracted` });
 
