@@ -473,6 +473,7 @@ function PropertiesPanel({
   onSelectControl,
   onDeleteControl,
   onAddControl,
+  onReorderControl,
 }: {
   section: ManifestSection;
   controls: ManifestControl[];
@@ -481,6 +482,7 @@ function PropertiesPanel({
   onSelectControl: (id: string | null) => void;
   onDeleteControl: (controlId: string) => void;
   onAddControl: (controlId: string) => void;
+  onReorderControl: (controlId: string, direction: number) => void;
 }) {
   const sectionControls = controls.filter(c => c.section === section.id);
   const [addControlId, setAddControlId] = useState('');
@@ -841,6 +843,32 @@ function PropertiesPanel({
                     ))}
                   </select>
                 )}
+
+                {/* Reorder buttons */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', flexShrink: 0 }}>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onReorderControl(c.id, -1); }}
+                    title="Move up / left"
+                    style={{
+                      fontSize: '7px', width: '14px', height: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      borderRadius: '2px', backgroundColor: 'rgba(107, 114, 128, 0.1)', border: '1px solid rgba(107, 114, 128, 0.2)',
+                      color: '#9ca3af', cursor: 'pointer', lineHeight: 1, padding: 0,
+                    }}
+                  >
+                    ▲
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onReorderControl(c.id, 1); }}
+                    title="Move down / right"
+                    style={{
+                      fontSize: '7px', width: '14px', height: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      borderRadius: '2px', backgroundColor: 'rgba(107, 114, 128, 0.1)', border: '1px solid rgba(107, 114, 128, 0.2)',
+                      color: '#9ca3af', cursor: 'pointer', lineHeight: 1, padding: 0,
+                    }}
+                  >
+                    ▼
+                  </button>
+                </div>
 
                 {/* Delete control button */}
                 <button
@@ -1500,6 +1528,19 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
               onSelectControl={setSelectedControl}
               onDeleteControl={(controlId) => handleDeleteControl(selected.id, controlId)}
               onAddControl={(controlId) => handleAddControl(selected.id, controlId)}
+              onReorderControl={(controlId, direction) => {
+                if (!manifest) return;
+                const section = manifest.sections.find(s => s.id === selected.id);
+                if (!section) return;
+                const controls = [...section.controls];
+                const idx = controls.indexOf(controlId);
+                if (idx === -1) return;
+                const newIdx = idx + direction;
+                if (newIdx < 0 || newIdx >= controls.length) return;
+                // Swap
+                [controls[idx], controls[newIdx]] = [controls[newIdx], controls[idx]];
+                handleSectionUpdate(selected.id, { controls });
+              }}
             />
           </div>
         )}
