@@ -859,6 +859,7 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
             }
           }
         }
+        console.log('[LayoutEditor] Loaded', Object.keys(centroids).length, 'control centroids');
         setControlCentroids(centroids);
       })
       .catch(() => { /* blueprint optional */ });
@@ -1327,8 +1328,7 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
                       inset: 0,
                       width: '100%',
                       height: '100%',
-                      objectFit: 'contain',
-                      objectPosition: 'top',
+                      objectFit: 'fill',
                       opacity: 0.3,
                       pointerEvents: 'none',
                       zIndex: 0,
