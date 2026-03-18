@@ -1157,7 +1157,21 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
                     pointerEvents: 'none',
                     transition: 'all 0.15s ease',
                   }}
-                />
+                >
+                  {selectedControl && isSelected && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: '#ef4444',
+                      boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)',
+                    }} />
+                  )}
+                </div>
               );
             })()}
           </div>
@@ -1310,7 +1324,23 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
                           zIndex: 1,
                           transition: 'all 0.15s ease',
                         }}
-                      />
+                      >
+                        {/* Selected control indicator — pulsing dot at section center */}
+                        {selectedControl && isSelected && (
+                          <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: '#ef4444',
+                            boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)',
+                            animation: 'pulse 1.5s ease-in-out infinite',
+                          }} />
+                        )}
+                      </div>
                     );
                   })()}
                 </>
