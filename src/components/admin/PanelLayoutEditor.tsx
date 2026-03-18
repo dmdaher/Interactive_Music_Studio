@@ -828,6 +828,9 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
   const [spatialMode, setSpatialMode] = useState(false);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
 
+  // Control panel centroids from blueprint (for per-control photo highlighting)
+  const [controlCentroids, setControlCentroids] = useState<Record<string, { x: number; y: number }>>({});
+
   // Ghost overlay state
   const [showPhoto, setShowPhoto] = useState(false);
   const [photoMode, setPhotoMode] = useState<'overlay' | 'side-by-side'>('overlay');
@@ -842,6 +845,23 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
       .then(r => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); })
       .then(setManifest)
       .catch(e => setError(e.message));
+
+    // Fetch blueprint for per-control panel centroids
+    fetch(`/api/pipeline/${deviceId}/blueprint`)
+      .then(r => r.ok ? r.json() : null)
+      .then(bp => {
+        if (!bp?.sections) return;
+        const centroids: Record<string, { x: number; y: number }> = {};
+        for (const s of bp.sections) {
+          for (const c of s.controls ?? []) {
+            if (c.panelCentroid && c.id) {
+              centroids[c.id] = { x: c.panelCentroid.x, y: c.panelCentroid.y };
+            }
+          }
+        }
+        setControlCentroids(centroids);
+      })
+      .catch(() => { /* blueprint optional */ });
   }, [deviceId]);
 
   // Fetch photo list when showPhoto is toggled on
@@ -1158,19 +1178,26 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
                     transition: 'all 0.15s ease',
                   }}
                 >
-                  {selectedControl && isSelected && (
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: '#ef4444',
-                      boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)',
-                    }} />
-                  )}
+                  {selectedControl && isSelected && bb && (() => {
+                    const cent = controlCentroids[selectedControl];
+                    if (!cent) return null;
+                    const relX = ((cent.x - bb.x) / bb.w) * 100;
+                    const relY = ((cent.y - bb.y) / bb.h) * 100;
+                    return (
+                      <div style={{
+                        position: 'absolute',
+                        top: `${Math.max(0, Math.min(100, relY))}%`,
+                        left: `${Math.max(0, Math.min(100, relX))}%`,
+                        transform: 'translate(-50%, -50%)',
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        backgroundColor: '#ef4444',
+                        boxShadow: '0 0 10px rgba(239, 68, 68, 0.9)',
+                        border: '2px solid white',
+                      }} />
+                    );
+                  })()}
                 </div>
               );
             })()}
@@ -1325,21 +1352,28 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
                           transition: 'all 0.15s ease',
                         }}
                       >
-                        {/* Selected control indicator — pulsing dot at section center */}
-                        {selectedControl && isSelected && (
-                          <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
-                            backgroundColor: '#ef4444',
-                            boxShadow: '0 0 8px rgba(239, 68, 68, 0.8)',
-                            animation: 'pulse 1.5s ease-in-out infinite',
-                          }} />
-                        )}
+                        {/* Selected control indicator — dot at control's panel position */}
+                        {selectedControl && isSelected && bb && (() => {
+                          const cent = controlCentroids[selectedControl];
+                          if (!cent) return null;
+                          // Convert panel coordinates to section-relative percentages
+                          const relX = ((cent.x - bb.x) / bb.w) * 100;
+                          const relY = ((cent.y - bb.y) / bb.h) * 100;
+                          return (
+                            <div style={{
+                              position: 'absolute',
+                              top: `${Math.max(0, Math.min(100, relY))}%`,
+                              left: `${Math.max(0, Math.min(100, relX))}%`,
+                              transform: 'translate(-50%, -50%)',
+                              width: '10px',
+                              height: '10px',
+                              borderRadius: '50%',
+                              backgroundColor: '#ef4444',
+                              boxShadow: '0 0 10px rgba(239, 68, 68, 0.9)',
+                              border: '2px solid white',
+                            }} />
+                          );
+                        })()}
                       </div>
                     );
                   })()}
