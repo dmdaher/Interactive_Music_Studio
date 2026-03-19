@@ -632,6 +632,52 @@ export function runLayoutEngine(manifest: MasterManifest): LayoutEngineOutput {
     // Pass through containerAssignment from manifest if present
     if (section.containerAssignment) {
       template.containerAssignment = section.containerAssignment;
+
+      // Generate sub-zone CSS for nested containerAssignment
+      // When a container has sub-zones (e.g., anchor: { left: {...}, right: {...} }),
+      // add childContainers entries with the correct flex-direction.
+      for (const [role, value] of Object.entries(section.containerAssignment)) {
+        if (!Array.isArray(value) && typeof value === 'object' && !('controls' in value)) {
+          // This is a nested Record<string, SubZone>
+          const subZones = value as Record<string, SubZone>;
+          const subContainers = Object.entries(subZones).map(([subRole, sz]) => ({
+            role: `${role}.${subRole}`,
+            display: 'flex',
+            properties: {
+              'flex-direction': subZoneDirection(sz),
+              'gap': '4px',
+              'align-items': subZoneDirection(sz) === 'row' ? 'center' : 'stretch',
+              'flex': '1',
+            },
+            children: subZoneControls(sz),
+          }));
+
+          // Replace or add the parent container to show it has sub-zones
+          if (template.cssArchitecture.childContainers) {
+            // Find the parent container and replace its children with sub-containers
+            const parentIdx = template.cssArchitecture.childContainers.findIndex(c => c.role === role);
+            if (parentIdx >= 0) {
+              template.cssArchitecture.childContainers[parentIdx].properties['display'] = 'flex';
+              template.cssArchitecture.childContainers[parentIdx].properties['flex-direction'] = 'row';
+              template.cssArchitecture.childContainers[parentIdx].properties['gap'] = '4px';
+              template.cssArchitecture.childContainers[parentIdx].children = subContainers.flatMap(sc => sc.children);
+            }
+          }
+
+          // Add sub-containers to the template
+          if (!template.cssArchitecture.childContainers) {
+            template.cssArchitecture.childContainers = [];
+          }
+          template.cssArchitecture.childContainers.push(...subContainers);
+
+          // Update component structure to reflect sub-zones
+          template.notes.push(
+            `${role} has sub-zones: ${Object.entries(subZones).map(([sr, sz]) =>
+              `${sr} (${subZoneDirection(sz)}, ${subZoneControls(sz).length} controls)`
+            ).join(', ')}`
+          );
+        }
+      }
     }
     templates.push(template);
   }
