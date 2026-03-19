@@ -1908,28 +1908,37 @@ function readAgentCheckpoint(agent: string) {
 
 function parseSectionsFromGatekeeper(): SectionStatus[] {
   try {
-    const checkpointPath = path.join(worktreeCwd, '.claude', 'agent-memory', 'gatekeeper', 'checkpoint.md');
-    const content = fs.readFileSync(checkpointPath, 'utf-8');
-    const sections: SectionStatus[] = [];
-    const lines = content.split('\n');
+    // Parse sections from manifest.json directly — not the checkpoint markdown
+    const worktreeManifest = path.join(worktreeCwd, '.pipeline', deviceId, 'manifest.json');
+    const mainManifest = path.join('.pipeline', deviceId, 'manifest.json');
+    const manifestPath = fs.existsSync(worktreeManifest) ? worktreeManifest
+      : fs.existsSync(mainManifest) ? mainManifest
+      : null;
 
-    let inManifest = false;
-    for (const line of lines) {
-      if (line.includes('MANIFEST') || (line.includes('Section') && line.includes('|'))) {
-        inManifest = true;
-        continue;
-      }
-      if (inManifest && line.startsWith('|') && !line.includes('---')) {
-        const cells = line.split('|').map((c) => c.trim()).filter(Boolean);
-        if (cells.length > 0 && cells[0] && !cells[0].includes('Section') && !cells[0].includes('ID')) {
-          const id = cells[0].toLowerCase().replace(/\s+/g, '-');
-          if (!sections.find((s) => s.id === id)) {
-            sections.push({ id, siScore: null, pqScore: null, criticScore: null, vaulted: false, attempts: 0, costUsd: 0, tokens: { input: 0, output: 0, cacheCreation: 0, cacheRead: 0 } });
-          }
-        }
-      }
-      if (inManifest && line.trim() === '') inManifest = false;
+    if (!manifestPath) {
+      appendLog(deviceId, { level: 'warn', message: 'No manifest.json found — cannot parse sections' });
+      return [];
     }
+
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+    const sections: SectionStatus[] = [];
+
+    for (const s of manifest.sections ?? []) {
+      if (s.id) {
+        sections.push({
+          id: s.id,
+          siScore: null,
+          pqScore: null,
+          criticScore: null,
+          vaulted: false,
+          attempts: 0,
+          costUsd: 0,
+          tokens: { input: 0, output: 0, cacheCreation: 0, cacheRead: 0 },
+        });
+      }
+    }
+
+    appendLog(deviceId, { level: 'info', message: `Parsed ${sections.length} sections from manifest.json` });
     return sections;
   } catch {
     return [];
