@@ -15,7 +15,7 @@ export default function PhotoOverlay() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!showPhoto || !deviceId) return;
+    if (!deviceId) return;
 
     let cancelled = false;
 
@@ -24,10 +24,13 @@ export default function PhotoOverlay() {
         const res = await fetch(`/api/pipeline/${deviceId}/photos`);
         if (!res.ok) return;
         const data = await res.json();
-        // Expect an array of photo URLs or objects with a url field
-        if (!cancelled && Array.isArray(data) && data.length > 0) {
-          const first = data[0];
-          setPhotoUrl(typeof first === 'string' ? first : first.url ?? null);
+        // API returns { photos: [{ name, path, size }] }
+        const photos = data.photos ?? data;
+        if (!cancelled && Array.isArray(photos) && photos.length > 0) {
+          const first = photos[0];
+          // Use the path field (API serves images via ?file= query)
+          const url = first.path ?? first.url ?? null;
+          setPhotoUrl(url);
         }
       } catch {
         // Silently ignore — photo overlay is optional
@@ -38,7 +41,7 @@ export default function PhotoOverlay() {
     return () => {
       cancelled = true;
     };
-  }, [showPhoto, deviceId]);
+  }, [deviceId]);
 
   if (!showPhoto || !photoUrl) return null;
 

@@ -21,6 +21,7 @@ export default function EditorToolbar({
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const showGrid = useEditorStore((s) => s.showGrid);
   const showPhoto = useEditorStore((s) => s.showPhoto);
+  const photoOpacity = useEditorStore((s) => s.photoOpacity);
   const past = useEditorStore((s) => s.past);
   const future = useEditorStore((s) => s.future);
 
@@ -28,6 +29,7 @@ export default function EditorToolbar({
   const setSnapGrid = useEditorStore((s) => s.setSnapGrid);
   const toggleGrid = useEditorStore((s) => s.toggleGrid);
   const togglePhoto = useEditorStore((s) => s.togglePhoto);
+  const setPhotoOpacity = useEditorStore((s) => s.setPhotoOpacity);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
 
@@ -116,28 +118,41 @@ export default function EditorToolbar({
       {/* Grid Toggle */}
       <button
         onClick={toggleGrid}
-        className={`flex h-6 items-center rounded px-2 text-xs transition-colors ${
+        className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
           showGrid
             ? 'bg-blue-500/20 text-blue-400'
             : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
         }`}
         title="Toggle Grid (G)"
       >
-        G
+        <span className="text-[10px]">Grid</span>
       </button>
 
-      {/* Photo Toggle */}
-      <button
-        onClick={togglePhoto}
-        className={`flex h-6 items-center rounded px-2 text-xs transition-colors ${
-          showPhoto
-            ? 'bg-blue-500/20 text-blue-400'
-            : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
-        }`}
-        title="Toggle Photo (P)"
-      >
-        P
-      </button>
+      {/* Photo Overlay Toggle + Opacity */}
+      <div className="flex items-center gap-1.5">
+        <button
+          onClick={togglePhoto}
+          className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
+            showPhoto
+              ? 'bg-blue-500/20 text-blue-400'
+              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+          }`}
+          title="Toggle Photo Overlay (P)"
+        >
+          <span className="text-[10px]">Photo</span>
+        </button>
+        {showPhoto && (
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={Math.round(photoOpacity * 100)}
+            onChange={(e) => setPhotoOpacity(Number(e.target.value) / 100)}
+            className="h-1 w-16 cursor-pointer accent-blue-500"
+            title={`Photo Opacity: ${Math.round(photoOpacity * 100)}%`}
+          />
+        )}
+      </div>
 
       {/* Spacer to push Approve button to the right */}
       <div className="flex-1" />
