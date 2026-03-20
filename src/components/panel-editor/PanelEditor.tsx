@@ -5,6 +5,7 @@ import { useEditorStore } from './store';
 import type { MasterManifestInput } from './store';
 import EditorToolbar from './EditorToolbar';
 import EditorWorkspace from './EditorWorkspace';
+import PropertiesPanel from './PropertiesPanel';
 
 interface PanelEditorProps {
   deviceId: string;
@@ -66,9 +67,8 @@ export default function PanelEditor({ deviceId }: PanelEditorProps) {
       <EditorToolbar />
       <div className="flex flex-1 overflow-hidden">
         <EditorWorkspace deviceId={deviceId} />
-        <div className="w-72 border-l border-gray-800 p-3">
-          {/* Properties panel placeholder for Task 7 */}
-          <div className="text-xs text-gray-500">Select a control</div>
+        <div className="w-72 border-l border-gray-800 bg-[#0d0d1a]">
+          <PropertiesPanel />
         </div>
       </div>
     </div>

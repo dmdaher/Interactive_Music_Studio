@@ -1,0 +1,439 @@
+'use client';
+
+import { useCallback, useMemo } from 'react';
+import { useEditorStore } from '../store';
+import type { ControlDef, SectionDef } from '../store';
+import ControlTypeSelector from './ControlTypeSelector';
+import LabelEditor from './LabelEditor';
+import GeometryFields from './GeometryFields';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Check if all values in an array are the same */
+function allSame<T>(values: T[]): boolean {
+  if (values.length === 0) return true;
+  return values.every((v) => v === values[0]);
+}
+
+// ─── Section Properties ──────────────────────────────────────────────────────
+
+function SectionProperties({ section }: { section: SectionDef }) {
+  const snapGrid = useEditorStore((s) => s.snapGrid);
+  const moveSection = useEditorStore((s) => s.moveSection);
+  const resizeSection = useEditorStore((s) => s.resizeSection);
+  const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+
+  const handleXChange = useCallback(
+    (val: number) => {
+      moveSection(section.id, val - section.x, 0);
+      pushSnapshot();
+    },
+    [section.id, section.x, moveSection, pushSnapshot],
+  );
+
+  const handleYChange = useCallback(
+    (val: number) => {
+      moveSection(section.id, 0, val - section.y);
+      pushSnapshot();
+    },
+    [section.id, section.y, moveSection, pushSnapshot],
+  );
+
+  const handleWChange = useCallback(
+    (val: number) => {
+      resizeSection(section.id, val, section.h);
+      pushSnapshot();
+    },
+    [section.id, section.h, resizeSection, pushSnapshot],
+  );
+
+  const handleHChange = useCallback(
+    (val: number) => {
+      resizeSection(section.id, section.w, val);
+      pushSnapshot();
+    },
+    [section.id, section.w, resizeSection, pushSnapshot],
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="border-b border-gray-800 pb-2">
+        <h3 className="text-sm font-medium text-gray-200">Section</h3>
+        <p className="text-xs text-gray-500 mt-0.5">{section.id}</p>
+      </div>
+
+      {/* Header label */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+          Header
+        </label>
+        <div className="text-xs text-gray-300">
+          {section.headerLabel ?? '(none)'}
+        </div>
+      </div>
+
+      {/* Archetype */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+          Archetype
+        </label>
+        <div className="text-xs text-gray-400 rounded bg-gray-900 border border-gray-700 px-2 py-1">
+          {section.archetype}
+        </div>
+      </div>
+
+      {/* Children count */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+          Controls
+        </label>
+        <div className="text-xs text-gray-400">
+          {section.childIds.length} control{section.childIds.length !== 1 ? 's' : ''}
+        </div>
+      </div>
+
+      {/* Geometry */}
+      <GeometryFields
+        x={section.x}
+        y={section.y}
+        w={section.w}
+        h={section.h}
+        step={snapGrid}
+        onXChange={handleXChange}
+        onYChange={handleYChange}
+        onWChange={handleWChange}
+        onHChange={handleHChange}
+      />
+    </div>
+  );
+}
+
+// ─── Single Control Properties ───────────────────────────────────────────────
+
+function SingleControlProperties({ control }: { control: ControlDef }) {
+  const snapGrid = useEditorStore((s) => s.snapGrid);
+  const updateControlProp = useEditorStore((s) => s.updateControlProp);
+  const moveControl = useEditorStore((s) => s.moveControl);
+  const resizeControl = useEditorStore((s) => s.resizeControl);
+  const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+
+  const ids = useMemo(() => [control.id], [control.id]);
+
+  const handleTypeChange = useCallback(
+    (type: string) => {
+      updateControlProp(ids, 'type', type);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleLabelChange = useCallback(
+    (value: string) => {
+      updateControlProp(ids, 'label', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handlePositionChange = useCallback(
+    (value: ControlDef['labelPosition']) => {
+      updateControlProp(ids, 'labelPosition', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleSecondaryLabelChange = useCallback(
+    (value: string) => {
+      updateControlProp(ids, 'secondaryLabel', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleXChange = useCallback(
+    (val: number) => {
+      moveControl(control.id, val - control.x, 0);
+      pushSnapshot();
+    },
+    [control.id, control.x, moveControl, pushSnapshot],
+  );
+
+  const handleYChange = useCallback(
+    (val: number) => {
+      moveControl(control.id, 0, val - control.y);
+      pushSnapshot();
+    },
+    [control.id, control.y, moveControl, pushSnapshot],
+  );
+
+  const handleWChange = useCallback(
+    (val: number) => {
+      resizeControl(control.id, val, control.h);
+      pushSnapshot();
+    },
+    [control.id, control.h, resizeControl, pushSnapshot],
+  );
+
+  const handleHChange = useCallback(
+    (val: number) => {
+      resizeControl(control.id, control.w, val);
+      pushSnapshot();
+    },
+    [control.id, control.w, resizeControl, pushSnapshot],
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="border-b border-gray-800 pb-2">
+        <h3 className="text-sm font-medium text-gray-200">Control</h3>
+        <p className="text-xs text-gray-500 mt-0.5 truncate" title={control.id}>
+          {control.id}
+        </p>
+      </div>
+
+      {/* Type */}
+      <ControlTypeSelector
+        currentType={control.type}
+        onChange={handleTypeChange}
+      />
+
+      {/* Divider */}
+      <div className="h-px bg-gray-800" />
+
+      {/* Label */}
+      <LabelEditor
+        label={control.label}
+        labelPosition={control.labelPosition}
+        secondaryLabel={control.secondaryLabel}
+        onLabelChange={handleLabelChange}
+        onPositionChange={handlePositionChange}
+        onSecondaryLabelChange={handleSecondaryLabelChange}
+      />
+
+      {/* Divider */}
+      <div className="h-px bg-gray-800" />
+
+      {/* Geometry */}
+      <GeometryFields
+        x={control.x}
+        y={control.y}
+        w={control.w}
+        h={control.h}
+        step={snapGrid}
+        onXChange={handleXChange}
+        onYChange={handleYChange}
+        onWChange={handleWChange}
+        onHChange={handleHChange}
+      />
+
+      {/* Lock status */}
+      <div className="h-px bg-gray-800" />
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] uppercase tracking-wider text-gray-500">
+          Locked
+        </span>
+        <span className="text-xs text-gray-400">
+          {control.locked ? 'Yes' : 'No'}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Multi-Select Properties ─────────────────────────────────────────────────
+
+function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
+  const snapGrid = useEditorStore((s) => s.snapGrid);
+  const updateControlProp = useEditorStore((s) => s.updateControlProp);
+  const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+
+  const ids = useMemo(() => controls.map((c) => c.id), [controls]);
+
+  const types = controls.map((c) => c.type);
+  const labels = controls.map((c) => c.label);
+  const positions = controls.map((c) => c.labelPosition);
+  const secondaryLabels = controls.map((c) => c.secondaryLabel);
+  const xs = controls.map((c) => c.x);
+  const ys = controls.map((c) => c.y);
+  const ws = controls.map((c) => c.w);
+  const hs = controls.map((c) => c.h);
+
+  const typeMixed = !allSame(types);
+  const labelMixed = !allSame(labels);
+  const positionMixed = !allSame(positions);
+  const secondaryMixed = !allSame(secondaryLabels);
+
+  const handleTypeChange = useCallback(
+    (type: string) => {
+      updateControlProp(ids, 'type', type);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleLabelChange = useCallback(
+    (value: string) => {
+      updateControlProp(ids, 'label', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handlePositionChange = useCallback(
+    (value: ControlDef['labelPosition']) => {
+      updateControlProp(ids, 'labelPosition', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleSecondaryLabelChange = useCallback(
+    (value: string) => {
+      updateControlProp(ids, 'secondaryLabel', value);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  // For multi-select geometry, we apply the value to all selected controls
+  const handleXChange = useCallback(
+    (val: number) => {
+      updateControlProp(ids, 'x', val);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleYChange = useCallback(
+    (val: number) => {
+      updateControlProp(ids, 'y', val);
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleWChange = useCallback(
+    (val: number) => {
+      updateControlProp(ids, 'w', Math.max(8, val));
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  const handleHChange = useCallback(
+    (val: number) => {
+      updateControlProp(ids, 'h', Math.max(8, val));
+      pushSnapshot();
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="border-b border-gray-800 pb-2">
+        <h3 className="text-sm font-medium text-gray-200">
+          {controls.length} Controls Selected
+        </h3>
+        <p className="text-xs text-gray-500 mt-0.5">
+          Shared fields shown. Differing values shown as &quot;Mixed&quot;.
+        </p>
+      </div>
+
+      {/* Type */}
+      <ControlTypeSelector
+        currentType={typeMixed ? '' : types[0]}
+        onChange={handleTypeChange}
+      />
+
+      <div className="h-px bg-gray-800" />
+
+      {/* Label */}
+      <LabelEditor
+        label={labelMixed ? '' : labels[0]}
+        labelPosition={positionMixed ? 'below' : positions[0]}
+        secondaryLabel={secondaryMixed ? undefined : secondaryLabels[0]}
+        labelMixed={labelMixed}
+        positionMixed={positionMixed}
+        secondaryMixed={secondaryMixed}
+        onLabelChange={handleLabelChange}
+        onPositionChange={handlePositionChange}
+        onSecondaryLabelChange={handleSecondaryLabelChange}
+      />
+
+      <div className="h-px bg-gray-800" />
+
+      {/* Geometry */}
+      <GeometryFields
+        x={allSame(xs) ? xs[0] : 0}
+        y={allSame(ys) ? ys[0] : 0}
+        w={allSame(ws) ? ws[0] : 0}
+        h={allSame(hs) ? hs[0] : 0}
+        step={snapGrid}
+        xMixed={!allSame(xs)}
+        yMixed={!allSame(ys)}
+        wMixed={!allSame(ws)}
+        hMixed={!allSame(hs)}
+        onXChange={handleXChange}
+        onYChange={handleYChange}
+        onWChange={handleWChange}
+        onHChange={handleHChange}
+      />
+    </div>
+  );
+}
+
+// ─── Main Properties Panel ──────────────────────────────────────────────────
+
+export default function PropertiesPanel() {
+  const selectedIds = useEditorStore((s) => s.selectedIds);
+  const controls = useEditorStore((s) => s.controls);
+  const sections = useEditorStore((s) => s.sections);
+
+  // Determine what's selected
+  const selectedControls = useMemo(
+    () => selectedIds.map((id) => controls[id]).filter(Boolean),
+    [selectedIds, controls],
+  );
+
+  const selectedSection = useMemo(() => {
+    if (selectedIds.length === 1) {
+      return sections[selectedIds[0]] ?? null;
+    }
+    return null;
+  }, [selectedIds, sections]);
+
+  // Render based on selection state
+  let content: React.ReactNode;
+
+  if (selectedIds.length === 0) {
+    // Nothing selected
+    content = (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-xs text-gray-500 text-center px-4">
+          Select a control or section to edit properties
+        </p>
+      </div>
+    );
+  } else if (selectedSection && selectedControls.length === 0) {
+    // A section is selected (not a control)
+    content = <SectionProperties section={selectedSection} />;
+  } else if (selectedControls.length === 1) {
+    // Single control selected
+    content = <SingleControlProperties control={selectedControls[0]} />;
+  } else if (selectedControls.length > 1) {
+    // Multiple controls selected
+    content = <MultiControlProperties controls={selectedControls} />;
+  } else {
+    // Fallback (shouldn't happen)
+    content = (
+      <div className="text-xs text-gray-500 px-4 text-center">
+        Unknown selection
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-full overflow-y-auto p-3 text-gray-300">{content}</div>
+  );
+}
