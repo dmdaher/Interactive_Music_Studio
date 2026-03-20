@@ -23,35 +23,9 @@ export function useZoomPan(): ZoomPanHandlers {
   const isPanning = useRef(false);
   const lastPointer = useRef({ x: 0, y: 0 });
 
-  const onWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
-    e.preventDefault();
-
-    const { zoom, panX, panY, setZoom, setPan } = useEditorStore.getState();
-
-    // Zoom factor: scroll up = zoom in, scroll down = zoom out
-    const direction = e.deltaY < 0 ? 1 : -1;
-    const factor = 0.1;
-    const newZoom = Math.max(0.1, Math.min(5, zoom + direction * factor));
-
-    if (newZoom === zoom) return;
-
-    // Get cursor position relative to the container
-    const rect = e.currentTarget.getBoundingClientRect();
-    const cursorX = e.clientX - rect.left;
-    const cursorY = e.clientY - rect.top;
-
-    // Adjust pan so the point under cursor stays fixed.
-    // Screen point = worldPoint * zoom + pan
-    // worldPoint = (screenPoint - pan) / zoom
-    // After zoom change: newPan = screenPoint - worldPoint * newZoom
-    const worldX = (cursorX - panX) / zoom;
-    const worldY = (cursorY - panY) / zoom;
-
-    const newPanX = cursorX - worldX * newZoom;
-    const newPanY = cursorY - worldY * newZoom;
-
-    setZoom(newZoom);
-    setPan(newPanX, newPanY);
+  // Scroll wheel does nothing (zoom via toolbar buttons only)
+  const onWheel = useCallback((_e: React.WheelEvent<HTMLDivElement>) => {
+    // Intentionally disabled — zoom only via toolbar +/- buttons
   }, []);
 
   const onPointerDown = useCallback(
