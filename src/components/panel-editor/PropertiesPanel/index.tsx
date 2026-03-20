@@ -25,32 +25,32 @@ function SectionProperties({ section }: { section: SectionDef }) {
 
   const handleXChange = useCallback(
     (val: number) => {
-      moveSection(section.id, val - section.x, 0);
       pushSnapshot();
+      moveSection(section.id, val - section.x, 0);
     },
     [section.id, section.x, moveSection, pushSnapshot],
   );
 
   const handleYChange = useCallback(
     (val: number) => {
-      moveSection(section.id, 0, val - section.y);
       pushSnapshot();
+      moveSection(section.id, 0, val - section.y);
     },
     [section.id, section.y, moveSection, pushSnapshot],
   );
 
   const handleWChange = useCallback(
     (val: number) => {
-      resizeSection(section.id, val, section.h);
       pushSnapshot();
+      resizeSection(section.id, val, section.h);
     },
     [section.id, section.h, resizeSection, pushSnapshot],
   );
 
   const handleHChange = useCallback(
     (val: number) => {
-      resizeSection(section.id, section.w, val);
       pushSnapshot();
+      resizeSection(section.id, section.w, val);
     },
     [section.id, section.w, resizeSection, pushSnapshot],
   );
@@ -130,64 +130,64 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
 
   const handleTypeChange = useCallback(
     (type: string) => {
-      updateControlProp(ids, 'type', type);
       pushSnapshot();
+      updateControlProp(ids, 'type', type);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleLabelChange = useCallback(
     (value: string) => {
-      updateControlProp(ids, 'label', value);
       pushSnapshot();
+      updateControlProp(ids, 'label', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handlePositionChange = useCallback(
     (value: ControlDef['labelPosition']) => {
-      updateControlProp(ids, 'labelPosition', value);
       pushSnapshot();
+      updateControlProp(ids, 'labelPosition', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleSecondaryLabelChange = useCallback(
     (value: string) => {
-      updateControlProp(ids, 'secondaryLabel', value);
       pushSnapshot();
+      updateControlProp(ids, 'secondaryLabel', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleXChange = useCallback(
     (val: number) => {
-      moveControl(control.id, val - control.x, 0);
       pushSnapshot();
+      moveControl(control.id, val - control.x, 0);
     },
     [control.id, control.x, moveControl, pushSnapshot],
   );
 
   const handleYChange = useCallback(
     (val: number) => {
-      moveControl(control.id, 0, val - control.y);
       pushSnapshot();
+      moveControl(control.id, 0, val - control.y);
     },
     [control.id, control.y, moveControl, pushSnapshot],
   );
 
   const handleWChange = useCallback(
     (val: number) => {
-      resizeControl(control.id, val, control.h);
       pushSnapshot();
+      resizeControl(control.id, val, control.h);
     },
     [control.id, control.h, resizeControl, pushSnapshot],
   );
 
   const handleHChange = useCallback(
     (val: number) => {
-      resizeControl(control.id, control.w, val);
       pushSnapshot();
+      resizeControl(control.id, control.w, val);
     },
     [control.id, control.w, resizeControl, pushSnapshot],
   );
@@ -277,32 +277,32 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
 
   const handleTypeChange = useCallback(
     (type: string) => {
-      updateControlProp(ids, 'type', type);
       pushSnapshot();
+      updateControlProp(ids, 'type', type);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleLabelChange = useCallback(
     (value: string) => {
-      updateControlProp(ids, 'label', value);
       pushSnapshot();
+      updateControlProp(ids, 'label', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handlePositionChange = useCallback(
     (value: ControlDef['labelPosition']) => {
-      updateControlProp(ids, 'labelPosition', value);
       pushSnapshot();
+      updateControlProp(ids, 'labelPosition', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleSecondaryLabelChange = useCallback(
     (value: string) => {
-      updateControlProp(ids, 'secondaryLabel', value);
       pushSnapshot();
+      updateControlProp(ids, 'secondaryLabel', value);
     },
     [ids, updateControlProp, pushSnapshot],
   );
@@ -310,16 +310,16 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   // For multi-select geometry, we apply the value to all selected controls
   const handleXChange = useCallback(
     (val: number) => {
-      updateControlProp(ids, 'x', val);
       pushSnapshot();
+      updateControlProp(ids, 'x', val);
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleYChange = useCallback(
     (val: number) => {
-      updateControlProp(ids, 'y', val);
       pushSnapshot();
+      updateControlProp(ids, 'y', val);
     },
     [ids, updateControlProp, pushSnapshot],
   );

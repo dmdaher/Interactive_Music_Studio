@@ -26,8 +26,8 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
       const dx = d.x - section.x;
       const dy = d.y - section.y;
       if (dx !== 0 || dy !== 0) {
-        moveSection(sectionId, dx, dy);
         pushSnapshot();
+        moveSection(sectionId, dx, dy);
       }
     },
     [section.x, section.y, sectionId, moveSection, pushSnapshot],
@@ -43,6 +43,8 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
     ) => {
       const newW = parseInt(ref.style.width, 10);
       const newH = parseInt(ref.style.height, 10);
+      // Snapshot BEFORE mutation so undo restores the previous state
+      pushSnapshot();
       // react-rnd may also shift position during resize (e.g. top/left handles)
       const dx = position.x - section.x;
       const dy = position.y - section.y;
@@ -50,7 +52,6 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
         moveSection(sectionId, dx, dy);
       }
       resizeSection(sectionId, newW, newH);
-      pushSnapshot();
     },
     [section.x, section.y, sectionId, moveSection, resizeSection, pushSnapshot],
   );
@@ -72,6 +73,7 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
       scale={zoom}
       dragGrid={[snapGrid, snapGrid]}
       resizeGrid={[snapGrid, snapGrid]}
+      cancel=".control-node"
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       enableResizing

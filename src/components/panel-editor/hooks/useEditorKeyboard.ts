@@ -42,16 +42,16 @@ export function useEditorKeyboard() {
       // ── Delete selected: Backspace or Delete ──────────────────────────────
       if (e.key === 'Backspace' || e.key === 'Delete') {
         e.preventDefault();
-        store.deleteSelected();
         store.pushSnapshot();
+        store.deleteSelected();
         return;
       }
 
       // ── Duplicate: Cmd/Ctrl+D ─────────────────────────────────────────────
       if (isMod && e.key === 'd') {
         e.preventDefault();
-        store.duplicateSelected();
         store.pushSnapshot();
+        store.duplicateSelected();
         return;
       }
 

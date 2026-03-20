@@ -57,15 +57,15 @@ export default function ContextMenu() {
 
   const handleDuplicate = useCallback(() => {
     const store = useEditorStore.getState();
-    store.duplicateSelected();
     store.pushSnapshot();
+    store.duplicateSelected();
     setMenu(null);
   }, []);
 
   const handleDelete = useCallback(() => {
     const store = useEditorStore.getState();
-    store.deleteSelected();
     store.pushSnapshot();
+    store.deleteSelected();
     setMenu(null);
   }, []);
 

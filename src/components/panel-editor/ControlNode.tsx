@@ -142,13 +142,14 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       const dy = d.y - dragStartRef.current.y;
       if (dx === 0 && dy === 0) return;
 
+      // Snapshot BEFORE mutation so undo restores the previous state
+      pushSnapshot();
       if (isMultiSelected) {
         // Move all selected (non-locked) controls by the same delta
         moveSelectedControls(dx, dy);
       } else {
         moveControl(controlId, dx, dy);
       }
-      pushSnapshot();
     },
     [isMultiSelected, controlId, moveControl, moveSelectedControls, pushSnapshot],
   );
@@ -163,6 +164,8 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
     ) => {
       const newW = parseInt(ref.style.width, 10);
       const newH = parseInt(ref.style.height, 10);
+      // Snapshot BEFORE mutation so undo restores the previous state
+      pushSnapshot();
       // Handle position shift from top/left resize handles
       const dx = position.x - relX;
       const dy = position.y - relY;
@@ -170,7 +173,6 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
         moveControl(controlId, dx, dy);
       }
       resizeControl(controlId, newW, newH);
-      pushSnapshot();
     },
     [relX, relY, controlId, moveControl, resizeControl, pushSnapshot],
   );
@@ -205,8 +207,8 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const commitEdit = useCallback(() => {
     if (!control) return;
     if (editValue !== control.label) {
-      updateControlProp([controlId], 'label', editValue);
       pushSnapshot();
+      updateControlProp([controlId], 'label', editValue);
     }
     setIsEditing(false);
   }, [control, controlId, editValue, updateControlProp, pushSnapshot]);
@@ -274,6 +276,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onContextMenu={handleContextMenu}
+      className="control-node"
     >
       {/* Lock icon badge (top-right) */}
       {isLocked && (
