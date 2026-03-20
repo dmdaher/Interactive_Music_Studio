@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 interface PanelButtonProps {
   id: string;
   label: string;
-  variant?: 'standard' | 'zone' | 'scene' | 'category' | 'function' | 'menu';
+  variant?: 'standard' | 'zone' | 'scene' | 'category' | 'function' | 'menu' | 'flat-key' | 'transport' | 'rubber';
   size?: 'sm' | 'md' | 'lg';
   active?: boolean;
   hasLed?: boolean;
@@ -13,6 +13,8 @@ interface PanelButtonProps {
   ledColor?: string;
   highlighted?: boolean;
   labelPosition?: 'on' | 'above' | 'below';
+  surfaceColor?: string;
+  iconContent?: string;
   onClick?: () => void;
 }
 
@@ -47,6 +49,18 @@ const variantStyles: Record<string, { base: string; active: string }> = {
     base: 'bg-gradient-to-b from-[#444444] to-[#2a2a2a] border-[#181818]',
     active: 'bg-gradient-to-b from-[#666666] to-[#4a4a4a] border-[#383838]',
   },
+  'flat-key': {
+    base: 'bg-gradient-to-b from-[#333333] to-[#262626] border-[#151515]',
+    active: 'bg-gradient-to-b from-[#4a4a4a] to-[#3a3a3a] border-[#2a2a2a]',
+  },
+  transport: {
+    base: 'bg-gradient-to-b from-[#3a3a3a] to-[#1e1e1e] border-[#111111]',
+    active: 'bg-gradient-to-b from-[#4a4a4a] to-[#333333] border-[#222222]',
+  },
+  rubber: {
+    base: 'bg-gradient-to-b from-[#353535] to-[#282828] border-[#181818]',
+    active: 'bg-gradient-to-b from-[#4a4a4a] to-[#3e3e3e] border-[#2a2a2a]',
+  },
 };
 
 const highlightAnimation = {
@@ -75,10 +89,59 @@ export default function PanelButton({
   ledColor = '#00ff44',
   highlighted = false,
   labelPosition = 'on',
+  surfaceColor,
+  iconContent,
   onClick,
 }: PanelButtonProps) {
   const sizeStyle = sizeClasses[size];
   const variantStyle = variantStyles[variant];
+
+  const isTransport = variant === 'transport';
+  const isRubber = variant === 'rubber';
+  const isFlatKey = variant === 'flat-key';
+
+  // Transport buttons are circular with an accent ring
+  const transportStyle = isTransport
+    ? {
+        borderRadius: '50%',
+        width: 40,
+        height: 40,
+        border: surfaceColor ? `3px solid ${surfaceColor}` : '3px solid #555',
+        boxShadow: active
+          ? `inset 0 2px 4px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05)${surfaceColor ? `, 0 0 8px ${surfaceColor}44` : ''}`
+          : `0 3px 8px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)`,
+        transform: active ? 'translateY(1px)' : 'translateY(0)',
+      }
+    : undefined;
+
+  // Rubber buttons are small squares with rounded corners and a rubber feel
+  const rubberStyle = isRubber
+    ? {
+        borderRadius: 4,
+        boxShadow: active
+          ? 'inset 0 2px 3px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.04)'
+          : '0 2px 4px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.06), inset 0 1px 0 rgba(255,255,255,0.06)',
+        transform: active ? 'translateY(1px)' : 'translateY(0)',
+      }
+    : undefined;
+
+  // Flat-key buttons are low-profile with less 3D gradient
+  const flatKeyStyle = isFlatKey
+    ? {
+        boxShadow: active
+          ? 'inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.03)'
+          : '0 2px 3px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.06)',
+        borderWidth: 1,
+        transform: active ? 'translateY(1px)' : 'translateY(0)',
+      }
+    : undefined;
+
+  const customStyle = transportStyle ?? rubberStyle ?? flatKeyStyle ?? {
+    boxShadow: active
+      ? 'inset 0 1px 3px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05)'
+      : '0 3px 6px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)',
+    transform: active ? 'translateY(1px)' : 'translateY(0)',
+  };
 
   return (
     <div className="flex flex-col items-center" data-control-id={id}>
@@ -105,26 +168,31 @@ export default function PanelButton({
         type="button"
         onClick={onClick}
         className={[
-          sizeStyle.button,
-          'rounded-md border',
+          isTransport ? '' : sizeStyle.button,
+          isTransport ? '' : 'rounded-md',
+          'border',
           'cursor-pointer select-none',
           'flex items-center justify-center',
           'transition-colors duration-100',
           active ? variantStyle.active : variantStyle.base,
         ].join(' ')}
-        style={{
-          boxShadow: active
-            ? 'inset 0 1px 3px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.05)'
-            : '0 3px 6px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.1)',
-          transform: active ? 'translateY(1px)' : 'translateY(0)',
-        }}
+        style={customStyle}
         {...(highlighted ? highlightAnimation : {})}
-        whileTap={{ scale: 0.95, y: 2 }}
+        whileTap={{ scale: isTransport ? 0.92 : 0.95, y: 2 }}
       >
-        {labelPosition === 'on' && (
-          <span className={`${sizeStyle.text} font-medium text-gray-200 leading-tight text-center px-1 tracking-wide uppercase`}>
-            {label}
+        {iconContent ? (
+          <span
+            className="text-gray-200 leading-none text-center select-none"
+            style={{ fontSize: isTransport ? 18 : 16 }}
+          >
+            {iconContent}
           </span>
+        ) : (
+          labelPosition === 'on' && (
+            <span className={`${sizeStyle.text} font-medium text-gray-200 leading-tight text-center px-1 tracking-wide uppercase`}>
+              {label}
+            </span>
+          )
         )}
       </motion.button>
 

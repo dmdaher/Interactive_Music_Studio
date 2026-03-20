@@ -7,6 +7,7 @@ interface ValueDialProps {
   label?: string;
   highlighted?: boolean;
   size?: 'sm' | 'lg';
+  hasPush?: boolean;
 }
 
 const DIAL_SIZES = { sm: 48, lg: 96 };
@@ -32,6 +33,7 @@ export default function ValueDial({
   label,
   highlighted = false,
   size = 'sm',
+  hasPush = false,
 }: ValueDialProps) {
   const DIAL_SIZE = DIAL_SIZES[size];
   const capInset = size === 'lg' ? 20 : 8;
@@ -123,6 +125,22 @@ export default function ValueDial({
             boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.4)',
           }}
         />
+
+        {/* Push indicator ring (shown when hasPush is true) */}
+        {hasPush && (
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: centerDot + 8,
+              height: centerDot + 8,
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              boxShadow: 'inset 0 0 3px rgba(255,255,255,0.05)',
+            }}
+          />
+        )}
       </motion.div>
 
       {/* Label */}
