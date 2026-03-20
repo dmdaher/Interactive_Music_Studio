@@ -3,7 +3,6 @@
 import LEDIndicator from '@/components/controls/LEDIndicator';
 import PanelButton from '@/components/controls/PanelButton';
 import Slider from '@/components/controls/Slider';
-
 import { PanelState } from '@/types/panel';
 
 interface TempoSectionProps {

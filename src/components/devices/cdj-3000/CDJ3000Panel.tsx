@@ -18,7 +18,9 @@ import TempoSection from './sections/TempoSection';
 
 interface CDJ3000PanelProps {
   panelState: PanelState;
+  displayState?: any;
   highlightedControls: string[];
+  zones?: any[];
   onButtonClick?: (id: string) => void;
 }
 

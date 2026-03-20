@@ -1,7 +1,6 @@
 'use client';
 
 import Wheel from '@/components/controls/Wheel';
-
 import { PanelState } from '@/types/panel';
 
 interface JogSectionProps {

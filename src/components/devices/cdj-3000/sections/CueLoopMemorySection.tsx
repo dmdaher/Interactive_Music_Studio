@@ -2,7 +2,6 @@
 
 import Knob from '@/components/controls/Knob';
 import PanelButton from '@/components/controls/PanelButton';
-
 import { PanelState } from '@/types/panel';
 
 interface CueLoopMemorySectionProps {

@@ -2,7 +2,6 @@
 
 import PanelButton from '@/components/controls/PanelButton';
 import ValueDial from '@/components/controls/ValueDial';
-
 import { PanelState } from '@/types/panel';
 
 interface NavigationSectionProps {

@@ -65,14 +65,6 @@ function deviceIdToPascal(deviceId: string): string {
     .join('');
 }
 
-/** Convert "cdj-3000" -> "Cdj3000" (for component names that should be more standard PascalCase) */
-function deviceIdToComponentPascal(deviceId: string): string {
-  return deviceId
-    .split('-')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1).toUpperCase())
-    .join('');
-}
-
 /** Convert "browse-bar" -> "BrowseBar" */
 function sectionIdToPascal(sectionId: string): string {
   return sectionId
@@ -81,13 +73,8 @@ function sectionIdToPascal(sectionId: string): string {
     .join('');
 }
 
-/** Convert "cdj-3000" -> "CDJ3000" for constant prefix */
-function deviceIdToConstPrefix(deviceId: string): string {
-  return deviceId
-    .split('-')
-    .map(part => part.toUpperCase())
-    .join('');
-}
+/** Alias for readability — constant prefix uses same transform as PascalCase */
+const deviceIdToConstPrefix = deviceIdToPascal;
 
 // ─── JSX Rendering Helpers ──────────────────────────────────────────────────
 
@@ -213,7 +200,9 @@ function escapeJsx(text: string): string {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/\{/g, '&#123;')
+    .replace(/\}/g, '&#125;');
 }
 
 // ─── Section Body Renderers ─────────────────────────────────────────────────
@@ -326,23 +315,48 @@ function renderClusterBelowAnchor(
   const splits = section.heightSplits ?? { cluster: 0.42, anchor: 0.52, gap: 0.06 };
   const cols = section.gridCols ?? 2;
 
-  const anchorIds = assignment?.anchor;
-  const clusterIds = assignment?.cluster;
+  const anchorPct = `${(splits.anchor * 100).toFixed(0)}%`;
+  const clusterPct = `${(splits.cluster * 100).toFixed(0)}%`;
 
-  const anchorControls = Array.isArray(anchorIds)
-    ? renderControlsById(anchorIds, controlMap, '          ')
-    : '';
+  // Cluster controls
+  const clusterIds = assignment?.cluster;
   const clusterControls = Array.isArray(clusterIds)
     ? renderControlsById(clusterIds, controlMap, '          ')
     : '';
 
-  const anchorPct = `${(splits.anchor * 100).toFixed(0)}%`;
-  const clusterPct = `${(splits.cluster * 100).toFixed(0)}%`;
+  // Anchor — may be flat string[] or nested Record<string, SubZone>
+  const anchorValue = assignment?.anchor;
+  let anchorBody: string;
+
+  if (!anchorValue) {
+    anchorBody = '';
+  } else if (Array.isArray(anchorValue)) {
+    anchorBody = renderControlsById(anchorValue, controlMap, '          ');
+  } else {
+    // Nested sub-zones: Record<string, SubZone>
+    const subZones = anchorValue as Record<string, SubZone>;
+    const subZoneParts = Object.entries(subZones).map(([_subRole, sz]) => {
+      const ids = subZoneControls(sz);
+      const dir = subZoneDirection(sz);
+      const flexDir = dir === 'row' ? 'flex-row' : 'flex-col';
+      const controls = renderControlsById(ids, controlMap, '              ');
+      return [
+        `            <div className="flex ${flexDir} gap-1 flex-1">`,
+        controls,
+        `            </div>`,
+      ].join('\n');
+    });
+    anchorBody = [
+      `          <div className="flex flex-row gap-1 w-full h-full">`,
+      ...subZoneParts,
+      `          </div>`,
+    ].join('\n');
+  }
 
   return [
     `      <div data-section-id="${section.id}" className="flex flex-col h-full">`,
     `        <div className="flex flex-col items-center" style={{ flex: '0 0 ${anchorPct}' }}>`,
-    anchorControls,
+    anchorBody,
     `        </div>`,
     `        <div className="grid gap-1" style={{ gridTemplateColumns: 'repeat(${cols}, 1fr)', flex: '0 0 ${clusterPct}' }}>`,
     clusterControls,
@@ -534,11 +548,11 @@ function generateSectionFile(
 
   const body = renderSectionBody(template, section, allControlMap);
 
+  const importBlock = importLines ? `${importLines}\n` : '';
+
   return `'use client';
 
-${importLines}
-
-import { PanelState } from '@/types/panel';
+${importBlock}import { PanelState } from '@/types/panel';
 
 interface ${sectionPascal}SectionProps {
   panelState: PanelState;
@@ -619,7 +633,9 @@ ${sectionImports}
 
 interface ${pascalName}PanelProps {
   panelState: PanelState;
+  displayState?: any;
   highlightedControls: string[];
+  zones?: any[];
   onButtonClick?: (id: string) => void;
 }
 

@@ -1,7 +1,6 @@
 'use client';
 
 import PadButton from '@/components/controls/PadButton';
-
 import { PanelState } from '@/types/panel';
 
 interface HotCueSectionProps {

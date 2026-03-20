@@ -2,7 +2,6 @@
 
 import Lever from '@/components/controls/Lever';
 import PanelButton from '@/components/controls/PanelButton';
-
 import { PanelState } from '@/types/panel';
 
 interface LeftTransportSectionProps {

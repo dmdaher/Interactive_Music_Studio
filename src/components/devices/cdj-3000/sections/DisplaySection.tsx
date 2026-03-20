@@ -1,7 +1,5 @@
 'use client';
 
-
-
 import { PanelState } from '@/types/panel';
 
 interface DisplaySectionProps {
