@@ -16,9 +16,7 @@ export default function PhotoOverlay() {
   const photoScale = useEditorStore((s) => s.photoScale);
   const canvasWidth = useEditorStore((s) => s.canvasWidth);
   const canvasHeight = useEditorStore((s) => s.canvasHeight);
-  const setCanvasSize = useEditorStore((s) => s.setCanvasSize);
   const deviceId = useEditorStore((s) => s.deviceId);
-  const [aspectMatched, setAspectMatched] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,25 +63,10 @@ export default function PhotoOverlay() {
       <img
         src={photoUrl}
         alt="Hardware reference photo"
-        onLoad={(e) => {
-          // Auto-match canvas aspect ratio to the photo on first load
-          if (!aspectMatched) {
-            const img = e.currentTarget;
-            const photoW = img.naturalWidth;
-            const photoH = img.naturalHeight;
-            if (photoW > 0 && photoH > 0) {
-              const aspect = photoW / photoH;
-              // Keep current canvas width, adjust height to match aspect ratio
-              const newH = Math.round(canvasWidth / aspect);
-              setCanvasSize(canvasWidth, newH);
-              setAspectMatched(true);
-            }
-          }
-        }}
         style={{
           width: canvasWidth,
           height: canvasHeight,
-          objectFit: 'fill',
+          objectFit: 'contain',
           opacity: photoOpacity,
           transform: `translate(${photoOffsetX}px, ${photoOffsetY}px) scale(${photoScale})`,
           transformOrigin: '0 0',
