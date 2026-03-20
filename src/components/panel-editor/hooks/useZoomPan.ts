@@ -4,7 +4,6 @@ import { useCallback, useRef } from 'react';
 import { useEditorStore } from '../store';
 
 interface ZoomPanHandlers {
-  onWheel: (e: React.WheelEvent<HTMLDivElement>) => void;
   onPointerDown: (e: React.PointerEvent<HTMLDivElement>) => void;
   onPointerMove: (e: React.PointerEvent<HTMLDivElement>) => void;
   onPointerUp: (e: React.PointerEvent<HTMLDivElement>) => void;
@@ -22,11 +21,6 @@ interface ZoomPanHandlers {
 export function useZoomPan(): ZoomPanHandlers {
   const isPanning = useRef(false);
   const lastPointer = useRef({ x: 0, y: 0 });
-
-  // Scroll wheel does nothing (zoom via toolbar buttons only)
-  const onWheel = useCallback((_e: React.WheelEvent<HTMLDivElement>) => {
-    // Intentionally disabled — zoom only via toolbar +/- buttons
-  }, []);
 
   const onPointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -74,5 +68,5 @@ export function useZoomPan(): ZoomPanHandlers {
     []
   );
 
-  return { onWheel, onPointerDown, onPointerMove, onPointerUp };
+  return { onPointerDown, onPointerMove, onPointerUp };
 }

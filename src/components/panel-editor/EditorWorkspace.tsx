@@ -11,16 +11,15 @@ interface EditorWorkspaceProps {
 }
 
 export default function EditorWorkspace({ deviceId: _deviceId, readOnly }: EditorWorkspaceProps) {
-  const { onWheel, onPointerDown, onPointerMove, onPointerUp } = useZoomPan();
+  const { onPointerDown, onPointerMove, onPointerUp } = useZoomPan();
 
   return (
     <div
-      className={`relative flex-1 overflow-hidden ${
+      className={`relative flex-1 overflow-auto ${
         readOnly
           ? 'cursor-default'
           : 'cursor-grab active:cursor-grabbing'
       }`}
-      onWheel={onWheel}
       onPointerDown={readOnly ? undefined : onPointerDown}
       onPointerMove={readOnly ? undefined : onPointerMove}
       onPointerUp={readOnly ? undefined : onPointerUp}
