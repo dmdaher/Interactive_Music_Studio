@@ -27,59 +27,63 @@ type ControlType = (typeof CONTROL_TYPES)[number];
 /** Render a small static thumbnail of each control type */
 function TypeThumbnail({ type }: { type: ControlType }) {
   const wrapClass =
-    'flex items-center justify-center w-full h-full pointer-events-none overflow-hidden';
+    'flex items-center justify-center w-full h-full pointer-events-none';
 
   switch (type) {
     case 'button':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.7)' }}>
+        <div className={wrapClass} style={{ transform: 'scale(0.6)' }}>
           <PanelButton id="thumb-btn" label="BTN" size="sm" />
         </div>
       );
     case 'knob':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.7)' }}>
+        <div className={wrapClass} style={{ transform: 'scale(0.55)' }}>
           <Knob id="thumb-knob" label="" size="sm" />
         </div>
       );
     case 'slider':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.55)' }}>
+        <div className={wrapClass} style={{ transform: 'scale(0.45)' }}>
           <Slider id="thumb-slider" label="" trackHeight={48} trackWidth={8} />
         </div>
       );
     case 'led':
       return (
         <div className={wrapClass}>
-          <div className="flex flex-col items-center gap-0.5">
-            <div className="relative">
-              <LEDIndicator id="thumb-led" on color="#22c55e" size={14} />
-            </div>
-          </div>
+          <div
+            className="rounded-full"
+            style={{
+              width: 16,
+              height: 16,
+              backgroundColor: '#22c55e',
+              border: '2px solid #166534',
+            }}
+          />
         </div>
       );
     case 'wheel':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.45)' }}>
-          <Wheel id="thumb-wheel" label="" width={60} height={60} />
+        <div className={wrapClass} style={{ transform: 'scale(0.35)' }}>
+          <Wheel id="thumb-wheel" label="" width={80} height={80} />
         </div>
       );
     case 'pad':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.6)' }}>
-          <PadButton id="thumb-pad" label="PAD" width={32} height={32} />
+        <div className={wrapClass} style={{ transform: 'scale(0.55)' }}>
+          <PadButton id="thumb-pad" label="PAD" width={36} height={36} />
         </div>
       );
     case 'encoder':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.65)' }}>
+        <div className={wrapClass} style={{ transform: 'scale(0.5)' }}>
           <ValueDial id="thumb-enc" size="sm" />
         </div>
       );
     case 'lever':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.6)' }}>
-          <Lever id="thumb-lever" label="" scale={0.6} />
+        <div className={wrapClass} style={{ transform: 'scale(0.45)' }}>
+          <Lever id="thumb-lever" label="" scale={0.7} />
         </div>
       );
     case 'screen':
@@ -130,7 +134,7 @@ export default function ControlTypeSelector({
             }`}
             title={type}
           >
-            <div className="flex h-10 w-full items-center justify-center">
+            <div className="flex h-12 w-full items-center justify-center overflow-hidden">
               <TypeThumbnail type={type} />
             </div>
             <span className="text-[9px] capitalize text-gray-400">{type}</span>
