@@ -58,6 +58,10 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
+      // Only select section if the click was on the section itself,
+      // not on a child control-node. Controls handle their own selection.
+      const target = e.target as HTMLElement;
+      if (target.closest('.control-node')) return;
       e.stopPropagation();
       setSelectedIds([sectionId]);
     },
