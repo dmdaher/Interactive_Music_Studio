@@ -27,6 +27,7 @@ import {
   subZoneDirection,
   LayoutEngineOutput,
 } from './layout-engine';
+import { HARDWARE_ICONS } from '../src/lib/hardware-icons';
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -40,19 +41,21 @@ const DEFAULT_PANEL_HEIGHT = 800;
  * Unknown types cause a hard error.
  */
 const CONTROL_MAP: Record<string, { component: string; import: string }> = {
-  button:    { component: 'PanelButton',   import: '@/components/controls/PanelButton' },
-  knob:      { component: 'Knob',          import: '@/components/controls/Knob' },
-  fader:     { component: 'Slider',        import: '@/components/controls/Slider' },
-  slider:    { component: 'Slider',        import: '@/components/controls/Slider' },
-  led:       { component: 'LEDIndicator',  import: '@/components/controls/LEDIndicator' },
-  indicator: { component: 'LEDIndicator',  import: '@/components/controls/LEDIndicator' },
-  wheel:     { component: 'Wheel',         import: '@/components/controls/Wheel' },
-  pad:       { component: 'PadButton',     import: '@/components/controls/PadButton' },
-  encoder:   { component: 'ValueDial',     import: '@/components/controls/ValueDial' },
-  switch:    { component: 'Lever',         import: '@/components/controls/Lever' },
-  lever:     { component: 'Lever',         import: '@/components/controls/Lever' },
-  screen:    { component: 'div',           import: '' },
-  display:   { component: 'div',           import: '' },
+  button:    { component: 'PanelButton',      import: '@/components/controls/PanelButton' },
+  knob:      { component: 'Knob',             import: '@/components/controls/Knob' },
+  fader:     { component: 'Slider',           import: '@/components/controls/Slider' },
+  slider:    { component: 'Slider',           import: '@/components/controls/Slider' },
+  led:       { component: 'LEDIndicator',     import: '@/components/controls/LEDIndicator' },
+  indicator: { component: 'LEDIndicator',     import: '@/components/controls/LEDIndicator' },
+  wheel:     { component: 'Wheel',            import: '@/components/controls/Wheel' },
+  pad:       { component: 'PadButton',        import: '@/components/controls/PadButton' },
+  encoder:   { component: 'ValueDial',        import: '@/components/controls/ValueDial' },
+  switch:    { component: 'Lever',            import: '@/components/controls/Lever' },
+  lever:     { component: 'DirectionSwitch',  import: '@/components/controls/DirectionSwitch' },
+  port:      { component: 'Port',             import: '@/components/controls/Port' },
+  slot:      { component: 'Port',             import: '@/components/controls/Port' },
+  screen:    { component: 'TouchDisplay',     import: '@/components/controls/TouchDisplay' },
+  display:   { component: 'TouchDisplay',     import: '@/components/controls/TouchDisplay' },
 };
 
 // ─── Naming Helpers ─────────────────────────────────────────────────────────
@@ -78,10 +81,17 @@ const deviceIdToConstPrefix = deviceIdToPascal;
 
 // ─── JSX Rendering Helpers ──────────────────────────────────────────────────
 
+/**
+ * Render a single control as JSX. Passes enriched manifest fields (buttonStyle,
+ * surfaceColor, icon, hasLed, etc.) when they are present; gracefully falls
+ * back to defaults when they are absent (backward-compatible with unenriched
+ * manifests such as the current CDJ-3000).
+ */
 function renderControl(
   controlId: string,
   control: ManifestControl,
   indent: string,
+  allControls?: Map<string, ManifestControl>,
 ): string {
   const mapping = CONTROL_MAP[control.type];
   if (!mapping) {
@@ -94,17 +104,35 @@ function renderControl(
 
   const label = control.verbatimLabel;
 
+  // Resolve icon content from HARDWARE_ICONS library or use raw string
+  const resolvedIcon = control.icon
+    ? (HARDWARE_ICONS[control.icon] ?? control.icon)
+    : undefined;
+
   switch (control.type) {
-    case 'button':
-      return [
+    case 'button': {
+      // Determine variant: explicit buttonStyle takes priority, then shape-based inference
+      const variant = control.buttonStyle
+        ?? (control.shape === 'circle' ? 'transport' : undefined);
+      const useIcon = resolvedIcon && control.labelDisplay === 'icon-only';
+      const lines: string[] = [
         `${indent}<PanelButton`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
+      ];
+      if (variant) lines.push(`${indent}  variant="${variant}"`);
+      if (control.surfaceColor) lines.push(`${indent}  surfaceColor="${control.surfaceColor}"`);
+      if (useIcon) lines.push(`${indent}  iconContent="${escapeJsx(resolvedIcon!)}"`);
+      if (control.hasLed) lines.push(`${indent}  hasLed`);
+      if (control.ledColor) lines.push(`${indent}  ledColor="${control.ledColor}"`);
+      lines.push(
         `${indent}  active={getState('${controlId}').active}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}  onClick={() => onButtonClick?.('${controlId}')}`,
         `${indent}/>`,
-      ].join('\n');
+      );
+      return lines.join('\n');
+    }
 
     case 'knob':
       return [
@@ -117,15 +145,28 @@ function renderControl(
       ].join('\n');
 
     case 'led':
-    case 'indicator':
-      return [
+    case 'indicator': {
+      const lines: string[] = [
         `${indent}<LEDIndicator`,
         `${indent}  id="${controlId}"`,
         `${indent}  on={getState('${controlId}').ledOn ?? false}`,
-        `${indent}  color={getState('${controlId}').ledColor}`,
+      ];
+      if (control.ledColor) {
+        lines.push(`${indent}  color="${control.ledColor}"`);
+      } else {
+        lines.push(`${indent}  color={getState('${controlId}').ledColor}`);
+      }
+      // Dual-label variant: label contains '/' separator
+      if (control.ledVariant === 'dual-label' && label.includes('/')) {
+        lines.push(`${indent}  variant="dual-label"`);
+        lines.push(`${indent}  label="${escapeJsx(label)}"`);
+      }
+      lines.push(
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
-      ].join('\n');
+      );
+      return lines.join('\n');
+    }
 
     case 'fader':
     case 'slider':
@@ -138,7 +179,33 @@ function renderControl(
         `${indent}/>`,
       ].join('\n');
 
-    case 'wheel':
+    case 'wheel': {
+      // If another control has nestedIn pointing to this wheel, render JogWheelAssembly
+      const hasNestedDisplay = allControls
+        ? Array.from(allControls.values()).some(
+            c => c.nestedIn === controlId && (c.type === 'screen' || c.type === 'display'),
+          )
+        : false;
+
+      if (hasNestedDisplay) {
+        const wheelSize = 160;
+        const displaySize = 60;
+        const ringColor = control.ledColor ?? undefined;
+        const lines: string[] = [
+          `${indent}<JogWheelAssembly`,
+          `${indent}  id="${controlId}"`,
+          `${indent}  label="${escapeJsx(label)}"`,
+          `${indent}  wheelSize={${wheelSize}}`,
+          `${indent}  displaySize={${displaySize}}`,
+        ];
+        if (ringColor) lines.push(`${indent}  ringColor="${ringColor}"`);
+        lines.push(
+          `${indent}  highlighted={isHighlighted('${controlId}')}`,
+          `${indent}/>`,
+        );
+        return lines.join('\n');
+      }
+
       return [
         `${indent}<Wheel`,
         `${indent}  id="${controlId}"`,
@@ -146,6 +213,7 @@ function renderControl(
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
       ].join('\n');
+    }
 
     case 'pad':
       return [
@@ -158,17 +226,21 @@ function renderControl(
         `${indent}/>`,
       ].join('\n');
 
-    case 'encoder':
-      return [
+    case 'encoder': {
+      const lines: string[] = [
         `${indent}<ValueDial`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
+      ];
+      if (control.encoderHasPush) lines.push(`${indent}  hasPush`);
+      lines.push(
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
-      ].join('\n');
+      );
+      return lines.join('\n');
+    }
 
     case 'switch':
-    case 'lever':
       return [
         `${indent}<Lever`,
         `${indent}  id="${controlId}"`,
@@ -177,17 +249,47 @@ function renderControl(
         `${indent}/>`,
       ].join('\n');
 
-    case 'screen':
-    case 'display':
+    case 'lever': {
+      const positions = control.positionLabels ?? ['FWD', 'REV', 'SLIP REV'];
       return [
-        `${indent}<div`,
-        `${indent}  data-control-id="${controlId}"`,
-        `${indent}  className="bg-gray-900 rounded border border-gray-700 flex items-center justify-center text-xs text-gray-500"`,
-        `${indent}  style={{ minHeight: 120, minWidth: 200 }}`,
-        `${indent}>`,
-        `${indent}  ${escapeJsx(label)}`,
-        `${indent}</div>`,
+        `${indent}<DirectionSwitch`,
+        `${indent}  id="${controlId}"`,
+        `${indent}  label="${escapeJsx(label)}"`,
+        `${indent}  positions={${JSON.stringify(positions)}}`,
+        `${indent}  highlighted={isHighlighted('${controlId}')}`,
+        `${indent}/>`,
       ].join('\n');
+    }
+
+    case 'port':
+    case 'slot':
+      return [
+        `${indent}<Port`,
+        `${indent}  id="${controlId}"`,
+        `${indent}  label="${escapeJsx(label)}"`,
+        `${indent}  variant="${control.type === 'slot' ? 'sd-card' : 'usb-a'}"`,
+        `${indent}  highlighted={isHighlighted('${controlId}')}`,
+        `${indent}/>`,
+      ].join('\n');
+
+    case 'screen':
+    case 'display': {
+      // Screens nested inside a wheel are rendered by JogWheelAssembly — skip here
+      if (control.nestedIn) {
+        return `${indent}{/* ${controlId}: nested in ${control.nestedIn}, rendered by JogWheelAssembly */}`;
+      }
+      return [
+        `${indent}<TouchDisplay`,
+        `${indent}  id="${controlId}"`,
+        `${indent}  label="${escapeJsx(label)}"`,
+        `${indent}  variant="main"`,
+        `${indent}  showMockContent`,
+        `${indent}  width={200}`,
+        `${indent}  height={120}`,
+        `${indent}  highlighted={isHighlighted('${controlId}')}`,
+        `${indent}/>`,
+      ].join('\n');
+    }
 
     default:
       throw new Error(`Unhandled control type "${control.type}" for "${controlId}".`);
@@ -213,12 +315,17 @@ function renderControlsById(
   indent: string,
 ): string {
   return controlIds
+    .filter(id => {
+      // Skip controls with nestedIn — they are rendered by their parent control
+      const ctrl = controlMap.get(id);
+      return !ctrl?.nestedIn;
+    })
     .map(id => {
       const ctrl = controlMap.get(id);
       if (!ctrl) {
         throw new Error(`Control "${id}" referenced in containerAssignment but not found in manifest controls.`);
       }
-      return renderControl(id, ctrl, indent);
+      return renderControl(id, ctrl, indent, controlMap);
     })
     .join('\n');
 }
@@ -486,6 +593,39 @@ function renderDualColumn(
   ].join('\n');
 }
 
+function renderTransportPair(
+  template: TemplateSpec,
+  controlMap: Map<string, ManifestControl>,
+  section: ManifestSection,
+): string {
+  // Render each button with the transport variant automatically applied
+  const controlJsx = template.controlSlots
+    .filter(id => {
+      const ctrl = controlMap.get(id);
+      return !ctrl?.nestedIn;
+    })
+    .map(id => {
+      const ctrl = controlMap.get(id);
+      if (!ctrl) {
+        throw new Error(`Control "${id}" referenced in transport-pair but not found in manifest controls.`);
+      }
+      // Force transport variant for buttons in a transport-pair section
+      const transportCtrl: ManifestControl = {
+        ...ctrl,
+        buttonStyle: ctrl.buttonStyle ?? 'transport',
+        shape: ctrl.shape ?? 'circle',
+      };
+      return renderControl(id, transportCtrl, '        ', controlMap);
+    })
+    .join('\n');
+
+  return [
+    `      <div data-section-id="${section.id}" className="flex flex-col items-center gap-4">`,
+    controlJsx,
+    `      </div>`,
+  ].join('\n');
+}
+
 function renderSectionBody(
   template: TemplateSpec,
   section: ManifestSection,
@@ -508,6 +648,8 @@ function renderSectionBody(
       return renderAnchorLayout(template, controlMap, section);
     case 'dual-column':
       return renderDualColumn(template, controlMap, section.id);
+    case 'transport-pair':
+      return renderTransportPair(template, controlMap, section);
     default:
       throw new Error(
         `Unknown archetype "${template.archetype}" for section "${section.id}". ` +
@@ -518,7 +660,10 @@ function renderSectionBody(
 
 // ─── File Generators ────────────────────────────────────────────────────────
 
-function collectImports(controls: ManifestControl[]): Map<string, string> {
+function collectImports(
+  controls: ManifestControl[],
+  allControls: Map<string, ManifestControl>,
+): Map<string, string> {
   const imports = new Map<string, string>();
   for (const ctrl of controls) {
     const mapping = CONTROL_MAP[ctrl.type];
@@ -527,6 +672,18 @@ function collectImports(controls: ManifestControl[]): Map<string, string> {
     }
     if (mapping.import && !imports.has(mapping.component)) {
       imports.set(mapping.component, mapping.import);
+    }
+
+    // If this is a wheel that has a nested display, add JogWheelAssembly import
+    if (ctrl.type === 'wheel') {
+      const hasNestedDisplay = Array.from(allControls.values()).some(
+        c => c.nestedIn === ctrl.id && (c.type === 'screen' || c.type === 'display'),
+      );
+      if (hasNestedDisplay) {
+        if (!imports.has('JogWheelAssembly')) {
+          imports.set('JogWheelAssembly', '@/components/controls/JogWheelAssembly');
+        }
+      }
     }
   }
   return imports;
@@ -537,9 +694,10 @@ function generateSectionFile(
   section: ManifestSection,
   sectionControls: ManifestControl[],
   allControlMap: Map<string, ManifestControl>,
+  groupLabels?: Array<{ id: string; text: string; controlIds: string[]; position: string }>,
 ): string {
   const sectionPascal = sectionIdToPascal(section.id);
-  const imports = collectImports(sectionControls);
+  const imports = collectImports(sectionControls, allControlMap);
 
   const importLines = Array.from(imports.entries())
     .sort(([a], [b]) => a.localeCompare(b))
@@ -549,6 +707,27 @@ function generateSectionFile(
   const body = renderSectionBody(template, section, allControlMap);
 
   const importBlock = importLines ? `${importLines}\n` : '';
+
+  // Check for shared labels / group labels for controls in this section
+  const sectionControlIds = new Set(sectionControls.map(c => c.id));
+  const relevantGroups = (groupLabels ?? []).filter(g =>
+    g.controlIds.some(id => sectionControlIds.has(id)),
+  );
+  // Also check for sharedLabel on individual controls
+  const sharedLabelGroups = new Map<string, string[]>();
+  for (const ctrl of sectionControls) {
+    if (ctrl.sharedLabel) {
+      const existing = sharedLabelGroups.get(ctrl.sharedLabel) ?? [];
+      existing.push(ctrl.id);
+      sharedLabelGroups.set(ctrl.sharedLabel, existing);
+    }
+  }
+
+  // Generate group label wrappers if any exist
+  let groupLabelComment = '';
+  if (relevantGroups.length > 0 || sharedLabelGroups.size > 0) {
+    groupLabelComment = '\n  // Group labels are rendered inline within the section body\n';
+  }
 
   return `'use client';
 
@@ -567,7 +746,7 @@ export default function ${sectionPascal}Section({
 }: ${sectionPascal}SectionProps) {
   const isHighlighted = (id: string) => highlightedControls.includes(id);
   const getState = (id: string) => panelState[id] ?? { active: false };
-
+${groupLabelComment}
   return (
 ${body}
   );
@@ -855,7 +1034,7 @@ function main() {
 
     const sectionControls = manifest.controls.filter(c => c.section === section.id);
     const sectionPascal = sectionIdToPascal(section.id);
-    const content = generateSectionFile(template, section, sectionControls, controlMap);
+    const content = generateSectionFile(template, section, sectionControls, controlMap, manifest.groupLabels);
     const filePath = path.join(sectionsDir, `${sectionPascal}Section.tsx`);
 
     sectionFiles.push({ path: filePath, content });

@@ -324,6 +324,24 @@ function generateTemplate(section: ManifestSection, controls: ManifestControl[])
       };
     }
 
+    case 'transport-pair': {
+      return {
+        sectionId: section.id,
+        archetype: section.archetype,
+        cssArchitecture: {
+          display: 'flex',
+          properties: {
+            'flex-direction': 'column',
+            'align-items': 'center',
+            'gap': '16px',
+          },
+        },
+        componentStructure: `<div data-section-id="${section.id}" className="flex flex-col items-center gap-4">{/* 2 transport buttons stacked vertically */}</div>`,
+        controlSlots: section.controls,
+        notes: [`Transport pair — two large circular buttons stacked vertically with generous spacing`],
+      };
+    }
+
     case 'stacked-rows': {
       return {
         sectionId: section.id,
@@ -372,7 +390,7 @@ function generateTemplate(section: ManifestSection, controls: ManifestControl[])
         section.archetype as string,
         `Unknown archetype "${section.archetype}". ` +
         `Valid archetypes: grid-NxM, single-column, single-row, anchor-layout, ` +
-        `cluster-above-anchor, cluster-below-anchor, dual-column, stacked-rows. ` +
+        `cluster-above-anchor, cluster-below-anchor, dual-column, transport-pair, stacked-rows. ` +
         `To add a new archetype, update LayoutArchetype type AND the generateTemplate switch in layout-engine.ts.`
       );
     }
