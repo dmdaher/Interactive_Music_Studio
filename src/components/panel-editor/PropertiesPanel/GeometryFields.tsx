@@ -76,8 +76,8 @@ export default function GeometryFields({
 }: GeometryFieldsProps) {
   return (
     <div className="space-y-1.5">
-      <label className="text-[10px] uppercase tracking-wider text-gray-500">
-        Geometry
+      <label className="text-[10px] uppercase tracking-wide text-gray-500">
+        Position
       </label>
       <div className="grid grid-cols-2 gap-2">
         <NumField

@@ -44,6 +44,7 @@ export default function EditorToolbar({
           value={snapGrid}
           onChange={(e) => setSnapGrid(Number(e.target.value) as SnapGrid)}
           className="h-6 rounded border border-gray-700 bg-gray-900 px-1.5 text-xs text-gray-300 outline-none focus:border-blue-500"
+          title="Snap Grid Size"
         >
           {SNAP_OPTIONS.map((v) => (
             <option key={v} value={v}>
@@ -62,7 +63,7 @@ export default function EditorToolbar({
           onClick={() => setZoom(zoom - ZOOM_STEP)}
           disabled={zoom <= 0.1}
           className="flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Zoom out"
+          title="Zoom Out (Cmd+-)"
         >
           -
         </button>
@@ -73,14 +74,14 @@ export default function EditorToolbar({
           onClick={() => setZoom(zoom + ZOOM_STEP)}
           disabled={zoom >= 5}
           className="flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Zoom in"
+          title="Zoom In (Cmd+=)"
         >
           +
         </button>
         <button
           onClick={() => setZoom(1)}
           className="ml-1 flex h-6 items-center rounded px-1.5 text-[10px] text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
-          title="Reset zoom"
+          title="Reset Zoom"
         >
           Reset
         </button>
@@ -95,7 +96,7 @@ export default function EditorToolbar({
           onClick={undo}
           disabled={past.length === 0}
           className="flex h-6 items-center rounded px-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Undo"
+          title="Undo (Cmd+Z)"
         >
           Undo
         </button>
@@ -103,7 +104,7 @@ export default function EditorToolbar({
           onClick={redo}
           disabled={future.length === 0}
           className="flex h-6 items-center rounded px-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Redo"
+          title="Redo (Cmd+Shift+Z)"
         >
           Redo
         </button>
@@ -120,7 +121,7 @@ export default function EditorToolbar({
             ? 'bg-blue-500/20 text-blue-400'
             : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
         }`}
-        title="Toggle grid (G)"
+        title="Toggle Grid (G)"
       >
         G
       </button>
@@ -133,7 +134,7 @@ export default function EditorToolbar({
             ? 'bg-blue-500/20 text-blue-400'
             : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
         }`}
-        title="Toggle photo overlay (P)"
+        title="Toggle Photo (P)"
       >
         P
       </button>

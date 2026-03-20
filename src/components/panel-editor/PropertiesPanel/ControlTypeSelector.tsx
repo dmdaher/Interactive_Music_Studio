@@ -111,8 +111,8 @@ export default function ControlTypeSelector({
 
   return (
     <div className="space-y-1.5">
-      <label className="text-[10px] uppercase tracking-wider text-gray-500">
-        Control Type
+      <label className="text-[10px] uppercase tracking-wide text-gray-500">
+        Type
       </label>
       <div className="grid grid-cols-3 gap-1.5">
         {CONTROL_TYPES.map((type) => (

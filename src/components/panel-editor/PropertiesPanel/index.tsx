@@ -56,7 +56,7 @@ function SectionProperties({ section }: { section: SectionDef }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
       <div className="border-b border-gray-800 pb-2">
         <h3 className="text-sm font-medium text-gray-200">Section</h3>
         <p className="text-xs text-gray-500 mt-0.5">{section.id}</p>
@@ -64,7 +64,7 @@ function SectionProperties({ section }: { section: SectionDef }) {
 
       {/* Header label */}
       <div className="space-y-1">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">
           Header
         </label>
         <div className="text-xs text-gray-300">
@@ -72,9 +72,12 @@ function SectionProperties({ section }: { section: SectionDef }) {
         </div>
       </div>
 
+      {/* Divider */}
+      <div className="h-px bg-gray-800" />
+
       {/* Archetype */}
       <div className="space-y-1">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">
           Archetype
         </label>
         <div className="text-xs text-gray-400 rounded bg-gray-900 border border-gray-700 px-2 py-1">
@@ -82,9 +85,12 @@ function SectionProperties({ section }: { section: SectionDef }) {
         </div>
       </div>
 
+      {/* Divider */}
+      <div className="h-px bg-gray-800" />
+
       {/* Children count */}
       <div className="space-y-1">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">
           Controls
         </label>
         <div className="text-xs text-gray-400">
@@ -92,7 +98,10 @@ function SectionProperties({ section }: { section: SectionDef }) {
         </div>
       </div>
 
-      {/* Geometry */}
+      {/* Divider */}
+      <div className="h-px bg-gray-800" />
+
+      {/* Position */}
       <GeometryFields
         x={section.x}
         y={section.y}
@@ -184,7 +193,7 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
       <div className="border-b border-gray-800 pb-2">
         <h3 className="text-sm font-medium text-gray-200">Control</h3>
         <p className="text-xs text-gray-500 mt-0.5 truncate" title={control.id}>
@@ -214,7 +223,7 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
       {/* Divider */}
       <div className="h-px bg-gray-800" />
 
-      {/* Geometry */}
+      {/* Position */}
       <GeometryFields
         x={control.x}
         y={control.y}
@@ -227,10 +236,12 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
         onHChange={handleHChange}
       />
 
-      {/* Lock status */}
+      {/* Divider */}
       <div className="h-px bg-gray-800" />
+
+      {/* Lock status */}
       <div className="flex items-center justify-between">
-        <span className="text-[10px] uppercase tracking-wider text-gray-500">
+        <span className="text-[10px] uppercase tracking-wide text-gray-500">
           Locked
         </span>
         <span className="text-xs text-gray-400">
@@ -330,7 +341,7 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
       <div className="border-b border-gray-800 pb-2">
         <h3 className="text-sm font-medium text-gray-200">
           {controls.length} Controls Selected
@@ -363,7 +374,7 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
 
       <div className="h-px bg-gray-800" />
 
-      {/* Geometry */}
+      {/* Position */}
       <GeometryFields
         x={allSame(xs) ? xs[0] : 0}
         y={allSame(ys) ? ys[0] : 0}

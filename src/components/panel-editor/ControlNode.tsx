@@ -269,6 +269,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
           ? '0 0 8px 2px rgba(59,130,246,0.3)'
           : 'none',
         opacity: isLocked ? 0.7 : 1,
+        cursor: isLocked ? 'not-allowed' : 'move',
       }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}

@@ -60,7 +60,7 @@ export default function LabelEditor({
 
   return (
     <div className="space-y-2">
-      <label className="text-[10px] uppercase tracking-wider text-gray-500">
+      <label className="text-[10px] uppercase tracking-wide text-gray-500">
         Label
       </label>
 
