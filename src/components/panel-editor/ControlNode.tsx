@@ -74,7 +74,9 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           <LEDIndicator
             id={control.id}
             highlighted={isSelected}
-            size={control.w}
+            on
+            color="#22c55e"
+            size={Math.max(control.w, 14)}
           />
           <span className="text-[8px] text-gray-500 uppercase truncate w-full text-center">
             {control.label}

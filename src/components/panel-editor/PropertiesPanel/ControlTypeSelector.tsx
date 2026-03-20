@@ -50,14 +50,18 @@ function TypeThumbnail({ type }: { type: ControlType }) {
       );
     case 'led':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.9)' }}>
-          <LEDIndicator id="thumb-led" on color="#ff4444" size={10} />
+        <div className={wrapClass}>
+          <div className="flex flex-col items-center gap-0.5">
+            <div className="relative">
+              <LEDIndicator id="thumb-led" on color="#22c55e" size={14} />
+            </div>
+          </div>
         </div>
       );
     case 'wheel':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.35)' }}>
-          <Wheel id="thumb-wheel" label="" width={40} height={60} />
+        <div className={wrapClass} style={{ transform: 'scale(0.45)' }}>
+          <Wheel id="thumb-wheel" label="" width={60} height={60} />
         </div>
       );
     case 'pad':
@@ -68,7 +72,7 @@ function TypeThumbnail({ type }: { type: ControlType }) {
       );
     case 'encoder':
       return (
-        <div className={wrapClass} style={{ transform: 'scale(0.55)' }}>
+        <div className={wrapClass} style={{ transform: 'scale(0.65)' }}>
           <ValueDial id="thumb-enc" size="sm" />
         </div>
       );
@@ -126,7 +130,7 @@ export default function ControlTypeSelector({
             }`}
             title={type}
           >
-            <div className="flex h-7 w-full items-center justify-center">
+            <div className="flex h-10 w-full items-center justify-center">
               <TypeThumbnail type={type} />
             </div>
             <span className="text-[9px] capitalize text-gray-400">{type}</span>
