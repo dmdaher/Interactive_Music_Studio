@@ -1,38 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-interface ManifestControl {
-  id: string;
-  verbatimLabel: string;
-  type: string;
-  section: string;
-  functionalGroup: string;
-}
-
-interface ManifestSection {
-  id: string;
-  headerLabel: string | null;
-  archetype: string;
-  controls: string[];
-  widthPercent: number;
-  complexity: string;
-  gridRows?: number;
-  gridCols?: number;
-  heightSplits?: { cluster: number; anchor: number; gap: number };
-}
-
-interface MasterManifest {
-  deviceId: string;
-  deviceName: string;
-  manufacturer: string;
-  layoutType: string;
-  densityTargets: { vertical: string; horizontal: string; horizontalDeadSpaceMax: number };
-  sections: ManifestSection[];
-  controls: ManifestControl[];
-  sharedElements: Array<{ id: string; spans: string[]; expectedInstanceCount: number }>;
-  alignmentAnchors: Array<{ sourceId: string; targetId: string; axis: string }>;
-}
+import type { ManifestControl, ManifestSection, MasterManifest } from '@/types/manifest';
 
 interface ManifestViewerProps {
   deviceId: string;
@@ -185,9 +154,9 @@ export default function ManifestViewer({ deviceId }: ManifestViewerProps) {
           Density Targets
         </h3>
         <div className="space-y-1 text-[11px]" style={{ color: '#9ca3af' }}>
-          <div>Vertical: {data.densityTargets.vertical}</div>
-          <div>Horizontal: {data.densityTargets.horizontal}</div>
-          <div>Max dead space: {data.densityTargets.horizontalDeadSpaceMax}%</div>
+          <div>Vertical: {data.densityTargets?.vertical ?? 'N/A'}</div>
+          <div>Horizontal: {data.densityTargets?.horizontal ?? 'N/A'}</div>
+          <div>Max dead space: {data.densityTargets?.horizontalDeadSpaceMax ?? 'N/A'}%</div>
         </div>
       </div>
     </div>

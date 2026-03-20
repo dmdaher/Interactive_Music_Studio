@@ -1,4 +1,15 @@
 import { StateCreator } from 'zustand';
+import type {
+  ManifestControl,
+  ManifestSection,
+  MasterManifest,
+  SubZone,
+  AlignmentAnchor,
+  DensityTargets,
+} from '@/types/manifest';
+
+// Re-export MasterManifest as MasterManifestInput for backward compatibility
+export type MasterManifestInput = MasterManifest;
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -22,64 +33,6 @@ const DEFAULT_SIZES: Record<string, { w: number; h: number }> = {
   switch:  { w: 32,  h: 64  },
   screen:  { w: 200, h: 120 },
 };
-
-// ─── Manifest input types (mirrored from layout-engine.ts) ──────────────────
-// scripts/ is excluded from tsconfig so we re-declare the subset we need.
-
-type SubZone = string[] | { controls: string[]; direction: 'row' | 'column' };
-
-interface ManifestControl {
-  id: string;
-  verbatimLabel: string;
-  type: string;
-  section: string;
-  functionalGroup: string;
-  spatialNeighbors: {
-    above: string | null;
-    below: string | null;
-    left: string | null;
-    right: string | null;
-  };
-}
-
-interface ManifestSection {
-  id: string;
-  headerLabel: string | null;
-  archetype: string;
-  panelBoundingBox?: { x: number; y: number; w: number; h: number };
-  gridRows?: number;
-  gridCols?: number;
-  controls: string[];
-  containerAssignment?: Record<string, string[] | Record<string, SubZone>>;
-  heightSplits?: { cluster: number; anchor: number; gap: number };
-  widthPercent: number;
-  complexity: string;
-}
-
-interface AlignmentAnchor {
-  sourceId: string;
-  targetId: string;
-  axis: 'x' | 'y';
-  tolerancePx: number;
-}
-
-interface DensityTargets {
-  vertical: string;
-  horizontal: string;
-  horizontalDeadSpaceMax: number;
-}
-
-export interface MasterManifestInput {
-  deviceId: string;
-  deviceName: string;
-  manufacturer: string;
-  layoutType: string;
-  densityTargets?: DensityTargets;
-  sections: ManifestSection[];
-  controls: ManifestControl[];
-  sharedElements?: unknown[];
-  alignmentAnchors?: AlignmentAnchor[];
-}
 
 // ─── Editor data model (flat maps) ──────────────────────────────────────────
 

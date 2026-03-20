@@ -1,42 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import type { ManifestControl, ManifestSection, MasterManifest, SubZone } from '@/types/manifest';
+import { subZoneControls, subZoneDirection } from '@/types/manifest';
 
-// ─── Types ──────────────────────────────────────────────────
-
-interface ManifestControl {
-  id: string;
-  verbatimLabel: string;
-  type: string;
-  section: string;
-}
-
-interface ManifestSection {
-  id: string;
-  headerLabel: string | null;
-  archetype: string;
-  gridRows?: number;
-  gridCols?: number;
-  controls: string[];
-  containerAssignment?: Record<string, string[] | Record<string, SubZone>>;
-  heightSplits?: { cluster: number; anchor: number; gap: number };
-  panelBoundingBox?: { x: number; y: number; w: number; h: number };
-  widthPercent: number;
-  complexity: string;
-}
-
-type SubZone = string[] | { controls: string[]; direction: 'row' | 'column' };
-function szControls(sz: SubZone): string[] { return Array.isArray(sz) ? sz : sz.controls; }
-function szDirection(sz: SubZone): 'row' | 'column' { return Array.isArray(sz) ? 'column' : sz.direction; }
-
-interface MasterManifest {
-  deviceId: string;
-  deviceName: string;
-  manufacturer: string;
-  layoutType: string;
-  sections: ManifestSection[];
-  controls: ManifestControl[];
-}
+// Local aliases for brevity (used extensively in this file)
+const szControls = subZoneControls;
+const szDirection = subZoneDirection;
 
 interface TemplateSpec {
   sectionId: string;
@@ -1083,6 +1053,8 @@ export default function PanelLayoutEditor({ deviceId }: PanelLayoutEditorProps) 
         verbatimLabel: controlId,
         type: 'button',
         section: sectionId,
+        functionalGroup: 'default',
+        spatialNeighbors: { above: null, below: null, left: null, right: null },
       };
       return {
         ...prev,

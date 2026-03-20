@@ -26,3 +26,25 @@ export type {
 } from './manifestSlice';
 export { CANVAS_BASE_W, CANVAS_BASE_H } from './manifestSlice';
 export type { HistorySlice, ManifestSnapshot } from './historySlice';
+
+// Shared manifest types (canonical source of truth)
+export type {
+  ManifestControl,
+  ManifestSection,
+  MasterManifest,
+  ControlType,
+  LayoutArchetype,
+  SubZone,
+  AlignmentAnchor,
+  DensityTargets,
+  ButtonShape,
+  SizeClass,
+  ButtonStyle,
+  LabelDisplay,
+  LEDBehavior,
+  LEDPosition,
+  LEDVariant,
+  InteractionType,
+  DeviceDimensions,
+  GroupLabel,
+} from '@/types/manifest';
