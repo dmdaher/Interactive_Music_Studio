@@ -248,6 +248,13 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
   const isLocked = control.locked;
 
+  // Detect if any part of the control extends outside its parent section bounds
+  const isOutOfBounds =
+    control.x < section.x ||
+    control.y < section.y ||
+    control.x + control.w > section.x + section.w ||
+    control.y + control.h > section.y + section.h;
+
   return (
     <Rnd
       position={{ x: relX, y: relY }}
@@ -261,15 +268,19 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       style={{
-        outline: isSelected
-          ? '2px solid rgba(59,130,246,0.8)'
-          : 'none',
+        outline: isOutOfBounds
+          ? '2px solid rgba(239,68,68,0.8)'
+          : isSelected
+            ? '2px solid rgba(59,130,246,0.8)'
+            : 'none',
         outlineOffset: 1,
         borderRadius: 2,
         zIndex: isSelected ? 10 : 1,
-        boxShadow: isSelected
-          ? '0 0 8px 2px rgba(59,130,246,0.3)'
-          : 'none',
+        boxShadow: isOutOfBounds
+          ? '0 0 8px 2px rgba(239,68,68,0.3)'
+          : isSelected
+            ? '0 0 8px 2px rgba(59,130,246,0.3)'
+            : 'none',
         opacity: isLocked ? 0.7 : 1,
         cursor: isLocked ? 'not-allowed' : 'move',
       }}

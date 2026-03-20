@@ -6,6 +6,7 @@ import type { MasterManifestInput } from './store';
 import EditorToolbar from './EditorToolbar';
 import EditorWorkspace from './EditorWorkspace';
 import PropertiesPanel from './PropertiesPanel';
+import LayersPanel from './LayersPanel';
 import ContextMenu from './ContextMenu';
 import { useEditorKeyboard } from './hooks/useEditorKeyboard';
 import { useAutoSave } from './hooks/useAutoSave';
@@ -86,6 +87,7 @@ function EditorShell({ deviceId }: { deviceId: string }) {
       )}
 
       <div className="flex flex-1 overflow-hidden">
+        <LayersPanel />
         <EditorWorkspace deviceId={deviceId} readOnly={previewMode} />
         <div className="w-72 border-l border-gray-800 bg-[#0d0d1a]">
           <PropertiesPanel />
