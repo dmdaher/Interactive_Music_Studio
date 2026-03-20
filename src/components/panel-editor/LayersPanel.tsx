@@ -9,17 +9,17 @@ function truncate(str: string, maxLen: number): string {
   return str.slice(0, maxLen - 1) + '\u2026';
 }
 
-// ─── Section item ───────────────────────────────────────────────────────────
+// ─── Control item (inside expanded section) ─────────────────────────────────
 
-function SectionItem({ sectionId }: { sectionId: string }) {
-  const section = useEditorStore((s) => s.sections[sectionId]);
+function ControlItem({ controlId }: { controlId: string }) {
+  const control = useEditorStore((s) => s.controls[controlId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+  const toggleSelected = useEditorStore((s) => s.toggleSelected);
 
-  const isSelected = selectedIds.includes(sectionId);
+  const isSelected = selectedIds.includes(controlId);
   const itemRef = useRef<HTMLButtonElement>(null);
 
-  // Bi-directional sync: scroll into view when selected on canvas
   useEffect(() => {
     if (isSelected && itemRef.current) {
       itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -29,9 +29,73 @@ function SectionItem({ sectionId }: { sectionId: string }) {
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      if (e.shiftKey || e.metaKey) {
+        toggleSelected(controlId);
+      } else {
+        setSelectedIds([controlId]);
+      }
+    },
+    [controlId, toggleSelected, setSelectedIds],
+  );
+
+  if (!control) return null;
+
+  return (
+    <button
+      ref={itemRef}
+      onClick={handleClick}
+      className={`flex w-full items-center gap-1 rounded px-2 py-1 text-left text-[10px] transition-colors ${
+        isSelected
+          ? 'bg-blue-600/30 text-white'
+          : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+      }`}
+    >
+      <span className="flex-1 truncate">{truncate(control.label || control.id, 22)}</span>
+      <span className="flex-shrink-0 text-[8px] text-gray-600 uppercase">{control.type}</span>
+    </button>
+  );
+}
+
+// ─── Section item (with collapsible control list) ────────────────────────────
+
+function SectionItem({ sectionId }: { sectionId: string }) {
+  const section = useEditorStore((s) => s.sections[sectionId]);
+  const selectedIds = useEditorStore((s) => s.selectedIds);
+  const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+
+  const [expanded, setExpanded] = useState(false);
+  const isSelected = selectedIds.includes(sectionId);
+  // Also highlight section if any of its children are selected
+  const hasSelectedChild = section?.childIds.some((id) => selectedIds.includes(id)) ?? false;
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isSelected && itemRef.current) {
+      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [isSelected]);
+
+  // Auto-expand when a child control is selected (e.g. from canvas click)
+  useEffect(() => {
+    if (hasSelectedChild && !expanded) {
+      setExpanded(true);
+    }
+  }, [hasSelectedChild, expanded]);
+
+  const handleSectionClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
       setSelectedIds([sectionId]);
     },
     [sectionId, setSelectedIds],
+  );
+
+  const handleToggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setExpanded((prev) => !prev);
+    },
+    [],
   );
 
   if (!section) return null;
@@ -40,29 +104,55 @@ function SectionItem({ sectionId }: { sectionId: string }) {
   const controlCount = section.childIds.length;
 
   return (
-    <button
-      ref={itemRef}
-      onClick={handleClick}
-      className={`flex w-full items-center gap-1.5 rounded px-2 py-1.5 text-left transition-colors ${
-        isSelected
-          ? 'bg-blue-600/20 text-white'
-          : 'text-gray-300 hover:bg-white/5 hover:text-gray-100'
-      }`}
-    >
-      <span className="flex-1 truncate text-[11px] font-medium">
-        {truncate(displayName, 20)}
-      </span>
+    <div ref={itemRef}>
+      {/* Section header row */}
+      <div
+        className={`flex items-center rounded transition-colors ${
+          isSelected
+            ? 'bg-blue-600/20'
+            : hasSelectedChild
+              ? 'bg-blue-600/10'
+              : 'hover:bg-white/5'
+        }`}
+      >
+        {/* Expand/collapse arrow */}
+        <button
+          onClick={handleToggle}
+          className="flex h-7 w-5 flex-shrink-0 items-center justify-center text-gray-500 hover:text-gray-300"
+        >
+          <svg
+            className={`h-2.5 w-2.5 transition-transform ${expanded ? 'rotate-90' : ''}`}
+            viewBox="0 0 12 12"
+            fill="currentColor"
+          >
+            <path d="M4 2l4 4-4 4z" />
+          </svg>
+        </button>
 
-      {/* Control count */}
-      <span className="flex-shrink-0 text-[9px] text-gray-500">
-        {controlCount}
-      </span>
+        {/* Section name + metadata */}
+        <button
+          onClick={handleSectionClick}
+          className={`flex flex-1 items-center gap-1.5 py-1 pr-2 text-left text-[11px] font-medium ${
+            isSelected ? 'text-white' : 'text-gray-300'
+          }`}
+        >
+          <span className="flex-1 truncate">{truncate(displayName, 18)}</span>
+          <span className="flex-shrink-0 text-[9px] text-gray-500">{controlCount}</span>
+          <span className="flex-shrink-0 rounded bg-gray-700/60 px-1 py-0.5 text-[8px] text-gray-400 uppercase leading-none">
+            {truncate(section.archetype, 10)}
+          </span>
+        </button>
+      </div>
 
-      {/* Archetype badge */}
-      <span className="flex-shrink-0 rounded bg-gray-700/60 px-1 py-0.5 text-[8px] text-gray-400 uppercase leading-none">
-        {truncate(section.archetype, 10)}
-      </span>
-    </button>
+      {/* Expanded child controls */}
+      {expanded && (
+        <div className="ml-4 border-l border-gray-800 pl-0.5 py-0.5">
+          {section.childIds.map((id) => (
+            <ControlItem key={id} controlId={id} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

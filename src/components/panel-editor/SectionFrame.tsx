@@ -7,9 +7,10 @@ import ControlNode from './ControlNode';
 
 interface SectionFrameProps {
   sectionId: string;
+  zIndex?: number;
 }
 
-export default function SectionFrame({ sectionId }: SectionFrameProps) {
+export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProps) {
   const section = useEditorStore((s) => s.sections[sectionId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const zoom = useEditorStore((s) => s.zoom);
@@ -90,6 +91,7 @@ export default function SectionFrame({ sectionId }: SectionFrameProps) {
           ? 'rgba(59,130,246,0.06)'
           : 'rgba(255,255,255,0.02)',
         transition: 'border-color 0.15s, background-color 0.15s',
+        zIndex: isSelected ? 100 : zIndex,
       }}
       className="hover:border-white/20"
       onClick={handleClick}

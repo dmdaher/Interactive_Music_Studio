@@ -15,7 +15,11 @@ export default function PanCanvas() {
   const sections = useEditorStore((s) => s.sections);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
 
-  const sectionEntries = Object.values(sections);
+  // Sort sections by area: largest first (rendered at bottom), smallest last (on top).
+  // This ensures smaller sections in overlapping areas are always clickable.
+  const sectionEntries = Object.values(sections).sort(
+    (a, b) => (b.w * b.h) - (a.w * a.h)
+  );
 
   return (
     <div
@@ -44,8 +48,8 @@ export default function PanCanvas() {
       <DragSelectRect />
 
       {/* Section frames with real controls */}
-      {sectionEntries.map((section) => (
-        <SectionFrame key={section.id} sectionId={section.id} />
+      {sectionEntries.map((section, index) => (
+        <SectionFrame key={section.id} sectionId={section.id} zIndex={index + 1} />
       ))}
     </div>
   );
