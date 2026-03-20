@@ -6,6 +6,15 @@ import type {
   SubZone,
   AlignmentAnchor,
   DensityTargets,
+  GroupLabel,
+  ButtonShape,
+  SizeClass,
+  ButtonStyle,
+  LabelDisplay,
+  LEDBehavior,
+  LEDPosition,
+  LEDVariant,
+  InteractionType,
 } from '@/types/manifest';
 
 // Re-export MasterManifest as MasterManifestInput for backward compatibility
@@ -32,6 +41,17 @@ const DEFAULT_SIZES: Record<string, { w: number; h: number }> = {
   lever:   { w: 32,  h: 64  },
   switch:  { w: 32,  h: 64  },
   screen:  { w: 200, h: 120 },
+  port:    { w: 48,  h: 32  },
+  slot:    { w: 64,  h: 16  },
+};
+
+/** sizeClass → pixel dimension overrides */
+const SIZE_CLASS_DIMS: Record<string, { w: number; h: number }> = {
+  xs: { w: 24, h: 24 },
+  sm: { w: 48, h: 36 },
+  md: { w: 64, h: 48 },
+  lg: { w: 96, h: 72 },
+  xl: { w: 160, h: 120 },
 };
 
 // ─── Editor data model (flat maps) ──────────────────────────────────────────
@@ -45,10 +65,8 @@ export interface ControlDef {
   w: number;
   h: number;
   sectionId: string;
-  labelPosition: 'above' | 'below' | 'left' | 'right' | 'on-button';
+  labelPosition: 'above' | 'below' | 'left' | 'right' | 'on-button' | 'hidden';
   locked: boolean;
-  shape?: 'rectangle' | 'circle';
-  ledVariant?: 'dot' | 'dual-label';
   secondaryLabel?: string;
   spatialNeighbors?: {
     above: string | null;
@@ -57,6 +75,44 @@ export interface ControlDef {
     right: string | null;
   };
   functionalGroup?: string;
+  containerAssignment?: Record<string, unknown>;
+  heightSplits?: Record<string, number>;
+  gridCols?: number;
+  gridRows?: number;
+  widthPercent?: number;
+  complexity?: string;
+
+  // Visual Appearance (enriched fields)
+  shape?: ButtonShape;
+  sizeClass?: SizeClass;
+  surfaceColor?: string | null;
+  buttonStyle?: ButtonStyle;
+
+  // Label Rendering (enriched fields)
+  labelDisplay?: LabelDisplay;
+  icon?: string | null;
+  primaryLabel?: string;
+
+  // LED Properties (enriched fields)
+  hasLed?: boolean;
+  ledColor?: string | null;
+  ledBehavior?: LEDBehavior;
+  ledPosition?: LEDPosition;
+  ledVariant?: LEDVariant;
+
+  // Interaction Model (enriched fields)
+  interactionType?: InteractionType;
+  secondaryFunction?: string | null;
+  positions?: number;
+  positionLabels?: string[];
+  encoderHasPush?: boolean;
+  orientation?: 'vertical' | 'horizontal';
+
+  // Relationships (enriched fields)
+  pairedWith?: string | null;
+  sharedLabel?: string | null;
+  groupId?: string | null;
+  nestedIn?: string | null;
 }
 
 export interface SectionDef {
@@ -87,6 +143,7 @@ export interface ManifestSlice {
   densityTargets?: DensityTargets;
   sharedElements: unknown[];
   alignmentAnchors: AlignmentAnchor[];
+  groupLabels: GroupLabel[];
   sections: Record<string, SectionDef>;
   controls: Record<string, ControlDef>;
   selectedIds: string[];
@@ -117,16 +174,37 @@ function defaultLabelPosition(type: string): ControlDef['labelPosition'] {
   return 'below';
 }
 
-function defaultSize(type: string): { w: number; h: number } {
+/** Map manifest LabelDisplay to editor labelPosition.
+ *  'icon-only' maps to 'hidden' since the label rendering is handled
+ *  via the separate labelDisplay field in ControlDef. */
+function mapLabelDisplay(ld?: LabelDisplay): ControlDef['labelPosition'] | undefined {
+  if (!ld) return undefined;
+  if (ld === 'icon-only') return 'hidden';
+  return ld;
+}
+
+function defaultSize(type: string, sizeClass?: SizeClass): { w: number; h: number } {
+  if (sizeClass && SIZE_CLASS_DIMS[sizeClass]) {
+    return SIZE_CLASS_DIMS[sizeClass];
+  }
   return DEFAULT_SIZES[type] ?? { w: 48, h: 32 };
 }
 
 let addCounter = 0;
 
+// ─── Combined state shape for cross-slice access ──────────────────────────
+// The manifest slice needs to write canvasWidth/canvasHeight from the canvas
+// slice when deviceDimensions are present.
+
+interface CanvasFields {
+  canvasWidth: number;
+  canvasHeight: number;
+}
+
 // ─── Slice Creator ──────────────────────────────────────────────────────────
 
 export const createManifestSlice: StateCreator<
-  ManifestSlice,
+  ManifestSlice & CanvasFields,
   [],
   [],
   ManifestSlice
@@ -139,6 +217,7 @@ export const createManifestSlice: StateCreator<
   densityTargets: undefined,
   sharedElements: [],
   alignmentAnchors: [],
+  groupLabels: [],
   sections: {},
   controls: {},
   selectedIds: [],
@@ -224,7 +303,7 @@ export const createManifestSlice: StateCreator<
       ) => {
         const mc = mcById.get(controlId);
         if (!mc) return;
-        const size = defaultSize(mc.type);
+        const size = defaultSize(mc.type, mc.sizeClass);
         const fitW = Math.max(MIN_CONTROL_W, maxW ? Math.min(size.w, maxW - 4) : size.w);
         const fitH = Math.max(MIN_CONTROL_H, maxH ? Math.min(size.h, maxH - 4) : size.h);
         controls[controlId] = {
@@ -236,10 +315,43 @@ export const createManifestSlice: StateCreator<
           w: fitW,
           h: fitH,
           sectionId: ms.id,
-          labelPosition: defaultLabelPosition(mc.type),
+          labelPosition: mapLabelDisplay(mc.labelDisplay) ?? defaultLabelPosition(mc.type),
           locked: false,
           spatialNeighbors: mc.spatialNeighbors,
           functionalGroup: mc.functionalGroup,
+
+          // Enriched fields — visual appearance
+          shape: mc.shape,
+          sizeClass: mc.sizeClass,
+          surfaceColor: mc.surfaceColor,
+          buttonStyle: mc.buttonStyle,
+
+          // Enriched fields — label rendering
+          labelDisplay: mc.labelDisplay,
+          icon: mc.icon,
+          primaryLabel: mc.primaryLabel,
+          secondaryLabel: mc.secondaryLabel ?? undefined,
+
+          // Enriched fields — LED properties
+          hasLed: mc.hasLed,
+          ledColor: mc.ledColor,
+          ledBehavior: mc.ledBehavior,
+          ledPosition: mc.ledPosition,
+          ledVariant: mc.ledVariant,
+
+          // Enriched fields — interaction model
+          interactionType: mc.interactionType,
+          secondaryFunction: mc.secondaryFunction,
+          positions: mc.positions,
+          positionLabels: mc.positionLabels,
+          encoderHasPush: mc.encoderHasPush,
+          orientation: mc.orientation,
+
+          // Enriched fields — relationships
+          pairedWith: mc.pairedWith,
+          sharedLabel: mc.sharedLabel,
+          groupId: mc.groupId,
+          nestedIn: mc.nestedIn,
         };
       };
 
@@ -247,7 +359,7 @@ export const createManifestSlice: StateCreator<
         const cellW = rowW / ids.length;
         ids.forEach((id, i) => {
           const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const size = mc ? defaultSize(mc.type, mc.sizeClass) : { w: 48, h: 32 };
           const fitW = Math.min(size.w, cellW - 4);
           const fitH = Math.min(size.h, rowH - 4);
           placeControl(id, rowX + i * cellW + (cellW - fitW) / 2, rowY + (rowH - fitH) / 2, cellW, rowH);
@@ -258,7 +370,7 @@ export const createManifestSlice: StateCreator<
         const cellH = colH / ids.length;
         ids.forEach((id, i) => {
           const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const size = mc ? defaultSize(mc.type, mc.sizeClass) : { w: 48, h: 32 };
           const fitW = Math.min(size.w, colW - 4);
           const fitH = Math.min(size.h, cellH - 4);
           placeControl(id, colX + (colW - fitW) / 2, colY + i * cellH + (cellH - fitH) / 2, colW, cellH);
@@ -273,7 +385,7 @@ export const createManifestSlice: StateCreator<
           const col = i % cols;
           const row = Math.floor(i / cols);
           const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const size = mc ? defaultSize(mc.type, mc?.sizeClass) : { w: 48, h: 32 };
           const fitW = Math.min(size.w, cellW - 4);
           const fitH = Math.min(size.h, cellH - 4);
           placeControl(id, gx + col * cellW + (cellW - fitW) / 2, gy + row * cellH + (cellH - fitH) / 2, cellW, cellH);
@@ -398,6 +510,17 @@ export const createManifestSlice: StateCreator<
       }
     }
 
+    // Compute canvas size from device dimensions if available
+    const canvasSizeUpdate: Record<string, number> = {};
+    if (manifest.deviceDimensions) {
+      const { widthMm, depthMm } = manifest.deviceDimensions;
+      if (widthMm > 0 && depthMm > 0) {
+        const aspect = widthMm / depthMm;
+        canvasSizeUpdate.canvasWidth = CANVAS_BASE_W;
+        canvasSizeUpdate.canvasHeight = Math.round(CANVAS_BASE_W / aspect);
+      }
+    }
+
     set({
       deviceId: manifest.deviceId,
       deviceName: manifest.deviceName,
@@ -406,10 +529,12 @@ export const createManifestSlice: StateCreator<
       densityTargets: manifest.densityTargets,
       sharedElements: manifest.sharedElements ?? [],
       alignmentAnchors: manifest.alignmentAnchors ?? [],
+      groupLabels: manifest.groupLabels ?? [],
       sections,
       controls,
       selectedIds: [],
       lockedIds: [],
+      ...canvasSizeUpdate,
     });
   },
 

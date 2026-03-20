@@ -7,11 +7,15 @@ import type { ControlDef } from './store';
 import PanelButton from '@/components/controls/PanelButton';
 import Knob from '@/components/controls/Knob';
 import Slider from '@/components/controls/Slider';
-import LEDIndicator from '@/components/controls/LEDIndicator';
 import Wheel from '@/components/controls/Wheel';
 import PadButton from '@/components/controls/PadButton';
 import ValueDial from '@/components/controls/ValueDial';
 import Lever from '@/components/controls/Lever';
+import Port from '@/components/controls/Port';
+import TouchDisplay from '@/components/controls/TouchDisplay';
+import JogWheelAssembly from '@/components/controls/JogWheelAssembly';
+import DirectionSwitch from '@/components/controls/DirectionSwitch';
+import { HARDWARE_ICONS } from '@/lib/hardware-icons';
 
 interface ControlNodeProps {
   controlId: string;
@@ -25,12 +29,42 @@ function mapButtonLabelPosition(
   if (lp === 'on-button') return 'on';
   if (lp === 'above') return 'above';
   if (lp === 'below') return 'below';
-  // 'left' and 'right' don't map to PanelButton — fall back to 'on'
+  // 'left', 'right', 'hidden' don't map to PanelButton — fall back to 'on'
   return 'on';
+}
+
+/** Resolve the display text for a control — icon or label */
+function resolveDisplayContent(control: ControlDef): { text: string; isIcon: boolean } {
+  if (control.icon && control.labelDisplay === 'icon-only') {
+    const iconChar = HARDWARE_ICONS[control.icon] ?? control.icon;
+    return { text: iconChar, isIcon: true };
+  }
+  return { text: control.label, isIcon: false };
 }
 
 /** Wrap a control component with label positioning handled by the editor */
 function withLabel(control: ControlDef, component: React.ReactNode) {
+  const effectivePos = control.labelDisplay ?? control.labelPosition;
+
+  // Hidden label — return just the component
+  if (effectivePos === 'hidden') return component;
+
+  // Icon-only — render icon instead of text label
+  if (effectivePos === 'icon-only') {
+    const { text } = resolveDisplayContent(control);
+    const iconEl = (
+      <span className="text-[10px] text-gray-400 text-center leading-tight">
+        {text}
+      </span>
+    );
+    return (
+      <div className="flex flex-col items-center gap-0.5">
+        {iconEl}
+        {component}
+      </div>
+    );
+  }
+
   const label = control.label;
   const pos = control.labelPosition;
 
@@ -76,42 +110,112 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
   );
 }
 
+/** Render a small LED dot indicator for buttons with hasLed */
+function renderButtonLed(control: ControlDef) {
+  if (!control.hasLed || (control.type !== 'button' && control.type !== 'pad')) return null;
+  const color = control.ledColor ?? '#22c55e';
+  const position = control.ledPosition ?? 'above';
+
+  const ledDot = (
+    <div
+      className="rounded-full"
+      style={{
+        width: 6,
+        height: 6,
+        backgroundColor: color,
+        boxShadow: `0 0 4px 1px ${color}`,
+      }}
+    />
+  );
+
+  // Position the LED relative to the button
+  if (position === 'inside') {
+    return (
+      <div className="absolute top-1 right-1" style={{ zIndex: 5 }}>
+        {ledDot}
+      </div>
+    );
+  }
+  // For 'above', 'below', 'ring' — render above by default (handled by PanelButton's hasLed prop)
+  return null;
+}
+
+/** Infer Port variant from label text */
+function inferPortVariant(label: string): 'usb-a' | 'sd-card' | 'ethernet' | 'rca' {
+  const lower = label.toLowerCase();
+  if (lower.includes('sd') || lower.includes('card')) return 'sd-card';
+  if (lower.includes('ethernet') || lower.includes('lan') || lower.includes('link')) return 'ethernet';
+  if (lower.includes('rca') || lower.includes('phono')) return 'rca';
+  return 'usb-a';
+}
+
 /** Render the real hardware control component based on control type */
-function renderControl(control: ControlDef, isSelected: boolean) {
+function renderControl(control: ControlDef, isSelected: boolean, allControls: Record<string, ControlDef>) {
+  // Skip controls that are nested inside another control (e.g., display nested in jog wheel)
+  if (control.nestedIn && allControls[control.nestedIn]) {
+    // This control is part of a composite — it will be rendered by the parent
+    return null;
+  }
+
   switch (control.type) {
     case 'button': {
       if (control.shape === 'circle') {
         const diameter = Math.min(control.w, control.h);
+        const { text, isIcon } = resolveDisplayContent(control);
         return (
-          <div className="flex flex-col items-center gap-1" data-control-id={control.id}>
+          <div className="relative flex flex-col items-center gap-1" data-control-id={control.id}>
+            {renderButtonLed(control)}
             <div
               className="rounded-full flex items-center justify-center cursor-pointer"
               style={{
                 width: diameter,
                 height: diameter,
-                backgroundColor: '#2a2a2a',
+                backgroundColor: control.surfaceColor ?? '#2a2a2a',
                 border: '2px solid #444',
                 boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.05)',
               }}
             >
-              <span className="text-[8px] font-medium text-gray-300 uppercase text-center leading-tight px-1">
-                {control.label}
+              <span
+                className="font-medium text-gray-300 uppercase text-center leading-tight px-1"
+                style={{ fontSize: isIcon ? 14 : 8 }}
+              >
+                {text}
               </span>
             </div>
           </div>
         );
       }
+
+      // Map buttonStyle to PanelButton variant ('raised' maps to 'standard')
+      const rawStyle = control.buttonStyle;
+      const variant = rawStyle === 'raised' ? 'standard' : (rawStyle ?? 'standard');
+
+      // Determine icon content
+      const iconContent = (control.icon && control.labelDisplay === 'icon-only')
+        ? (HARDWARE_ICONS[control.icon] ?? control.icon)
+        : undefined;
+
       const btnSize: 'sm' | 'md' | 'lg' =
         control.h <= 32 ? 'sm' : control.h <= 48 ? 'md' : 'lg';
-      return (
-        <PanelButton
-          id={control.id}
-          label={control.label}
-          highlighted={isSelected}
-          size={btnSize}
-          labelPosition={mapButtonLabelPosition(control.labelPosition)}
-        />
+
+      const buttonEl = (
+        <div className="relative">
+          {renderButtonLed(control)}
+          <PanelButton
+            id={control.id}
+            label={control.label}
+            highlighted={isSelected}
+            size={btnSize}
+            variant={variant}
+            surfaceColor={control.surfaceColor ?? undefined}
+            iconContent={iconContent}
+            hasLed={control.hasLed && control.ledPosition !== 'inside'}
+            ledColor={control.ledColor ?? undefined}
+            labelPosition={mapButtonLabelPosition(control.labelPosition)}
+          />
+        </div>
       );
+      return buttonEl;
     }
     case 'knob': {
       const knobSize: 'sm' | 'md' = control.w <= 48 ? 'sm' : 'md';
@@ -137,8 +241,9 @@ function renderControl(control: ControlDef, isSelected: boolean) {
       );
     case 'led':
     case 'indicator': {
+      const ledColor = control.ledColor ?? '#22c55e';
       if (control.ledVariant === 'dual-label') {
-        // Dual-label indicator (e.g., VINYL/CDJ — top and bottom rows)
+        // Dual-label indicator (e.g., VINYL/CDJ -- top and bottom rows)
         const parts = control.label.split('/').map(s => s.trim());
         const topLabel = parts[0] || 'MODE A';
         const bottomLabel = parts[1] || 'MODE B';
@@ -161,8 +266,8 @@ function renderControl(control: ControlDef, isSelected: boolean) {
                   className="rounded-full"
                   style={{
                     width: 6, height: 6,
-                    backgroundColor: '#22c55e',
-                    boxShadow: '0 0 4px #22c55e',
+                    backgroundColor: ledColor,
+                    boxShadow: `0 0 4px ${ledColor}`,
                   }}
                 />
                 <span className="text-[8px] font-medium text-green-400 uppercase">
@@ -192,7 +297,29 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           </div>
         );
       }
-      // Default: simple green dot indicator
+      if (control.ledVariant === 'bar') {
+        return (
+          <div
+            className="flex flex-col items-center justify-center gap-1 rounded"
+            style={{ backgroundColor: '#1a1a2a', padding: 4 }}
+            data-control-id={control.id}
+          >
+            <div
+              className="rounded-sm"
+              style={{
+                width: Math.max(control.w - 8, 16),
+                height: 6,
+                backgroundColor: ledColor,
+                boxShadow: `0 0 6px ${ledColor}`,
+              }}
+            />
+            <span className="text-[7px] text-gray-400 uppercase truncate w-full text-center leading-tight">
+              {control.label}
+            </span>
+          </div>
+        );
+      }
+      // Default: simple dot indicator
       return (
         <div
           className="flex flex-col items-center justify-center gap-1 rounded"
@@ -204,8 +331,8 @@ function renderControl(control: ControlDef, isSelected: boolean) {
             style={{
               width: 20,
               height: 20,
-              backgroundColor: '#22c55e',
-              border: '3px solid #166534',
+              backgroundColor: ledColor,
+              border: `3px solid ${ledColor}44`,
               boxShadow: 'inset 0 -2px 4px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.2)',
             }}
           />
@@ -215,7 +342,26 @@ function renderControl(control: ControlDef, isSelected: boolean) {
         </div>
       );
     }
-    case 'wheel':
+    case 'wheel': {
+      // Check if any control is nested inside this wheel (e.g., a display or ring LED)
+      const nestedIds = Object.values(allControls).filter(c => c.nestedIn === control.id);
+      const nestedDisplay = nestedIds.find(c => c.type === 'screen' || c.type === 'display');
+      const nestedRing = nestedIds.find(c => c.type === 'led' && c.ledPosition === 'ring');
+
+      if (nestedDisplay || nestedRing) {
+        // Render as JogWheelAssembly (composite)
+        return withLabel(control,
+          <JogWheelAssembly
+            id={control.id}
+            label=""
+            highlighted={isSelected}
+            wheelSize={Math.min(control.w, control.h)}
+            displaySize={nestedDisplay ? Math.min(nestedDisplay.w, nestedDisplay.h, 60) : 60}
+            ringColor={nestedRing?.ledColor ?? undefined}
+          />
+        );
+      }
+
       return withLabel(control,
         <Wheel
           id={control.id}
@@ -225,15 +371,19 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           height={control.h}
         />
       );
+    }
     case 'pad':
       return (
-        <PadButton
-          id={control.id}
-          label={control.label}
-          highlighted={isSelected}
-          width={control.w}
-          height={control.h}
-        />
+        <div className="relative">
+          {renderButtonLed(control)}
+          <PadButton
+            id={control.id}
+            label={control.label}
+            highlighted={isSelected}
+            width={control.w}
+            height={control.h}
+          />
+        </div>
       );
     case 'encoder': {
       const dialSize: 'sm' | 'lg' = control.w <= 48 ? 'sm' : 'lg';
@@ -243,11 +393,26 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           label=""
           highlighted={isSelected}
           size={dialSize}
+          hasPush={control.encoderHasPush}
         />
       );
     }
     case 'switch':
     case 'lever': {
+      // If positions > 2, use DirectionSwitch for multi-position switches
+      if (control.positions && control.positions > 2) {
+        return withLabel(control,
+          <DirectionSwitch
+            id={control.id}
+            label=""
+            positions={control.positionLabels ?? Array.from({ length: control.positions }, (_, i) => `${i + 1}`)}
+            highlighted={isSelected}
+            ledColor={control.ledColor ?? undefined}
+            width={control.w}
+            height={Math.min(control.h, 16)}
+          />
+        );
+      }
       // Lever default height is ~62px at scale=1. Derive scale from control height.
       const leverScale = control.h / 62;
       return withLabel(control,
@@ -256,15 +421,43 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           label=""
           highlighted={isSelected}
           scale={leverScale}
+          positions={control.positions}
+          positionLabels={control.positionLabels}
         />
       );
     }
+    case 'port':
+      return withLabel(control,
+        <Port
+          id={control.id}
+          label=""
+          variant={inferPortVariant(control.label)}
+          highlighted={isSelected}
+          width={control.w}
+          height={control.h}
+        />
+      );
+    case 'slot':
+      return withLabel(control,
+        <Port
+          id={control.id}
+          label=""
+          variant="sd-card"
+          highlighted={isSelected}
+          width={control.w}
+          height={control.h}
+        />
+      );
     case 'screen':
     case 'display':
       return (
-        <div className="flex h-full w-full items-center justify-center rounded border border-gray-700 bg-gray-900 text-xs text-gray-500">
-          {control.label}
-        </div>
+        <TouchDisplay
+          id={control.id}
+          label={control.labelDisplay === 'hidden' ? undefined : control.label}
+          highlighted={isSelected}
+          width={control.w}
+          height={control.h}
+        />
       );
     default:
       return <div className="text-xs text-red-400">Unknown: {control.type}</div>;
@@ -273,6 +466,7 @@ function renderControl(control: ControlDef, isSelected: boolean) {
 
 export default function ControlNode({ controlId, sectionId }: ControlNodeProps) {
   const control = useEditorStore((s) => s.controls[controlId]);
+  const allControls = useEditorStore((s) => s.controls);
   const section = useEditorStore((s) => s.sections[sectionId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const zoom = useEditorStore((s) => s.zoom);
@@ -418,6 +612,9 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
   if (!control || !section) return null;
 
+  // Skip rendering for controls nested inside another (rendered by composite parent)
+  if (control.nestedIn && allControls[control.nestedIn]) return null;
+
   const isLocked = control.locked;
 
   // Detect if any part of the control extends outside its parent section bounds
@@ -474,7 +671,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
       {/* Control rendering */}
       <div className="flex h-full w-full items-center justify-center overflow-hidden pointer-events-none">
-        {renderControl(control, isSelected)}
+        {renderControl(control, isSelected, allControls)}
       </div>
 
       {/* Inline label editor overlay */}

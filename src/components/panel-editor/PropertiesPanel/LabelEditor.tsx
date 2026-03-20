@@ -9,6 +9,7 @@ const LABEL_POSITIONS: ControlDef['labelPosition'][] = [
   'left',
   'right',
   'on-button',
+  'hidden',
 ];
 
 interface LabelEditorProps {

@@ -2,6 +2,7 @@
 
 import { useEditorStore } from './store';
 import SectionFrame from './SectionFrame';
+import GroupLabelNode from './GroupLabelNode';
 import GridOverlay from './GridOverlay';
 import PhotoOverlay from './PhotoOverlay';
 import DragSelectRect from './DragSelectRect';
@@ -13,6 +14,7 @@ export default function PanCanvas() {
   const canvasWidth = useEditorStore((s) => s.canvasWidth);
   const canvasHeight = useEditorStore((s) => s.canvasHeight);
   const sections = useEditorStore((s) => s.sections);
+  const groupLabels = useEditorStore((s) => s.groupLabels);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
 
   // Sort sections by area: largest first (rendered at bottom), smallest last (on top).
@@ -50,6 +52,11 @@ export default function PanCanvas() {
       {/* Section frames with real controls */}
       {sectionEntries.map((section, index) => (
         <SectionFrame key={section.id} sectionId={section.id} zIndex={index + 1} />
+      ))}
+
+      {/* Group labels (spanning across controls) */}
+      {groupLabels.map((gl) => (
+        <GroupLabelNode key={gl.id} groupLabel={gl} />
       ))}
     </div>
   );
