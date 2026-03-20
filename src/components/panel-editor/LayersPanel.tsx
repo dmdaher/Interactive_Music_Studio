@@ -2,19 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEditorStore } from './store';
-import type { SectionDef, ControlDef } from './store';
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-/** Check if a control is outside its parent section bounds */
-function isControlOutOfBounds(control: ControlDef, section: SectionDef): boolean {
-  return (
-    control.x < section.x ||
-    control.y < section.y ||
-    control.x + control.w > section.x + section.w ||
-    control.y + control.h > section.y + section.h
-  );
-}
 
 /** Truncate a string to maxLen characters, adding ellipsis if needed */
 function truncate(str: string, maxLen: number): string {
@@ -22,113 +9,13 @@ function truncate(str: string, maxLen: number): string {
   return str.slice(0, maxLen - 1) + '\u2026';
 }
 
-// ─── Type badge colors ──────────────────────────────────────────────────────
-
-const TYPE_COLORS: Record<string, string> = {
-  button: 'bg-blue-900/60 text-blue-300',
-  knob: 'bg-purple-900/60 text-purple-300',
-  fader: 'bg-green-900/60 text-green-300',
-  slider: 'bg-green-900/60 text-green-300',
-  led: 'bg-yellow-900/60 text-yellow-300',
-  indicator: 'bg-yellow-900/60 text-yellow-300',
-  wheel: 'bg-orange-900/60 text-orange-300',
-  pad: 'bg-pink-900/60 text-pink-300',
-  encoder: 'bg-cyan-900/60 text-cyan-300',
-  switch: 'bg-gray-700/60 text-gray-300',
-  lever: 'bg-gray-700/60 text-gray-300',
-  screen: 'bg-indigo-900/60 text-indigo-300',
-  display: 'bg-indigo-900/60 text-indigo-300',
-};
-
-function typeBadgeClass(type: string): string {
-  return TYPE_COLORS[type] ?? 'bg-gray-700/60 text-gray-400';
-}
-
-// ─── Control item ───────────────────────────────────────────────────────────
-
-interface ControlItemProps {
-  controlId: string;
-  sectionId: string;
-}
-
-function ControlItem({ controlId, sectionId }: ControlItemProps) {
-  const control = useEditorStore((s) => s.controls[controlId]);
-  const section = useEditorStore((s) => s.sections[sectionId]);
-  const selectedIds = useEditorStore((s) => s.selectedIds);
-  const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
-  const toggleSelected = useEditorStore((s) => s.toggleSelected);
-
-  const isSelected = selectedIds.includes(controlId);
-  const itemRef = useRef<HTMLButtonElement>(null);
-
-  // Bi-directional sync: scroll into view when selected on canvas
-  useEffect(() => {
-    if (isSelected && itemRef.current) {
-      itemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-  }, [isSelected]);
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (e.shiftKey || e.metaKey) {
-        toggleSelected(controlId);
-      } else {
-        setSelectedIds([controlId]);
-      }
-    },
-    [controlId, toggleSelected, setSelectedIds],
-  );
-
-  if (!control || !section) return null;
-
-  const outOfBounds = isControlOutOfBounds(control, section);
-
-  return (
-    <button
-      ref={itemRef}
-      onClick={handleClick}
-      className={`flex w-full items-center gap-1.5 rounded px-2 py-1 text-left text-[11px] transition-colors ${
-        isSelected
-          ? 'bg-blue-600/30 text-white'
-          : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
-      }`}
-    >
-      {/* Out-of-bounds red dot indicator */}
-      {outOfBounds && (
-        <span
-          className="inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full bg-red-500"
-          title="Control is outside section bounds"
-        />
-      )}
-
-      {/* Control label */}
-      <span className="flex-1 truncate">
-        {truncate(control.label || control.id, 20)}
-      </span>
-
-      {/* Type badge */}
-      <span
-        className={`flex-shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase leading-none ${typeBadgeClass(control.type)}`}
-      >
-        {control.type}
-      </span>
-    </button>
-  );
-}
-
 // ─── Section item ───────────────────────────────────────────────────────────
 
-interface SectionItemProps {
-  sectionId: string;
-}
-
-function SectionItem({ sectionId }: SectionItemProps) {
+function SectionItem({ sectionId }: { sectionId: string }) {
   const section = useEditorStore((s) => s.sections[sectionId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
 
-  const [expanded, setExpanded] = useState(false);
   const isSelected = selectedIds.includes(sectionId);
   const itemRef = useRef<HTMLButtonElement>(null);
 
@@ -147,84 +34,35 @@ function SectionItem({ sectionId }: SectionItemProps) {
     [sectionId, setSelectedIds],
   );
 
-  const handleToggleExpand = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setExpanded((prev) => !prev);
-    },
-    [],
-  );
-
   if (!section) return null;
 
   const displayName = section.headerLabel || section.id;
   const controlCount = section.childIds.length;
 
   return (
-    <div>
-      {/* Section header row */}
-      <div
-        className={`flex items-center rounded transition-colors ${
-          isSelected
-            ? 'bg-blue-600/20'
-            : 'hover:bg-white/5'
-        }`}
-      >
-        {/* Expand/collapse arrow */}
-        <button
-          onClick={handleToggleExpand}
-          className="flex h-6 w-5 flex-shrink-0 items-center justify-center text-gray-500 hover:text-gray-300"
-          aria-label={expanded ? 'Collapse section' : 'Expand section'}
-        >
-          <svg
-            className={`h-3 w-3 transition-transform ${expanded ? 'rotate-90' : ''}`}
-            viewBox="0 0 12 12"
-            fill="currentColor"
-          >
-            <path d="M4 2l4 4-4 4z" />
-          </svg>
-        </button>
+    <button
+      ref={itemRef}
+      onClick={handleClick}
+      className={`flex w-full items-center gap-1.5 rounded px-2 py-1.5 text-left transition-colors ${
+        isSelected
+          ? 'bg-blue-600/20 text-white'
+          : 'text-gray-300 hover:bg-white/5 hover:text-gray-100'
+      }`}
+    >
+      <span className="flex-1 truncate text-[11px] font-medium">
+        {truncate(displayName, 20)}
+      </span>
 
-        {/* Section name + metadata */}
-        <button
-          ref={itemRef}
-          onClick={handleClick}
-          className={`flex flex-1 items-center gap-1.5 py-1 pr-2 text-left text-[11px] font-medium ${
-            isSelected ? 'text-white' : 'text-gray-300'
-          }`}
-        >
-          <span className="flex-1 truncate">{truncate(displayName, 18)}</span>
+      {/* Control count */}
+      <span className="flex-shrink-0 text-[9px] text-gray-500">
+        {controlCount}
+      </span>
 
-          {/* Control count */}
-          <span className="flex-shrink-0 text-[9px] text-gray-500">
-            {controlCount}
-          </span>
-
-          {/* Archetype badge */}
-          <span className="flex-shrink-0 rounded bg-gray-700/60 px-1 py-0.5 text-[8px] text-gray-400 uppercase leading-none">
-            {truncate(section.archetype, 10)}
-          </span>
-        </button>
-      </div>
-
-      {/* Expanded child controls */}
-      {expanded && (
-        <div className="ml-4 border-l border-gray-800 pl-1">
-          {section.childIds.map((childId) => (
-            <ControlItem
-              key={childId}
-              controlId={childId}
-              sectionId={sectionId}
-            />
-          ))}
-          {section.childIds.length === 0 && (
-            <div className="px-2 py-1 text-[10px] text-gray-600 italic">
-              No controls
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+      {/* Archetype badge */}
+      <span className="flex-shrink-0 rounded bg-gray-700/60 px-1 py-0.5 text-[8px] text-gray-400 uppercase leading-none">
+        {truncate(section.archetype, 10)}
+      </span>
+    </button>
   );
 }
 
@@ -282,7 +120,7 @@ export default function LayersPanel() {
       </div>
 
       {/* Section list */}
-      <div className="flex-1 overflow-y-auto px-1 py-1">
+      <div className="flex-1 overflow-y-auto px-1 py-1 space-y-0.5">
         {sortedSectionIds.length === 0 ? (
           <div className="px-2 py-4 text-center text-[11px] text-gray-600">
             No sections loaded
