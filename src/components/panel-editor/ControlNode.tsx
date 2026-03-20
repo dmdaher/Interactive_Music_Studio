@@ -670,7 +670,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       )}
 
       {/* Control rendering */}
-      <div className="flex h-full w-full items-center justify-center overflow-hidden pointer-events-none">
+      <div className="flex h-full w-full items-center justify-center pointer-events-none">
         {renderControl(control, isSelected, allControls)}
       </div>
 
