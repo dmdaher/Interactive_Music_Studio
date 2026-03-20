@@ -50,18 +50,48 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
   // Hidden label — return just the component
   if (effectivePos === 'hidden') return component;
 
-  // Icon-only — render icon instead of text label
+  // Icon-only — the icon is shown ON the button face (handled by the component).
+  // The text label (control.label) is shown above/below the button as panel text.
   if (effectivePos === 'icon-only') {
-    const { text } = resolveDisplayContent(control);
-    const iconEl = (
-      <span className="text-[10px] text-gray-400 text-center leading-tight">
-        {text}
+    const pos = control.labelPosition;
+    // If label position is on-button or hidden, just show the component (icon is on it)
+    if (pos === 'on-button' || pos === 'hidden') return component;
+
+    const labelEl = (
+      <span className="text-[8px] font-medium text-gray-400 uppercase text-center leading-tight truncate w-full">
+        {control.label}
       </span>
     );
+
+    if (pos === 'above') {
+      return (
+        <div className="flex flex-col items-center gap-0.5">
+          {labelEl}
+          {component}
+        </div>
+      );
+    }
+    if (pos === 'left') {
+      return (
+        <div className="flex items-center gap-1">
+          {labelEl}
+          {component}
+        </div>
+      );
+    }
+    if (pos === 'right') {
+      return (
+        <div className="flex items-center gap-1">
+          {component}
+          {labelEl}
+        </div>
+      );
+    }
+    // Default: below
     return (
       <div className="flex flex-col items-center gap-0.5">
-        {iconEl}
         {component}
+        {labelEl}
       </div>
     );
   }
