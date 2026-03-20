@@ -4,6 +4,7 @@ import { useEditorStore, CANVAS_BASE_W, CANVAS_BASE_H } from './store';
 import SectionFrame from './SectionFrame';
 import GridOverlay from './GridOverlay';
 import PhotoOverlay from './PhotoOverlay';
+import DragSelectRect from './DragSelectRect';
 
 export default function PanCanvas() {
   const zoom = useEditorStore((s) => s.zoom);
@@ -36,6 +37,9 @@ export default function PanCanvas() {
 
       {/* Grid overlay */}
       <GridOverlay />
+
+      {/* Drag-select rubber band (behind sections, above grid) */}
+      <DragSelectRect />
 
       {/* Section frames with real controls */}
       {sectionEntries.map((section) => (
