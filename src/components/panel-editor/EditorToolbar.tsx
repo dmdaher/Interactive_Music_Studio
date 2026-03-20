@@ -6,7 +6,17 @@ import type { SnapGrid } from './store';
 const SNAP_OPTIONS: SnapGrid[] = [4, 8, 16, 32];
 const ZOOM_STEP = 0.1;
 
-export default function EditorToolbar() {
+interface EditorToolbarProps {
+  previewMode: boolean;
+  buildStatus: 'idle' | 'building' | 'approved';
+  onApproveAndBuild: () => void;
+}
+
+export default function EditorToolbar({
+  previewMode,
+  buildStatus,
+  onApproveAndBuild,
+}: EditorToolbarProps) {
   const zoom = useEditorStore((s) => s.zoom);
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const showGrid = useEditorStore((s) => s.showGrid);
@@ -126,6 +136,29 @@ export default function EditorToolbar() {
         title="Toggle photo overlay (P)"
       >
         P
+      </button>
+
+      {/* Spacer to push Approve button to the right */}
+      <div className="flex-1" />
+
+      {/* Approve & Build */}
+      <button
+        onClick={onApproveAndBuild}
+        disabled={previewMode || buildStatus === 'building'}
+        className={`flex h-7 items-center rounded px-3 text-xs font-medium transition-colors ${
+          previewMode
+            ? 'border border-green-700 bg-green-700/20 text-green-400 cursor-default'
+            : buildStatus === 'building'
+              ? 'border border-gray-600 bg-gray-800 text-gray-400 cursor-wait'
+              : 'border border-green-600 bg-green-700/30 text-green-300 hover:bg-green-700/50'
+        }`}
+        title="Approve & Build Panel"
+      >
+        {buildStatus === 'building'
+          ? 'Building panel...'
+          : previewMode
+            ? 'In Preview'
+            : 'Approve & Build'}
       </button>
     </div>
   );
