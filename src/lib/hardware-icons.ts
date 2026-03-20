@@ -1,0 +1,18 @@
+export const HARDWARE_ICONS: Record<string, string> = {
+  'play': '▶',
+  'pause': '❚❚',
+  'play-pause': '▶/❚❚',
+  'stop': '■',
+  'record': '●',
+  'fast-forward': '▶▶',
+  'rewind': '◀◀',
+  'skip-forward': '▶▶|',
+  'skip-backward': '|◀◀',
+  'arrow-left': '◀',
+  'arrow-right': '▶',
+  'eject': '⏏',
+  'search-skip': '⏭',
+  'loop-redo': '↺',
+  'sync-lock': '⟳',
+  'settings-gear': '⚙',
+};
