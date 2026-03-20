@@ -2,6 +2,8 @@
 
 import { useEditorStore, CANVAS_BASE_W, CANVAS_BASE_H } from './store';
 import SectionFrame from './SectionFrame';
+import GridOverlay from './GridOverlay';
+import PhotoOverlay from './PhotoOverlay';
 
 export default function PanCanvas() {
   const zoom = useEditorStore((s) => s.zoom);
@@ -28,6 +30,12 @@ export default function PanCanvas() {
         className="absolute inset-0 rounded border border-gray-800"
         style={{ backgroundColor: '#111122' }}
       />
+
+      {/* Photo overlay (behind everything) */}
+      <PhotoOverlay />
+
+      {/* Grid overlay */}
+      <GridOverlay />
 
       {/* Section frames with real controls */}
       {sectionEntries.map((section) => (
