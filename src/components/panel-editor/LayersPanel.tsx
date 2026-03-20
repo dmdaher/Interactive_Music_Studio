@@ -61,7 +61,9 @@ function ControlItem({ controlId }: { controlId: string }) {
 function SectionItem({ sectionId }: { sectionId: string }) {
   const section = useEditorStore((s) => s.sections[sectionId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
+  const focusedSectionId = useEditorStore((s) => s.focusedSectionId);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+  const setFocusedSection = useEditorStore((s) => s.setFocusedSection);
 
   const [expanded, setExpanded] = useState(false);
   const isSelected = selectedIds.includes(sectionId);
@@ -82,12 +84,15 @@ function SectionItem({ sectionId }: { sectionId: string }) {
     }
   }, [hasSelectedChild, expanded]);
 
+  const isFocused = focusedSectionId === sectionId;
+
   const handleSectionClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       setSelectedIds([sectionId]);
+      setFocusedSection(sectionId);
     },
-    [sectionId, setSelectedIds],
+    [sectionId, setSelectedIds, setFocusedSection],
   );
 
   const handleToggle = useCallback(
@@ -110,9 +115,11 @@ function SectionItem({ sectionId }: { sectionId: string }) {
         className={`flex items-center rounded transition-colors ${
           isSelected
             ? 'bg-blue-600/20'
-            : hasSelectedChild
-              ? 'bg-blue-600/10'
-              : 'hover:bg-white/5'
+            : isFocused
+              ? 'bg-amber-600/15 border-l-2 border-amber-500'
+              : hasSelectedChild
+                ? 'bg-blue-600/10'
+                : 'hover:bg-white/5'
         }`}
       >
         {/* Expand/collapse arrow */}

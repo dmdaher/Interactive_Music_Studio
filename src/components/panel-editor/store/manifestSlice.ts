@@ -148,6 +148,7 @@ export interface ManifestSlice {
   controls: Record<string, ControlDef>;
   selectedIds: string[];
   lockedIds: string[];
+  focusedSectionId: string | null;
 
   // Actions
   loadFromManifest: (manifest: MasterManifestInput) => void;
@@ -162,6 +163,7 @@ export interface ManifestSlice {
   toggleLock: (id: string) => void;
   setSelectedIds: (ids: string[]) => void;
   toggleSelected: (id: string) => void;
+  setFocusedSection: (id: string | null) => void;
   addControl: (sectionId: string, type: string, label: string) => void;
 }
 
@@ -222,6 +224,7 @@ export const createManifestSlice: StateCreator<
   controls: {},
   selectedIds: [],
   lockedIds: [],
+  focusedSectionId: null,
 
   // ── Actions ─────────────────────────────────────────────────────────────
 
@@ -527,6 +530,7 @@ export const createManifestSlice: StateCreator<
       controls,
       selectedIds: [],
       lockedIds: [],
+      focusedSectionId: null,
       ...canvasSizeUpdate,
     });
   },
@@ -720,6 +724,8 @@ export const createManifestSlice: StateCreator<
       set({ selectedIds: [...selectedIds, id] });
     }
   },
+
+  setFocusedSection: (id) => set({ focusedSectionId: id }),
 
   addControl: (sectionId, type, label) => {
     const section = get().sections[sectionId];
