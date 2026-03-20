@@ -56,13 +56,29 @@ interface ManifestSection {
   complexity: string;
 }
 
+interface AlignmentAnchor {
+  sourceId: string;
+  targetId: string;
+  axis: 'x' | 'y';
+  tolerancePx: number;
+}
+
+interface DensityTargets {
+  vertical: string;
+  horizontal: string;
+  horizontalDeadSpaceMax: number;
+}
+
 export interface MasterManifestInput {
   deviceId: string;
   deviceName: string;
   manufacturer: string;
   layoutType: string;
+  densityTargets?: DensityTargets;
   sections: ManifestSection[];
   controls: ManifestControl[];
+  sharedElements?: unknown[];
+  alignmentAnchors?: AlignmentAnchor[];
 }
 
 // ─── Editor data model (flat maps) ──────────────────────────────────────────
@@ -101,6 +117,8 @@ export interface SectionDef {
   heightSplits?: Record<string, number>;
   gridCols?: number;
   gridRows?: number;
+  widthPercent?: number;
+  complexity?: string;
 }
 
 // ─── Slice interface ────────────────────────────────────────────────────────
@@ -108,6 +126,12 @@ export interface SectionDef {
 export interface ManifestSlice {
   // State
   deviceId: string;
+  deviceName: string;
+  manufacturer: string;
+  layoutType: string;
+  densityTargets?: DensityTargets;
+  sharedElements: unknown[];
+  alignmentAnchors: AlignmentAnchor[];
   sections: Record<string, SectionDef>;
   controls: Record<string, ControlDef>;
   selectedIds: string[];
@@ -154,6 +178,12 @@ export const createManifestSlice: StateCreator<
 > = (set, get) => ({
   // Default state
   deviceId: '',
+  deviceName: '',
+  manufacturer: '',
+  layoutType: '',
+  densityTargets: undefined,
+  sharedElements: [],
+  alignmentAnchors: [],
   sections: {},
   controls: {},
   selectedIds: [],
@@ -192,6 +222,8 @@ export const createManifestSlice: StateCreator<
         heightSplits: ms.heightSplits as Record<string, number> | undefined,
         gridCols: ms.gridCols,
         gridRows: ms.gridRows,
+        widthPercent: ms.widthPercent,
+        complexity: ms.complexity,
       };
 
       // ── Archetype-aware control placement ──────────────────────────────
@@ -413,6 +445,12 @@ export const createManifestSlice: StateCreator<
 
     set({
       deviceId: manifest.deviceId,
+      deviceName: manifest.deviceName,
+      manufacturer: manifest.manufacturer,
+      layoutType: manifest.layoutType,
+      densityTargets: manifest.densityTargets,
+      sharedElements: manifest.sharedElements ?? [],
+      alignmentAnchors: manifest.alignmentAnchors ?? [],
       sections,
       controls,
       selectedIds: [],
