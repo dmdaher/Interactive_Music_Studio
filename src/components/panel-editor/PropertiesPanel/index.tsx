@@ -207,8 +207,39 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
         onChange={handleTypeChange}
       />
 
-      {/* Divider */}
-      <div className="h-px bg-gray-800" />
+      {/* Shape (buttons only) */}
+      {control.type === 'button' && (
+        <>
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wide text-gray-500">Shape</label>
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => { pushSnapshot(); updateControlProp(ids, 'shape', 'rectangle'); }}
+                className={`flex-1 flex items-center justify-center gap-1 rounded border py-1.5 text-[10px] transition-colors ${
+                  (control.shape ?? 'rectangle') === 'rectangle'
+                    ? 'border-blue-500 bg-blue-500/10 text-blue-400'
+                    : 'border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-600'
+                }`}
+              >
+                <div className="w-4 h-3 rounded-sm border border-current" />
+                Rect
+              </button>
+              <button
+                onClick={() => { pushSnapshot(); updateControlProp(ids, 'shape', 'circle'); }}
+                className={`flex-1 flex items-center justify-center gap-1 rounded border py-1.5 text-[10px] transition-colors ${
+                  control.shape === 'circle'
+                    ? 'border-blue-500 bg-blue-500/10 text-blue-400'
+                    : 'border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-600'
+                }`}
+              >
+                <div className="w-3.5 h-3.5 rounded-full border border-current" />
+                Circle
+              </button>
+            </div>
+          </div>
+          <div className="h-px bg-gray-800" />
+        </>
+      )}
 
       {/* Label */}
       <LabelEditor

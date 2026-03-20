@@ -94,6 +94,7 @@ export interface ControlDef {
   sectionId: string;
   labelPosition: 'above' | 'below' | 'left' | 'right' | 'on-button';
   locked: boolean;
+  shape?: 'rectangle' | 'circle';
   secondaryLabel?: string;
   spatialNeighbors?: {
     above: string | null;

@@ -33,6 +33,27 @@ function mapButtonLabelPosition(
 function renderControl(control: ControlDef, isSelected: boolean) {
   switch (control.type) {
     case 'button': {
+      if (control.shape === 'circle') {
+        const diameter = Math.min(control.w, control.h);
+        return (
+          <div className="flex flex-col items-center gap-1" data-control-id={control.id}>
+            <div
+              className="rounded-full flex items-center justify-center cursor-pointer"
+              style={{
+                width: diameter,
+                height: diameter,
+                backgroundColor: '#2a2a2a',
+                border: '2px solid #444',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.05)',
+              }}
+            >
+              <span className="text-[8px] font-medium text-gray-300 uppercase text-center leading-tight px-1">
+                {control.label}
+              </span>
+            </div>
+          </div>
+        );
+      }
       const btnSize: 'sm' | 'md' | 'lg' =
         control.h <= 32 ? 'sm' : control.h <= 48 ? 'md' : 'lg';
       return (
