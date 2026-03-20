@@ -60,6 +60,8 @@ function renderControl(control: ControlDef, isSelected: boolean) {
           id={control.id}
           label={control.label}
           highlighted={isSelected}
+          width={control.w}
+          height={control.h}
         />
       );
     case 'pad':
