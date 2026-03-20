@@ -176,43 +176,161 @@ export const createManifestSlice: StateCreator<
         childIds: [...ms.controls],
       };
 
-      // Place controls within the section. Simple grid layout based on order.
-      const controlCount = ms.controls.length;
-      const cols = Math.ceil(Math.sqrt(controlCount));
+      // ── Archetype-aware control placement ──────────────────────────────
+      const padding = 8;
+      const headerOffset = ms.headerLabel ? 16 : 0;
+      const availW = sectionW - padding * 2;
+      const availH = sectionH - padding * 2 - headerOffset;
+      const startX = sectionX + padding;
+      const startY = sectionY + padding + headerOffset;
 
-      for (let i = 0; i < ms.controls.length; i++) {
-        const controlId = ms.controls[i];
+      const placeControl = (
+        controlId: string,
+        cx: number,
+        cy: number,
+        maxW?: number,
+        maxH?: number,
+      ) => {
         const mc = mcById.get(controlId);
-        if (!mc) continue;
-
+        if (!mc) return;
         const size = defaultSize(mc.type);
-        const col = i % cols;
-        const row = Math.floor(i / cols);
-
-        // Offset within the section with some padding
-        const padding = 8;
-        const headerOffset = ms.headerLabel ? 16 : 0;
-        const availH = sectionH - padding * 2 - headerOffset;
-        const rows = Math.ceil(controlCount / cols);
-        const cellW = (sectionW - padding * 2) / cols;
-        const cellH = rows > 1 ? availH / rows : availH;
-
-        // Clamp control size to fit within cell (with 4px gap)
-        const fitW = Math.min(size.w, cellW - 4);
-        const fitH = Math.min(size.h, cellH - 4);
-
+        const fitW = maxW ? Math.min(size.w, maxW - 4) : size.w;
+        const fitH = maxH ? Math.min(size.h, maxH - 4) : size.h;
         controls[controlId] = {
           id: controlId,
           label: mc.verbatimLabel,
           type: mc.type,
-          x: sectionX + padding + col * cellW + (cellW - fitW) / 2,
-          y: sectionY + padding + headerOffset + row * cellH + (cellH - fitH) / 2,
+          x: cx,
+          y: cy,
           w: fitW,
           h: fitH,
           sectionId: ms.id,
           labelPosition: defaultLabelPosition(mc.type),
           locked: false,
         };
+      };
+
+      const placeRow = (ids: string[], rowX: number, rowY: number, rowW: number, rowH: number) => {
+        const cellW = rowW / ids.length;
+        ids.forEach((id, i) => {
+          const mc = mcById.get(id);
+          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const fitW = Math.min(size.w, cellW - 4);
+          const fitH = Math.min(size.h, rowH - 4);
+          placeControl(id, rowX + i * cellW + (cellW - fitW) / 2, rowY + (rowH - fitH) / 2, cellW, rowH);
+        });
+      };
+
+      const placeColumn = (ids: string[], colX: number, colY: number, colW: number, colH: number) => {
+        const cellH = colH / ids.length;
+        ids.forEach((id, i) => {
+          const mc = mcById.get(id);
+          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const fitW = Math.min(size.w, colW - 4);
+          const fitH = Math.min(size.h, cellH - 4);
+          placeControl(id, colX + (colW - fitW) / 2, colY + i * cellH + (cellH - fitH) / 2, colW, cellH);
+        });
+      };
+
+      const placeGrid = (ids: string[], gx: number, gy: number, gw: number, gh: number, cols: number) => {
+        const rows = Math.ceil(ids.length / cols);
+        const cellW = gw / cols;
+        const cellH = gh / rows;
+        ids.forEach((id, i) => {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          const mc = mcById.get(id);
+          const size = mc ? defaultSize(mc.type) : { w: 48, h: 32 };
+          const fitW = Math.min(size.w, cellW - 4);
+          const fitH = Math.min(size.h, cellH - 4);
+          placeControl(id, gx + col * cellW + (cellW - fitW) / 2, gy + row * cellH + (cellH - fitH) / 2, cellW, cellH);
+        });
+      };
+
+      const archetype = ms.archetype;
+
+      if (archetype === 'single-row') {
+        // All controls in one horizontal row
+        placeRow(ms.controls, startX, startY, availW, availH);
+
+      } else if (archetype === 'single-column') {
+        // All controls stacked vertically
+        placeColumn(ms.controls, startX, startY, availW, availH);
+
+      } else if (archetype.startsWith('grid') || archetype === 'dual-column') {
+        // grid-NxM or dual-column
+        const cols = archetype === 'dual-column' ? 2 : (ms.gridCols ?? 2);
+        placeGrid(ms.controls, startX, startY, availW, availH, cols);
+
+      } else if (archetype === 'stacked-rows' && ms.containerAssignment) {
+        // Each container row is a horizontal flex row, stacked vertically
+        const rowEntries = Object.entries(ms.containerAssignment).sort(([a], [b]) => a.localeCompare(b));
+        const rowCount = rowEntries.length;
+        const rowH = availH / rowCount;
+        rowEntries.forEach(([, ids], rowIdx) => {
+          const rowIds = Array.isArray(ids) ? ids : [];
+          placeRow(rowIds, startX, startY + rowIdx * rowH, availW, rowH);
+        });
+
+      } else if (
+        (archetype === 'cluster-above-anchor' || archetype === 'cluster-below-anchor') &&
+        ms.containerAssignment
+      ) {
+        const splits = ms.heightSplits ?? { cluster: 0.5, anchor: 0.45, gap: 0.05 };
+        const cols = ms.gridCols ?? 2;
+        const clusterH = availH * splits.cluster;
+        const anchorH = availH * splits.anchor;
+        const gapH = availH * (splits.gap ?? 0.05);
+
+        const clusterIds = ms.containerAssignment.cluster;
+        const anchorValue = ms.containerAssignment.anchor;
+
+        // Get flat anchor IDs (handle nested sub-zones)
+        const anchorIds: string[] = [];
+        if (Array.isArray(anchorValue)) {
+          anchorIds.push(...anchorValue);
+        } else if (anchorValue && typeof anchorValue === 'object') {
+          // Nested sub-zones — flatten for positioning
+          Object.values(anchorValue).forEach((sz) => {
+            if (Array.isArray(sz)) {
+              anchorIds.push(...sz);
+            } else if (sz && typeof sz === 'object' && 'controls' in sz) {
+              anchorIds.push(...(sz as { controls: string[] }).controls);
+            }
+          });
+        }
+
+        if (archetype === 'cluster-above-anchor') {
+          // Cluster on top, anchor on bottom
+          if (Array.isArray(clusterIds)) {
+            placeGrid(clusterIds, startX, startY, availW, clusterH, cols);
+          }
+          placeRow(anchorIds, startX, startY + clusterH + gapH, availW, anchorH);
+        } else {
+          // Anchor on top, cluster on bottom
+          placeRow(anchorIds, startX, startY, availW, anchorH);
+          if (Array.isArray(clusterIds)) {
+            placeGrid(clusterIds, startX, startY + anchorH + gapH, availW, clusterH, cols);
+          }
+        }
+
+      } else if (archetype === 'anchor-layout' && ms.containerAssignment) {
+        // Secondary controls then anchor
+        const anchorIds = ms.containerAssignment.anchor;
+        const secondaryIds = ms.containerAssignment.secondary ?? ms.containerAssignment.cluster;
+        const secondaryH = availH * 0.4;
+        const anchorH = availH * 0.55;
+        if (Array.isArray(secondaryIds)) {
+          placeRow(secondaryIds, startX, startY, availW, secondaryH);
+        }
+        if (Array.isArray(anchorIds)) {
+          placeColumn(anchorIds, startX, startY + secondaryH + availH * 0.05, availW, anchorH);
+        }
+
+      } else {
+        // Fallback: generic grid (for any unrecognized archetype)
+        const fallbackCols = Math.ceil(Math.sqrt(ms.controls.length));
+        placeGrid(ms.controls, startX, startY, availW, availH, fallbackCols);
       }
     }
 
