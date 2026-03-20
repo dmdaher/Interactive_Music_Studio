@@ -1,8 +1,8 @@
-# Editor V2 Architecture — Complete Plan
+# Editor V2 Architecture — Complete Plan (Revised)
 
-> **Context:** Consolidates all feedback from initial build, user testing, and Gemini's architectural review. This replaces the piecemeal plans from the first session with a unified roadmap.
+> **Context:** Consolidates all feedback from initial build, user testing, Gemini's architectural review, and comprehensive end-to-end gap analysis (60+ gaps identified). This is the definitive roadmap.
 
-## Core Principle
+## Core Principles
 
 **"Correct Topology, Approximate Geometry"**
 - The pipeline must get the TOPOLOGY right (rows are rows, groups are groups)
@@ -10,42 +10,99 @@
 - If a contractor has to re-group sections or change archetypes, the pipeline failed
 - The editor output must be production-grade — thousands of users will see it daily
 
+**"Everything from the Manifest"**
+- The contractor should NEVER decide: button colors, shapes, LED colors, icon vs text, control grouping, or archetype assignments
+- All visual and behavioral properties come from the pipeline via the manifest
+- The contractor can OVERRIDE if the pipeline got it wrong, but defaults must be correct
+
+**"Free-Form Editing, Clean Code Output"**
+- Contractor drags freely against the photo overlay (Figma-style)
+- On Approve, the Layout Inference Engine re-derives clean archetype parameters from final positions
+- Contractor reviews inference results and can override per-section
+- Codegen generates production flex/grid CSS, not brittle absolute positioning
+
+---
+
 ## Architecture Overview
 
 ```
 Pipeline Phase 0 (AI + Deterministic)
-  ├── Diagram Parser (vision) → spatial-blueprint.json
-  │   └── NEW: Silkscreen boundary detection
-  ├── Gatekeeper (judge LLM) → manifest.json
-  │   └── NEW: Visual/behavioral/relational field extraction
-  ├── Manifest Completeness Validator (mechanical) → validated manifest
-  │   └── NEW: Rules-based field checker + auto-fixer
-  └── Layout Engine (deterministic) → templates.json
+  ├── Diagram Parser (vision)
+  │   ├── Extract centroids, bounding boxes, topology
+  │   ├── NEW: Detect silkscreen boundary lines
+  │   ├── NEW: Detect control shapes (circle vs rectangle)
+  │   ├── NEW: Classify relative size (xs-xl)
+  │   ├── NEW: Recognize transport-pair pattern
+  │   └── NEW: Expanded typeHint vocabulary (port, slot, lever, fader)
+  │
+  ├── Gatekeeper (judge LLM)
+  │   ├── Reconcile text + geometry → manifest
+  │   ├── NEW: Visual Appearance Protocol (shape, color, style)
+  │   ├── NEW: Label Rendering Protocol (icon, display mode, group labels)
+  │   ├── NEW: LED Properties Protocol (color, behavior, position)
+  │   ├── NEW: Interaction Model Protocol (momentary/toggle/hold, positions)
+  │   ├── NEW: Control Pairing Protocol (paired controls, shared labels)
+  │   ├── NEW: Nesting Protocol (jog display inside jog wheel)
+  │   └── NEW: Type Accuracy Rules (ports ≠ buttons)
+  │
+  ├── Manifest Completeness Validator (NEW — mechanical, rules-based)
+  │   ├── Check every control for required visual fields
+  │   ├── Auto-fix obvious errors (label says "port" → type = "port")
+  │   ├── Validate pairing symmetry, nesting validity
+  │   └── Score ≥ 9.0 to pass, else retry Gatekeeper
+  │
+  └── Layout Engine (deterministic)
+      ├── Generate CSS architecture per section
+      └── NEW: Handle transport-pair archetype
 
-Editor (Contractor)
-  ├── Load: manifest → editor renders archetype-based layout
-  ├── Edit: contractor drags/resizes/adjusts freely (absolute pixels)
-  ├── Save: auto-saves absolute positions to manifest-editor.json
+Editor Session (replaces old Phases 1-3)
+  ├── Load: enriched manifest → editor renders with correct components,
+  │   colors, shapes, icons, LED indicators, group labels
+  ├── Edit: contractor drags/resizes freely (absolute pixels)
+  ├── Save: auto-saves to manifest-editor.json
   └── Approve & Build:
-      ├── Layout Inference: re-derives archetypes from final positions
+      ├── Layout Inference Engine: re-derives archetypes from final positions
+      ├── Inference Review: contractor sees per-section results, can override
       ├── Codegen: generates clean flex/grid React components
-      └── Validation: contractor reviews generated panel
+      └── Validation: contractor reviews generated panel side-by-side
+
+Codegen (updated)
+  ├── Reads inferred archetype parameters (not raw pixel coords)
+  ├── Generates flex/grid CSS (not absolute positioning)
+  ├── Renders all new component types (Port, TouchDisplay, etc.)
+  ├── Passes enriched fields to components (color, icon, LED props)
+  ├── Renders group labels
+  └── Handles nested controls (jog display inside jog wheel)
+```
+
+### Phase Architecture Decision
+
+**The editor REPLACES pipeline phases 1-3.** The old phases (Phase 1: Section Loop with SI/PQ/Critic agents, Phase 2: Global Assembly, Phase 3: Harmonic Polish) were LLM-driven panel building. The editor + codegen replaces all of them.
+
+Updated PHASE_ORDER:
+```
+pending → phase-preflight → phase-0-diagram-parser → phase-0-gatekeeper
+→ phase-0-manifest-validator (NEW) → phase-0-layout-engine
+→ editor-session (NEW — pauses for contractor)
+→ phase-0-codegen (NEW — runs inference + codegen)
+→ panel-pr → phase-4-extraction → phase-4-audit
+→ phase-5-tutorial-build → tutorial-pr → completed
 ```
 
 ---
 
 ## Phase 1: Manifest Schema Expansion
 
-### 1A. ManifestControl — New Fields
+### 1A. ManifestControl — Complete Type
 
 ```typescript
 export interface ManifestControl {
-  // ─── Existing ─────────────────────────────────────────────────────
+  // ─── Identity (existing) ──────────────────────────────────────────
   id: string;
   verbatimLabel: string;
   type: 'button' | 'knob' | 'slider' | 'fader' | 'switch' | 'lever'
       | 'led' | 'screen' | 'encoder' | 'wheel' | 'pad'
-      | 'port' | 'slot';  // NEW types
+      | 'port' | 'slot';
   section: string;
   functionalGroup: string;
   spatialNeighbors: {
@@ -91,9 +148,7 @@ export interface ManifestControl {
 }
 ```
 
-### 1B. ManifestSection — New Archetype
-
-Add `'transport-pair'` to the archetype union for the CUE + PLAY/PAUSE pattern:
+### 1B. LayoutArchetype — Add transport-pair
 
 ```typescript
 export type LayoutArchetype =
@@ -105,30 +160,32 @@ export type LayoutArchetype =
   | 'cluster-below-anchor'
   | 'dual-column'
   | 'stacked-rows'
-  | 'transport-pair';  // NEW: two large circular buttons (CUE + PLAY)
+  | 'transport-pair';
 ```
 
-### 1C. Top-Level Manifest — Device Dimensions
+### 1C. MasterManifest — Device Dimensions + Group Labels
 
 ```typescript
 export interface MasterManifest {
   // Existing fields...
 
-  // NEW: Physical device dimensions for correct aspect ratio
   deviceDimensions?: {
-    widthMm: number;   // e.g., 329 for CDJ-3000
-    depthMm: number;   // e.g., 453 for CDJ-3000
+    widthMm: number;
+    depthMm: number;
   };
 
-  // NEW: Group labels that span multiple controls
   groupLabels?: Array<{
     id: string;
     text: string;
-    controlIds: string[];  // controls this label spans
+    controlIds: string[];
     position: 'above' | 'below';
   }>;
 }
 ```
+
+### 1D. Shared Type Source
+
+Create `src/types/manifest.ts` with the canonical ManifestControl and ManifestSection types. Both `scripts/layout-engine.ts` and `src/components/panel-editor/store/manifestSlice.ts` import from this shared source. Eliminates type drift between pipeline and editor.
 
 ---
 
@@ -138,122 +195,95 @@ export interface MasterManifest {
 
 Add to the Parser's extraction protocol:
 
-**Silkscreen Boundary Detection:**
-- Look for printed lines/boxes on the panel surface that visually group controls
-- If a printed boundary encloses N controls, those N controls MUST be one section
-- Boundary lines provide horizontal/vertical constraints that override centroid-only analysis
-- Output boundary boxes in the spatial blueprint alongside centroids
-
-**Transport Button Recognition:**
-- If two large circular controls are found in the bottom-left area, flag as `transport-pair`
-- Transport buttons are physically larger than all other buttons — use relative size as a signal
+- **Silkscreen Boundary Detection:** Look for printed lines/boxes on the panel surface. Controls inside a boundary box = one section.
+- **Control Shape Detection:** Output `shape: 'circle' | 'rectangle' | 'square'` for each control based on visual analysis.
+- **Relative Size Classification:** Output `sizeClass: 'xs' | 'sm' | 'md' | 'lg' | 'xl'` based on control area relative to median.
+- **Transport-Pair Recognition:** If two large circular controls are in the bottom-left, flag as potential `transport-pair`.
+- **Expanded typeHint vocabulary:** Add `port`, `slot`, `lever`, `fader` to the typeHint set.
 
 ### 2B. Gatekeeper SOUL Update
 
-Add five new extraction protocols to the Gatekeeper SOUL:
+Add five extraction protocols:
 
-**Visual Appearance Protocol:**
-- For every control: determine shape, sizeClass, surfaceColor, buttonStyle
-- Read manual diagrams and descriptions for color references
-- CUE buttons are typically orange/amber, PLAY buttons green, HOT CUE pads multicolor
-- Browse bar buttons are flat-key style, transport buttons are raised rubber
+1. **Visual Appearance Protocol** — shape, sizeClass, surfaceColor, buttonStyle for every control
+2. **Label Rendering Protocol** — labelDisplay, icon, primaryLabel, secondaryLabel for every control
+3. **LED Properties Protocol** — hasLed, ledColor, ledBehavior, ledPosition for controls with LEDs
+4. **Interaction Model Protocol** — interactionType, secondaryFunction, positions, positionLabels, encoderHasPush
+5. **Control Pairing Protocol** — pairedWith, sharedLabel, groupId, nestedIn
 
-**Label Rendering Protocol:**
-- Determine labelDisplay for every control (on-button, above, icon-only, hidden)
-- Identify icon vs text display — transport buttons show icons (►/II, ◄◄)
-- Split compound labels into primaryLabel + secondaryLabel (e.g., "LOOP IN/CUE (IN ADJUST)" → primary: "LOOP IN/CUE", secondary: "IN ADJUST")
-
-**LED Properties Protocol:**
-- Identify all controls with integrated LEDs (hasLed)
-- Determine LED color from manual descriptions
-- Determine LED behavior (steady on/off, blink during I/O, dynamic color per state)
-
-**Interaction Model Protocol:**
-- Classify every control: momentary, toggle, hold, rotary, slide
-- Identify secondary functions (long-press, shift+press)
-- For levers/switches: count positions and label each position
-- For encoders: note if push-to-select is available
-
-**Control Pairing Protocol:**
-- Identify paired controls that share a label (SEARCH ◄◄ + ►►, BEAT JUMP ◄ + ►)
-- Set pairedWith (symmetric: A→B and B→A)
-- Set sharedLabel (the text printed once for the pair)
-- Identify nesting (jog display nestedIn jog wheel)
-
-**Type Accuracy Rules:**
+Add type accuracy rules:
 - Physical ports/slots → type: 'port' or 'slot', NOT 'button'
 - 3-position levers → type: 'lever' with positions: 3
 - Encoders with push → encoderHasPush: true
 
-### 2C. Manifest Completeness Validator (NEW)
+### 2C. Manifest Completeness Validator (NEW phase)
 
-A mechanical (non-LLM) validator that runs after the Gatekeeper, before the Layout Engine. Rules-based checks:
+Mechanical rules-based validator. Runs as `phase-0-manifest-validator` between Gatekeeper and Layout Engine.
 
-```
-For every control:
-  ✓ shape is set (not null/undefined)
-  ✓ sizeClass is set
-  ✓ labelDisplay is set
-  ✓ If type is 'led': ledColor is set
-  ✓ If type is 'button': buttonStyle is set
-  ✓ If label contains "port" or "slot": type is 'port' or 'slot' (auto-fix)
-  ✓ If label contains unicode arrows/symbols: icon field is set
-  ✓ interactionType is set
+Checks:
+- Every control has: shape, sizeClass, labelDisplay set
+- Every LED-type control has: ledColor set
+- Every button has: buttonStyle set
+- Every control with unicode arrows in label has: icon field set
+- Paired controls are symmetric (A→B and B→A)
+- Nested controls reference valid parent IDs
+- Type accuracy: labels containing "port"/"slot"/"indicator" match their type
+- Group labels reference valid control IDs
 
-For paired controls:
-  ✓ If control A has pairedWith=B, then control B has pairedWith=A
-  ✓ If controls share a sharedLabel, they are in the same section
+Auto-fixes:
+- Label contains "port" + type is "button" → change to "port"
+- Label contains "slot" + type is "button" → change to "slot"
+- Label contains "indicator" + type is "button" → change to "led"
+- Missing sizeClass → compute from parser bounding box area relative to median
 
-For sections:
-  ✓ If section has exactly 2 large circular buttons: suggest archetype 'transport-pair'
-  ✓ All controls in containerAssignment exist in the section's controls array
+Scoring: -0.5 per missing field, -1.0 per type error, -1.0 per broken pairing. ≥9.0 passes.
 
-For nesting:
-  ✓ If control A has nestedIn=B, control B exists
-  ✓ Jog display type controls have nestedIn set to a wheel type control
+### 2D. Layout Engine Update
 
-Scoring:
-  - Each missing field: -0.5 from a 10.0 base
-  - Each type accuracy error: -1.0
-  - Each broken pairing: -1.0
-  - Score >= 9.0: PASS
-  - Score < 9.0: flag for Gatekeeper retry
-```
-
-Auto-fix rules (applied before scoring):
-- Label contains "port" + type is "button" → change type to "port"
-- Label contains "slot" + type is "button" → change type to "slot"
-- Label contains "indicator" + type is "button" → change type to "led"
+- Add `transport-pair` to the archetype switch in `generateTemplate`
+- Accept `port` and `slot` in the ManifestControl.type union
+- Pass through `deviceDimensions` in output
 
 ---
 
 ## Phase 3: New Control Components
 
-### 3A. Components to Build
+### 3A. New Components to Build
 
-| Component | Props | Visual |
-|---|---|---|
-| `Port` | `id, label, variant ('usb-a'\|'sd-card'\|'ethernet'\|'rca'), highlighted, width, height` | Dark recessed rectangle with port icon silhouette |
-| `TouchDisplay` | `id, label, variant ('main'\|'jog'), bezelWidth, showMockContent, highlighted, width, height` | Dark rectangle with rounded corners, subtle bezel gradient, optional static waveform mockup |
-| `JogDisplay` | `id, label, size, highlighted, showMockContent` | Circular LCD with dark fill, optional artwork circle mockup |
-| `DirectionSwitch` | `id, label, positions, positionLabels, currentPosition, ledColor, highlighted, width, height` | Flat horizontal rocker with position markers and embedded LED dots |
-| `LEDRing` | `id, color, brightness, innerDiameter, outerDiameter, highlighted` | Annular (donut-shaped) LED strip |
-| `JogWheelAssembly` | `id, wheelSize, displaySize, ringColor, highlighted` | Composite: Wheel + JogDisplay (center) + LEDRing (outer). Single drag target. |
+| Component | File | Props | Visual |
+|---|---|---|---|
+| `Port` | `src/components/controls/Port.tsx` | `id, label, variant ('usb-a'\|'sd-card'\|'ethernet'\|'rca'), highlighted, width, height` | Dark recessed rectangle with port icon |
+| `TouchDisplay` | `src/components/controls/TouchDisplay.tsx` | `id, label, variant ('main'\|'jog'), bezelWidth, showMockContent, highlighted, width, height` | Dark LCD with rounded bezel, optional waveform mockup |
+| `JogDisplay` | `src/components/controls/JogDisplay.tsx` | `id, label, size, highlighted, showMockContent` | Circular LCD with dark fill |
+| `DirectionSwitch` | `src/components/controls/DirectionSwitch.tsx` | `id, label, positions, positionLabels, currentPosition, ledColor, highlighted, width, height` | Flat horizontal rocker with LED dots |
+| `LEDRing` | `src/components/controls/LEDRing.tsx` | `id, color, brightness, innerDiameter, outerDiameter, highlighted` | Annular LED strip |
+| `JogWheelAssembly` | `src/components/controls/JogWheelAssembly.tsx` | `id, wheelSize, displaySize, ringColor, highlighted` | Composite: Wheel + JogDisplay (center) + LEDRing (outer). Single drag target. |
 
-### 3B. PanelButton Variants to Add
+### 3B. PanelButton Variants
 
 | Variant | Visual | Used for |
 |---|---|---|
-| `flat-key` | Low-profile key-cap style, less 3D gradient, tighter spacing | Browse bar buttons (SOURCE, BROWSE, TAG LIST, etc.) |
-| `transport` | Large, raised rubber, with icon display and colored accent ring | CUE (orange ring), PLAY/PAUSE (green ring) |
-| `rubber-pad` | Already exists as PadButton, but PanelButton should support `variant: 'rubber'` for consistency | SLIP, QUANTIZE (small rubber toggle buttons) |
+| `flat-key` | Low-profile key-cap style, less 3D gradient | Browse bar buttons |
+| `transport` | Large, raised rubber, colored accent ring, icon display | CUE (orange), PLAY/PAUSE (green) |
+| `rubber` | Small rubber toggle button | SLIP, QUANTIZE |
 
-### 3C. Icon Library
+### 3C. Existing Component Updates
 
-Define a set of standard hardware icons for `icon-only` label display:
+| Component | Change |
+|---|---|
+| `PanelButton` | Add `variant`, `surfaceColor`, `iconContent` props |
+| `PadButton` | Add `color` prop for per-pad RGB colors |
+| `Lever` | Add `positions`, `positionLabels`, `ledColor` props |
+| `ValueDial` | Add `hasPush` prop |
+| `Wheel` (jog) | Add `ringColor`, `ringOn` props |
+| `LEDIndicator` | Add dynamic `color` prop support |
+
+### 3D. Icon Library
+
+Create `src/lib/hardware-icons.ts`:
 
 ```typescript
-const HARDWARE_ICONS: Record<string, string> = {
+export const HARDWARE_ICONS: Record<string, string> = {
   'play': '▶',
   'pause': '❚❚',
   'play-pause': '▶/❚❚',
@@ -269,181 +299,273 @@ const HARDWARE_ICONS: Record<string, string> = {
 };
 ```
 
-These render at 16-20px centered on the button face when `labelDisplay: 'icon-only'`.
-
 ---
 
 ## Phase 4: Editor Updates
 
-### 4A. loadFromManifest Updates
+### 4A. Store Updates (`manifestSlice.ts`)
 
-Read all new manifest fields into ControlDef:
-- `shape`, `sizeClass` → drive default pixel dimensions (instead of hardcoded DEFAULT_SIZES)
-- `surfaceColor` → stored, passed to components
-- `labelDisplay` → maps to labelPosition + iconMode
-- `icon` → stored for icon-only rendering
-- `hasLed`, `ledColor`, `ledBehavior` → stored, rendered on controls
-- `pairedWith`, `sharedLabel`, `groupId` → stored for group label rendering
-- `nestedIn` → stored for composite component rendering
-- `interactionType` → stored for future tutorial state behavior
-- `deviceDimensions` → compute canvas aspect ratio automatically
-- `groupLabels` → render as standalone text elements on canvas
+- Import types from shared `src/types/manifest.ts` (Phase 1D)
+- Add all new fields to `ControlDef`
+- Add `GroupLabelDef` type and `groupLabels` state
+- Compute canvas dimensions from `deviceDimensions`:
+  ```ts
+  const aspectRatio = manifest.deviceDimensions
+    ? manifest.deviceDimensions.widthMm / manifest.deviceDimensions.depthMm
+    : CANVAS_BASE_W / CANVAS_BASE_H;
+  ```
+- Map `sizeClass` to pixel dimensions (replaces hardcoded DEFAULT_SIZES)
+- Read `groupLabels` from manifest and position them on canvas
 
 ### 4B. ControlNode Rendering Updates
 
 - Read `shape` → render circle vs rectangle buttons
-- Read `surfaceColor` → apply as accent color to button/pad/LED
-- Read `labelDisplay` → use `icon-only` mode, `hidden` mode
-- Read `icon` → render large centered icon symbol
-- Read `hasLed` + `ledColor` → show LED dot on buttons that have integrated LEDs
-- Read `buttonStyle` → select PanelButton variant (flat-key, transport, rubber)
-- Read `ledVariant` → render dot vs dual-label LED
-- Render `Port`, `TouchDisplay`, `JogWheelAssembly`, `DirectionSwitch` for new types
-- Composite controls with `nestedIn` render inside their parent
+- Read `surfaceColor` → apply as accent color
+- Read `buttonStyle` → select PanelButton variant
+- Read `labelDisplay` → `icon-only` renders icon large and centered, `hidden` renders no label
+- Read `icon` → lookup in HARDWARE_ICONS, render at 16-20px
+- Read `hasLed` + `ledColor` → show LED dot on buttons
+- Read `ledVariant` → render dot vs dual-label
+- Render `Port` for type `port`, `slot`
+- Render `TouchDisplay` for type `screen` with variant `main`
+- Render `JogWheelAssembly` when detecting wheel + nested display
+- Render `DirectionSwitch` for type `lever` with positions > 2
+- Handle `nestedIn` → render inside parent component
 
 ### 4C. GroupLabel Rendering
 
-```typescript
-interface GroupLabelDef {
-  id: string;
-  text: string;
-  controlIds: string[];  // controls this label spans
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  sectionId: string;
-  fontSize: number;
-  textAlign: 'left' | 'center' | 'right';
-}
+New `GroupLabelNode.tsx`:
+- Draggable text element on canvas (uses Rnd)
+- Auto-positioned above/below the controls it spans
+- Text, fontSize, alignment from manifest groupLabels
+- Rendered in SectionFrame alongside ControlNodes
+- Shown in LayersPanel under each section
+
+### 4D. Layout Inference Engine (Approve & Build)
+
+Create `src/lib/layout-inference.ts`:
+
+**Step 1 — Analyze positions per section:**
+- Group controls by similar Y values (within 5px tolerance) → rows
+- Group controls by similar X values → columns
+- Detect grids (consistent row + column pattern)
+- Compute gaps between adjacent controls
+- Compute padding from section edges
+
+**Step 2 — Re-derive archetype + parameters:**
+- All controls similar Y → `single-row` with computed gap
+- All controls similar X → `single-column` with computed gap
+- Grid pattern → `grid-NxM` with cols/rows/gap
+- Stacked horizontal groups → `stacked-rows` with row assignments
+- Two large circles → `transport-pair`
+- Fallback: absolute positioning
+
+**Step 3 — Inference Review UI:**
+```
+┌─────────────────────────────────────────────┐
+│ Layout Inference Results                     │
+│                                              │
+│ Hot Cue:      single-row, gap 12px    ✓  ✎  │
+│ Loop:         grid 3x2, gap 8px       ✓  ✎  │
+│ Transport:    stacked-rows, 6 rows    ✓  ✎  │
+│ Beat Sync:    single-column, gap 4px  ✓  ✎  │
+│ ...                                          │
+│                                              │
+│ [✎ = override archetype/params]              │
+│                                              │
+│         [Back to Editor]  [Generate]         │
+└─────────────────────────────────────────────┘
 ```
 
-- Render as draggable text elements on the canvas
-- Auto-positioned above/below the controls they span (from manifest groupLabels)
-- Contractor can adjust position but the text comes from the manifest
+Contractor confirms or overrides, then clicks Generate.
 
-### 4D. Layout Inference (Approve & Build)
+**Step 4 — Output:**
+Write inferred parameters to `.pipeline/{deviceId}/inferred-layout.json`:
+```json
+{
+  "sections": {
+    "hot-cue": { "archetype": "single-row", "gap": 12, "padding": 8 },
+    "loop": { "archetype": "grid-NxM", "gridCols": 3, "gap": 8 }
+  }
+}
+```
+Codegen reads this + manifest for component generation.
 
-When the contractor clicks "Approve & Build":
+### 4E. Codegen Trigger
 
-1. **Analyze final positions** per section:
-   - Group controls by similar Y values → detect rows
-   - Group controls by similar X values → detect columns
-   - Detect grids (consistent rows + columns)
-   - Compute gaps between adjacent controls
-   - Compute padding from section edges
+New API route: `POST /api/pipeline/{deviceId}/codegen`
+- Runs `scripts/panel-codegen.ts` with the inferred layout
+- Returns success/failure
+- Called from the editor's "Generate" button after inference review
 
-2. **Re-derive archetype + parameters:**
-   - If all controls share similar Y → `single-row` with computed gap
-   - If all controls share similar X → `single-column` with computed gap
-   - If controls form a grid pattern → `grid-NxM` with computed cols/rows/gap
-   - If controls form stacked horizontal groups → `stacked-rows` with computed row assignments
-   - If two large circles at bottom → `transport-pair`
-   - Fallback: absolute positioning with inline styles
+### 4F. Properties Panel Updates
 
-3. **Update manifest with inferred layout:**
-   - Write back archetype, gap, padding, containerAssignment
-   - Codegen reads the structural manifest and generates clean flex/grid CSS
+New sections (read from manifest as defaults, contractor can override):
 
-4. **Contractor reviews generated panel:**
-   - Side-by-side: editor view vs generated component
-   - If layout inference got it wrong → contractor adjusts, re-approve
-   - If it looks right → finalize
+- **Visual:** Button style selector, surface color picker (preset palette)
+- **LED:** Has LED toggle, LED color picker
+- **Label:** Display mode (on-button/above/below/icon-only/hidden), icon selector from HARDWARE_ICONS
+- **Read-only info:** Interaction type, secondary function, pairedWith, groupId (informational, not editable)
 
-### 4E. Properties Panel Updates
+### 4G. Editor UX Constraints
 
-New sections in the properties panel when selecting controls:
-
-- **Visual** (read from manifest, contractor can override):
-  - Shape selector (rectangle/circle/pill) — already built
-  - Button style (raised/flat-key/transport/rubber)
-  - Surface color picker (preset palette)
-
-- **LED** (read from manifest, contractor can override):
-  - LED style (dot/dual-label) — already built
-  - LED color picker
-  - Has LED toggle
-
-- **Label** (read from manifest, contractor can override):
-  - Display mode (on-button/above/below/icon-only/hidden)
-  - Icon selector (from HARDWARE_ICONS)
-  - Primary + secondary label text
-  - Already partially built
+- Properties panel shows manifest-derived values as defaults
+- Contractor CAN override visual properties (in case pipeline got it wrong)
+- Contractor CANNOT change: control type (except through override with confirmation)
+- Overrides are saved alongside the manifest data so the pipeline can learn from corrections
 
 ---
 
-## Phase 5: Pipeline Rerun & Verification
+## Phase 5: Codegen Updates
 
-1. Update ManifestControl type in `layout-engine.ts`
-2. Update Gatekeeper SOUL with all new protocols
-3. Add Manifest Completeness Validator to checkpoint-validators.ts
-4. Build new components (Port, TouchDisplay, JogDisplay, DirectionSwitch, JogWheelAssembly)
-5. Update editor (loadFromManifest, ControlNode, PropertiesPanel)
-6. Rerun CDJ-3000 pipeline with enriched Gatekeeper
-7. Open editor — panel should render at ~80% fidelity
-8. Contractor does positioning/sizing pass
-9. Approve & Build → layout inference → codegen
-10. Final panel review
+### 5A. CONTROL_MAP Expansion
+
+Add to `panel-codegen.ts`:
+```typescript
+port:    { component: 'Port',           import: '@/components/controls/Port' },
+slot:    { component: 'Port',           import: '@/components/controls/Port' },
+lever:   { component: 'DirectionSwitch', import: '@/components/controls/DirectionSwitch' },
+```
+
+### 5B. Enriched Field Handling
+
+Update `renderControl()` to pass enriched props:
+- `shape` → PanelButton shape prop or circle rendering
+- `surfaceColor` → accent color on buttons/pads
+- `icon` + `labelDisplay: 'icon-only'` → render icon instead of text
+- `buttonStyle` → PanelButton variant
+- `hasLed` + `ledColor` → render LED indicator on buttons
+- `ledVariant` → LED rendering variant
+
+### 5C. Archetype Handling
+
+- Add `transport-pair` case to `renderSectionBody`
+- Read inferred layout parameters (gap, padding) for CSS generation
+- Generate flex/grid CSS from archetype parameters, not absolute positioning
+
+### 5D. Group Labels
+
+Render `sharedLabel` text above/below paired control groups:
+```tsx
+<div className="text-[10px] text-gray-400 uppercase tracking-wider text-center">
+  SEARCH
+</div>
+<div className="flex flex-row gap-2">
+  <PanelButton id="search-bwd" icon="rewind" ... />
+  <PanelButton id="search-fwd" icon="fast-forward" ... />
+</div>
+```
+
+### 5E. Nested Controls
+
+Handle `nestedIn` for jog display inside jog wheel:
+- Detect wheel + nested display in the same section
+- Generate `JogWheelAssembly` composite component
+- Jog display renders inside the wheel, not as a sibling
+
+### 5F. Screen/Display Components
+
+Replace plain `<div>` for screen type with `TouchDisplay` component:
+```typescript
+screen:  { component: 'TouchDisplay', import: '@/components/controls/TouchDisplay' },
+display: { component: 'TouchDisplay', import: '@/components/controls/TouchDisplay' },
+```
 
 ---
 
-## Implementation Order
+## Phase 6: Pipeline Rerun & Verification
 
-| Step | What | Where | Depends on |
-|---|---|---|---|
-| 1 | Expand ManifestControl schema | `scripts/layout-engine.ts` | Nothing |
-| 2 | Update Gatekeeper SOUL | `.claude/agents/gatekeeper.md` | Step 1 |
-| 3 | Add Manifest Completeness Validator | `src/lib/pipeline/checkpoint-validators.ts` | Step 1 |
-| 4 | Build Port component | `src/components/controls/Port.tsx` | Nothing |
-| 5 | Build TouchDisplay component | `src/components/controls/TouchDisplay.tsx` | Nothing |
-| 6 | Build JogDisplay component | `src/components/controls/JogDisplay.tsx` | Nothing |
-| 7 | Build DirectionSwitch component | `src/components/controls/DirectionSwitch.tsx` | Nothing |
-| 8 | Build JogWheelAssembly composite | `src/components/controls/JogWheelAssembly.tsx` | Steps 5, 6 |
-| 9 | Add PanelButton variants | `src/components/controls/PanelButton.tsx` | Nothing |
-| 10 | Add icon library | `src/lib/hardware-icons.ts` | Nothing |
-| 11 | Update editor loadFromManifest | `src/components/panel-editor/store/manifestSlice.ts` | Step 1 |
-| 12 | Update editor ControlNode | `src/components/panel-editor/ControlNode.tsx` | Steps 4-10 |
-| 13 | Update editor PropertiesPanel | `src/components/panel-editor/PropertiesPanel/` | Step 11 |
-| 14 | Add GroupLabel support | `src/components/panel-editor/GroupLabelNode.tsx` | Step 1 |
-| 15 | Build Layout Inference engine | `src/lib/layout-inference.ts` | Nothing |
-| 16 | Wire inference into Approve & Build | `src/components/panel-editor/PanelEditor.tsx` | Step 15 |
-| 17 | Update Diagram Parser SOUL | `.claude/agents/diagram-parser.md` | Nothing |
-| 18 | Rerun CDJ-3000 pipeline | Pipeline runner | Steps 1-3, 17 |
-| 19 | Verify in editor | Manual testing | Steps 11-16, 18 |
+1. Update ManifestControl type (shared source)
+2. Update Parser SOUL (silkscreen, shape, size, transport-pair, typeHints)
+3. Update Gatekeeper SOUL (5 new protocols + type accuracy rules)
+4. Build Manifest Completeness Validator + wire into pipeline
+5. Update Layout Engine (transport-pair, port/slot types)
+6. Build new components (Port, TouchDisplay, JogDisplay, DirectionSwitch, JogWheelAssembly, LEDRing)
+7. Add PanelButton variants + update existing components
+8. Build icon library
+9. Update editor store (loadFromManifest, all new fields)
+10. Update ControlNode (render new types + enriched fields)
+11. Update PropertiesPanel (new sections)
+12. Build GroupLabelNode
+13. Build Layout Inference Engine
+14. Wire inference into Approve & Build flow
+15. Update codegen (new types, enriched fields, archetype parameters)
+16. Build codegen API route
+17. Update PHASE_ORDER (remove phases 1-3, add validator + editor + codegen phases)
+18. Rerun CDJ-3000 pipeline
+19. Open editor — verify ~80% fidelity before contractor
+20. Contractor positioning pass
+21. Approve & Build → inference → review → codegen
+22. Verify generated panel in tutorial system
 
-Steps 1-3 (schema + pipeline) and Steps 4-10 (components) can run in parallel.
-Steps 11-16 (editor updates) depend on both.
-Steps 17-19 are the final verification.
+---
+
+## Implementation Order (Parallelizable)
+
+```
+Stream A (Pipeline):          Stream B (Components):      Stream C (Editor):
+1. Shared types               4. Port component           11. Store updates
+2. Parser SOUL update         5. TouchDisplay              12. ControlNode updates
+3. Gatekeeper SOUL update     6. JogDisplay                13. PropertiesPanel updates
+   ↓                          7. DirectionSwitch           14. GroupLabelNode
+Manifest Validator             8. JogWheelAssembly              ↓
+   ↓                          9. PanelButton variants      15. Layout Inference Engine
+Layout Engine update          10. Icon library              16. Approve & Build flow
+   ↓                              ↓                        17. Codegen updates
+Pipeline rerun ←──────────── All components ready ──────→ 18. Codegen API route
+   ↓                                                           ↓
+                        19. End-to-end verification
+```
+
+Streams A, B, C can run in parallel. They converge at step 19.
 
 ---
 
 ## Success Criteria
 
-**Pipeline output (before contractor):**
+**After pipeline runs (before contractor):**
 - All controls render with correct component type (no buttons for ports)
-- All controls have correct shape (CUE is circle, SOURCE is rectangle)
-- All controls have correct colors (CUE is orange, PLAY is green)
-- All LEDs show correct colors
-- Transport buttons show icons, not text
+- All controls have correct shape, color, style from manifest
+- Transport buttons show icons with colored accent rings
 - Paired controls share group labels
 - Jog display renders inside jog wheel
+- LEDs show correct colors
 - Canvas aspect ratio matches device dimensions
-- Archetype assignments are topologically correct
+- Archetypes are topologically correct
 
 **After contractor pass:**
 - All controls positioned accurately against photo reference
-- Spacing and sizing match the real hardware proportions
-- No archetype changes needed (topology was correct from pipeline)
-- Layout inference produces clean flex/grid CSS
-- Generated panel looks production-grade at any reasonable viewport size
+- Spacing and sizing match hardware proportions
+- No archetype changes needed (topology correct from pipeline)
 
-**What the contractor NEVER has to decide:**
+**After inference + codegen:**
+- Layout inference correctly identifies archetypes from contractor positions
+- Contractor confirms inference results (with option to override)
+- Generated panel uses clean flex/grid CSS (not absolute positioning)
+- Generated panel looks production-grade
+- All enriched fields pass through to component props
+
+**What the contractor NEVER decides:**
 - Button colors, shapes, or styles
 - LED colors or behaviors
 - Icon vs text display
 - Which controls are paired
 - What archetype a section uses
 - How the jog wheel assembly is composed
+- Interaction types (momentary/toggle/hold)
+
+---
+
+## Risk Mitigation
+
+| Risk | Mitigation |
+|---|---|
+| Gatekeeper hallucinating visual details | Manifest Completeness Validator catches missing/wrong fields. Defaults for common patterns. |
+| Layout inference getting archetypes wrong | Contractor review step with per-section override before codegen |
+| Archetype drift (contractor breaks layout) | Inference always re-derives archetypes. Free-form editing doesn't corrupt structural data. |
+| Parser missing silkscreen boundaries | Validator checks section topology. Contractor can reassign controls between sections. |
+| Enriched manifest too large/complex | All new fields are optional. Existing manifests still work (missing fields = defaults). |
+| Codegen can't handle all enriched fields | Fallback rendering for unknown values. New fields enhance, never break. |
 
 ---
 
