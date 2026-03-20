@@ -304,8 +304,13 @@ export const createManifestSlice: StateCreator<
         const mc = mcById.get(controlId);
         if (!mc) return;
         const size = defaultSize(mc.type, mc.sizeClass);
-        const fitW = Math.max(MIN_CONTROL_W, maxW ? Math.min(size.w, maxW - 4) : size.w);
-        const fitH = Math.max(MIN_CONTROL_H, maxH ? Math.min(size.h, maxH - 4) : size.h);
+        // Scale controls to fill their cell: use the larger of default size or 80% of cell
+        // This prevents tiny controls in large sections (e.g., 160px jog wheel in 660px section)
+        const targetW = maxW ? Math.max(size.w, (maxW - 4) * 0.8) : size.w;
+        const targetH = maxH ? Math.max(size.h, (maxH - 4) * 0.8) : size.h;
+        // But don't exceed the cell
+        const fitW = Math.max(MIN_CONTROL_W, maxW ? Math.min(targetW, maxW - 4) : targetW);
+        const fitH = Math.max(MIN_CONTROL_H, maxH ? Math.min(targetH, maxH - 4) : targetH);
         controls[controlId] = {
           id: controlId,
           label: mc.verbatimLabel,
@@ -358,22 +363,14 @@ export const createManifestSlice: StateCreator<
       const placeRow = (ids: string[], rowX: number, rowY: number, rowW: number, rowH: number) => {
         const cellW = rowW / ids.length;
         ids.forEach((id, i) => {
-          const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type, mc.sizeClass) : { w: 48, h: 32 };
-          const fitW = Math.min(size.w, cellW - 4);
-          const fitH = Math.min(size.h, rowH - 4);
-          placeControl(id, rowX + i * cellW + (cellW - fitW) / 2, rowY + (rowH - fitH) / 2, cellW, rowH);
+          placeControl(id, rowX + i * cellW, rowY, cellW, rowH);
         });
       };
 
       const placeColumn = (ids: string[], colX: number, colY: number, colW: number, colH: number) => {
         const cellH = colH / ids.length;
         ids.forEach((id, i) => {
-          const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type, mc.sizeClass) : { w: 48, h: 32 };
-          const fitW = Math.min(size.w, colW - 4);
-          const fitH = Math.min(size.h, cellH - 4);
-          placeControl(id, colX + (colW - fitW) / 2, colY + i * cellH + (cellH - fitH) / 2, colW, cellH);
+          placeControl(id, colX, colY + i * cellH, colW, cellH);
         });
       };
 
@@ -384,11 +381,7 @@ export const createManifestSlice: StateCreator<
         ids.forEach((id, i) => {
           const col = i % cols;
           const row = Math.floor(i / cols);
-          const mc = mcById.get(id);
-          const size = mc ? defaultSize(mc.type, mc?.sizeClass) : { w: 48, h: 32 };
-          const fitW = Math.min(size.w, cellW - 4);
-          const fitH = Math.min(size.h, cellH - 4);
-          placeControl(id, gx + col * cellW + (cellW - fitW) / 2, gy + row * cellH + (cellH - fitH) / 2, cellW, cellH);
+          placeControl(id, gx + col * cellW, gy + row * cellH, cellW, cellH);
         });
       };
 
