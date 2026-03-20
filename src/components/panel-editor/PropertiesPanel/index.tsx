@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useEditorStore } from '../store';
 import type { ControlDef, SectionDef } from '../store';
 import ControlTypeSelector from './ControlTypeSelector';
@@ -444,7 +444,14 @@ export default function PropertiesPanel() {
     );
   }
 
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to top whenever selection changes
+  useEffect(() => {
+    panelRef.current?.scrollTo(0, 0);
+  }, [selectedIds]);
+
   return (
-    <div className="h-full overflow-y-auto p-3 text-gray-300">{content}</div>
+    <div ref={panelRef} className="h-full overflow-y-auto p-3 text-gray-300">{content}</div>
   );
 }
