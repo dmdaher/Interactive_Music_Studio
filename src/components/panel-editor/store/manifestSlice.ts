@@ -3,21 +3,21 @@ import { StateCreator } from 'zustand';
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 /** Canvas base size for converting manifest % to px coordinates */
-export const CANVAS_BASE_W = 1200;
-export const CANVAS_BASE_H = 800;
+export const CANVAS_BASE_W = 2400;
+export const CANVAS_BASE_H = 1600;
 
-/** Default pixel dimensions per control type */
+/** Default pixel dimensions per control type (scaled for 2400x1600 canvas) */
 const DEFAULT_SIZES: Record<string, { w: number; h: number }> = {
-  button:  { w: 48,  h: 32  },
-  knob:    { w: 48,  h: 48  },
-  slider:  { w: 32,  h: 120 },
-  fader:   { w: 32,  h: 120 },
-  led:     { w: 16,  h: 16  },
-  wheel:   { w: 120, h: 120 },
-  pad:     { w: 48,  h: 48  },
-  encoder: { w: 48,  h: 48  },
-  lever:   { w: 24,  h: 48  },
-  switch:  { w: 24,  h: 48  },
+  button:  { w: 96,  h: 64  },
+  knob:    { w: 96,  h: 96  },
+  slider:  { w: 64,  h: 240 },
+  fader:   { w: 64,  h: 240 },
+  led:     { w: 32,  h: 32  },
+  wheel:   { w: 240, h: 240 },
+  pad:     { w: 96,  h: 96  },
+  encoder: { w: 96,  h: 96  },
+  lever:   { w: 48,  h: 96  },
+  switch:  { w: 48,  h: 96  },
   screen:  { w: 200, h: 120 },
 };
 
@@ -179,8 +179,8 @@ export const createManifestSlice: StateCreator<
       // ── Archetype-aware control placement ──────────────────────────────
       const padding = 8;
       const headerOffset = ms.headerLabel ? 16 : 0;
-      const MIN_CONTROL_H = 24;
-      const MIN_CONTROL_W = 24;
+      const MIN_CONTROL_H = 48;
+      const MIN_CONTROL_W = 48;
 
       // Calculate minimum section height needed to fit controls
       const controlCount = ms.controls.length;
