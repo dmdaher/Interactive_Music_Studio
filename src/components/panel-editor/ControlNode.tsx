@@ -70,15 +70,19 @@ function renderControl(control: ControlDef, isSelected: boolean) {
     case 'led':
     case 'indicator':
       return (
-        <div className="flex flex-col items-center gap-0.5">
-          <LEDIndicator
-            id={control.id}
-            highlighted={isSelected}
-            on
-            color="#22c55e"
-            size={Math.max(control.w, 14)}
+        <div className="flex flex-col items-center gap-1">
+          <div
+            className="rounded-full"
+            style={{
+              width: Math.max(control.w, 16),
+              height: Math.max(control.w, 16),
+              backgroundColor: '#22c55e',
+              boxShadow: '0 0 6px 2px #22c55e, 0 0 12px 4px rgba(34,197,94,0.4)',
+              border: '2px solid rgba(34,197,94,0.6)',
+            }}
+            data-control-id={control.id}
           />
-          <span className="text-[8px] text-gray-500 uppercase truncate w-full text-center">
+          <span className="text-[8px] text-gray-400 uppercase truncate w-full text-center leading-tight">
             {control.label}
           </span>
         </div>
