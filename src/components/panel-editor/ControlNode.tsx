@@ -321,7 +321,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
                 </span>
               </div>
             </div>
-            {/* Bottom mode */}
+            {/* Bottom mode (dimmed — shows the alternate color at low opacity) */}
             <div
               className="flex items-center justify-center py-1 px-2"
               style={{ backgroundColor: '#1a1a2a' }}
@@ -331,11 +331,11 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
                   className="rounded-full"
                   style={{
                     width: 6, height: 6,
-                    backgroundColor: '#333',
-                    border: '1px solid #444',
+                    backgroundColor: `${ledColor}33`,
+                    border: `1px solid ${ledColor}66`,
                   }}
                 />
-                <span className="text-[8px] font-medium text-gray-500 uppercase">
+                <span className="text-[8px] font-medium uppercase" style={{ color: `${ledColor}88` }}>
                   {bottomLabel}
                 </span>
               </div>
