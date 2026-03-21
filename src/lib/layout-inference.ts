@@ -649,36 +649,28 @@ function normalizeSizes(group: CleanedControl[]): void {
 function resolveOverlaps(controls: CleanedControl[]): void {
   if (controls.length < 2) return;
 
-  // Check vertical overlaps (sort by Y)
-  const sortedByY = [...controls].sort((a, b) => a.y - b.y);
-  let hasVerticalOverlap = false;
+  // Only resolve vertical overlap between controls that ACTUALLY share
+  // horizontal space (their X ranges overlap). Controls side by side
+  // at different X positions can have overlapping Y ranges — that's fine.
+  for (let i = 0; i < controls.length; i++) {
+    for (let j = i + 1; j < controls.length; j++) {
+      const a = controls[i];
+      const b = controls[j];
 
-  for (let i = 1; i < sortedByY.length; i++) {
-    const prevBottom = sortedByY[i - 1].y + sortedByY[i - 1].h;
-    if (sortedByY[i].y < prevBottom) {
-      hasVerticalOverlap = true;
-      break;
-    }
-  }
+      // Check if they share horizontal space
+      const xOverlap = a.x < b.x + b.w && a.x + a.w > b.x;
+      if (!xOverlap) continue;
 
-  if (hasVerticalOverlap) {
-    // Calculate total height needed and available space
-    const totalControlHeight = sortedByY.reduce((sum, c) => sum + c.h, 0);
-    const topY = sortedByY[0].y;
-    const bottomY = Math.max(...sortedByY.map(c => c.y + c.h));
-    const availableHeight = Math.max(bottomY - topY, totalControlHeight + (sortedByY.length - 1) * 4);
+      // Check if they overlap vertically
+      const yOverlap = a.y < b.y + b.h && a.y + a.h > b.y;
+      if (!yOverlap) continue;
 
-    // Redistribute with even gaps
-    const totalGapSpace = availableHeight - totalControlHeight;
-    const gapPerSlot = Math.max(4, totalGapSpace / (sortedByY.length - 1));
-
-    let currentY = topY;
-    for (let i = 0; i < sortedByY.length; i++) {
-      // Find the actual control in the original array and update it
-      const ctrl = controls.find(c => c.id === sortedByY[i].id);
-      if (ctrl) {
-        ctrl.y = Math.round(currentY);
-        currentY += ctrl.h + gapPerSlot;
+      // They truly overlap — push the lower one down
+      const upper = a.y <= b.y ? a : b;
+      const lower = a.y <= b.y ? b : a;
+      const lowerCtrl = controls.find(c => c.id === lower.id);
+      if (lowerCtrl) {
+        lowerCtrl.y = upper.y + upper.h + 4; // 4px minimum gap
       }
     }
   }
