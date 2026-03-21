@@ -43,139 +43,149 @@ function resolveDisplayContent(control: ControlDef): { text: string; isIcon: boo
   return { text: control.label, isIcon: false };
 }
 
-/** Wrap a control component with label positioning handled by the editor */
-function withLabel(control: ControlDef, component: React.ReactNode) {
+/** Compute the font size for a floating label based on control properties */
+function labelFontSize(control: ControlDef): number {
+  return control.labelFontSize
+    ?? (control.sizeClass === 'xl' ? 11 : control.sizeClass === 'lg' ? 10 : control.sizeClass === 'sm' ? 7 : 8);
+}
+
+/** Should this control show a floating label outside the Rnd container? */
+function shouldShowFloatingLabel(control: ControlDef): boolean {
   const effectivePos = control.labelDisplay ?? control.labelPosition;
+  if (effectivePos === 'hidden') return false;
+  if (control.labelPosition === 'on-button') {
+    // on-button labels are rendered by the component itself;
+    // but a secondary label still floats below
+    return !!control.secondaryLabel;
+  }
+  if (!control.label) return false;
+  return true;
+}
 
-  // Hidden label — return just the component
-  if (effectivePos === 'hidden') return component;
+/** Render the floating label element positioned absolutely outside the Rnd container.
+ *  `relX` / `relY` are the control position relative to the parent section. */
+function renderFloatingLabel(
+  control: ControlDef,
+  relX: number,
+  relY: number,
+): React.ReactNode {
+  if (!shouldShowFloatingLabel(control)) return null;
 
-  // Icon-only — the icon is shown ON the button face (handled by the component).
-  // The text label (control.label) is shown above/below the button as panel text.
-  if (effectivePos === 'icon-only') {
-    const pos = control.labelPosition;
-    // If label position is on-button or hidden, just show the component (icon is on it)
-    if (pos === 'on-button' || pos === 'hidden') return component;
+  const pos = control.labelPosition;
+  const fontSize = labelFontSize(control);
+  const effectivePos = control.labelDisplay ?? pos;
 
-    const labelEl = (
-      <span className="text-[8px] font-medium text-gray-400 uppercase text-center leading-tight truncate w-full">
-        {control.label}
-      </span>
-    );
-
-    if (pos === 'above') {
-      return (
-        <div className="flex flex-col items-center gap-0.5">
-          {labelEl}
-          {component}
-        </div>
-      );
-    }
-    if (pos === 'left') {
-      return (
-        <div className="flex items-center gap-1">
-          {labelEl}
-          {component}
-        </div>
-      );
-    }
-    if (pos === 'right') {
-      return (
-        <div className="flex items-center gap-1">
-          {component}
-          {labelEl}
-        </div>
-      );
-    }
-    // Default: below
+  // on-button with secondary label — float the secondary label below the control
+  if (pos === 'on-button') {
     return (
-      <div className="flex flex-col items-center gap-0.5">
-        {component}
-        {labelEl}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          left: relX,
+          top: relY + control.h + 2,
+          width: control.w,
+          zIndex: 1,
+        }}
+      >
+        <span
+          className="font-medium text-gray-500 uppercase text-center leading-tight truncate w-full block"
+          style={{ fontSize: Math.max(fontSize - 2, 6) }}
+        >
+          {control.secondaryLabel}
+        </span>
       </div>
     );
   }
 
-  const label = control.label;
-  const pos = control.labelPosition;
+  // icon-only: the icon is on the button face, the text label floats outside
+  // (pos can't be 'on-button' here — that case early-returns above)
+  const showPrimaryLabel = effectivePos !== 'icon-only' || pos !== 'hidden';
 
-  // Font size: use labelFontSize if set, otherwise scale with sizeClass
-  const fontSize = control.labelFontSize
-    ?? (control.sizeClass === 'xl' ? 11 : control.sizeClass === 'lg' ? 10 : control.sizeClass === 'sm' ? 7 : 8);
-
-  // If label is on-button, show the component but still render secondary label below if it exists
-  if (pos === 'on-button' || !label) {
-    if (control.secondaryLabel) {
-      return (
-        <div className="flex flex-col items-center gap-0.5">
-          {component}
-          <span
-            className="font-medium text-gray-500 uppercase text-center leading-tight truncate w-full"
-            style={{ fontSize: Math.max(fontSize - 2, 6) }}
-          >
-            {control.secondaryLabel}
-          </span>
-        </div>
-      );
-    }
-    return component;
-  }
-
+  // Build the label content
   const secondaryLabel = control.secondaryLabel;
-  const labelEl = secondaryLabel ? (
-    <div className="flex items-center gap-1 w-full justify-center">
-      <span
-        className="font-medium text-gray-400 uppercase leading-tight truncate"
-        style={{ fontSize }}
-      >
-        {control.primaryLabel ?? label}
-      </span>
-      <span className="text-gray-600" style={{ fontSize: fontSize - 1 }}>/</span>
-      <span
-        className="font-medium text-gray-500 uppercase leading-tight truncate"
-        style={{ fontSize: fontSize - 1 }}
-      >
-        {secondaryLabel}
-      </span>
-    </div>
+  const primaryLabelText = control.primaryLabel ?? control.label;
+
+  const labelContent = secondaryLabel && effectivePos !== 'icon-only' ? (
+    <>
+      <div className="flex items-center gap-1 w-full justify-center">
+        <span
+          className="font-medium text-gray-400 uppercase leading-tight truncate"
+          style={{ fontSize }}
+        >
+          {primaryLabelText}
+        </span>
+        <span className="text-gray-600" style={{ fontSize: fontSize - 1 }}>/</span>
+        <span
+          className="font-medium text-gray-500 uppercase leading-tight truncate"
+          style={{ fontSize: fontSize - 1 }}
+        >
+          {secondaryLabel}
+        </span>
+      </div>
+    </>
   ) : (
-    <span
-      className="font-medium text-gray-400 uppercase text-center leading-tight truncate w-full"
-      style={{ fontSize }}
-    >
-      {label}
-    </span>
+    <>
+      {showPrimaryLabel && (
+        <span
+          className="font-medium text-gray-400 uppercase text-center leading-tight truncate w-full block"
+          style={{ fontSize }}
+        >
+          {control.label}
+        </span>
+      )}
+      {secondaryLabel && (
+        <span
+          className="font-medium text-gray-500 uppercase text-center leading-tight truncate w-full block"
+          style={{ fontSize: Math.max(fontSize - 1, 6) }}
+        >
+          {secondaryLabel}
+        </span>
+      )}
+    </>
   );
 
-  if (pos === 'above') {
-    return (
-      <div className="flex flex-col items-center gap-0.5">
-        {labelEl}
-        {component}
-      </div>
-    );
+  // Compute position based on labelPosition
+  const labelStyle: React.CSSProperties = { zIndex: 1 };
+
+  // Estimate label height for positioning (primary + optional secondary)
+  const lineH = fontSize + 2;
+  const totalLabelH = secondaryLabel ? lineH * 2 : lineH;
+
+  switch (pos) {
+    case 'above':
+      labelStyle.left = relX;
+      labelStyle.top = relY - totalLabelH - 2;
+      labelStyle.width = control.w;
+      labelStyle.textAlign = 'center';
+      break;
+    case 'below':
+    default:
+      labelStyle.left = relX;
+      labelStyle.top = relY + control.h + 2;
+      labelStyle.width = control.w;
+      labelStyle.textAlign = 'center';
+      break;
+    case 'left':
+      // Position to the left of the control, vertically centered
+      labelStyle.top = relY + (control.h - totalLabelH) / 2;
+      labelStyle.left = relX - 60;
+      labelStyle.width = 56;
+      labelStyle.textAlign = 'right';
+      break;
+    case 'right':
+      labelStyle.left = relX + control.w + 4;
+      labelStyle.top = relY + (control.h - totalLabelH) / 2;
+      labelStyle.width = 56;
+      labelStyle.textAlign = 'left';
+      break;
   }
-  if (pos === 'left') {
-    return (
-      <div className="flex items-center gap-1">
-        {labelEl}
-        {component}
-      </div>
-    );
-  }
-  if (pos === 'right') {
-    return (
-      <div className="flex items-center gap-1">
-        {component}
-        {labelEl}
-      </div>
-    );
-  }
-  // Default: below
+
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      {component}
-      {labelEl}
+    <div
+      className="absolute pointer-events-none"
+      style={labelStyle}
+    >
+      {labelContent}
     </div>
   );
 }
@@ -260,8 +270,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
             </div>
           </div>
         );
-        // Use withLabel for above/below/left/right positioning
-        return withLabel(control, circleButton);
+        return circleButton;
       }
 
       // Map buttonStyle to PanelButton variant ('raised' maps to 'standard')
@@ -296,7 +305,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       return buttonEl;
     }
     case 'knob': {
-      return withLabel(control,
+      return (
         <Knob
           id={control.id}
           label=""
@@ -308,7 +317,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
     }
     case 'fader':
     case 'slider':
-      return withLabel(control,
+      return (
         <Slider
           id={control.id}
           label=""
@@ -428,7 +437,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
 
       if (nestedDisplay || nestedRing) {
         // Render as JogWheelAssembly (composite)
-        return withLabel(control,
+        return (
           <JogWheelAssembly
             id={control.id}
             label=""
@@ -440,7 +449,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
         );
       }
 
-      return withLabel(control,
+      return (
         <Wheel
           id={control.id}
           label=""
@@ -464,7 +473,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
         </div>
       );
     case 'encoder': {
-      return withLabel(control,
+      return (
         <ValueDial
           id={control.id}
           label=""
@@ -478,7 +487,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
     case 'lever': {
       // If positions > 2, use DirectionSwitch for multi-position switches
       if (control.positions && control.positions > 2) {
-        return withLabel(control,
+        return (
           <DirectionSwitch
             id={control.id}
             label=""
@@ -492,7 +501,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       }
       // Lever default height is ~62px at scale=1. Derive scale from control height.
       const leverScale = control.h / 62;
-      return withLabel(control,
+      return (
         <Lever
           id={control.id}
           label=""
@@ -504,7 +513,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       );
     }
     case 'port':
-      return withLabel(control,
+      return (
         <Port
           id={control.id}
           label=""
@@ -515,7 +524,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
         />
       );
     case 'slot':
-      return withLabel(control,
+      return (
         <Port
           id={control.id}
           label=""
@@ -724,62 +733,75 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
     control.y + control.h > section.y + section.h;
 
   return (
-    <Rnd
-      position={{ x: relX, y: relY }}
-      size={{ width: control.w, height: control.h }}
-      scale={zoom}
-      dragGrid={[snapGrid, snapGrid]}
-      resizeGrid={[snapGrid, snapGrid]}
-      disableDragging={isLocked}
-      enableResizing={!isLocked}
-      resizeHandleStyles={isSelected ? {
-        bottomRight: { width: 10, height: 10, right: -5, bottom: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nwse-resize' },
-        bottomLeft: { width: 10, height: 10, left: -5, bottom: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nesw-resize' },
-        topRight: { width: 10, height: 10, right: -5, top: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nesw-resize' },
-        topLeft: { width: 10, height: 10, left: -5, top: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nwse-resize' },
-      } : undefined}
-      onDragStart={handleDragStart}
-      onDragStop={handleDragStop}
-      onResizeStop={handleResizeStop}
-      style={{
-        outline: isSelected
-          ? '2px solid rgba(59,130,246,0.8)'
-          : 'none',
-        outlineOffset: 1,
-        borderRadius: 2,
-        zIndex: isSelected ? 50 : 1,
-        boxShadow: isSelected
-          ? '0 0 8px 2px rgba(59,130,246,0.3)'
-          : 'none',
-        opacity: isLocked ? 0.7 : 1,
-        cursor: isLocked ? 'not-allowed' : 'move',
-      }}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      onContextMenu={handleContextMenu}
-      className="control-node"
-    >
-      {/* Lock icon badge (top-right) */}
-      {isLocked && (
-        <div
-          className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-800 text-[8px] text-yellow-400 border border-gray-600 pointer-events-none"
-          style={{ zIndex: 20 }}
-          title="Locked"
-        >
-          L
+    <>
+      <Rnd
+        position={{ x: relX, y: relY }}
+        size={{ width: control.w, height: control.h }}
+        scale={zoom}
+        dragGrid={[snapGrid, snapGrid]}
+        resizeGrid={[snapGrid, snapGrid]}
+        disableDragging={isLocked}
+        enableResizing={!isLocked}
+        resizeHandleStyles={isSelected ? {
+          bottomRight: { width: 10, height: 10, right: -5, bottom: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nwse-resize' },
+          bottomLeft: { width: 10, height: 10, left: -5, bottom: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nesw-resize' },
+          topRight: { width: 10, height: 10, right: -5, top: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nesw-resize' },
+          topLeft: { width: 10, height: 10, left: -5, top: -5, background: '#3b82f6', borderRadius: '50%', cursor: 'nwse-resize' },
+        } : undefined}
+        onDragStart={handleDragStart}
+        onDragStop={handleDragStop}
+        onResizeStop={handleResizeStop}
+        style={{
+          outline: isSelected
+            ? '2px solid rgba(59,130,246,0.8)'
+            : 'none',
+          outlineOffset: 1,
+          borderRadius: 2,
+          zIndex: isSelected ? 50 : 1,
+          boxShadow: isSelected
+            ? '0 0 8px 2px rgba(59,130,246,0.3)'
+            : 'none',
+          opacity: isLocked ? 0.7 : 1,
+          cursor: isLocked ? 'not-allowed' : 'move',
+        }}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        onContextMenu={handleContextMenu}
+        className="control-node"
+      >
+        {/* Lock icon badge (top-right) */}
+        {isLocked && (
+          <div
+            className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-800 text-[8px] text-yellow-400 border border-gray-600 pointer-events-none"
+            style={{ zIndex: 20 }}
+            title="Locked"
+          >
+            L
+          </div>
+        )}
+
+        {/* Control rendering — component only, no label */}
+        <div className="flex h-full w-full items-center justify-center pointer-events-none">
+          {renderControl(control, isSelected, allControls)}
         </div>
-      )}
+      </Rnd>
 
-      {/* Control rendering */}
-      <div className="flex h-full w-full items-center justify-center pointer-events-none">
-        {renderControl(control, isSelected, allControls)}
-      </div>
+      {/* Floating label — rendered OUTSIDE the Rnd container */}
+      {renderFloatingLabel(control, relX, relY)}
 
-      {/* Inline label editor overlay */}
+      {/* Inline label editor — positioned near the floating label */}
       {isEditing && (
         <div
-          className="absolute inset-x-0 bottom-0 flex items-center justify-center"
-          style={{ zIndex: 30, pointerEvents: 'auto' }}
+          className="absolute"
+          style={{
+            left: relX,
+            top: control.labelPosition === 'above'
+              ? relY - 16
+              : relY + control.h + 2,
+            width: control.w,
+            zIndex: 60,
+            pointerEvents: 'auto',
+          }}
         >
           <input
             ref={inputRef}
@@ -793,6 +815,6 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
           />
         </div>
       )}
-    </Rnd>
+    </>
   );
 }
