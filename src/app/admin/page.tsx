@@ -22,7 +22,7 @@ export default function AdminPage() {
 
   const handleSelectPipeline = useCallback(
     (deviceId: string) => {
-      router.push(`/admin/pipeline/${deviceId}`);
+      router.push(`/admin/${deviceId}`);
     },
     [router],
   );
@@ -30,7 +30,7 @@ export default function AdminPage() {
   const handleCreated = useCallback(
     (deviceId: string) => {
       fetchRuns();
-      router.push(`/admin/pipeline/${deviceId}`);
+      router.push(`/admin/${deviceId}`);
     },
     [fetchRuns, router],
   );
