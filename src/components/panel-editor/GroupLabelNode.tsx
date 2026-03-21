@@ -83,10 +83,11 @@ export default function GroupLabelNode({ groupLabel }: GroupLabelNodeProps) {
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       style={{
-        zIndex: 2,
+        zIndex: 200,
         outline: isSelected ? '1px solid rgba(147,130,246,0.6)' : 'none',
         borderRadius: 2,
         cursor: 'move',
+        backgroundColor: 'rgba(10,10,20,0.8)',
       }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
