@@ -49,7 +49,7 @@ export default function NavigationSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '88.30%',
+              left: '87.70%',
               top: '11.00%',
               width: '12.70%',
               height: '4.40%',
@@ -69,7 +69,7 @@ export default function NavigationSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.90%',
+              left: '83.70%',
               top: '13.80%',
               width: '12.00%',
               height: '9.70%',
@@ -85,8 +85,8 @@ export default function NavigationSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '81.70%',
-              top: '24.20%',
+              left: '80.40%',
+              top: '24.30%',
               width: '12.70%',
               height: '4.40%',
             }}
@@ -105,8 +105,8 @@ export default function NavigationSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '86.50%',
-              top: '25.20%',
+              left: '87.70%',
+              top: '24.30%',
               width: '12.70%',
               height: '4.40%',
             }}

@@ -73,7 +73,7 @@ export default function LeftTransportSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '3.30%',
+              left: '3.10%',
               top: '57.30%',
               width: '10.70%',
               height: '5.80%',
@@ -173,7 +173,7 @@ export default function LeftTransportSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '2.00%',
+              left: '1.80%',
               top: '80.20%',
               width: '13.30%',
               height: '7.30%',
@@ -196,7 +196,7 @@ export default function LeftTransportSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '2.00%',
+              left: '1.80%',
               top: '89.20%',
               width: '13.30%',
               height: '7.30%',

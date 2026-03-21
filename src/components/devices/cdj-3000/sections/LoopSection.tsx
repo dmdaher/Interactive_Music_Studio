@@ -50,7 +50,7 @@ export default function LoopSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '7.70%',
+              left: '7.80%',
               top: '40.70%',
               width: '12.00%',
               height: '2.90%',
@@ -116,7 +116,7 @@ export default function LoopSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '7.70%',
+              left: '7.80%',
               top: '46.80%',
               width: '12.00%',
               height: '2.90%',

@@ -28,8 +28,8 @@ export default function BeatSyncSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '85.60%',
-              top: '47.00%',
+              left: '87.10%',
+              top: '47.50%',
               width: '5.30%',
               height: '3.40%',
             }}
@@ -37,7 +37,7 @@ export default function BeatSyncSection({
             <motion.div whileTap={{ scale: 0.95, y: 2 }}>
               <PanelButton
                 id="beat-sync-inst-doubles-btn"
-                label="INST.DOUBLES"
+                label="Beat Sync"
                 variant="standard"
                 hasLed
                 ledColor="#3b82f6"
@@ -50,8 +50,8 @@ export default function BeatSyncSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '92.10%',
-              top: '47.00%',
+              left: '92.30%',
+              top: '47.50%',
               width: '5.30%',
               height: '3.40%',
             }}
@@ -72,8 +72,8 @@ export default function BeatSyncSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '88.90%',
-              top: '51.10%',
+              left: '89.70%',
+              top: '50.90%',
               width: '5.30%',
               height: '3.40%',
             }}

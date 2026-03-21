@@ -828,7 +828,157 @@ ${body}
 `;
 }
 
-function generateRootPanel(
+/**
+ * Generate a flat panel where ALL controls are direct children of the root
+ * panel container, positioned using panel-level percentages from editorPosition.
+ * Section backgrounds are rendered as decorative-only divs (no control children).
+ */
+function generateFlatPanel(
+  manifest: MasterManifest,
+  sections: ManifestSection[],
+  controlMap: Map<string, ManifestControl>,
+  panelWidth: number,
+  panelHeight: number,
+): string {
+  const pascalName = deviceIdToPascal(manifest.deviceId);
+  const constPrefix = deviceIdToConstPrefix(manifest.deviceId);
+
+  // Collect imports from ALL controls (not per-section)
+  const allControls = manifest.controls.filter(c => !c.nestedIn);
+  const imports = collectImports(manifest.controls, controlMap);
+  const importLines = Array.from(imports.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([component, importPath]) => `import ${component} from '${importPath}';`)
+    .join('\n');
+
+  // Section backgrounds — decorative only, no children
+  const sectionBackgrounds = sections
+    .filter(s => s.panelBoundingBox)
+    .map(s => {
+      const bb = s.panelBoundingBox!;
+      return [
+        `        {/* ${s.headerLabel ?? s.id} background */}`,
+        `        <div`,
+        `          className="absolute rounded-lg pointer-events-none"`,
+        `          style={{`,
+        `            left: '${bb.x}%',`,
+        `            top: '${bb.y}%',`,
+        `            width: '${bb.w}%',`,
+        `            height: '${bb.h}%',`,
+        `            backgroundColor: 'rgba(0,0,0,0.12)',`,
+        `            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',`,
+        `          }}`,
+        `        />`,
+      ].join('\n');
+    })
+    .join('\n\n');
+
+  // All controls positioned directly on the panel using editorPosition percentages
+  const controlRenderings = allControls
+    .map(ctrl => {
+      const ep = (ctrl as any).editorPosition as { x: number; y: number; w: number; h: number } | undefined;
+      if (!ep) return null; // Should not happen in flat mode, but guard
+
+      const controlJsx = renderControl(ctrl.id, ctrl, '          ', controlMap);
+      return [
+        `        {/* ${ctrl.id} */}`,
+        `        <div`,
+        `          className="absolute flex items-center justify-center"`,
+        `          style={{`,
+        `            left: '${ep.x.toFixed(1)}%',`,
+        `            top: '${ep.y.toFixed(1)}%',`,
+        `            width: '${ep.w.toFixed(1)}%',`,
+        `            height: '${ep.h.toFixed(1)}%',`,
+        `          }}`,
+        `        >`,
+        controlJsx,
+        `        </div>`,
+      ].join('\n');
+    })
+    .filter(Boolean)
+    .join('\n\n');
+
+  return `'use client';
+
+import { motion } from 'framer-motion';
+${importLines}
+import { PanelState } from '@/types/panel';
+import { ${constPrefix}_PANEL } from '@/lib/devices/${manifest.deviceId}-constants';
+
+interface ${pascalName}PanelProps {
+  panelState: PanelState;
+  displayState?: any;
+  highlightedControls: string[];
+  zones?: any[];
+  onButtonClick?: (id: string) => void;
+}
+
+export default function ${pascalName}Panel({
+  panelState,
+  highlightedControls,
+  onButtonClick,
+}: ${pascalName}PanelProps) {
+  const isHighlighted = (id: string) => highlightedControls.includes(id);
+  const getState = (id: string) => panelState[id] ?? { active: false };
+
+  return (
+    <div className="w-full h-full overflow-x-auto">
+      <motion.div
+        className="relative rounded-2xl overflow-hidden select-none"
+        style={{
+          width: ${constPrefix}_PANEL.width,
+          minWidth: ${constPrefix}_PANEL.width,
+          height: ${constPrefix}_PANEL.height,
+          backgroundColor: '#1a1a1a',
+          boxShadow: '0 0 0 1px rgba(80,80,80,0.3), 0 8px 32px rgba(0,0,0,0.6), 0 2px 0 0 rgba(255,255,255,0.04) inset, 0 -2px 0 0 rgba(0,0,0,0.4) inset',
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Panel texture overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            backgroundImage: 'radial-gradient(ellipse at 30% 20%, rgba(60,60,60,0.12) 0%, transparent 60%)',
+          }}
+        />
+
+        {/* Top bezel accent */}
+        <div
+          className="absolute top-0 left-0 right-0 h-px pointer-events-none z-30"
+          style={{
+            background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 70%, transparent 95%)',
+          }}
+        />
+
+        {/* Branding bar */}
+        <div className="absolute top-1 left-4 z-30 pointer-events-none flex items-center gap-2">
+          <span className="text-[10px] font-bold text-neutral-500 tracking-[0.35em] uppercase">
+            {${constPrefix}_PANEL.manufacturer}
+          </span>
+          <span className="text-[9px] font-medium text-neutral-600 tracking-[0.2em] uppercase">
+            {${constPrefix}_PANEL.deviceName}
+          </span>
+        </div>
+
+        {/* Section backgrounds — decorative only */}
+${sectionBackgrounds}
+
+        {/* All controls — panel-level percentage positioning */}
+${controlRenderings}
+      </motion.div>
+    </div>
+  );
+}
+`;
+}
+
+/**
+ * Generate the section-based root panel (original behavior).
+ * Used when controls do NOT have editorPosition data (first codegen before editor).
+ */
+function generateSectionBasedPanel(
   manifest: MasterManifest,
   sections: ManifestSection[],
   panelWidth: number,
@@ -954,6 +1104,25 @@ ${sectionRenderings}
   );
 }
 `;
+}
+
+function generateRootPanel(
+  manifest: MasterManifest,
+  sections: ManifestSection[],
+  controlMap: Map<string, ManifestControl>,
+  panelWidth: number,
+  panelHeight: number,
+): string {
+  // Check if any control has editorPosition — if so, use flat panel mode
+  const hasEditorPositions = manifest.controls.some((c: any) => c.editorPosition);
+
+  if (hasEditorPositions) {
+    console.log('  Layout mode: FLAT (panel-level percentage positioning from editor)');
+    return generateFlatPanel(manifest, sections, controlMap, panelWidth, panelHeight);
+  } else {
+    console.log('  Layout mode: SECTION-BASED (archetype layout from templates)');
+    return generateSectionBasedPanel(manifest, sections, panelWidth, panelHeight);
+  }
 }
 
 function generateConstants(
@@ -1205,7 +1374,7 @@ function main() {
   }
 
   // Generate root panel
-  const rootPanelContent = generateRootPanel(manifest, manifest.sections, panelWidth, panelHeight);
+  const rootPanelContent = generateRootPanel(manifest, manifest.sections, controlMap, panelWidth, panelHeight);
   const rootPanelPath = path.join(deviceDir, `${pascalName}Panel.tsx`);
   console.log(`  Root: ${pascalName}Panel.tsx`);
 

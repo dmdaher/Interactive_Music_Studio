@@ -82,7 +82,7 @@ export default function MediaSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '4.70%',
+              left: '4.50%',
               top: '16.00%',
               width: '8.30%',
               height: '3.40%',
@@ -98,7 +98,7 @@ export default function MediaSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '4.70%',
+              left: '4.50%',
               top: '18.70%',
               width: '8.30%',
               height: '3.40%',

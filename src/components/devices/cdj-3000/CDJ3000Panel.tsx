@@ -1,21 +1,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import DirectionSwitch from '@/components/controls/DirectionSwitch';
+import JogWheelAssembly from '@/components/controls/JogWheelAssembly';
+import Knob from '@/components/controls/Knob';
+import LEDIndicator from '@/components/controls/LEDIndicator';
+import PadButton from '@/components/controls/PadButton';
+import PanelButton from '@/components/controls/PanelButton';
+import Port from '@/components/controls/Port';
+import Slider from '@/components/controls/Slider';
+import TouchDisplay from '@/components/controls/TouchDisplay';
+import ValueDial from '@/components/controls/ValueDial';
+import Wheel from '@/components/controls/Wheel';
 import { PanelState } from '@/types/panel';
 import { CDJ3000_PANEL } from '@/lib/devices/cdj-3000-constants';
-import BrowseBarSection from './sections/BrowseBarSection';
-import MediaSection from './sections/MediaSection';
-import DisplaySection from './sections/DisplaySection';
-import NavigationSection from './sections/NavigationSection';
-import PerformanceModesSection from './sections/PerformanceModesSection';
-import HotCueSection from './sections/HotCueSection';
-import LoopSection from './sections/LoopSection';
-import CueLoopMemorySection from './sections/CueLoopMemorySection';
-import LeftTransportSection from './sections/LeftTransportSection';
-import JogSection from './sections/JogSection';
-import JogModeControlsSection from './sections/JogModeControlsSection';
-import BeatSyncSection from './sections/BeatSyncSection';
-import TempoSection from './sections/TempoSection';
 
 interface CDJ3000PanelProps {
   panelState: PanelState;
@@ -30,6 +28,9 @@ export default function CDJ3000Panel({
   highlightedControls,
   onButtonClick,
 }: CDJ3000PanelProps) {
+  const isHighlighted = (id: string) => highlightedControls.includes(id);
+  const getState = (id: string) => panelState[id] ?? { active: false };
+
   return (
     <div className="w-full h-full overflow-x-auto">
       <motion.div
@@ -71,317 +72,1476 @@ export default function CDJ3000Panel({
           </span>
         </div>
 
+        {/* Section backgrounds — decorative only */}
+        {/* Browse Bar background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '10.6%',
             top: '1.5%',
             width: '78.3%',
             height: '4.8%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <BrowseBarSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Media background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '2.3%',
             top: '7.5%',
             width: '12.8%',
             height: '15%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <MediaSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* display background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '19%',
             top: '7.1%',
             width: '61.3%',
             height: '26.2%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <DisplaySection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Navigation background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '78.2%',
             top: '10.5%',
-            width: '23.3%',
-            height: '19.5%',
+            width: '22.8%',
+            height: '18.6%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <NavigationSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Performance Modes background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '1.2%',
             top: '23.8%',
             width: '14.3%',
             height: '7.8%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <PerformanceModesSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Hot Cue background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '14.4%',
             top: '34.4%',
             width: '70.7%',
             height: '3.9%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <HotCueSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Loop background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '-0.8%',
             top: '40.2%',
             width: '29.2%',
             height: '10%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <LoopSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Cue/Loop Memory background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '59.4%',
             top: '34.5%',
             width: '36%',
             height: '9.5%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <CueLoopMemorySection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Transport background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '0.6%',
             top: '50.4%',
             width: '15.6%',
             height: '46.6%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <LeftTransportSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* jog background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '13.6%',
             top: '44.5%',
             width: '75.3%',
             height: '48.9%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <JogSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Jog Mode background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '69.8%',
             top: '40.5%',
             width: '29.2%',
             height: '10.2%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <JogModeControlsSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Beat Sync background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
-            left: '85%',
-            top: '46.5%',
-            width: '13.2%',
-            height: '8.5%',
+            left: '86.5%',
+            top: '47%',
+            width: '11.8%',
+            height: '7.8%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
           }}
-        >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <BeatSyncSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
-            />
-          </div>
-        </div>
+        />
+
+        {/* Tempo background */}
         <div
-          className="absolute"
+          className="absolute rounded-lg pointer-events-none"
           style={{
             left: '79.2%',
             top: '58%',
             width: '21.3%',
             height: '36.9%',
+            backgroundColor: 'rgba(0,0,0,0.12)',
+            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
+          }}
+        />
+
+        {/* All controls — panel-level percentage positioning */}
+        {/* source-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '11.2%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
           }}
         >
-          <div
-            className="w-full h-full rounded-lg"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.12)',
-              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
-              padding: '6px',
-            }}
-          >
-            <TempoSection
-              panelState={panelState}
-              highlightedControls={highlightedControls}
-              onButtonClick={onButtonClick}
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="source-btn"
+              label="SOURCE"
+              variant="flat-key"
+              active={getState('source-btn').active}
+              highlighted={isHighlighted('source-btn')}
+              onClick={() => onButtonClick?.('source-btn')}
             />
-          </div>
+          </motion.div>
+        </div>
+
+        {/* browse-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '22.3%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="browse-btn"
+              label="BROWSE"
+              variant="flat-key"
+              active={getState('browse-btn').active}
+              highlighted={isHighlighted('browse-btn')}
+              onClick={() => onButtonClick?.('browse-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* tag-list-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '44.6%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="tag-list-btn"
+              label="TAG LIST"
+              variant="flat-key"
+              active={getState('tag-list-btn').active}
+              highlighted={isHighlighted('tag-list-btn')}
+              onClick={() => onButtonClick?.('tag-list-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* source-indicator */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '48.5%',
+            top: '2.0%',
+            width: '2.5%',
+            height: '1.7%',
+          }}
+        >
+          <LEDIndicator
+            id="source-indicator"
+            on={getState('source-indicator').ledOn ?? false}
+            color="#22c55e"
+            highlighted={isHighlighted('source-indicator')}
+          />
+        </div>
+
+        {/* playlist-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '34.7%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="playlist-btn"
+              label="PLAYLIST"
+              variant="flat-key"
+              active={getState('playlist-btn').active}
+              highlighted={isHighlighted('playlist-btn')}
+              onClick={() => onButtonClick?.('playlist-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* search-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '55.6%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="search-btn"
+              label="SEARCH"
+              variant="flat-key"
+              active={getState('search-btn').active}
+              highlighted={isHighlighted('search-btn')}
+              onClick={() => onButtonClick?.('search-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* menu-utility-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '67.0%',
+            top: '2.0%',
+            width: '21.3%',
+            height: '3.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="menu-utility-btn"
+              label="MENU/UTILITY"
+              variant="flat-key"
+              active={getState('menu-utility-btn').active}
+              highlighted={isHighlighted('menu-utility-btn')}
+              onClick={() => onButtonClick?.('menu-utility-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* usb-port */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '2.9%',
+            top: '8.0%',
+            width: '6.1%',
+            height: '3.4%',
+          }}
+        >
+          <Port
+            id="usb-port"
+            label="USB port"
+            variant="usb-a"
+            highlighted={isHighlighted('usb-port')}
+          />
+        </div>
+
+        {/* usb-indicator */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '10.2%',
+            top: '8.0%',
+            width: '2.3%',
+            height: '3.4%',
+          }}
+        >
+          <LEDIndicator
+            id="usb-indicator"
+            on={getState('usb-indicator').ledOn ?? false}
+            color="#22c55e"
+            highlighted={isHighlighted('usb-indicator')}
+          />
+        </div>
+
+        {/* usb-stop-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '8.4%',
+            top: '11.8%',
+            width: '6.0%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="usb-stop-btn"
+              label="USB STOP"
+              variant="standard"
+              active={getState('usb-stop-btn').active}
+              highlighted={isHighlighted('usb-stop-btn')}
+              onClick={() => onButtonClick?.('usb-stop-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* sd-card-slot */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '4.5%',
+            top: '16.0%',
+            width: '8.3%',
+            height: '3.4%',
+          }}
+        >
+          <Port
+            id="sd-card-slot"
+            label="SD memory card slot"
+            variant="sd-card"
+            highlighted={isHighlighted('sd-card-slot')}
+          />
+        </div>
+
+        {/* sd-indicator */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '4.5%',
+            top: '18.7%',
+            width: '8.3%',
+            height: '3.4%',
+          }}
+        >
+          <LEDIndicator
+            id="sd-indicator"
+            on={getState('sd-indicator').ledOn ?? false}
+            color="#f59e0b"
+            highlighted={isHighlighted('sd-indicator')}
+          />
+        </div>
+
+        {/* touch-display */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '19.7%',
+            top: '7.6%',
+            width: '60.0%',
+            height: '25.2%',
+          }}
+        >
+          <TouchDisplay
+            id="touch-display"
+            label="Touch display"
+            variant="main"
+            showMockContent
+            width={200}
+            height={120}
+            highlighted={isHighlighted('touch-display')}
+          />
+        </div>
+
+        {/* back-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '78.9%',
+            top: '11.0%',
+            width: '12.7%',
+            height: '4.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="back-btn"
+              label="BACK"
+              variant="standard"
+              active={getState('back-btn').active}
+              highlighted={isHighlighted('back-btn')}
+              onClick={() => onButtonClick?.('back-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* tag-track-remove-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '87.7%',
+            top: '11.0%',
+            width: '12.7%',
+            height: '4.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="tag-track-remove-btn"
+              label="TAG TRACK/REMOVE"
+              variant="standard"
+              active={getState('tag-track-remove-btn').active}
+              highlighted={isHighlighted('tag-track-remove-btn')}
+              onClick={() => onButtonClick?.('tag-track-remove-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* rotary-selector */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '83.7%',
+            top: '13.8%',
+            width: '12.0%',
+            height: '9.7%',
+          }}
+        >
+          <ValueDial
+            id="rotary-selector"
+            label="Rotary selector"
+            hasPush
+            highlighted={isHighlighted('rotary-selector')}
+          />
+        </div>
+
+        {/* track-filter-edit-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '80.4%',
+            top: '24.3%',
+            width: '12.7%',
+            height: '4.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="track-filter-edit-btn"
+              label="TRACK FILTER/EDIT"
+              variant="standard"
+              active={getState('track-filter-edit-btn').active}
+              highlighted={isHighlighted('track-filter-edit-btn')}
+              onClick={() => onButtonClick?.('track-filter-edit-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* shortcut-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '87.7%',
+            top: '24.3%',
+            width: '12.7%',
+            height: '4.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="shortcut-btn"
+              label="SHORTCUT"
+              variant="standard"
+              active={getState('shortcut-btn').active}
+              highlighted={isHighlighted('shortcut-btn')}
+              onClick={() => onButtonClick?.('shortcut-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* time-mode-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '4.2%',
+            top: '24.3%',
+            width: '8.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="time-mode-btn"
+              label="TIME MODE/AUTO CUE"
+              variant="rubber"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('time-mode-btn').active}
+              highlighted={isHighlighted('time-mode-btn')}
+              onClick={() => onButtonClick?.('time-mode-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* quantize-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '6.5%',
+            top: '28.3%',
+            width: '8.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="quantize-btn"
+              label="QUANTIZE"
+              variant="rubber"
+              hasLed
+              ledColor="#ef4444"
+              active={getState('quantize-btn').active}
+              highlighted={isHighlighted('quantize-btn')}
+              onClick={() => onButtonClick?.('quantize-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* slip-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.9%',
+            top: '28.3%',
+            width: '8.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="slip-btn"
+              label="SLIP"
+              variant="rubber"
+              hasLed
+              ledColor="#3b82f6"
+              active={getState('slip-btn').active}
+              highlighted={isHighlighted('slip-btn')}
+              onClick={() => onButtonClick?.('slip-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-a */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '15.1%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-a"
+              label="HOT CUE A"
+              active={getState('hot-cue-a').active}
+              highlighted={isHighlighted('hot-cue-a')}
+              onClick={() => onButtonClick?.('hot-cue-a')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-b */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '23.8%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-b"
+              label="HOT CUE B"
+              active={getState('hot-cue-b').active}
+              highlighted={isHighlighted('hot-cue-b')}
+              onClick={() => onButtonClick?.('hot-cue-b')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-c */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '32.5%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-c"
+              label="HOT CUE C"
+              active={getState('hot-cue-c').active}
+              highlighted={isHighlighted('hot-cue-c')}
+              onClick={() => onButtonClick?.('hot-cue-c')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-d */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '41.1%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-d"
+              label="HOT CUE D"
+              active={getState('hot-cue-d').active}
+              highlighted={isHighlighted('hot-cue-d')}
+              onClick={() => onButtonClick?.('hot-cue-d')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-e */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '50.9%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-e"
+              label="HOT CUE E"
+              active={getState('hot-cue-e').active}
+              highlighted={isHighlighted('hot-cue-e')}
+              onClick={() => onButtonClick?.('hot-cue-e')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-f */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '59.6%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-f"
+              label="HOT CUE F"
+              active={getState('hot-cue-f').active}
+              highlighted={isHighlighted('hot-cue-f')}
+              onClick={() => onButtonClick?.('hot-cue-f')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-g */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '68.6%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-g"
+              label="HOT CUE G"
+              active={getState('hot-cue-g').active}
+              highlighted={isHighlighted('hot-cue-g')}
+              onClick={() => onButtonClick?.('hot-cue-g')}
+            />
+          </motion.div>
+        </div>
+
+        {/* hot-cue-h */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '77.1%',
+            top: '34.9%',
+            width: '7.3%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.93, y: 2 }}>
+            <PadButton
+              id="hot-cue-h"
+              label="HOT CUE H"
+              active={getState('hot-cue-h').active}
+              highlighted={isHighlighted('hot-cue-h')}
+              onClick={() => onButtonClick?.('hot-cue-h')}
+            />
+          </motion.div>
+        </div>
+
+        {/* loop-in-cue-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '-0.1%',
+            top: '40.7%',
+            width: '12.0%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="loop-in-cue-btn"
+              label="IN/CUE"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('loop-in-cue-btn').active}
+              highlighted={isHighlighted('loop-in-cue-btn')}
+              onClick={() => onButtonClick?.('loop-in-cue-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* loop-out-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '7.8%',
+            top: '40.7%',
+            width: '12.0%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="loop-out-btn"
+              label="OUT"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('loop-out-btn').active}
+              highlighted={isHighlighted('loop-out-btn')}
+              onClick={() => onButtonClick?.('loop-out-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* loop-reloop-exit-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '15.8%',
+            top: '40.7%',
+            width: '12.0%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="loop-reloop-exit-btn"
+              label="LOOP RELOOP/EXIT"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('loop-reloop-exit-btn').active}
+              highlighted={isHighlighted('loop-reloop-exit-btn')}
+              onClick={() => onButtonClick?.('loop-reloop-exit-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* 4-beat-loop-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '-0.1%',
+            top: '46.8%',
+            width: '12.0%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="4-beat-loop-btn"
+              label="4 BEAT LOOP (1/2X)"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('4-beat-loop-btn').active}
+              highlighted={isHighlighted('4-beat-loop-btn')}
+              onClick={() => onButtonClick?.('4-beat-loop-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* 8-beat-loop-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '7.8%',
+            top: '46.8%',
+            width: '12.0%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="8-beat-loop-btn"
+              label="8 BEAT LOOP (2X)"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('8-beat-loop-btn').active}
+              highlighted={isHighlighted('8-beat-loop-btn')}
+              onClick={() => onButtonClick?.('8-beat-loop-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* vinyl-speed-adj-knob */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '89.5%',
+            top: '35.0%',
+            width: '5.3%',
+            height: '3.9%',
+          }}
+        >
+          <Knob
+            id="vinyl-speed-adj-knob"
+            label="VINYL SPEED ADJ. TOUCH/BRAKE"
+            value={getState('vinyl-speed-adj-knob').value ?? 64}
+            highlighted={isHighlighted('vinyl-speed-adj-knob')}
+          />
+        </div>
+
+        {/* cue-loop-call-left-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '60.1%',
+            top: '41.2%',
+            width: '8.8%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="cue-loop-call-left-btn"
+              label="CUE/LOOP CALL ◄"
+              variant="standard"
+              iconContent="◀"
+              active={getState('cue-loop-call-left-btn').active}
+              highlighted={isHighlighted('cue-loop-call-left-btn')}
+              onClick={() => onButtonClick?.('cue-loop-call-left-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* cue-loop-call-right-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '64.8%',
+            top: '41.2%',
+            width: '8.8%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="cue-loop-call-right-btn"
+              label="CUE/LOOP CALL ►"
+              variant="standard"
+              iconContent="▶"
+              active={getState('cue-loop-call-right-btn').active}
+              highlighted={isHighlighted('cue-loop-call-right-btn')}
+              onClick={() => onButtonClick?.('cue-loop-call-right-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* delete-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '71.3%',
+            top: '41.2%',
+            width: '8.8%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="delete-btn"
+              label="DELETE"
+              variant="standard"
+              active={getState('delete-btn').active}
+              highlighted={isHighlighted('delete-btn')}
+              onClick={() => onButtonClick?.('delete-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* memory-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '77.1%',
+            top: '41.2%',
+            width: '8.8%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="memory-btn"
+              label="MEMORY"
+              variant="standard"
+              active={getState('memory-btn').active}
+              highlighted={isHighlighted('memory-btn')}
+              onClick={() => onButtonClick?.('memory-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* beat-jump-left-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.3%',
+            top: '50.8%',
+            width: '6.4%',
+            height: '5.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="beat-jump-left-btn"
+              label="BEAT JUMP ◄"
+              variant="standard"
+              iconContent="◀"
+              active={getState('beat-jump-left-btn').active}
+              highlighted={isHighlighted('beat-jump-left-btn')}
+              onClick={() => onButtonClick?.('beat-jump-left-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* beat-jump-right-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '9.2%',
+            top: '50.8%',
+            width: '6.4%',
+            height: '5.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="beat-jump-right-btn"
+              label="BEAT JUMP ►"
+              variant="standard"
+              iconContent="▶"
+              active={getState('beat-jump-right-btn').active}
+              highlighted={isHighlighted('beat-jump-right-btn')}
+              onClick={() => onButtonClick?.('beat-jump-right-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* direction-lever */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '3.1%',
+            top: '57.3%',
+            width: '10.7%',
+            height: '5.8%',
+          }}
+        >
+          <DirectionSwitch
+            id="direction-lever"
+            label="DIRECTION FWD, REV, SLIP REV"
+            positions={["FWD","REV","SLIP REV"]}
+            highlighted={isHighlighted('direction-lever')}
+          />
+        </div>
+
+        {/* track-search-bwd-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.5%',
+            top: '67.1%',
+            width: '6.0%',
+            height: '5.3%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="track-search-bwd-btn"
+              label="Track/Search"
+              variant="standard"
+              iconContent="|◀◀"
+              active={getState('track-search-bwd-btn').active}
+              highlighted={isHighlighted('track-search-bwd-btn')}
+              onClick={() => onButtonClick?.('track-search-bwd-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* track-search-fwd-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '9.4%',
+            top: '67.1%',
+            width: '6.0%',
+            height: '5.3%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="track-search-fwd-btn"
+              label="Track/Search"
+              variant="standard"
+              iconContent="▶▶|"
+              active={getState('track-search-fwd-btn').active}
+              highlighted={isHighlighted('track-search-fwd-btn')}
+              onClick={() => onButtonClick?.('track-search-fwd-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* search-bwd-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.3%',
+            top: '72.5%',
+            width: '6.4%',
+            height: '5.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="search-bwd-btn"
+              label="Search"
+              variant="standard"
+              iconContent="◀◀"
+              active={getState('search-bwd-btn').active}
+              highlighted={isHighlighted('search-bwd-btn')}
+              onClick={() => onButtonClick?.('search-bwd-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* search-fwd-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '9.2%',
+            top: '72.5%',
+            width: '6.4%',
+            height: '5.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="search-fwd-btn"
+              label="Search"
+              variant="standard"
+              iconContent="▶▶"
+              active={getState('search-fwd-btn').active}
+              highlighted={isHighlighted('search-fwd-btn')}
+              onClick={() => onButtonClick?.('search-fwd-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* cue-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.8%',
+            top: '80.2%',
+            width: '13.3%',
+            height: '7.3%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="cue-btn"
+              label="CUE"
+              variant="transport"
+              surfaceColor="#f59e0b"
+              hasLed
+              ledColor="#f59e0b"
+              active={getState('cue-btn').active}
+              highlighted={isHighlighted('cue-btn')}
+              onClick={() => onButtonClick?.('cue-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* play-pause-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '1.8%',
+            top: '89.2%',
+            width: '13.3%',
+            height: '7.3%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="play-pause-btn"
+              label="PLAY/PAUSE ►/II"
+              variant="transport"
+              surfaceColor="#22c55e"
+              iconContent="▶/❚❚"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('play-pause-btn').active}
+              highlighted={isHighlighted('play-pause-btn')}
+              onClick={() => onButtonClick?.('play-pause-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* jog-wheel */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '14.3%',
+            top: '44.9%',
+            width: '74.0%',
+            height: '47.9%',
+          }}
+        >
+          <JogWheelAssembly
+            id="jog-wheel"
+            label="Jog wheel (–REV/+FWD)"
+            wheelSize={160}
+            displaySize={60}
+            ringColor="#22c55e"
+            highlighted={isHighlighted('jog-wheel')}
+          />
+        </div>
+
+        {/* jog-mode-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '91.7%',
+            top: '41.0%',
+            width: '6.7%',
+            height: '2.9%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="jog-mode-btn"
+              label="JOG MODE"
+              variant="standard"
+              active={getState('jog-mode-btn').active}
+              highlighted={isHighlighted('jog-mode-btn')}
+              onClick={() => onButtonClick?.('jog-mode-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* vinyl-cdj-indicator */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '84.8%',
+            top: '41.0%',
+            width: '6.7%',
+            height: '2.9%',
+          }}
+        >
+          <LEDIndicator
+            id="vinyl-cdj-indicator"
+            on={getState('vinyl-cdj-indicator').ledOn ?? false}
+            color="#22c55e"
+            highlighted={isHighlighted('vinyl-cdj-indicator')}
+          />
+        </div>
+
+        {/* jog-adjust-knob */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '70.4%',
+            top: '47.3%',
+            width: '14.7%',
+            height: '2.9%',
+          }}
+        >
+          <Knob
+            id="jog-adjust-knob"
+            label="JOG ADJUST"
+            value={getState('jog-adjust-knob').value ?? 64}
+            highlighted={isHighlighted('jog-adjust-knob')}
+          />
+        </div>
+
+        {/* beat-sync-inst-doubles-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '87.1%',
+            top: '47.5%',
+            width: '5.3%',
+            height: '3.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="beat-sync-inst-doubles-btn"
+              label="Beat Sync"
+              variant="standard"
+              hasLed
+              ledColor="#3b82f6"
+              active={getState('beat-sync-inst-doubles-btn').active}
+              highlighted={isHighlighted('beat-sync-inst-doubles-btn')}
+              onClick={() => onButtonClick?.('beat-sync-inst-doubles-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* master-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '92.3%',
+            top: '47.5%',
+            width: '5.3%',
+            height: '3.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="master-btn"
+              label="MASTER"
+              variant="standard"
+              hasLed
+              ledColor="#22c55e"
+              active={getState('master-btn').active}
+              highlighted={isHighlighted('master-btn')}
+              onClick={() => onButtonClick?.('master-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* key-sync-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '89.7%',
+            top: '50.9%',
+            width: '5.3%',
+            height: '3.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="key-sync-btn"
+              label="KEY SYNC"
+              variant="standard"
+              surfaceColor="#ec4899"
+              hasLed
+              ledColor="#ec4899"
+              active={getState('key-sync-btn').active}
+              highlighted={isHighlighted('key-sync-btn')}
+              onClick={() => onButtonClick?.('key-sync-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* tempo-range-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '83.5%',
+            top: '58.5%',
+            width: '16.3%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="tempo-range-btn"
+              label="TEMPO ±6/±10/±16/WIDE"
+              variant="standard"
+              active={getState('tempo-range-btn').active}
+              highlighted={isHighlighted('tempo-range-btn')}
+              onClick={() => onButtonClick?.('tempo-range-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* master-tempo-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '83.5%',
+            top: '63.0%',
+            width: '16.3%',
+            height: '2.4%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="master-tempo-btn"
+              label="MASTER TEMPO"
+              variant="standard"
+              hasLed
+              ledColor="#f59e0b"
+              active={getState('master-tempo-btn').active}
+              highlighted={isHighlighted('master-tempo-btn')}
+              onClick={() => onButtonClick?.('master-tempo-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* tempo-slider */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '87.6%',
+            top: '69.3%',
+            width: '8.0%',
+            height: '25.2%',
+          }}
+        >
+          <Slider
+            id="tempo-slider"
+            label="TEMPO slider"
+            value={getState('tempo-slider').value ?? 64}
+            highlighted={isHighlighted('tempo-slider')}
+          />
+        </div>
+
+        {/* tempo-reset-btn */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '79.8%',
+            top: '78.7%',
+            width: '4.7%',
+            height: '6.3%',
+          }}
+        >
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="tempo-reset-btn"
+              label="TEMPO RESET"
+              variant="standard"
+              active={getState('tempo-reset-btn').active}
+              highlighted={isHighlighted('tempo-reset-btn')}
+              onClick={() => onButtonClick?.('tempo-reset-btn')}
+            />
+          </motion.div>
+        </div>
+
+        {/* tempo-reset-indicator */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '81.5%',
+            top: '78.8%',
+            width: '8.0%',
+            height: '6.2%',
+          }}
+        >
+          <LEDIndicator
+            id="tempo-reset-indicator"
+            on={getState('tempo-reset-indicator').ledOn ?? false}
+            color="#22c55e"
+            highlighted={isHighlighted('tempo-reset-indicator')}
+          />
         </div>
       </motion.div>
     </div>

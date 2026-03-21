@@ -63,7 +63,7 @@ export const CDJ3000_CONTROLS = {
   'jog-mode-btn': { type: 'button', section: 'jog-mode-controls', label: 'JOG MODE' },
   'vinyl-cdj-indicator': { type: 'led', section: 'jog-mode-controls', label: 'VINYL/CDJ indicator' },
   'jog-adjust-knob': { type: 'knob', section: 'jog-mode-controls', label: 'JOG ADJUST' },
-  'beat-sync-inst-doubles-btn': { type: 'button', section: 'beat-sync', label: 'INST.DOUBLES' },
+  'beat-sync-inst-doubles-btn': { type: 'button', section: 'beat-sync', label: 'Beat Sync' },
   'master-btn': { type: 'button', section: 'beat-sync', label: 'MASTER' },
   'key-sync-btn': { type: 'button', section: 'beat-sync', label: 'KEY SYNC' },
   'tempo-range-btn': { type: 'button', section: 'tempo', label: 'TEMPO ±6/±10/±16/WIDE' },
