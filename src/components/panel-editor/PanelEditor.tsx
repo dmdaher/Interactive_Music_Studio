@@ -35,6 +35,10 @@ function EditorShell({ deviceId }: { deviceId: string }) {
   const [inferenceResults, setInferenceResults] = useState<InferredSection[]>([]);
   const [cleanupResult, setCleanupResult] = useState<GeometryCleanupResult | null>(null);
   const [codegenError, setCodegenError] = useState<string | null>(null);
+  const [preCleanupSnapshot, setPreCleanupSnapshot] = useState<{
+    sections: Record<string, any>;
+    controls: Record<string, any>;
+  } | null>(null);
 
   const handleApproveAndBuild = useCallback(async () => {
     // Force-save current manifest (bypass debounce)
@@ -52,22 +56,64 @@ function EditorShell({ deviceId }: { deviceId: string }) {
       // Best-effort save
     }
 
+    // Save snapshot of current positions (so "Back" can restore them)
+    const snapshot = {
+      sections: JSON.parse(JSON.stringify(sections)),
+      controls: JSON.parse(JSON.stringify(controls)),
+    };
+    setPreCleanupSnapshot(snapshot);
+
     // Run geometry cleanup (snap alignment, normalize sizes)
     const cleaned = cleanupGeometry(sections, controls, canvasWidth, canvasHeight);
     setCleanupResult(cleaned);
 
+    // Apply cleaned positions to the editor canvas so the contractor sees the cleanup
+    const updatedControls = { ...controls };
+    const updatedSections = { ...sections };
+    for (const cs of cleaned.sections) {
+      if (updatedSections[cs.id]) {
+        updatedSections[cs.id] = {
+          ...updatedSections[cs.id],
+          x: cs.x,
+          y: cs.y,
+          w: cs.w,
+          h: cs.h,
+        };
+      }
+      for (const cc of cs.controls) {
+        if (updatedControls[cc.id]) {
+          updatedControls[cc.id] = {
+            ...updatedControls[cc.id],
+            x: cc.x,
+            y: cc.y,
+            w: cc.w,
+            h: cc.h,
+          };
+        }
+      }
+    }
+    useEditorStore.setState({ sections: updatedSections, controls: updatedControls });
+
     // Also run layout inference for the review modal (archetype overrides)
-    const result = inferLayout(sections, controls);
+    const result = inferLayout(updatedSections, updatedControls);
     setInferenceResults(result.sections);
     setShowInferenceReview(true);
     setBuildStatus('idle');
   }, [deviceId]);
 
   const handleInferenceBack = useCallback(() => {
+    // Restore original positions if snapshot exists
+    if (preCleanupSnapshot) {
+      useEditorStore.setState({
+        sections: preCleanupSnapshot.sections,
+        controls: preCleanupSnapshot.controls,
+      });
+      setPreCleanupSnapshot(null);
+    }
     setShowInferenceReview(false);
     setInferenceResults([]);
     setCleanupResult(null);
-  }, []);
+  }, [preCleanupSnapshot]);
 
   const handleInferenceGenerate = useCallback(async (sections: InferredSection[]) => {
     setShowInferenceReview(false);
