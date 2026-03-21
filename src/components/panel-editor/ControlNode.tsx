@@ -289,7 +289,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
           {renderButtonLed(control)}
           <PanelButton
             id={control.id}
-            label={control.label}
+            label={control.labelPosition === 'on-button' ? control.label : (iconContent ?? '')}
             highlighted={isSelected}
             size={btnSize}
             variant={variant}
@@ -464,7 +464,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
           {renderButtonLed(control)}
           <PadButton
             id={control.id}
-            label={control.label}
+            label={control.labelPosition === 'on-button' ? control.label : ''}
             highlighted={isSelected}
             width={control.w}
             height={control.h}
@@ -543,7 +543,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
         return (
           <JogDisplay
             id={control.id}
-            label={control.labelDisplay === 'hidden' ? undefined : control.label}
+            label={control.labelPosition === 'on-button' ? control.label : undefined}
             size={Math.min(control.w, control.h)}
             highlighted={isSelected}
             showMockContent
@@ -553,7 +553,7 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       return (
         <TouchDisplay
           id={control.id}
-          label={control.labelDisplay === 'hidden' ? undefined : control.label}
+          label={control.labelPosition === 'on-button' ? control.label : undefined}
           highlighted={isSelected}
           width={control.w}
           height={control.h}
