@@ -99,6 +99,10 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
   const label = control.label;
   const pos = control.labelPosition;
 
+  // Font size: use labelFontSize if set, otherwise scale with sizeClass
+  const fontSize = control.labelFontSize
+    ?? (control.sizeClass === 'xl' ? 11 : control.sizeClass === 'lg' ? 10 : control.sizeClass === 'sm' ? 7 : 8);
+
   // If label is on-button, show the component but still render secondary label below if it exists
   if (pos === 'on-button' || !label) {
     if (control.secondaryLabel) {
@@ -116,10 +120,6 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
     }
     return component;
   }
-
-  // Font size: use labelFontSize if set, otherwise scale with sizeClass
-  const fontSize = control.labelFontSize
-    ?? (control.sizeClass === 'xl' ? 11 : control.sizeClass === 'lg' ? 10 : control.sizeClass === 'sm' ? 7 : 8);
 
   const secondaryLabel = control.secondaryLabel;
   const labelEl = secondaryLabel ? (
@@ -296,13 +296,13 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       return buttonEl;
     }
     case 'knob': {
-      const knobSize: 'sm' | 'md' = control.w <= 48 ? 'sm' : 'md';
       return withLabel(control,
         <Knob
           id={control.id}
           label=""
           highlighted={isSelected}
-          size={knobSize}
+          outerSize={Math.min(control.w, control.h)}
+          innerSize={Math.min(control.w, control.h) * 0.7}
         />
       );
     }
