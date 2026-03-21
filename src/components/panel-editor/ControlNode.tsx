@@ -557,6 +557,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const toggleSelected = useEditorStore((s) => s.toggleSelected);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+  const setFocusedSection = useEditorStore((s) => s.setFocusedSection);
   const updateControlProp = useEditorStore((s) => s.updateControlProp);
 
   const isSelected = selectedIds.includes(controlId);
@@ -577,6 +578,8 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
   const handleDragStart = useCallback(
     (_e: unknown, d: { x: number; y: number }) => {
+      // Focus parent section to bring it above others during drag/resize
+      setFocusedSection(sectionId);
       dragStartRef.current = { x: d.x, y: d.y };
     },
     [],
@@ -626,13 +629,15 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
+      // Focus the parent section so it raises above other sections
+      setFocusedSection(sectionId);
       if (e.shiftKey || e.metaKey) {
         toggleSelected(controlId);
       } else {
         setSelectedIds([controlId]);
       }
     },
-    [controlId, toggleSelected, setSelectedIds],
+    [controlId, sectionId, toggleSelected, setSelectedIds, setFocusedSection],
   );
 
   const handleDoubleClick = useCallback(
@@ -724,7 +729,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
             : 'none',
         outlineOffset: 1,
         borderRadius: 2,
-        zIndex: isSelected ? 10 : 1,
+        zIndex: isSelected ? 50 : 1,
         boxShadow: isOutOfBounds
           ? '0 0 8px 2px rgba(239,68,68,0.3)'
           : isSelected
