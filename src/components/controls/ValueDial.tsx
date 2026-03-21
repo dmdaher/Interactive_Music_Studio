@@ -7,6 +7,7 @@ interface ValueDialProps {
   label?: string;
   highlighted?: boolean;
   size?: 'sm' | 'lg';
+  outerSize?: number;
   hasPush?: boolean;
 }
 
@@ -33,10 +34,11 @@ export default function ValueDial({
   label,
   highlighted = false,
   size = 'sm',
+  outerSize,
   hasPush = false,
 }: ValueDialProps) {
-  const DIAL_SIZE = DIAL_SIZES[size];
-  const capInset = size === 'lg' ? 20 : 8;
+  const DIAL_SIZE = outerSize ?? DIAL_SIZES[size];
+  const capInset = DIAL_SIZE > 60 ? 20 : 8;
   const centerDot = size === 'lg' ? 10 : 6;
   const ridgeHeight = size === 'lg' ? 6 : 4;
   const highlightRidgeHeight = size === 'lg' ? 5 : 3;

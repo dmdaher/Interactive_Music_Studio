@@ -40,6 +40,7 @@ export default function EditorWorkspace({ deviceId, readOnly }: EditorWorkspaceP
 
   const isSideBySide = showPhoto && photoMode === 'side-by-side';
   const [photoWidth, setPhotoWidth] = useState(40); // percentage
+  const [photoZoom, setPhotoZoom] = useState(1);
   const isDraggingRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -67,15 +68,27 @@ export default function EditorWorkspace({ deviceId, readOnly }: EditorWorkspaceP
       {isSideBySide && photoUrl && (
         <>
           <div
-            className="overflow-auto bg-[#0a0a14] flex items-start justify-center p-4"
+            className="overflow-auto bg-[#0a0a14] p-2"
             style={{ width: `${photoWidth}%`, minWidth: 200 }}
+            onWheel={(e) => {
+              e.stopPropagation();
+              const delta = e.deltaY < 0 ? 0.1 : -0.1;
+              setPhotoZoom(z => Math.max(0.3, Math.min(5, z + delta)));
+            }}
           >
             <img
               src={photoUrl}
               alt="Hardware reference"
-              className="max-w-full h-auto object-contain"
-              style={{ maxHeight: '100%' }}
+              style={{
+                transformOrigin: 'top center',
+                transform: `scale(${photoZoom})`,
+                maxWidth: 'none',
+                width: '100%',
+              }}
             />
+            <div className="sticky bottom-1 left-1 text-[9px] text-gray-600 bg-gray-900/80 rounded px-1 py-0.5 inline-block">
+              {Math.round(photoZoom * 100)}% — scroll to zoom
+            </div>
           </div>
           {/* Draggable divider */}
           <div

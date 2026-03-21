@@ -464,13 +464,12 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
         </div>
       );
     case 'encoder': {
-      const dialSize: 'sm' | 'lg' = control.w <= 48 ? 'sm' : 'lg';
       return withLabel(control,
         <ValueDial
           id={control.id}
           label=""
           highlighted={isSelected}
-          size={dialSize}
+          outerSize={Math.min(control.w, control.h)}
           hasPush={control.encoderHasPush}
         />
       );
