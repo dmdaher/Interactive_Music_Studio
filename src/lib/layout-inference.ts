@@ -532,6 +532,9 @@ export function cleanupGeometry(
       normalizeSizes(group);
     }
 
+    // ── Overlap resolution: fix overlapping controls ───────────────
+    resolveOverlaps(sectionControls);
+
     // ── Equal spacing: normalize gaps in rows/columns ──────────────
     equalizeSpacing(sectionControls, 'x');
     equalizeSpacing(sectionControls, 'y');
@@ -634,6 +637,92 @@ function normalizeSizes(group: CleanedControl[]): void {
     const roundedH = Math.round(avgH);
     for (const c of group) {
       c.h = roundedH;
+    }
+  }
+}
+
+/**
+ * Resolve overlapping controls. If controls overlap vertically (most common),
+ * redistribute them with even spacing to eliminate overlap.
+ * Sorted by Y position, each control is pushed down if it overlaps the previous.
+ */
+function resolveOverlaps(controls: CleanedControl[]): void {
+  if (controls.length < 2) return;
+
+  // Check vertical overlaps (sort by Y)
+  const sortedByY = [...controls].sort((a, b) => a.y - b.y);
+  let hasVerticalOverlap = false;
+
+  for (let i = 1; i < sortedByY.length; i++) {
+    const prevBottom = sortedByY[i - 1].y + sortedByY[i - 1].h;
+    if (sortedByY[i].y < prevBottom) {
+      hasVerticalOverlap = true;
+      break;
+    }
+  }
+
+  if (hasVerticalOverlap) {
+    // Calculate total height needed and available space
+    const totalControlHeight = sortedByY.reduce((sum, c) => sum + c.h, 0);
+    const topY = sortedByY[0].y;
+    const bottomY = Math.max(...sortedByY.map(c => c.y + c.h));
+    const availableHeight = Math.max(bottomY - topY, totalControlHeight + (sortedByY.length - 1) * 4);
+
+    // Redistribute with even gaps
+    const totalGapSpace = availableHeight - totalControlHeight;
+    const gapPerSlot = Math.max(4, totalGapSpace / (sortedByY.length - 1));
+
+    let currentY = topY;
+    for (let i = 0; i < sortedByY.length; i++) {
+      // Find the actual control in the original array and update it
+      const ctrl = controls.find(c => c.id === sortedByY[i].id);
+      if (ctrl) {
+        ctrl.y = Math.round(currentY);
+        currentY += ctrl.h + gapPerSlot;
+      }
+    }
+  }
+
+  // Check horizontal overlaps (sort by X)
+  const sortedByX = [...controls].sort((a, b) => a.x - b.x);
+  let hasHorizontalOverlap = false;
+
+  for (let i = 1; i < sortedByX.length; i++) {
+    const prevRight = sortedByX[i - 1].x + sortedByX[i - 1].w;
+    if (sortedByX[i].x < prevRight && Math.abs(sortedByX[i].y - sortedByX[i - 1].y) < SNAP_TOLERANCE) {
+      hasHorizontalOverlap = true;
+      break;
+    }
+  }
+
+  if (hasHorizontalOverlap) {
+    // Only fix horizontal overlaps for controls in the same row
+    const rows: CleanedControl[][] = [];
+    const assigned = new Set<string>();
+
+    for (const ctrl of controls) {
+      if (assigned.has(ctrl.id)) continue;
+      const row = [ctrl];
+      assigned.add(ctrl.id);
+      for (const other of controls) {
+        if (assigned.has(other.id)) continue;
+        if (Math.abs((other.y + other.h / 2) - (ctrl.y + ctrl.h / 2)) <= SNAP_TOLERANCE) {
+          row.push(other);
+          assigned.add(other.id);
+        }
+      }
+      if (row.length >= 2) rows.push(row);
+    }
+
+    for (const row of rows) {
+      row.sort((a, b) => a.x - b.x);
+      for (let i = 1; i < row.length; i++) {
+        const prevRight = row[i - 1].x + row[i - 1].w;
+        if (row[i].x < prevRight) {
+          const ctrl = controls.find(c => c.id === row[i].id);
+          if (ctrl) ctrl.x = prevRight + 4; // 4px minimum gap
+        }
+      }
     }
   }
 }
