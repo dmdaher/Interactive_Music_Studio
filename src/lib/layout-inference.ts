@@ -445,7 +445,7 @@ export interface GeometryCleanupResult {
 }
 
 /** Snap tolerance: controls within this many pixels are considered aligned */
-const SNAP_TOLERANCE = 8;
+const SNAP_TOLERANCE = 15;
 
 /** Size normalization tolerance: sizes within 10% are normalized to average */
 const SIZE_NORM_TOLERANCE = 0.10;
