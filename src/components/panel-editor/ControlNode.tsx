@@ -106,7 +106,24 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
   const fontSize = control.labelFontSize
     ?? (control.sizeClass === 'xl' ? 11 : control.sizeClass === 'lg' ? 10 : control.sizeClass === 'sm' ? 7 : 8);
 
-  const labelEl = (
+  const secondaryLabel = control.secondaryLabel;
+  const labelEl = secondaryLabel ? (
+    <div className="flex items-center gap-1 w-full justify-center">
+      <span
+        className="font-medium text-gray-400 uppercase leading-tight truncate"
+        style={{ fontSize }}
+      >
+        {control.primaryLabel ?? label}
+      </span>
+      <span className="text-gray-600" style={{ fontSize: fontSize - 1 }}>/</span>
+      <span
+        className="font-medium text-gray-500 uppercase leading-tight truncate"
+        style={{ fontSize: fontSize - 1 }}
+      >
+        {secondaryLabel}
+      </span>
+    </div>
+  ) : (
     <span
       className="font-medium text-gray-400 uppercase text-center leading-tight truncate w-full"
       style={{ fontSize }}
