@@ -34,6 +34,8 @@ export function useAutoSave(deviceId: string) {
     }
 
     // Subscribe to store changes for auto-save (sections + controls)
+    // Skip the first change (initial loadFromManifest) to avoid overwriting saved edits
+    let isFirstChange = true;
     const unsubSave = useEditorStore.subscribe(
       (state, prevState) => {
         // Only trigger if sections or controls actually changed
@@ -41,6 +43,12 @@ export function useAutoSave(deviceId: string) {
           state.sections === prevState.sections &&
           state.controls === prevState.controls
         ) {
+          return;
+        }
+
+        // Skip the initial load — don't overwrite saved edits
+        if (isFirstChange) {
+          isFirstChange = false;
           return;
         }
 
