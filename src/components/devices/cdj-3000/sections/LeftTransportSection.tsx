@@ -42,6 +42,7 @@ export default function LeftTransportSection({
                 id="beat-jump-left-btn"
                 label="BEAT JUMP ◄"
                 variant="standard"
+                size="md"
                 iconContent="◀"
                 active={getState('beat-jump-left-btn').active}
                 highlighted={isHighlighted('beat-jump-left-btn')}
@@ -63,6 +64,7 @@ export default function LeftTransportSection({
                 id="beat-jump-right-btn"
                 label="BEAT JUMP ►"
                 variant="standard"
+                size="md"
                 iconContent="▶"
                 active={getState('beat-jump-right-btn').active}
                 highlighted={isHighlighted('beat-jump-right-btn')}
@@ -100,6 +102,7 @@ export default function LeftTransportSection({
                 id="track-search-bwd-btn"
                 label="Track/Search"
                 variant="standard"
+                size="md"
                 iconContent="|◀◀"
                 active={getState('track-search-bwd-btn').active}
                 highlighted={isHighlighted('track-search-bwd-btn')}
@@ -121,6 +124,7 @@ export default function LeftTransportSection({
                 id="track-search-fwd-btn"
                 label="Track/Search"
                 variant="standard"
+                size="md"
                 iconContent="▶▶|"
                 active={getState('track-search-fwd-btn').active}
                 highlighted={isHighlighted('track-search-fwd-btn')}
@@ -142,6 +146,7 @@ export default function LeftTransportSection({
                 id="search-bwd-btn"
                 label="Search"
                 variant="standard"
+                size="md"
                 iconContent="◀◀"
                 active={getState('search-bwd-btn').active}
                 highlighted={isHighlighted('search-bwd-btn')}
@@ -163,6 +168,7 @@ export default function LeftTransportSection({
                 id="search-fwd-btn"
                 label="Search"
                 variant="standard"
+                size="md"
                 iconContent="▶▶"
                 active={getState('search-fwd-btn').active}
                 highlighted={isHighlighted('search-fwd-btn')}
@@ -184,6 +190,7 @@ export default function LeftTransportSection({
                 id="cue-btn"
                 label="CUE"
                 variant="transport"
+                size="md"
                 surfaceColor="#f59e0b"
                 hasLed
                 ledColor="#f59e0b"
@@ -207,6 +214,7 @@ export default function LeftTransportSection({
                 id="play-pause-btn"
                 label="PLAY/PAUSE ►/II"
                 variant="transport"
+                size="md"
                 surfaceColor="#22c55e"
                 iconContent="▶/❚❚"
                 hasLed

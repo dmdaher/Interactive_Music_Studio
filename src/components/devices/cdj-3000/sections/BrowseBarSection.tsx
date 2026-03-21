@@ -40,6 +40,7 @@ export default function BrowseBarSection({
                 id="source-btn"
                 label="SOURCE"
                 variant="flat-key"
+                size="md"
                 active={getState('source-btn').active}
                 highlighted={isHighlighted('source-btn')}
                 onClick={() => onButtonClick?.('source-btn')}
@@ -60,6 +61,7 @@ export default function BrowseBarSection({
                 id="browse-btn"
                 label="BROWSE"
                 variant="flat-key"
+                size="md"
                 active={getState('browse-btn').active}
                 highlighted={isHighlighted('browse-btn')}
                 onClick={() => onButtonClick?.('browse-btn')}
@@ -80,6 +82,7 @@ export default function BrowseBarSection({
                 id="tag-list-btn"
                 label="TAG LIST"
                 variant="flat-key"
+                size="md"
                 active={getState('tag-list-btn').active}
                 highlighted={isHighlighted('tag-list-btn')}
                 onClick={() => onButtonClick?.('tag-list-btn')}
@@ -116,6 +119,7 @@ export default function BrowseBarSection({
                 id="playlist-btn"
                 label="PLAYLIST"
                 variant="flat-key"
+                size="md"
                 active={getState('playlist-btn').active}
                 highlighted={isHighlighted('playlist-btn')}
                 onClick={() => onButtonClick?.('playlist-btn')}
@@ -136,6 +140,7 @@ export default function BrowseBarSection({
                 id="search-btn"
                 label="SEARCH"
                 variant="flat-key"
+                size="md"
                 active={getState('search-btn').active}
                 highlighted={isHighlighted('search-btn')}
                 onClick={() => onButtonClick?.('search-btn')}
@@ -156,6 +161,7 @@ export default function BrowseBarSection({
                 id="menu-utility-btn"
                 label="MENU/UTILITY"
                 variant="flat-key"
+                size="md"
                 active={getState('menu-utility-btn').active}
                 highlighted={isHighlighted('menu-utility-btn')}
                 onClick={() => onButtonClick?.('menu-utility-btn')}

@@ -39,6 +39,7 @@ export default function LoopSection({
                 id="loop-in-cue-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('loop-in-cue-btn').active}
@@ -61,6 +62,7 @@ export default function LoopSection({
                 id="loop-out-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('loop-out-btn').active}
@@ -83,6 +85,7 @@ export default function LoopSection({
                 id="loop-reloop-exit-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('loop-reloop-exit-btn').active}
@@ -105,6 +108,7 @@ export default function LoopSection({
                 id="4-beat-loop-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('4-beat-loop-btn').active}
@@ -127,6 +131,7 @@ export default function LoopSection({
                 id="8-beat-loop-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('8-beat-loop-btn').active}

@@ -41,6 +41,7 @@ export default function JogModeControlsSection({
                 id="jog-mode-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('jog-mode-btn').active}
                 highlighted={isHighlighted('jog-mode-btn')}
                 onClick={() => onButtonClick?.('jog-mode-btn')}

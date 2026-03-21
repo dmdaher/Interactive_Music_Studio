@@ -40,7 +40,7 @@ export default function JogSection({
               id="jog-wheel"
               label=""
               wheelSize={160}
-              displaySize={60}
+              displaySize={56}
               ringColor="#22c55e"
               highlighted={isHighlighted('jog-wheel')}
             />

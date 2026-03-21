@@ -40,6 +40,7 @@ export default function NavigationSection({
                 id="back-btn"
                 label="BACK"
                 variant="standard"
+                size="md"
                 active={getState('back-btn').active}
                 highlighted={isHighlighted('back-btn')}
                 onClick={() => onButtonClick?.('back-btn')}
@@ -60,6 +61,7 @@ export default function NavigationSection({
                 id="tag-track-remove-btn"
                 label="TAG TRACK/REMOVE"
                 variant="standard"
+                size="md"
                 active={getState('tag-track-remove-btn').active}
                 highlighted={isHighlighted('tag-track-remove-btn')}
                 onClick={() => onButtonClick?.('tag-track-remove-btn')}
@@ -96,6 +98,7 @@ export default function NavigationSection({
                 id="track-filter-edit-btn"
                 label="TRACK FILTER/EDIT"
                 variant="standard"
+                size="md"
                 active={getState('track-filter-edit-btn').active}
                 highlighted={isHighlighted('track-filter-edit-btn')}
                 onClick={() => onButtonClick?.('track-filter-edit-btn')}
@@ -116,6 +119,7 @@ export default function NavigationSection({
                 id="shortcut-btn"
                 label="SHORTCUT"
                 variant="standard"
+                size="md"
                 active={getState('shortcut-btn').active}
                 highlighted={isHighlighted('shortcut-btn')}
                 onClick={() => onButtonClick?.('shortcut-btn')}

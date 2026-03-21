@@ -73,6 +73,7 @@ export default function MediaSection({
                 id="usb-stop-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('usb-stop-btn').active}
                 highlighted={isHighlighted('usb-stop-btn')}
                 onClick={() => onButtonClick?.('usb-stop-btn')}

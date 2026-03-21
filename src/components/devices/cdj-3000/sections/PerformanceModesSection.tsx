@@ -39,6 +39,7 @@ export default function PerformanceModesSection({
                 id="time-mode-btn"
                 label=""
                 variant="rubber"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('time-mode-btn').active}
@@ -61,6 +62,7 @@ export default function PerformanceModesSection({
                 id="quantize-btn"
                 label=""
                 variant="rubber"
+                size="md"
                 hasLed
                 ledColor="#ef4444"
                 active={getState('quantize-btn').active}
@@ -83,6 +85,7 @@ export default function PerformanceModesSection({
                 id="slip-btn"
                 label=""
                 variant="rubber"
+                size="md"
                 hasLed
                 ledColor="#3b82f6"
                 active={getState('slip-btn').active}

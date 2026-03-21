@@ -58,6 +58,7 @@ export default function CueLoopMemorySection({
                 id="cue-loop-call-left-btn"
                 label="CUE/LOOP CALL ◄"
                 variant="standard"
+                size="md"
                 iconContent="◀"
                 active={getState('cue-loop-call-left-btn').active}
                 highlighted={isHighlighted('cue-loop-call-left-btn')}
@@ -79,6 +80,7 @@ export default function CueLoopMemorySection({
                 id="cue-loop-call-right-btn"
                 label="CUE/LOOP CALL ►"
                 variant="standard"
+                size="md"
                 iconContent="▶"
                 active={getState('cue-loop-call-right-btn').active}
                 highlighted={isHighlighted('cue-loop-call-right-btn')}
@@ -100,6 +102,7 @@ export default function CueLoopMemorySection({
                 id="delete-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('delete-btn').active}
                 highlighted={isHighlighted('delete-btn')}
                 onClick={() => onButtonClick?.('delete-btn')}
@@ -120,6 +123,7 @@ export default function CueLoopMemorySection({
                 id="memory-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('memory-btn').active}
                 highlighted={isHighlighted('memory-btn')}
                 onClick={() => onButtonClick?.('memory-btn')}

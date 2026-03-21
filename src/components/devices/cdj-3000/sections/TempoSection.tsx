@@ -41,6 +41,7 @@ export default function TempoSection({
                 id="tempo-range-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('tempo-range-btn').active}
                 highlighted={isHighlighted('tempo-range-btn')}
                 onClick={() => onButtonClick?.('tempo-range-btn')}
@@ -61,6 +62,7 @@ export default function TempoSection({
                 id="master-tempo-btn"
                 label=""
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#f59e0b"
                 active={getState('master-tempo-btn').active}
@@ -99,6 +101,7 @@ export default function TempoSection({
                 id="tempo-reset-btn"
                 label=""
                 variant="standard"
+                size="md"
                 active={getState('tempo-reset-btn').active}
                 highlighted={isHighlighted('tempo-reset-btn')}
                 onClick={() => onButtonClick?.('tempo-reset-btn')}

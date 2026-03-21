@@ -92,6 +92,8 @@ function renderControl(
   control: ManifestControl,
   indent: string,
   allControls?: Map<string, ManifestControl>,
+  pxW?: number,
+  pxH?: number,
 ): string {
   const mapping = CONTROL_MAP[control.type];
   if (!mapping) {
@@ -116,12 +118,40 @@ function renderControl(
 
   switch (control.type) {
     case 'button': {
-      // Determine variant: explicit buttonStyle takes priority, then shape-based inference
-      // Map 'raised' → 'standard' since PanelButton doesn't have a 'raised' variant
+      // Circle buttons — render custom circle div (same as editor)
+      if (control.shape === 'circle' && pxW && pxH) {
+        const diameter = Math.min(pxW, pxH);
+        const useIcon = resolvedIcon && control.labelDisplay === 'icon-only';
+        const displayText = useIcon ? escapeJsx(resolvedIcon!) : escapeJsx(label);
+        const fontSize = useIcon ? 14 : 8;
+        return [
+          `${indent}<motion.div whileTap={{ scale: 0.92, y: 2 }}>`,
+          `${indent}  <div`,
+          `${indent}    data-control-id="${controlId}"`,
+          `${indent}    className="rounded-full flex items-center justify-center cursor-pointer"`,
+          `${indent}    style={{`,
+          `${indent}      width: ${diameter},`,
+          `${indent}      height: ${diameter},`,
+          `${indent}      backgroundColor: '#2a2a2a',`,
+          `${indent}      border: '3px solid ${control.surfaceColor ?? '#444'}',`,
+          `${indent}      boxShadow: '${control.surfaceColor ? `inset 0 2px 4px rgba(0,0,0,0.4), 0 0 8px ${control.surfaceColor}40` : 'inset 0 2px 4px rgba(0,0,0,0.4)'}',`,
+          `${indent}    }}`,
+          `${indent}    onClick={() => onButtonClick?.('${controlId}')}`,
+          `${indent}  >`,
+          `${indent}    <span className="font-medium text-gray-300 uppercase text-center" style={{ fontSize: ${fontSize} }}>`,
+          `${indent}      ${displayText}`,
+          `${indent}    </span>`,
+          `${indent}  </div>`,
+          `${indent}</motion.div>`,
+        ].join('\n');
+      }
+
+      // Rectangle buttons
       const rawStyle = control.buttonStyle;
       const variant = rawStyle === 'raised' ? 'standard'
-        : rawStyle ?? (control.shape === 'circle' ? 'transport' : undefined);
+        : rawStyle ?? undefined;
       const useIcon = resolvedIcon && control.labelDisplay === 'icon-only';
+      const btnSize: string = pxH ? (pxH <= 32 ? 'sm' : pxH <= 48 ? 'md' : 'lg') : 'md';
       const lines: string[] = [
         `${indent}<motion.div whileTap={{ scale: 0.95, y: 2 }}>`,
         `${indent}  <PanelButton`,
@@ -129,6 +159,7 @@ function renderControl(
         `${indent}    label="${escapeJsx(label)}"`,
       ];
       if (variant) lines.push(`${indent}    variant="${variant}"`);
+      if (btnSize) lines.push(`${indent}    size="${btnSize}"`);
       if (control.surfaceColor) lines.push(`${indent}    surfaceColor="${control.surfaceColor}"`);
       if (useIcon) lines.push(`${indent}    iconContent="${escapeJsx(resolvedIcon!)}"`);
       if (control.hasLed) lines.push(`${indent}    hasLed`);
@@ -143,15 +174,22 @@ function renderControl(
       return lines.join('\n');
     }
 
-    case 'knob':
-      return [
+    case 'knob': {
+      const outerSize = pxW && pxH ? Math.min(pxW, pxH) : undefined;
+      const lines = [
         `${indent}<Knob`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
         `${indent}  value={getState('${controlId}').value ?? 64}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
-        `${indent}/>`,
-      ].join('\n');
+      ];
+      if (outerSize) {
+        lines.push(`${indent}  outerSize={${outerSize}}`);
+        lines.push(`${indent}  innerSize={${Math.round(outerSize * 0.7)}}`);
+      }
+      lines.push(`${indent}/>`);
+      return lines.join('\n');
+    }
 
     case 'led':
     case 'indicator': {
@@ -174,27 +212,31 @@ function renderControl(
     }
 
     case 'fader':
-    case 'slider':
-      return [
+    case 'slider': {
+      const lines = [
         `${indent}<Slider`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
         `${indent}  value={getState('${controlId}').value ?? 64}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
-        `${indent}/>`,
-      ].join('\n');
+      ];
+      if (pxH) lines.push(`${indent}  trackHeight={${pxH - 20}}`);
+      if (pxW) lines.push(`${indent}  trackWidth={${pxW - 10}}`);
+      lines.push(`${indent}/>`);
+      return lines.join('\n');
+    }
 
     case 'wheel': {
-      // If another control has nestedIn pointing to this wheel, render JogWheelAssembly
       const hasNestedDisplay = allControls
         ? Array.from(allControls.values()).some(
             c => c.nestedIn === controlId && (c.type === 'screen' || c.type === 'display'),
           )
         : false;
 
+      const wheelSize = pxW && pxH ? Math.min(pxW, pxH) : 160;
+
       if (hasNestedDisplay) {
-        const wheelSize = 160;
-        const displaySize = 60;
+        const displaySize = Math.round(wheelSize * 0.35);
         const ringColor = control.ledColor ?? undefined;
         const lines: string[] = [
           `${indent}<JogWheelAssembly`,
@@ -215,6 +257,8 @@ function renderControl(
         `${indent}<Wheel`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
+        `${indent}  width={${pxW ?? 120}}`,
+        `${indent}  height={${pxH ?? 120}}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
       ].join('\n');
@@ -229,16 +273,20 @@ function renderControl(
         `${indent}    active={getState('${controlId}').active}`,
         `${indent}    highlighted={isHighlighted('${controlId}')}`,
         `${indent}    onClick={() => onButtonClick?.('${controlId}')}`,
+        pxW ? `${indent}    width={${pxW}}` : '',
+        pxH ? `${indent}    height={${pxH}}` : '',
         `${indent}  />`,
         `${indent}</motion.div>`,
-      ].join('\n');
+      ].filter(Boolean).join('\n');
 
     case 'encoder': {
+      const outerSize = pxW && pxH ? Math.min(pxW, pxH) : undefined;
       const lines: string[] = [
         `${indent}<ValueDial`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
       ];
+      if (outerSize) lines.push(`${indent}  outerSize={${outerSize}}`);
       if (control.encoderHasPush) lines.push(`${indent}  hasPush`);
       lines.push(
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
@@ -247,14 +295,17 @@ function renderControl(
       return lines.join('\n');
     }
 
-    case 'switch':
+    case 'switch': {
+      const leverScale = pxH ? pxH / 62 : 1;
       return [
         `${indent}<Lever`,
         `${indent}  id="${controlId}"`,
         `${indent}  label="${escapeJsx(label)}"`,
+        `${indent}  scale={${leverScale.toFixed(2)}}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
       ].join('\n');
+    }
 
     case 'lever': {
       const positions = control.positionLabels ?? ['FWD', 'REV', 'SLIP REV'];
@@ -264,8 +315,10 @@ function renderControl(
         `${indent}  label="${escapeJsx(label)}"`,
         `${indent}  positions={${JSON.stringify(positions)}}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
+        pxW ? `${indent}  width={${pxW}}` : '',
+        pxH ? `${indent}  height={${pxH}}` : '',
         `${indent}/>`,
-      ].join('\n');
+      ].filter(Boolean).join('\n');
     }
 
     case 'port':
@@ -276,12 +329,13 @@ function renderControl(
         `${indent}  label="${escapeJsx(label)}"`,
         `${indent}  variant="${control.type === 'slot' ? 'sd-card' : 'usb-a'}"`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
+        pxW ? `${indent}  width={${pxW}}` : '',
+        pxH ? `${indent}  height={${pxH}}` : '',
         `${indent}/>`,
-      ].join('\n');
+      ].filter(Boolean).join('\n');
 
     case 'screen':
     case 'display': {
-      // Screens nested inside a wheel are rendered by JogWheelAssembly — skip here
       if (control.nestedIn) {
         return `${indent}{/* ${controlId}: nested in ${control.nestedIn}, rendered by JogWheelAssembly */}`;
       }
@@ -291,8 +345,8 @@ function renderControl(
         `${indent}  label="${escapeJsx(label)}"`,
         `${indent}  variant="main"`,
         `${indent}  showMockContent`,
-        `${indent}  width={200}`,
-        `${indent}  height={120}`,
+        `${indent}  width={${pxW ?? 200}}`,
+        `${indent}  height={${pxH ?? 120}}`,
         `${indent}  highlighted={isHighlighted('${controlId}')}`,
         `${indent}/>`,
       ].join('\n');
@@ -884,10 +938,10 @@ function generateFlatPanel(
       const ep = (ctrl as any).editorPosition as { x: number; y: number; w: number; h: number } | undefined;
       if (!ep) return null; // Should not happen in flat mode, but guard
 
-      const controlJsx = renderControl(ctrl.id, ctrl, '          ', controlMap);
-      // Compute pixel dimensions for inline sizing (panel is panelWidth x panelHeight)
+      // Compute pixel dimensions for component sizing
       const pxW = Math.round((ep.w / 100) * panelWidth);
       const pxH = Math.round((ep.h / 100) * panelHeight);
+      const controlJsx = renderControl(ctrl.id, ctrl, '          ', controlMap, pxW, pxH);
 
       return [
         `        {/* ${ctrl.id} */}`,

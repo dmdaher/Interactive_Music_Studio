@@ -39,6 +39,7 @@ export default function BeatSyncSection({
                 id="beat-sync-inst-doubles-btn"
                 label="Beat Sync"
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#3b82f6"
                 active={getState('beat-sync-inst-doubles-btn').active}
@@ -61,6 +62,7 @@ export default function BeatSyncSection({
                 id="master-btn"
                 label="MASTER"
                 variant="standard"
+                size="md"
                 hasLed
                 ledColor="#22c55e"
                 active={getState('master-btn').active}
@@ -83,6 +85,7 @@ export default function BeatSyncSection({
                 id="key-sync-btn"
                 label="KEY SYNC"
                 variant="standard"
+                size="md"
                 surfaceColor="#ec4899"
                 hasLed
                 ledColor="#ec4899"
