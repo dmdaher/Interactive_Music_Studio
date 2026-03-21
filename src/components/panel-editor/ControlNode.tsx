@@ -99,8 +99,23 @@ function withLabel(control: ControlDef, component: React.ReactNode) {
   const label = control.label;
   const pos = control.labelPosition;
 
-  // If label is on-button or no label, just return the component
-  if (pos === 'on-button' || !label) return component;
+  // If label is on-button, show the component but still render secondary label below if it exists
+  if (pos === 'on-button' || !label) {
+    if (control.secondaryLabel) {
+      return (
+        <div className="flex flex-col items-center gap-0.5">
+          {component}
+          <span
+            className="font-medium text-gray-500 uppercase text-center leading-tight truncate w-full"
+            style={{ fontSize: Math.max(fontSize - 2, 6) }}
+          >
+            {control.secondaryLabel}
+          </span>
+        </div>
+      );
+    }
+    return component;
+  }
 
   // Font size: use labelFontSize if set, otherwise scale with sizeClass
   const fontSize = control.labelFontSize
