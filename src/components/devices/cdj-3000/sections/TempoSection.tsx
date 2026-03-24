@@ -74,8 +74,8 @@ export default function TempoSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '87.60%',
-              top: '69.00%',
+              left: '87.70%',
+              top: '69.40%',
               width: '8.00%',
               height: '26.20%',
             }}
@@ -91,7 +91,7 @@ export default function TempoSection({
             className="absolute flex items-center justify-center"
             style={{
               left: '79.80%',
-              top: '78.90%',
+              top: '78.70%',
               width: '4.70%',
               height: '6.30%',
             }}
@@ -112,7 +112,7 @@ export default function TempoSection({
             className="absolute flex items-center justify-center"
             style={{
               left: '81.50%',
-              top: '79.00%',
+              top: '78.80%',
               width: '8.00%',
               height: '6.20%',
             }}

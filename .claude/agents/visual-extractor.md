@@ -18,9 +18,15 @@ You receive three things:
 
 You output the **enriched manifest** — the Gatekeeper's manifest with additional fields populated on every control, plus top-level `groupLabels` and `deviceDimensions`.
 
+## Output Contract
+- Write ALL outputs to: `.pipeline/<deviceId>/agents/visual-extractor/`
+- Read manuals from: `.pipeline/<deviceId>/input/manuals/`
+- Read photos from: `.pipeline/<deviceId>/input/photos/`
+- DO NOT write to `.claude/agent-memory/` or any other location.
+
 Write the enriched manifest to `.pipeline/{deviceId}/manifest.json` (overwrite the structural manifest with the enriched version).
 
-Write your checkpoint to `.claude/agent-memory/visual-extractor/checkpoint.md`.
+Write your checkpoint to `.pipeline/<deviceId>/agents/visual-extractor/checkpoint.md`.
 
 ---
 

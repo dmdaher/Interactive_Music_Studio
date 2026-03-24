@@ -74,7 +74,7 @@ export default function BeatSyncSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '89.70%',
+              left: '89.40%',
               top: '50.90%',
               width: '5.30%',
               height: '3.40%',

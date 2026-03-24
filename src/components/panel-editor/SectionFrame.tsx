@@ -23,16 +23,19 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
 
   const isSelected = selectedIds.includes(sectionId);
 
+  const sx = section?.x ?? 0;
+  const sy = section?.y ?? 0;
+
   const handleDragStop = useCallback(
     (_e: unknown, d: { x: number; y: number }) => {
-      const dx = d.x - section.x;
-      const dy = d.y - section.y;
+      const dx = d.x - sx;
+      const dy = d.y - sy;
       if (dx !== 0 || dy !== 0) {
         pushSnapshot();
         moveSection(sectionId, dx, dy);
       }
     },
-    [section.x, section.y, sectionId, moveSection, pushSnapshot],
+    [sx, sy, sectionId, moveSection, pushSnapshot],
   );
 
   const handleResizeStop = useCallback(
@@ -45,23 +48,19 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
     ) => {
       const newW = parseInt(ref.style.width, 10);
       const newH = parseInt(ref.style.height, 10);
-      // Snapshot BEFORE mutation so undo restores the previous state
       pushSnapshot();
-      // react-rnd may also shift position during resize (e.g. top/left handles)
-      const dx = position.x - section.x;
-      const dy = position.y - section.y;
+      const dx = position.x - sx;
+      const dy = position.y - sy;
       if (dx !== 0 || dy !== 0) {
         moveSection(sectionId, dx, dy);
       }
       resizeSection(sectionId, newW, newH);
     },
-    [section.x, section.y, sectionId, moveSection, resizeSection, pushSnapshot],
+    [sx, sy, sectionId, moveSection, resizeSection, pushSnapshot],
   );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      // Only select section if the click was on the section itself,
-      // not on a child control-node. Controls handle their own selection.
       const target = e.target as HTMLElement;
       if (target.closest('.control-node')) return;
       e.stopPropagation();

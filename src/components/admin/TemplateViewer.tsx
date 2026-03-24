@@ -95,9 +95,9 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
       </div>
 
       {/* Warnings */}
-      {data.warnings.length > 0 && (
+      {(data.warnings ?? []).length > 0 && (
         <div className="mb-3 text-[10px] p-2 rounded" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>
-          {data.warnings.map((w, i) => (
+          {(data.warnings ?? []).map((w, i) => (
             <div key={i}>{w}</div>
           ))}
         </div>
@@ -105,7 +105,7 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
 
       {/* Section cards */}
       <div className="space-y-1.5">
-        {data.templates.map((t) => (
+        {(data.templates ?? []).map((t) => (
           <div
             key={t.sectionId}
             className="rounded p-2 cursor-pointer transition-colors"
@@ -129,7 +129,7 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
                 </span>
               </div>
               <span className="text-[10px]" style={{ color: '#6b7280' }}>
-                {t.controlSlots.length} controls
+                {(t.controlSlots ?? []).length} controls
                 {data.panelArchitecture.sectionWidths[t.sectionId] && (
                   <> &middot; {data.panelArchitecture.sectionWidths[t.sectionId]}</>
                 )}
@@ -137,7 +137,7 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
             </div>
 
             {/* Notes */}
-            {t.notes.length > 0 && (
+            {(t.notes ?? []).length > 0 && (
               <div className="mt-1 text-[10px]" style={{ color: '#6b7280' }}>
                 {t.notes[0]}
               </div>
@@ -175,7 +175,7 @@ export default function TemplateViewer({ deviceId }: TemplateViewerProps) {
                 <div>
                   <div className="text-[9px] font-semibold uppercase mb-1" style={{ color: '#9ca3af' }}>Controls</div>
                   <div className="flex flex-wrap gap-1">
-                    {t.controlSlots.map((id) => (
+                    {(t.controlSlots ?? []).map((id) => (
                       <span
                         key={id}
                         className="text-[9px] px-1 py-0.5 rounded font-mono"

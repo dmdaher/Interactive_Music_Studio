@@ -31,10 +31,10 @@ You are the `gatekeeper`. You are the JUDGE of the AskMiyagi pipeline. You recon
 The Gatekeeper requires BOTH of these before producing a manifest:
 
 1. **Manual PDFs** — read directly for control names, functional groups, parameter info
-2. **Diagram Parser output** (`.claude/agent-memory/diagram-parser/spatial-blueprint.json` or checkpoint):
+2. **Diagram Parser output** (`.pipeline/<deviceId>/agents/diagram-parser/spatial-blueprint.json` or checkpoint):
    - Per-section spatial blueprints: centroids, bounding boxes, neighbor relationships
    - Topology classifications, proportion locks, grid dimensions
-3. **Control Extractor output** (OPTIONAL — `.claude/agent-memory/control-extractor/control-inventory.json`):
+3. **Control Extractor output** (OPTIONAL — `.pipeline/<deviceId>/agents/control-extractor/control-inventory.json`):
    - If available, use as additional reference for control naming
 
 **If Diagram Parser output is missing, HALT with status BLOCKED.** The manual is read directly — no separate extractor required.
@@ -83,6 +83,11 @@ The manifest is a JSON document conforming to the `MasterManifest` interface in 
   "deviceId": "cdj-3000",
   "deviceName": "CDJ-3000",
   "manufacturer": "Pioneer DJ",
+  "deviceDimensions": {
+    "widthMm": 320,
+    "depthMm": 392,
+    "heightMm": 106
+  },
   "layoutType": "asymmetric",
   "densityTargets": {
     "vertical": "Controls should occupy >= 85% of panel vertical height",
@@ -170,12 +175,18 @@ For controls that must align across sections (e.g., slider tops at the same Y-co
 ### SHARED ELEMENT REGISTRY (MANDATORY):
 Maintain a list of all cross-section elements with expected DOM instance counts. Duplicated shared elements = structural failure.
 
+## Output Contract
+- Write ALL outputs to: `.pipeline/<deviceId>/agents/gatekeeper/`
+- Read manuals from: `.pipeline/<deviceId>/input/manuals/`
+- Read photos from: `.pipeline/<deviceId>/input/photos/`
+- DO NOT write to `.claude/agent-memory/` or any other location.
+
 ### DATA FLOW:
 - **Reads from:**
-  - `.claude/agent-memory/manual-extractor/checkpoint.md` — text extraction data
-  - `.claude/agent-memory/diagram-parser/checkpoint.md` — spatial geometry data
+  - `.pipeline/<deviceId>/agents/manual-extractor/checkpoint.md` — text extraction data
+  - `.pipeline/<deviceId>/agents/diagram-parser/checkpoint.md` — spatial geometry data
   - `tasks/lessons.md` — historical error patterns
-- **Writes to:** `.claude/agent-memory/gatekeeper/checkpoint.md` — the Master Manifest JSON
+- **Writes to:** `.pipeline/<deviceId>/agents/gatekeeper/checkpoint.md` — the Master Manifest JSON
 
 ### CHECKPOINTING
 
@@ -196,7 +207,12 @@ conflicts: <number of unresolved conflicts>
 
 The checkpoint MUST include the full Master Manifest JSON (so the Layout Engine can consume it).
 
-On startup, ALWAYS read `.claude/agent-memory/gatekeeper/checkpoint.md` first. If a checkpoint exists, resume from "Next step" — do not restart from scratch.
+**REQUIRED top-level fields in the manifest:**
+- `deviceId`, `deviceName`, `manufacturer`
+- `deviceDimensions`: `{ widthMm, depthMm, heightMm }` — look up the real physical dimensions from the manual or manufacturer specs. This controls the editor canvas aspect ratio. Without it, the editor renders a wrong shape.
+- `layoutType`, `sections`, `controls`
+
+On startup, ALWAYS read `.pipeline/<deviceId>/agents/gatekeeper/checkpoint.md` first. If a checkpoint exists, resume from "Next step" — do not restart from scratch.
 
 After completing each major step, write your progress:
 - **Completed:** [what's done]

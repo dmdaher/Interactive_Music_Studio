@@ -343,7 +343,7 @@ function PanelSection({
               <div
                 key={role}
                 style={{
-                  flex: split ? `0 0 ${(split * 100).toFixed(0)}%` : '1',
+                  flex: split ? `0 0 ${((split ?? 0) * 100).toFixed(0)}%` : '1',
                   borderRadius: '3px',
                   padding: '2px',
                   display: 'flex',
@@ -640,13 +640,13 @@ function PropertiesPanel({
       {section.heightSplits && (
         <div style={rowStyle}>
           <label style={labelStyle}>
-            Cluster / Anchor: {(section.heightSplits.cluster * 100).toFixed(0)}% / {(section.heightSplits.anchor * 100).toFixed(0)}%
+            Cluster / Anchor: {((section.heightSplits?.cluster ?? 0) * 100).toFixed(0)}% / {((section.heightSplits?.anchor ?? 0) * 100).toFixed(0)}%
           </label>
           <input
             type="range"
             min={10}
             max={90}
-            value={Math.round(section.heightSplits.cluster * 100)}
+            value={Math.round((section.heightSplits?.cluster ?? 0.5) * 100)}
             onChange={(e) => {
               const cluster = parseInt(e.target.value) / 100;
               const anchor = Math.max(0, 1 - cluster - (section.heightSplits?.gap ?? 0.06));

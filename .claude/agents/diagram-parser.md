@@ -111,9 +111,15 @@ Include YAML frontmatter: `agent`, `deviceId`, `phase: 0`, `status`, `score` (0-
 
 On startup, read existing checkpoint first. Resume from "Next step" if exists.
 
+## Output Contract
+- Write ALL outputs to: `.pipeline/<deviceId>/agents/diagram-parser/`
+- Read manuals from: `.pipeline/<deviceId>/input/manuals/`
+- Read photos from: `.pipeline/<deviceId>/input/photos/`
+- DO NOT write to `.claude/agent-memory/` or any other location.
+
 ### DATA FLOW:
 - **Reads:** Hardware photos, manual front-panel diagrams (visual only)
-- **Writes:** `.claude/agent-memory/diagram-parser/checkpoint.md` — spatial-blueprint JSON per section
+- **Writes:** `.pipeline/<deviceId>/agents/diagram-parser/checkpoint.md` — spatial-blueprint JSON per section
 
 ### QUALITY:
 The pipeline runner **mechanically validates** your output. It checks for: JSON blocks, centroids, topology fields, bounding boxes, containerZones, neighbor relationships, aspect ratios, centroid precision. Missing fields = auto-reject with specific error message. Your self-score is overridden by the mechanical score.

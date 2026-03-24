@@ -10,11 +10,32 @@ export async function GET(
 
   // Check for editor-saved manifest first (preserves contractor edits)
   const editorPath = path.join('.pipeline', deviceId, 'manifest-editor.json');
+
+  // Auto-restore: if no editor file but a saved one exists from a previous pipeline run,
+  // restore it so the contractor doesn't lose their work after a pipeline reset.
+  if (!fs.existsSync(editorPath)) {
+    const savedPath = path.join('.pipeline', 'saved', deviceId, 'manifest-editor.json');
+    if (fs.existsSync(savedPath)) {
+      const pipelineDir = path.join('.pipeline', deviceId);
+      if (!fs.existsSync(pipelineDir)) {
+        fs.mkdirSync(pipelineDir, { recursive: true });
+      }
+      fs.copyFileSync(savedPath, editorPath);
+    }
+  }
+
   if (fs.existsSync(editorPath)) {
     try {
       const data = fs.readFileSync(editorPath, 'utf-8');
       const parsed = JSON.parse(data);
-      // Return with a flag so the client knows this is pre-edited data
+      // Editor stores sections/controls as Record<id, Def> objects.
+      // All consumers expect arrays. Normalize before returning.
+      if (parsed.sections && !Array.isArray(parsed.sections)) {
+        parsed.sections = Object.values(parsed.sections);
+      }
+      if (parsed.controls && !Array.isArray(parsed.controls)) {
+        parsed.controls = Object.values(parsed.controls);
+      }
       return NextResponse.json({ ...parsed, _source: 'editor' });
     } catch {
       // Fall through to original manifest
@@ -23,11 +44,8 @@ export async function GET(
 
   // Fall back to original pipeline manifest
   const mainPath = path.join('.pipeline', deviceId, 'manifest.json');
-  const worktreePath = path.join('.worktrees', deviceId, '.pipeline', deviceId, 'manifest.json');
 
-  const manifestPath = fs.existsSync(mainPath) ? mainPath
-    : fs.existsSync(worktreePath) ? worktreePath
-    : null;
+  const manifestPath = fs.existsSync(mainPath) ? mainPath : null;
 
   if (!manifestPath) {
     return NextResponse.json(
