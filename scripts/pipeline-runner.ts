@@ -980,10 +980,17 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
 
   const checkpoint = readAgentCheckpoint('gatekeeper');
 
+  // --- COPY AGENT OUTPUT BEFORE VALIDATION ---
+  // Always copy agent output from worktree to main repo immediately after the agent exits.
+  // Validation reads from main repo. If validation fails and we retry, the agent overwrites its output.
+  copyAgentOutput('gatekeeper');
+
   // --- POST-INSPECTION: validate the manifest.json file mechanically ---
+  const gkManifest = paths().agent('gatekeeper').dir + '/manifest.json';
   const worktreeManifest = path.join(worktreeCwd, '.pipeline', deviceId, 'manifest.json');
   const mainManifest = path.join('.pipeline', deviceId, 'manifest.json');
-  const manifestPath = fs.existsSync(worktreeManifest) ? worktreeManifest
+  const manifestPath = fs.existsSync(gkManifest) ? gkManifest
+    : fs.existsSync(worktreeManifest) ? worktreeManifest
     : fs.existsSync(mainManifest) ? mainManifest
     : null;
 
@@ -1068,7 +1075,7 @@ Include: agent: gatekeeper, deviceId: ${deviceId}, phase: 0, status, score, verd
     // The mechanical validator (structural completeness + 4-Point + archetype-geometry)
     // is the authoritative gate.
     if (validation.score >= 9.0 && validation.valid) {
-      copyAgentOutput('gatekeeper');
+      // Agent output already copied above (before validation)
       // Copy manifest to main pipeline dir if needed
       if (manifestPath === worktreeManifest && !fs.existsSync(mainManifest)) {
         fs.mkdirSync(path.dirname(mainManifest), { recursive: true });
