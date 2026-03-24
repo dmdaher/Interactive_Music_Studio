@@ -144,6 +144,33 @@
 
 ---
 
+## High Priority — Visual Extractor Enablement
+
+### Task 11: Wire visual extractor into pipeline runner
+
+The visual extractor agent SOUL exists (`.claude/agents/visual-extractor.md`) but was never integrated into the pipeline runner. It enriches the gatekeeper's structural manifest with visual properties (shape, surfaceColor, buttonStyle, LED data, interaction types, groupLabels, deviceDimensions) by reading the manual and hardware photos.
+
+Currently the gatekeeper sometimes includes visual data and sometimes doesn't — it's outside its role boundary (judge-only). The visual extractor is the proper agent for this job.
+
+**Files:**
+- Modify: `src/lib/pipeline/state-machine.ts` — add `'phase-0-visual-extractor'` to PHASE_ORDER between `'phase-0-gatekeeper'` and `'phase-0-layout-engine'`
+- Modify: `scripts/pipeline-runner.ts` — add `doPhase0VisualExtractor` handler function
+
+**Phase handler should:**
+1. Check that gatekeeper manifest exists (pre-condition)
+2. Build prompt telling the agent to read the manifest, manual PDFs, and photos
+3. Invoke agent with PIPELINE_TOOLS (Read, Write, Edit, Glob, Grep, Bash)
+4. `copyAgentOutput('visual-extractor')` BEFORE validation (per the pattern we established)
+5. Validate: enriched manifest has shape/sizeClass/labelDisplay on all controls
+6. Promote enriched manifest to pipeline root (overwrite gatekeeper's structural-only version)
+7. This is where `deviceDimensions` and `keyboard` get reliably added — the visual extractor reads the manual specs page
+
+**Key benefit:** Every instrument gets consistent visual enrichment regardless of how thorough the gatekeeper was. The gatekeeper focuses on structure (controls, sections, archetypes), the visual extractor focuses on appearance (shapes, colors, LEDs, labels). Clean separation of concerns.
+
+**Also update gatekeeper SOUL:** Remove visual property instructions from gatekeeper (it shouldn't be setting shape, surfaceColor, buttonStyle, etc.). Let it focus purely on structural decisions.
+
+---
+
 ## Dependency Order
 
 ```
@@ -157,6 +184,7 @@ Task 7 (Gatekeeper manifest fallback) — independent
 Task 8 (Extractor resume merge) — independent
 Task 9 (extractorSealed path) — independent
 Task 10 (renderDualColumn) — independent
+Task 11 (Visual extractor enablement) — independent but HIGH PRIORITY
 ```
 
-Tasks 1-4, 6-10 are all independent. Task 5 builds on 3+4.
+Tasks 1-4, 6-11 are all independent. Task 5 builds on 3+4. Task 11 is high priority — it ensures every instrument gets consistent visual enrichment.
