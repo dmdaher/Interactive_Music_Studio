@@ -33,4 +33,31 @@ describe('PanelShell', () => {
     expect(shell.style.width).toBe('800px');
     expect(shell.style.height).toBe('600px');
   });
+
+  it('renders keyboard when keyboard prop is provided', () => {
+    render(
+      <PanelShell
+        manufacturer="Roland"
+        deviceName="FANTOM-06"
+        width={1200}
+        height={361}
+        keyboard={{ keys: 61, startNote: 'C2', panelHeightPercent: 35 }}
+      >
+        <div data-testid="controls">Controls</div>
+      </PanelShell>
+    );
+    const keys = document.querySelectorAll('[data-key-type]');
+    expect(keys.length).toBe(61);
+    expect(screen.getByTestId('controls')).toBeInTheDocument();
+  });
+
+  it('does not render keyboard when keyboard is null', () => {
+    render(
+      <PanelShell manufacturer="Pioneer" deviceName="CDJ-3000" width={1200} height={1470} keyboard={null}>
+        <div />
+      </PanelShell>
+    );
+    const keys = document.querySelectorAll('[data-key-type]');
+    expect(keys.length).toBe(0);
+  });
 });

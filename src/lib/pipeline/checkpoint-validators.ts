@@ -410,6 +410,30 @@ export function validateGatekeeperManifest(manifestJson: string): ValidationResu
     score -= 0.5;
   }
 
+  // 10. Validate keyboard field
+  if (manifest.keyboard !== undefined && manifest.keyboard !== null) {
+    const kb = manifest.keyboard as Record<string, unknown>;
+    if (!kb.keys || !kb.startNote || !kb.panelHeightPercent) {
+      errors.push('keyboard field missing required sub-fields: keys, startNote, panelHeightPercent');
+      score -= 1.0;
+    }
+    if (kb.panelHeightPercent && ((kb.panelHeightPercent as number) < 10 || (kb.panelHeightPercent as number) > 90)) {
+      errors.push(`keyboard.panelHeightPercent (${kb.panelHeightPercent}) outside valid range 10-90`);
+      score -= 0.5;
+    }
+    // Validate sections don't extend into keyboard area
+    if (kb.panelHeightPercent) {
+      const maxY = kb.panelHeightPercent as number;
+      for (const section of sections) {
+        const bb = section.panelBoundingBox as { y: number; h: number } | undefined;
+        if (bb && (bb.y + bb.h) > maxY + 2) { // 2% tolerance
+          errors.push(`Section "${section.id}" extends below panel area (y+h=${(bb.y + bb.h).toFixed(1)}% > ${maxY}%)`);
+          score -= 0.5;
+        }
+      }
+    }
+  }
+
   score = Math.max(0, score);
   return { valid: errors.length === 0, errors, score };
 }

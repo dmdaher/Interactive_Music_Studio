@@ -158,6 +158,7 @@ export interface ManifestSlice {
   controls: Record<string, ControlDef>;
   selectedIds: string[];
   lockedIds: string[];
+  keyboard: { keys: number; startNote: string; panelHeightPercent: number } | null;
   focusedSectionId: string | null;
 
   // Actions
@@ -234,6 +235,7 @@ export const createManifestSlice: StateCreator<
   controls: {},
   selectedIds: [],
   lockedIds: [],
+  keyboard: null,
   focusedSectionId: null,
 
   // ── Actions ─────────────────────────────────────────────────────────────
@@ -255,6 +257,13 @@ export const createManifestSlice: StateCreator<
       }
     }
 
+    // When keyboard exists, sections only occupy the top panel area
+    let panelAreaH = effectiveCanvasH;
+    const manifestAny = manifest as MasterManifest & { keyboard?: { keys: number; startNote: string; panelHeightPercent: number } };
+    if (manifestAny.keyboard && manifestAny.keyboard.panelHeightPercent) {
+      panelAreaH = Math.round(effectiveCanvasH * (manifestAny.keyboard.panelHeightPercent / 100));
+    }
+
     // Build a lookup of manifest controls by ID
     const mcById = new Map<string, ManifestControl>();
     for (const mc of manifest.controls) {
@@ -265,9 +274,9 @@ export const createManifestSlice: StateCreator<
       // Convert panelBoundingBox % to pixel coordinates using actual canvas dimensions
       const bbox = ms.panelBoundingBox ?? { x: 0, y: 0, w: 20, h: 20 };
       const sectionX = (bbox.x / 100) * effectiveCanvasW;
-      const sectionY = (bbox.y / 100) * effectiveCanvasH;
+      const sectionY = (bbox.y / 100) * panelAreaH;
       const sectionW = (bbox.w / 100) * effectiveCanvasW;
-      const sectionH = (bbox.h / 100) * effectiveCanvasH;
+      const sectionH = (bbox.h / 100) * panelAreaH;
 
       sections[ms.id] = {
         id: ms.id,
@@ -596,6 +605,7 @@ export const createManifestSlice: StateCreator<
       controls,
       selectedIds: [],
       lockedIds: [],
+      keyboard: manifestAny.keyboard ?? null,
       focusedSectionId: null,
       ...canvasSizeUpdate,
     });

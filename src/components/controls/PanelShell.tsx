@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
+import Keyboard from './Keyboard';
 
 interface PanelShellProps {
   manufacturer: string;
@@ -9,6 +10,11 @@ interface PanelShellProps {
   width: number;
   height: number;
   children: ReactNode;
+  keyboard?: {
+    keys: number;
+    startNote: string;
+    panelHeightPercent: number;
+  } | null;
 }
 
 export default function PanelShell({
@@ -17,6 +23,7 @@ export default function PanelShell({
   width,
   height,
   children,
+  keyboard,
 }: PanelShellProps) {
   return (
     <div className="w-full h-full overflow-x-auto">
@@ -71,7 +78,18 @@ export default function PanelShell({
         </div>
 
         {/* Panel content (sections + controls) */}
-        {children}
+        {keyboard ? (
+          <>
+            <div style={{ height: `${keyboard.panelHeightPercent}%`, position: 'relative' }}>
+              {children}
+            </div>
+            <div style={{ height: `${100 - keyboard.panelHeightPercent}%`, position: 'relative' }}>
+              <Keyboard keys={keyboard.keys} startNote={keyboard.startNote} />
+            </div>
+          </>
+        ) : (
+          children
+        )}
       </motion.div>
     </div>
   );
