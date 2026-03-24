@@ -390,15 +390,19 @@ export function validateGatekeeperManifest(manifestJson: string): ValidationResu
     score -= 0.5;
   }
 
-  // 8. heightSplits must be 0-1 range (not integers like 30, 65)
+  // 8. heightSplits must be 0-1 range (not integers like 30, 65) — auto-correct
   for (const s of sections) {
     const splits = s.heightSplits as { cluster?: number; anchor?: number; gap?: number } | undefined;
     if (splits) {
       const values = [splits.cluster, splits.anchor, splits.gap].filter(v => v !== undefined) as number[];
       const hasIntegers = values.some(v => v > 1.0);
       if (hasIntegers) {
-        errors.push(`Section "${s.id}" heightSplits has values > 1.0 (${JSON.stringify(splits)}). Must be 0-1 range (e.g., 0.30 not 30).`);
-        score -= 1.0;
+        // Auto-correct: divide by 100 to convert percentages to decimals
+        if (splits.cluster !== undefined && splits.cluster > 1.0) splits.cluster = splits.cluster / 100;
+        if (splits.anchor !== undefined && splits.anchor > 1.0) splits.anchor = splits.anchor / 100;
+        if (splits.gap !== undefined && splits.gap > 1.0) splits.gap = splits.gap / 100;
+        errors.push(`Section "${s.id}" heightSplits auto-corrected from integers to decimals (${JSON.stringify(splits)})`);
+        score -= 0.5; // Deduct less since auto-corrected
       }
     }
   }
