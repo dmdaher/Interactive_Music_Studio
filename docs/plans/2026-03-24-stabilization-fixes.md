@@ -248,3 +248,14 @@ First-time walkthrough that guides the contractor through the editor. Runs once 
 - Create: `src/components/panel-editor/OnboardingTour.tsx`
 - Modify: `src/components/panel-editor/PanelEditor.tsx` — render tour on first load
 - Modify: `src/components/panel-editor/EditorToolbar.tsx` — add help button
+
+### Task 15: Show instrument name in editor
+
+The editor doesn't indicate which instrument is being edited. The contractor opens the page and sees "Miyagi Pipeline Control" with no device context.
+
+**Changes:**
+- Display manufacturer + device name in the editor toolbar (e.g., "Pioneer DJ — CDJ-3000")
+- Read from editor store (manufacturer, deviceName — already populated from manifest)
+
+**Files:**
+- Modify: `src/components/panel-editor/EditorToolbar.tsx` — add device name display
