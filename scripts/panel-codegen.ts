@@ -1092,29 +1092,23 @@ function generateFlatPanel(
   // Collect imports from ALL controls (not per-section)
   const allControls = manifest.controls.filter(c => !c.nestedIn);
   const imports = collectImports(manifest.controls, controlMap);
+  // Add shared shell components
+  imports.set('PanelShell', '@/components/controls/PanelShell');
+  imports.set('SectionContainer', '@/components/controls/SectionContainer');
   const importLines = Array.from(imports.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([component, importPath]) => `import ${component} from '${importPath}';`)
     .join('\n');
 
-  // Section backgrounds — decorative only, no children
+  // Section backgrounds — using SectionContainer component
   const sectionBackgrounds = sections
     .filter(s => s.panelBoundingBox)
     .map(s => {
       const bb = s.panelBoundingBox!;
+      const label = s.headerLabel ? ` headerLabel="${escapeJsx(s.headerLabel)}"` : '';
       return [
         `        {/* ${s.headerLabel ?? s.id} background */}`,
-        `        <div`,
-        `          className="absolute rounded-lg pointer-events-none"`,
-        `          style={{`,
-        `            left: '${bb.x}%',`,
-        `            top: '${bb.y}%',`,
-        `            width: '${bb.w}%',`,
-        `            height: '${bb.h}%',`,
-        `            backgroundColor: 'rgba(0,0,0,0.12)',`,
-        `            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',`,
-        `          }}`,
-        `        />`,
+        `        <SectionContainer id="${s.id}" x={${bb.x}} y={${bb.y}} w={${bb.w}} h={${bb.h}}${label} />`,
       ].join('\n');
     })
     .join('\n\n');
@@ -1191,7 +1185,6 @@ function generateFlatPanel(
 
   return `'use client';
 
-import { motion } from 'framer-motion';
 ${importLines}
 import { PanelState } from '@/types/panel';
 import { ${constPrefix}_PANEL } from '@/lib/devices/${manifest.deviceId}-constants';
@@ -1213,46 +1206,12 @@ export default function ${pascalName}Panel({
   const getState = (id: string) => panelState[id] ?? { active: false };
 
   return (
-    <div className="w-full h-full overflow-x-auto">
-      <motion.div
-        className="relative rounded-2xl overflow-hidden select-none"
-        style={{
-          width: ${constPrefix}_PANEL.width,
-          minWidth: ${constPrefix}_PANEL.width,
-          height: ${constPrefix}_PANEL.height,
-          backgroundColor: '#1a1a1a',
-          boxShadow: '0 0 0 1px rgba(80,80,80,0.3), 0 8px 32px rgba(0,0,0,0.6), 0 2px 0 0 rgba(255,255,255,0.04) inset, 0 -2px 0 0 rgba(0,0,0,0.4) inset',
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Panel texture overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            backgroundImage: 'radial-gradient(ellipse at 30% 20%, rgba(60,60,60,0.12) 0%, transparent 60%)',
-          }}
-        />
-
-        {/* Top bezel accent */}
-        <div
-          className="absolute top-0 left-0 right-0 h-px pointer-events-none z-30"
-          style={{
-            background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 70%, transparent 95%)',
-          }}
-        />
-
-        {/* Branding bar */}
-        <div className="absolute top-1 left-4 z-30 pointer-events-none flex items-center gap-2">
-          <span className="text-[10px] font-bold text-neutral-500 tracking-[0.35em] uppercase">
-            {${constPrefix}_PANEL.manufacturer}
-          </span>
-          <span className="text-[9px] font-medium text-neutral-600 tracking-[0.2em] uppercase">
-            {${constPrefix}_PANEL.deviceName}
-          </span>
-        </div>
-
+    <PanelShell
+      manufacturer={${constPrefix}_PANEL.manufacturer}
+      deviceName={${constPrefix}_PANEL.deviceName}
+      width={${constPrefix}_PANEL.width}
+      height={${constPrefix}_PANEL.height}
+    >
         {/* Section backgrounds — decorative only */}
 ${sectionBackgrounds}
 
@@ -1261,8 +1220,7 @@ ${controlRenderings}
 
         {/* Group labels */}
 ${groupLabelRenderings}
-      </motion.div>
-    </div>
+    </PanelShell>
   );
 }
 `;
@@ -1293,31 +1251,15 @@ function generateSectionBasedPanel(
       const pascal = sectionIdToPascal(s.id);
       const bb = s.panelBoundingBox;
       if (bb) {
+        const label = s.headerLabel ? ` headerLabel="${escapeJsx(s.headerLabel)}"` : '';
         return [
-          `        <div`,
-          `          className="absolute"`,
-          `          style={{`,
-          `            left: '${bb.x}%',`,
-          `            top: '${bb.y}%',`,
-          `            width: '${bb.w}%',`,
-          `            height: '${bb.h}%',`,
-          `          }}`,
-          `        >`,
-          `          <div`,
-          `            className="w-full h-full rounded-lg"`,
-          `            style={{`,
-          `              backgroundColor: 'rgba(0,0,0,0.12)',`,
-          `              boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',`,
-          `              padding: '6px',`,
-          `            }}`,
-          `          >`,
-          `            <${pascal}Section`,
-          `              panelState={panelState}`,
-          `              highlightedControls={highlightedControls}`,
-          `              onButtonClick={onButtonClick}`,
-          `            />`,
-          `          </div>`,
-          `        </div>`,
+          `        <SectionContainer id="${s.id}" x={${bb.x}} y={${bb.y}} w={${bb.w}} h={${bb.h}}${label}>`,
+          `          <${pascal}Section`,
+          `            panelState={panelState}`,
+          `            highlightedControls={highlightedControls}`,
+          `            onButtonClick={onButtonClick}`,
+          `          />`,
+          `        </SectionContainer>`,
         ].join('\n');
       } else {
         return [
@@ -1333,7 +1275,8 @@ function generateSectionBasedPanel(
 
   return `'use client';
 
-import { motion } from 'framer-motion';
+import PanelShell from '@/components/controls/PanelShell';
+import SectionContainer from '@/components/controls/SectionContainer';
 import { PanelState } from '@/types/panel';
 import { ${constPrefix}_PANEL } from '@/lib/devices/${manifest.deviceId}-constants';
 ${sectionImports}
@@ -1352,49 +1295,14 @@ export default function ${pascalName}Panel({
   onButtonClick,
 }: ${pascalName}PanelProps) {
   return (
-    <div className="w-full h-full overflow-x-auto">
-      <motion.div
-        className="relative rounded-2xl overflow-hidden select-none"
-        style={{
-          width: ${constPrefix}_PANEL.width,
-          minWidth: ${constPrefix}_PANEL.width,
-          height: ${constPrefix}_PANEL.height,
-          backgroundColor: '#1a1a1a',
-          boxShadow: '0 0 0 1px rgba(80,80,80,0.3), 0 8px 32px rgba(0,0,0,0.6), 0 2px 0 0 rgba(255,255,255,0.04) inset, 0 -2px 0 0 rgba(0,0,0,0.4) inset',
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {/* Panel texture overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none z-0"
-          style={{
-            backgroundImage: 'radial-gradient(ellipse at 30% 20%, rgba(60,60,60,0.12) 0%, transparent 60%)',
-          }}
-        />
-
-        {/* Top bezel accent */}
-        <div
-          className="absolute top-0 left-0 right-0 h-px pointer-events-none z-30"
-          style={{
-            background: 'linear-gradient(90deg, transparent 5%, rgba(255,255,255,0.08) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 70%, transparent 95%)',
-          }}
-        />
-
-        {/* Branding bar */}
-        <div className="absolute top-1 left-4 z-30 pointer-events-none flex items-center gap-2">
-          <span className="text-[10px] font-bold text-neutral-500 tracking-[0.35em] uppercase">
-            {${constPrefix}_PANEL.manufacturer}
-          </span>
-          <span className="text-[9px] font-medium text-neutral-600 tracking-[0.2em] uppercase">
-            {${constPrefix}_PANEL.deviceName}
-          </span>
-        </div>
-
+    <PanelShell
+      manufacturer={${constPrefix}_PANEL.manufacturer}
+      deviceName={${constPrefix}_PANEL.deviceName}
+      width={${constPrefix}_PANEL.width}
+      height={${constPrefix}_PANEL.height}
+    >
 ${sectionRenderings}
-      </motion.div>
-    </div>
+    </PanelShell>
   );
 }
 `;
