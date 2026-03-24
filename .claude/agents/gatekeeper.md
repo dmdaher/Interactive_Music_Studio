@@ -88,6 +88,7 @@ The manifest is a JSON document conforming to the `MasterManifest` interface in 
     "depthMm": 392,
     "heightMm": 106
   },
+  "keyboard": null,
   "layoutType": "asymmetric",
   "densityTargets": {
     "vertical": "Controls should occupy >= 85% of panel vertical height",
@@ -188,6 +189,18 @@ Maintain a list of all cross-section elements with expected DOM instance counts.
   - `tasks/lessons.md` — historical error patterns
 - **Writes to:** `.pipeline/<deviceId>/agents/gatekeeper/checkpoint.md` — the Master Manifest JSON
 
+### LAYOUT QUALITY RULES (MANDATORY)
+
+1. **No overlapping bounding boxes:** Every section's panelBoundingBox must be exclusive — no section's rectangle may overlap another's. If two sections share horizontal space, they must be at different y-positions (vertically stacked), not overlapping. Test: for any two sections A and B, their rectangles must NOT intersect.
+
+2. **Grid detection for pads:** When the manual shows a pad grid (e.g., 4 rows × 4 columns = 16 pads), specify the archetype as `grid-4x4` with `gridRows: 4, gridCols: 4`. Do NOT flatten a 4×4 grid into `single-row` or `cluster-above-anchor`. Look at the hardware photo — if pads form a square, it's a grid.
+
+3. **Spanning sections:** Some controls span across the bottom of multiple sections (e.g., tone category buttons that run the full width). Give these their own section with a bounding box that reflects their actual position — a thin, wide rectangle at the bottom of the panel area.
+
+4. **Keyboard area constraint:** When `keyboard` is set (not null), all panelBoundingBox values must satisfy: `y + h <= panelHeightPercent`. No controls in the keyboard zone. The keyboard occupies the bottom portion of the instrument and is rendered automatically by the panel component.
+
+5. **Section separation:** Leave at least 1% gap between adjacent sections to prevent visual overlap in the editor. Sections should be clearly separated, not touching or overlapping.
+
 ### CHECKPOINTING
 
 When writing your checkpoint, include YAML frontmatter at the very top:
@@ -210,6 +223,11 @@ The checkpoint MUST include the full Master Manifest JSON (so the Layout Engine 
 **REQUIRED top-level fields in the manifest:**
 - `deviceId`, `deviceName`, `manufacturer`
 - `deviceDimensions`: `{ widthMm, depthMm, heightMm }` — look up the real physical dimensions from the manual or manufacturer specs. This controls the editor canvas aspect ratio. Without it, the editor renders a wrong shape.
+- `keyboard`: `{ keys, startNote, type, panelHeightPercent }` or `null`
+  - Read the manual's specs/dimensions page — it always lists key count and range
+  - If the instrument has keys: set `keys` (25/37/49/61/76/88), `startNote` (e.g., "C2" for 61 keys, "A0" for 88 keys), `type: "standard"`, and `panelHeightPercent` (estimate from hardware photo — typically 30-40% for full-size synths)
+  - If no keyboard (DJ equipment, drum machines, effects units): set `keyboard: null`
+  - **CRITICAL:** When keyboard is present, ALL section panelBoundingBox y-values must be within 0 to panelHeightPercent. Controls do NOT go in the keyboard area.
 - `layoutType`, `sections`, `controls`
 
 On startup, ALWAYS read `.pipeline/<deviceId>/agents/gatekeeper/checkpoint.md` first. If a checkpoint exists, resume from "Next step" — do not restart from scratch.
