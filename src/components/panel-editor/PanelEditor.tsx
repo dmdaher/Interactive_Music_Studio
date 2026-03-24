@@ -275,12 +275,32 @@ export default function PanelEditor({ deviceId }: PanelEditorProps) {
         if (!cancelled) {
           if (data._source === 'editor' && data.sections && data.controls) {
             // Restore previously saved editor state (flat sections/controls)
+            // API normalizes to arrays — convert back to Record<id, Def> if needed
+            const sections = Array.isArray(data.sections)
+              ? Object.fromEntries(data.sections.map((s: any) => [s.id, s]))
+              : data.sections;
+            const controls = Array.isArray(data.controls)
+              ? Object.fromEntries(data.controls.map((c: any) => [c.id, c]))
+              : data.controls;
+
+            // Compute canvas dimensions from deviceDimensions if available
+            const CANVAS_BASE_W = 1200;
+            const canvasUpdate: Record<string, number> = {};
+            if (data.deviceDimensions) {
+              const { widthMm, depthMm } = data.deviceDimensions;
+              if (widthMm > 0 && depthMm > 0) {
+                canvasUpdate.canvasWidth = CANVAS_BASE_W;
+                canvasUpdate.canvasHeight = Math.round(CANVAS_BASE_W / (widthMm / depthMm));
+              }
+            }
+
             useEditorStore.setState({
               deviceId,
-              sections: data.sections,
-              controls: data.controls,
+              sections,
+              controls,
               selectedIds: [],
               lockedIds: [],
+              ...canvasUpdate,
             });
           } else {
             // First load — convert original pipeline manifest to editor format
