@@ -484,6 +484,73 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   );
 }
 
+// ─── Empty State (Keyboard Offset) ──────────────────────────────────────────
+
+function EmptyStatePanel() {
+  const keyboard = useEditorStore((s) => s.keyboard);
+
+  if (!keyboard) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-xs text-gray-500 text-center px-4">
+          Select a control or section to edit properties
+        </p>
+      </div>
+    );
+  }
+
+  const handleLeftChange = (val: number) => {
+    useEditorStore.setState({
+      keyboard: { ...keyboard, leftPercent: val },
+    });
+  };
+
+  const handleWidthChange = (val: number) => {
+    useEditorStore.setState({
+      keyboard: { ...keyboard, widthPercent: val },
+    });
+  };
+
+  return (
+    <div className="p-3 space-y-4">
+      <p className="text-xs text-gray-500 text-center">
+        Select a control or section to edit properties
+      </p>
+      <div className="border-t border-gray-700 pt-3">
+        <h3 className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
+          Keyboard
+        </h3>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] text-gray-500">Left offset %</label>
+            <input
+              type="number"
+              min={0}
+              max={50}
+              step={1}
+              value={keyboard.leftPercent ?? 0}
+              onChange={(e) => handleLeftChange(Number(e.target.value))}
+              className="w-16 rounded border border-gray-700 bg-gray-800 px-1.5 py-0.5 text-[11px] text-gray-200 outline-none focus:border-blue-500"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] text-gray-500">Width %</label>
+            <input
+              type="number"
+              min={50}
+              max={100}
+              step={1}
+              value={keyboard.widthPercent ?? 100}
+              onChange={(e) => handleWidthChange(Number(e.target.value))}
+              className="w-16 rounded border border-gray-700 bg-gray-800 px-1.5 py-0.5 text-[11px] text-gray-200 outline-none focus:border-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Properties Panel ──────────────────────────────────────────────────
 
 export default function PropertiesPanel() {
@@ -508,14 +575,8 @@ export default function PropertiesPanel() {
   let content: React.ReactNode;
 
   if (selectedIds.length === 0) {
-    // Nothing selected
-    content = (
-      <div className="flex h-full items-center justify-center">
-        <p className="text-xs text-gray-500 text-center px-4">
-          Select a control or section to edit properties
-        </p>
-      </div>
-    );
+    // Nothing selected — show keyboard offset if keyboard exists
+    content = <EmptyStatePanel />;
   } else if (selectedSection && selectedControls.length === 0) {
     // A section is selected (not a control)
     content = <SectionProperties section={selectedSection} />;
