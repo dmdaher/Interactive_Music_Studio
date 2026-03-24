@@ -1614,6 +1614,15 @@ function main() {
   // Write files
   fs.mkdirSync(sectionsDir, { recursive: true });
 
+  // Clean up old section files to prevent naming mismatches from previous codegen runs
+  if (fs.existsSync(sectionsDir)) {
+    for (const file of fs.readdirSync(sectionsDir)) {
+      if (file.endsWith('Section.tsx')) {
+        fs.unlinkSync(path.join(sectionsDir, file));
+      }
+    }
+  }
+
   for (const sf of sectionFiles) {
     fs.writeFileSync(sf.path, sf.content, 'utf-8');
   }

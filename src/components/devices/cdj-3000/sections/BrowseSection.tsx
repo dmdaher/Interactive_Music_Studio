@@ -1,22 +1,20 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import LEDIndicator from '@/components/controls/LEDIndicator';
 import PanelButton from '@/components/controls/PanelButton';
-import Slider from '@/components/controls/Slider';
 import { PanelState } from '@/types/panel';
 
-interface TempoSectionProps {
+interface BrowseSectionProps {
   panelState: PanelState;
   highlightedControls: string[];
   onButtonClick?: (id: string) => void;
 }
 
-export default function TempoSection({
+export default function BrowseSection({
   panelState,
   highlightedControls,
   onButtonClick,
-}: TempoSectionProps) {
+}: BrowseSectionProps) {
   const isHighlighted = (id: string) => highlightedControls.includes(id);
   const getState = (id: string) => panelState[id] ?? { active: false };
 
@@ -24,20 +22,19 @@ export default function TempoSection({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, delay: 0.55 }}
+      transition={{ duration: 0.3, delay: 0.0 }}
     >
-      <div data-section-id="TEMPO" className="grid grid-cols-2 gap-1">
-        <div className="flex flex-col gap-1">
-
-        </div>
-        <div className="flex flex-col gap-1">
-            <Slider
-              id="TEMPO_SLIDER"
+      <div data-section-id="BROWSE" className="flex flex-row gap-1 items-center">
+          <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+            <PanelButton
+              id="BROWSE_BTN"
               label=""
-              value={getState('TEMPO_SLIDER').value ?? 64}
-              highlighted={isHighlighted('TEMPO_SLIDER')}
+              size="md"
+              active={getState('BROWSE_BTN').active}
+              highlighted={isHighlighted('BROWSE_BTN')}
+              onClick={() => onButtonClick?.('BROWSE_BTN')}
             />
-        </div>
+          </motion.div>
       </div>
     </motion.div>
   );

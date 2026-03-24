@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import LEDIndicator from '@/components/controls/LEDIndicator';
 import PanelButton from '@/components/controls/PanelButton';
-import Port from '@/components/controls/Port';
 import { PanelState } from '@/types/panel';
 
 interface MediaSectionProps {
@@ -26,92 +25,55 @@ export default function MediaSection({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, delay: 0.05 }}
     >
-      <div data-section-id="media">
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '2.90%',
-              top: '8.00%',
-              width: '6.10%',
-              height: '3.40%',
-            }}
-          >
-            <Port
-              id="usb-port"
-              label=""
-              variant="usb-a"
-              highlighted={isHighlighted('usb-port')}
-            />
-          </div>
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '10.20%',
-              top: '8.00%',
-              width: '2.30%',
-              height: '3.40%',
-            }}
-          >
-            <LEDIndicator
-              id="usb-indicator"
-              on={getState('usb-indicator').ledOn ?? false}
-              color="#22c55e"
-              highlighted={isHighlighted('usb-indicator')}
-            />
-          </div>
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '8.40%',
-              top: '11.80%',
-              width: '6.00%',
-              height: '2.40%',
-            }}
-          >
+      <div data-section-id="MEDIA" className="flex flex-col gap-1">
+        <div className="flex flex-row gap-1 justify-center">
             <motion.div whileTap={{ scale: 0.95, y: 2 }}>
               <PanelButton
-                id="usb-stop-btn"
+                id="USB_PORT"
                 label=""
-                variant="standard"
                 size="md"
-                active={getState('usb-stop-btn').active}
-                highlighted={isHighlighted('usb-stop-btn')}
-                onClick={() => onButtonClick?.('usb-stop-btn')}
+                active={getState('USB_PORT').active}
+                highlighted={isHighlighted('USB_PORT')}
+                onClick={() => onButtonClick?.('USB_PORT')}
               />
             </motion.div>
-          </div>
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '4.50%',
-              top: '16.00%',
-              width: '8.30%',
-              height: '3.40%',
-            }}
-          >
-            <Port
-              id="sd-card-slot"
-              label=""
-              variant="sd-card"
-              highlighted={isHighlighted('sd-card-slot')}
-            />
-          </div>
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '4.50%',
-              top: '18.70%',
-              width: '8.30%',
-              height: '3.40%',
-            }}
-          >
             <LEDIndicator
-              id="sd-indicator"
-              on={getState('sd-indicator').ledOn ?? false}
-              color="#f59e0b"
-              highlighted={isHighlighted('sd-indicator')}
+              id="USB_INDICATOR"
+              on={getState('USB_INDICATOR').ledOn ?? false}
+              color={getState('USB_INDICATOR').ledColor}
+              highlighted={isHighlighted('USB_INDICATOR')}
             />
-          </div>
+        </div>
+        <div className="flex flex-row gap-1 justify-center">
+            <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+              <PanelButton
+                id="USB_STOP"
+                label=""
+                size="md"
+                active={getState('USB_STOP').active}
+                highlighted={isHighlighted('USB_STOP')}
+                onClick={() => onButtonClick?.('USB_STOP')}
+              />
+            </motion.div>
+        </div>
+        <div className="flex flex-row gap-1 justify-center">
+            <LEDIndicator
+              id="SD_INDICATOR"
+              on={getState('SD_INDICATOR').ledOn ?? false}
+              color={getState('SD_INDICATOR').ledColor}
+              highlighted={isHighlighted('SD_INDICATOR')}
+            />
+            <motion.div whileTap={{ scale: 0.95, y: 2 }}>
+              <PanelButton
+                id="SD_SLOT"
+                label=""
+                size="md"
+                active={getState('SD_SLOT').active}
+                highlighted={isHighlighted('SD_SLOT')}
+                onClick={() => onButtonClick?.('SD_SLOT')}
+              />
+            </motion.div>
+        </div>
       </div>
     </motion.div>
   );
