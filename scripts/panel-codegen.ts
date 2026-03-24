@@ -1191,6 +1191,7 @@ function generateFlatPanel(
 
   return `'use client';
 
+import { motion } from 'framer-motion';
 ${importLines}
 import { PanelState } from '@/types/panel';
 import { ${constPrefix}_PANEL } from '@/lib/devices/${manifest.deviceId}-constants';
