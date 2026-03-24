@@ -7,7 +7,14 @@
 
 **Architecture:** Defensive persistence — protect required fields from being dropped, prevent stale browser state from overwriting pipeline data, and ensure consistent visual enrichment.
 
-**Priority order:** Tasks 3+4 (auto-save clobber) → Task 1 (field preservation) → Task 11 (visual enrichment) → Task 2 (validator) → Everything else
+**Priority order:** Task 5 (version marker — foundation) → Task 3 (auto-save gating) → Task 4 (staleness detection using version marker + mtime) → Task 1 (field preservation) → Task 11 (visual enrichment) → Task 2 (validator) → Everything else
+
+**Adversarial review findings (2026-03-24):**
+- Task 3: `hasUserEdited` must be set by UI pointer/keyboard events, NOT by store mutations (programmatic state changes would falsely trigger it)
+- Task 4: mtime alone is insufficient — version marker (Task 5) is the primary signal, mtime is tiebreaker. Execution order changed: 5→3→4
+- Task 5: control ID hash is too narrow — must include structural properties (shape, archetype) not just IDs, to detect visual property changes
+- Task 11: don't REQUIRE visual fields from gatekeeper with hard rejection — flag missing fields as "needs manual input" to avoid hallucination
+- Task 1: carry-forward priority chain: gatekeeper output (if present) > editor manifest corrections > previous pipeline manifest
 
 ---
 
@@ -26,10 +33,15 @@ The auto-save hook in `useAutoSave.ts` fires on any state change, including the 
 
 **Changes:**
 - Add `hasUserEdited` flag to the editor store (initial: false)
-- Set it to true ONLY on explicit user mutations: `moveControl`, `resizeControl`, `moveSection`, `resizeSection`, `updateControlProp`, `duplicateSelected`, `deleteSelected` (in `manifestSlice.ts`)
-- Do NOT set it in: `loadFromManifest`, `setSelectedIds`, `toggleSelected`, `setFocusedSection` — these are not user edits
+- **CRITICAL:** Set it to true ONLY from UI event handlers, NOT from store mutations:
+  - `onPointerDown` / `onMouseDown` on canvas/control nodes that lead to drag operations
+  - Keyboard shortcuts that trigger delete/duplicate (keydown handler in `useEditorKeyboard`)
+  - Property panel onChange handlers (when contractor changes a dropdown/input)
+- Do NOT set it inside store actions like `moveControl` — these can be called programmatically (e.g., during auto-layout in `loadFromManifest`), which would falsely trigger the flag
 - In `useAutoSave.ts`, check `hasUserEdited` before saving — if false, skip
-- Reset `hasUserEdited` to false in BOTH: `loadFromManifest` AND the direct `useEditorStore.setState()` call in `PanelEditor.tsx` (editor restore path, lines ~297-304). Both paths load data without user interaction.
+- Reset `hasUserEdited` to false in BOTH: `loadFromManifest` AND the direct `useEditorStore.setState()` call in `PanelEditor.tsx` (editor restore path, lines ~297-304)
+- Keep the existing `isFirstChange` guard as secondary defense
+- Comment: `// hasUserEdited is driven by UI events, not store mutations, to prevent programmatic changes from triggering auto-save`
 
 **Verify:** Open editor, check that `manifest-editor.json` is NOT created until you actually drag a control.
 
@@ -43,12 +55,16 @@ The manifest GET endpoint serves `manifest-editor.json` if it exists, regardless
 **Current state (from audit):** Lines 12-57 check for editor manifest first. Lines 59-76 fall back to pipeline manifest. No timestamp comparison exists.
 
 **Changes:**
-- After reading `manifest-editor.json`, check if `manifest.json` ALSO exists
-- If both exist, compare `fs.statSync()` mtime of both files
-- If `manifest.json` mtime > `manifest-editor.json` mtime, the editor state is stale
-- In that case: rename `manifest-editor.json` to `manifest-editor.json.stale` (don't delete — keep for debugging) and serve `manifest.json` instead
-- Log: "Editor manifest is stale (pipeline manifest is newer), serving fresh pipeline data"
-- Edge case: if `manifest.json` doesn't exist (new device, pre-gatekeeper), always serve editor manifest — no staleness possible
+- **Primary signal: version marker** (from Task 5). If editor manifest has `_manifestVersion` that doesn't match the pipeline manifest's version, the editor state is stale.
+- **Secondary signal: mtime.** If both files exist, compare `fs.statSync()` mtime. If `manifest.json` is newer, editor state is likely stale.
+- **Decision logic:**
+  1. If editor manifest has `_manifestVersion` AND pipeline manifest exists → compare versions. Mismatch = stale.
+  2. If editor manifest has NO `_manifestVersion` (old format) → fall back to mtime comparison.
+  3. If stale: rename `manifest-editor.json` to `manifest-editor.json.stale`, serve pipeline manifest.
+  4. If `manifest.json` doesn't exist (new device, pre-gatekeeper) → always serve editor manifest.
+- Log: "Editor manifest is stale (version/mtime mismatch), serving fresh pipeline data"
+- **Note:** Depends on Task 5 (version marker) being implemented first. Without it, falls back to mtime-only (less reliable).
+- **Edge case:** trivial edit-then-undo creates newer editor mtime but semantically identical data. Version marker catches this (same version = not stale).
 
 **Verify:** Re-run gatekeeper for any device, then load the editor — it should show the fresh pipeline data, not old editor state.
 
@@ -63,13 +79,19 @@ Provides a secondary staleness check in the editor itself.
 **Current state (from audit):** No version or hash field exists in the manifest or editor state.
 
 **Changes:**
-- When loading manifest from API, compute a hash of the pipeline manifest's control IDs (e.g., `JSON.stringify(controlIds).hashCode()` or just the count + first/last ID)
-- Store as `_manifestVersion` in the editor state
-- When auto-saving, include `_manifestVersion` in the saved JSON
-- On next load: if `manifest-editor.json` has a `_manifestVersion` that doesn't match the current pipeline manifest, discard it
+- Compute a **structural hash** of the pipeline manifest that includes:
+  - Sorted control IDs
+  - Sorted section IDs
+  - Per-control structural fields: `type`, `section`, `shape`, `sizeClass` (fields the editor should NOT override)
+  - Exclude position fields: `x`, `y`, `w`, `h`, `editorPosition` (fields the editor SHOULD override)
+- Use a simple hash function (e.g., `JSON.stringify(structuralData)` → CRC32 or first 8 chars of SHA-256)
+- Store as `_manifestVersion` in the editor state and in auto-saved JSON
+- When the manifest API serves editor manifest (Task 4), compare `_manifestVersion` against current pipeline manifest's computed version
+- On mismatch: editor state is stale → archive it, serve fresh pipeline data
 - Also invalidate localStorage undo history when version mismatches — replaying undo from an old manifest on a new one can crash (different control IDs, different counts)
+- **Why structural hash, not just IDs:** If the gatekeeper re-runs and changes visual properties (shape, sizeClass) but not control IDs, the editor must pick up the new properties. An ID-only hash would miss this.
 
-**Depends on:** Task 3 + 4
+**Depends on:** Nothing — this is the foundation. Tasks 3 and 4 depend on this.
 
 ---
 
@@ -87,8 +109,11 @@ When the gatekeeper manifest is promoted to `.pipeline/{id}/manifest.json`, it o
 **Changes:**
 - Before the `fs.copyFileSync` on line 1099, read the existing `manifest.json` (if it exists)
 - After copying the new manifest, read it back and check for `deviceDimensions` and `keyboard`
-- If missing in the new manifest but present in the old one, merge them in (JSON read → add fields → write back)
-- Log a warning: "Carried forward deviceDimensions/keyboard from previous manifest — gatekeeper did not include them"
+- If missing in the new manifest, apply priority chain:
+  1. Check editor manifest (`.pipeline/{id}/manifest-editor.json`) — if contractor corrected these fields, their values win
+  2. Check previous pipeline manifest — carry forward as fallback
+- Log a warning: "Carried forward deviceDimensions/keyboard — gatekeeper did not include them (source: editor|previous)"
+- If gatekeeper DID include them, always use the gatekeeper's values (they're the freshest from the manual)
 
 **Depends on:** Task 11 (gatekeeper should include these fields, but this is the safety net)
 
@@ -135,15 +160,16 @@ The gatekeeper produces visual enrichment inconsistently. The CDJ-3000 got circl
    - `deviceDimensions` — from manual specs page (REQUIRED)
    - `keyboard` — from manual specs page, or `null` for non-keyboard instruments (REQUIRED)
 2. Mark these fields as REQUIRED in the manifest schema example
-3. Add: "The manifest completeness validator will REJECT manifests where >20% of controls are missing shape, sizeClass, or labelDisplay."
+3. Add: "Extract visual properties from the manual Part Names pages and hardware photos. If you cannot determine a property, leave it null — the validator will apply safe defaults. Hallucinating a visual property is WORSE than leaving it null."
 
-**Validator changes in `validateManifestCompleteness` (line 691):**
-- Count controls missing `shape` — if >20% missing, deduct 2.0
-- Count controls missing `sizeClass` — if >20% missing, deduct 1.0
-- Count controls missing `labelDisplay` — if >20% missing, deduct 1.0
-- Count controls missing `surfaceColor` on buttons with type `button` — deduct 0.5 per missing (capped at 3.0)
-
-**Note:** The validator at line 691 already has auto-fix logic for some fields (shape defaults, sizeClass defaults). Extend this to also auto-fix missing `labelDisplay` to `"below"` and missing `sizeClass` to `"md"` — so the gatekeeper doesn't fail catastrophically, but still gets a score deduction.
+**Validator changes in `validateManifestCompleteness` (line 691) — SOFT enforcement, not hard rejection:**
+- Count controls missing `shape` — if >20% missing, deduct 1.0 (warning, not gate failure)
+- Count controls missing `sizeClass` — if >20% missing, deduct 0.5
+- Count controls missing `labelDisplay` — if >20% missing, deduct 0.5
+- Count controls missing `surfaceColor` on transport/performance buttons — deduct 0.25 per missing (capped at 2.0)
+- **Auto-fix defaults** (extend existing auto-fixes at lines 741-846): missing `shape` → `"rectangle"`, missing `sizeClass` → `"md"`, missing `labelDisplay` → `"below"`
+- **DO NOT hard-reject** manifests for missing visual fields — this causes pipeline stalls. The contractor fixes remaining properties in the editor. Score deductions are informational warnings.
+- **Anti-hallucination:** The gatekeeper is a text agent. If the diagram parser didn't extract visual properties for some controls, the gatekeeper shouldn't fabricate them. The Sieve Extraction Strategy principle applies: separate perception from cognition.
 
 ---
 
@@ -284,12 +310,15 @@ The gatekeeper produces visual enrichment inconsistently. The CDJ-3000 got circl
 ## Execution Order
 
 ```
-PHASE 1 — Auto-save clobber (MUST fix first, blocks all editor work):
-  Task 3 (auto-save gating) → Task 4 (API staleness) → Task 5 (version marker)
+PHASE 1 — Version marker + auto-save clobber (MUST fix first, blocks all editor work):
+  Task 5 (version marker — foundation, no dependencies)
+  → Task 3 (auto-save gating — prevents mtime corruption)
+  → Task 4 (staleness detection — uses version marker + mtime)
 
 PHASE 2 — Pipeline reliability:
-  Task 1 (field preservation) + Task 11 (visual enrichment) + Task 2 (validator)
-  All independent, can run in parallel.
+  Task 1 (field preservation — uses version marker to decide priority)
+  + Task 11 (visual enrichment — soft enforcement, anti-hallucination)
+  + Task 2 (validator — enforces presence, not hard rejection)
 
 PHASE 3 — Architecture cleanup:
   Tasks 6, 7, 8, 9, 10 — all independent, can run in parallel.
