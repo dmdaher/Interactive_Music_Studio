@@ -14,6 +14,8 @@ interface PanelShellProps {
     keys: number;
     startNote: string;
     panelHeightPercent: number;
+    leftPercent?: number;
+    widthPercent?: number;
   } | null;
 }
 
@@ -83,7 +85,12 @@ export default function PanelShell({
             <div style={{ height: `${keyboard.panelHeightPercent}%`, position: 'relative' }}>
               {children}
             </div>
-            <div style={{ height: `${100 - keyboard.panelHeightPercent}%`, position: 'relative' }}>
+            <div style={{
+              height: `${100 - keyboard.panelHeightPercent}%`,
+              position: 'relative',
+              marginLeft: keyboard.leftPercent ? `${keyboard.leftPercent}%` : undefined,
+              width: keyboard.widthPercent ? `${keyboard.widthPercent}%` : undefined,
+            }}>
               <Keyboard keys={keyboard.keys} startNote={keyboard.startNote} />
             </div>
           </>

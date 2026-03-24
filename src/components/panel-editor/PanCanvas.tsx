@@ -64,10 +64,12 @@ export default function PanCanvas() {
       {/* Keyboard at bottom of canvas */}
       {keyboard && (
         <div
-          className="absolute left-0 right-0 pointer-events-none"
+          className="absolute pointer-events-none"
           style={{
             top: `${keyboard.panelHeightPercent}%`,
             height: `${100 - keyboard.panelHeightPercent}%`,
+            left: `${keyboard.leftPercent ?? 0}%`,
+            width: `${keyboard.widthPercent ?? 100}%`,
           }}
         >
           <Keyboard keys={keyboard.keys} startNote={keyboard.startNote} />

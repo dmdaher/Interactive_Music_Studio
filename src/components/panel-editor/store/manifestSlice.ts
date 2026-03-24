@@ -158,7 +158,7 @@ export interface ManifestSlice {
   controls: Record<string, ControlDef>;
   selectedIds: string[];
   lockedIds: string[];
-  keyboard: { keys: number; startNote: string; panelHeightPercent: number } | null;
+  keyboard: { keys: number; startNote: string; panelHeightPercent: number; leftPercent?: number; widthPercent?: number } | null;
   focusedSectionId: string | null;
 
   // Actions
@@ -259,7 +259,7 @@ export const createManifestSlice: StateCreator<
 
     // When keyboard exists, sections only occupy the top panel area
     let panelAreaH = effectiveCanvasH;
-    const manifestAny = manifest as MasterManifest & { keyboard?: { keys: number; startNote: string; panelHeightPercent: number } };
+    const manifestAny = manifest as MasterManifest & { keyboard?: { keys: number; startNote: string; panelHeightPercent: number; leftPercent?: number; widthPercent?: number } };
     if (manifestAny.keyboard && manifestAny.keyboard.panelHeightPercent) {
       panelAreaH = Math.round(effectiveCanvasH * (manifestAny.keyboard.panelHeightPercent / 100));
     }
