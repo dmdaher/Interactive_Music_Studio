@@ -340,6 +340,17 @@ function renderControl(
       if (control.nestedIn) {
         return `${indent}{/* ${controlId}: nested in ${control.nestedIn}, rendered by JogWheelAssembly */}`;
       }
+      // Circular displays (jog wheel center) use JogDisplay
+      if (control.shape === 'circle') {
+        const size = Math.min(pxW ?? 120, pxH ?? 120);
+        return [
+          `${indent}<JogDisplay`,
+          `${indent}  id="${controlId}"`,
+          `${indent}  size={${size}}`,
+          `${indent}  showMockContent`,
+          `${indent}/>`,
+        ].join('\n');
+      }
       return [
         `${indent}<TouchDisplay`,
         `${indent}  id="${controlId}"`,
@@ -982,6 +993,11 @@ function collectImports(
     }
     if (mapping.import && !imports.has(mapping.component)) {
       imports.set(mapping.component, mapping.import);
+    }
+
+    // Circular screens use JogDisplay instead of TouchDisplay
+    if ((ctrl.type === 'screen' || ctrl.type === 'display') && ctrl.shape === 'circle') {
+      imports.set('JogDisplay', '@/components/controls/JogDisplay');
     }
 
     // If this is a wheel that has a nested display, add JogWheelAssembly import

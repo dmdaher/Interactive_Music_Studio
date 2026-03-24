@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import DirectionSwitch from '@/components/controls/DirectionSwitch';
+import JogDisplay from '@/components/controls/JogDisplay';
 import Knob from '@/components/controls/Knob';
 import LEDIndicator from '@/components/controls/LEDIndicator';
 import PadButton from '@/components/controls/PadButton';
@@ -2029,14 +2030,10 @@ export default function CDJ3000Panel({
             justifyContent: 'center',
           }}
         >
-          <TouchDisplay
+          <JogDisplay
             id="JOG_DISPLAY"
-            label=""
-            variant="main"
+            size={246}
             showMockContent
-            width={512}
-            height={246}
-            highlighted={isHighlighted('JOG_DISPLAY')}
           />
         </div>
 
