@@ -242,6 +242,19 @@ export const createManifestSlice: StateCreator<
     const sections: Record<string, SectionDef> = {};
     const controls: Record<string, ControlDef> = {};
 
+    // Compute actual canvas height from device dimensions BEFORE placing controls.
+    // Without this, controls are placed in 1650px of vertical space even when the
+    // device is a wide synth (e.g., Fantom-06: 997mm x 300mm → 1200 x 361px).
+    let effectiveCanvasW = CANVAS_BASE_W;
+    let effectiveCanvasH = CANVAS_BASE_H;
+    if (manifest.deviceDimensions) {
+      const { widthMm, depthMm } = manifest.deviceDimensions;
+      if (widthMm > 0 && depthMm > 0) {
+        effectiveCanvasW = CANVAS_BASE_W;
+        effectiveCanvasH = Math.round(CANVAS_BASE_W / (widthMm / depthMm));
+      }
+    }
+
     // Build a lookup of manifest controls by ID
     const mcById = new Map<string, ManifestControl>();
     for (const mc of manifest.controls) {
@@ -249,12 +262,12 @@ export const createManifestSlice: StateCreator<
     }
 
     for (const ms of manifest.sections) {
-      // Convert panelBoundingBox % to pixel coordinates
+      // Convert panelBoundingBox % to pixel coordinates using actual canvas dimensions
       const bbox = ms.panelBoundingBox ?? { x: 0, y: 0, w: 20, h: 20 };
-      const sectionX = (bbox.x / 100) * CANVAS_BASE_W;
-      const sectionY = (bbox.y / 100) * CANVAS_BASE_H;
-      const sectionW = (bbox.w / 100) * CANVAS_BASE_W;
-      const sectionH = (bbox.h / 100) * CANVAS_BASE_H;
+      const sectionX = (bbox.x / 100) * effectiveCanvasW;
+      const sectionY = (bbox.y / 100) * effectiveCanvasH;
+      const sectionW = (bbox.w / 100) * effectiveCanvasW;
+      const sectionH = (bbox.h / 100) * effectiveCanvasH;
 
       sections[ms.id] = {
         id: ms.id,
