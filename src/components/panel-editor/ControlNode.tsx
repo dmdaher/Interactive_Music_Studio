@@ -733,7 +733,10 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   return (
     <>
       <Rnd
-        position={{ x: relX, y: relY }}
+        position={{
+          x: relX + (control.w * (1 - controlScale)) / 2,
+          y: relY + (control.h * (1 - controlScale)) / 2,
+        }}
         size={{ width: control.w * controlScale, height: control.h * controlScale }}
         scale={zoom}
         dragGrid={[snapGrid, snapGrid]}
