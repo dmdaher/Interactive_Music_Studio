@@ -1509,7 +1509,7 @@ function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; p
 }
 
 function main() {
-  const { deviceId, dryRun, panelWidth, panelHeight } = parseArgs();
+  let { deviceId, dryRun, panelWidth, panelHeight } = parseArgs();
 
   // Read manifest
   const manifestPath = path.join(PROJECT_ROOT, `.pipeline/${deviceId}/manifest.json`);
@@ -1519,6 +1519,14 @@ function main() {
     process.exit(1);
   }
   const manifest: MasterManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
+  // Compute panel dimensions from deviceDimensions if available
+  const dims = (manifest as any).deviceDimensions;
+  if (dims && dims.widthMm > 0 && dims.depthMm > 0) {
+    const aspect = dims.widthMm / dims.depthMm;
+    panelHeight = Math.round(panelWidth / aspect);
+    console.log(`  Device dimensions: ${dims.widthMm}mm x ${dims.depthMm}mm → ${panelWidth}x${panelHeight}px`);
+  }
 
   // Read templates
   const templatesPath = path.join(PROJECT_ROOT, `.pipeline/${deviceId}/templates.json`);
