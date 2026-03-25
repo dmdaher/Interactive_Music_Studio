@@ -724,12 +724,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
   const isLocked = control.locked;
 
-  // Detect if any part of the control extends outside its parent section bounds
-  const isOutOfBounds =
-    control.x < section.x ||
-    control.y < section.y ||
-    control.x + control.w > section.x + section.w ||
-    control.y + control.h > section.y + section.h;
+  // Controls can be dragged freely — section boundaries are decorative only.
 
   return (
     <>
