@@ -78,7 +78,7 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
       scale={zoom}
       dragGrid={[snapGrid, snapGrid]}
       resizeGrid={[snapGrid, snapGrid]}
-      cancel=".control-node"
+      dragHandleClassName="section-drag-handle"
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       enableResizing
@@ -96,12 +96,21 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
       className="hover:border-white/20"
       onClick={handleClick}
     >
-      {/* Section header label */}
-      {section.headerLabel && (
-        <div className="px-1 pt-0.5 text-[10px] font-medium text-gray-400 uppercase tracking-wider select-none pointer-events-none truncate">
-          {section.headerLabel}
-        </div>
-      )}
+      {/* Section drag handle — grab here to move the section */}
+      <div
+        className="section-drag-handle flex items-center gap-1 px-1.5 h-4 cursor-grab active:cursor-grabbing select-none"
+        style={{
+          backgroundColor: isSelected ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.05)',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '3px 3px 0 0',
+        }}
+      >
+        <span className="text-[8px] text-gray-500">⋮⋮</span>
+        <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider truncate">
+          {section.headerLabel ?? sectionId}
+        </span>
+        <span className="text-[8px] text-gray-600 ml-auto">{section.childIds.length}</span>
+      </div>
 
       {/* Child controls */}
       {section.childIds.map((id) => (

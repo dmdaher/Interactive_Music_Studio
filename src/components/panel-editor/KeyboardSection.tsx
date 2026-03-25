@@ -53,19 +53,23 @@ export default function KeyboardSection() {
       position: { x: number; y: number },
     ) => {
       const newW = parseInt(ref.style.width, 10);
+      const newH = parseInt(ref.style.height, 10);
       const newLeftPct = Math.max(0, (position.x / canvasWidth) * 100);
       const newWidthPct = Math.max(50, Math.min(100, (newW / canvasWidth) * 100));
+      // Vertical resize: top edge changes panelHeightPercent
+      const newPanelPct = Math.max(20, Math.min(90, (position.y / canvasHeight) * 100));
 
       useEditorStore.setState({
         keyboard: {
           ...keyboard!,
           leftPercent: Math.round(newLeftPct * 10) / 10,
           widthPercent: Math.round(newWidthPct * 10) / 10,
+          panelHeightPercent: Math.round(newPanelPct * 10) / 10,
         },
         hasUserEdited: true,
       });
     },
-    [keyboard, canvasWidth],
+    [keyboard, canvasWidth, canvasHeight],
   );
 
   return (
@@ -77,8 +81,8 @@ export default function KeyboardSection() {
       enableResizing={{
         left: true,
         right: true,
-        top: false,
-        bottom: false,
+        top: true,
+        bottom: true,
         topLeft: false,
         topRight: false,
         bottomLeft: false,
