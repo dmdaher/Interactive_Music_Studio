@@ -502,12 +502,14 @@ function EmptyStatePanel() {
   const handleLeftChange = (val: number) => {
     useEditorStore.setState({
       keyboard: { ...keyboard, leftPercent: val },
+      hasUserEdited: true,
     });
   };
 
   const handleWidthChange = (val: number) => {
     useEditorStore.setState({
       keyboard: { ...keyboard, widthPercent: val },
+      hasUserEdited: true,
     });
   };
 
