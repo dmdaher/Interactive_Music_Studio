@@ -98,18 +98,18 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
     >
       {/* Section drag handle — grab here to move the section */}
       <div
-        className="section-drag-handle flex items-center gap-1 px-1.5 h-4 cursor-grab active:cursor-grabbing select-none"
+        className="section-drag-handle flex items-center gap-2 px-2 h-7 cursor-grab active:cursor-grabbing select-none"
         style={{
-          backgroundColor: isSelected ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.05)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backgroundColor: isSelected ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.08)',
+          borderBottom: '1px solid rgba(255,255,255,0.12)',
           borderRadius: '3px 3px 0 0',
         }}
       >
-        <span className="text-[8px] text-gray-500">⋮⋮</span>
-        <span className="text-[9px] font-medium text-gray-400 uppercase tracking-wider truncate">
+        <span className="text-[10px] text-gray-400">⋮⋮</span>
+        <span className="text-[11px] font-semibold text-gray-300 uppercase tracking-wider truncate">
           {section.headerLabel ?? sectionId}
         </span>
-        <span className="text-[8px] text-gray-600 ml-auto">{section.childIds.length}</span>
+        <span className="text-[10px] text-gray-500 ml-auto">{section.childIds.length}</span>
       </div>
 
       {/* Child controls */}

@@ -50,13 +50,13 @@ export default function Keyboard({ keys, startNote, zones = [], highlightedKeys 
 
   return (
     <motion.div
-      className="flex flex-col w-full"
+      className="flex flex-col w-full h-full"
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.35 }}
     >
-      {/* Keyboard container */}
-      <div className="relative w-full h-32 select-none">
+      {/* Keyboard container — h-full fills parent, falls back to h-32 if no parent height */}
+      <div className="relative w-full h-full min-h-[80px] select-none">
         {/* White keys */}
         <div className="flex h-full">
           {whiteNotes.map((note) => {
