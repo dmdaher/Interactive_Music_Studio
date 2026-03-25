@@ -18,19 +18,19 @@
 
 The keyboard appears in the editor as a **draggable, resizable element** below the panel controls. It has:
 
-1. **Horizontal drag** — move the entire keyboard left/right. Updates `leftPercent`.
+1. **Full drag (horizontal + vertical)** — grab the keyboard and drag it anywhere. Updates `leftPercent` and `panelHeightPercent`. The contractor decides where the keyboard sits — not locked to any axis.
 2. **Horizontal resize** — drag left or right edge to widen/narrow. Updates `leftPercent` and `widthPercent`.
-3. **Vertical boundary drag** — drag the TOP edge of the keyboard up/down to change where the panel area ends and the keyboard begins. Updates `panelHeightPercent`. This also resizes all control section positions proportionally.
-4. **Visual boundary line** — a clear horizontal divider line between panel area and keyboard area. Maybe a dashed line with a label "PANEL | KEYBOARD".
+3. **Visual boundary line** — a dashed horizontal line at the top edge of the keyboard showing where the panel/keyboard split is. Informational only, not a constraint.
+4. **No vertical lock** — the keyboard can be dragged up (overlapping controls if needed) or down (leaving space). The contractor decides the right position by looking at the hardware photo overlay.
 
 ### Interaction Details
 
-**Horizontal drag:**
-- Grab anywhere on the keyboard body and drag left/right
-- Keyboard slides horizontally, keys stay intact
-- `leftPercent` updates live
+**Full drag:**
+- Grab anywhere on the keyboard body and drag freely (both axes)
+- Updates `leftPercent` (horizontal) and `panelHeightPercent` (vertical — where the keyboard top edge sits)
 - Snaps to grid (same snap as controls)
-- Cannot drag off-screen (clamp to 0-100%)
+- Clamp: left 0-50%, top 20-90% of canvas height
+- The contractor positions the keyboard by dragging it until it matches the hardware photo
 
 **Horizontal resize:**
 - Handles on left and right edges of the keyboard
@@ -39,13 +39,8 @@ The keyboard appears in the editor as a **draggable, resizable element** below t
 - Minimum width: 50% of canvas (prevents tiny keyboards)
 - Keys re-render at the new width (they're flex-based, so they auto-adjust)
 
-**Vertical boundary drag:**
-- Handle on the TOP edge of the keyboard (the panel/keyboard boundary)
-- Drag up → more keyboard, less panel area (panelHeightPercent decreases)
-- Drag down → less keyboard, more panel area (panelHeightPercent increases)
-- Range: 20-80% (prevent extremes)
-- Controls above the boundary are unaffected (positions stay the same in pixels)
-- The boundary is a visual guideline, not a hard constraint (controls CAN overlap into keyboard area if the contractor wants)
+**Why no vertical lock:**
+- The `panelHeightPercent: 35` from the manifest is the gatekeeper's estimate. It's often wrong (as seen in the Fantom-06 where controls overlap the keyboard). The contractor needs to drag the keyboard down until it clears all controls, matching the real hardware proportions from the photo overlay.
 
 **Visual design:**
 - Keyboard section has a subtle border/highlight when hovered
