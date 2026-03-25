@@ -602,7 +602,15 @@ export default function PropertiesPanel() {
     panelRef.current?.scrollTo(0, 0);
   }, [selectedIds]);
 
+  // Only show properties panel when something is selected or keyboard exists
+  const keyboard = useEditorStore((s) => s.keyboard);
+  const hasContent = selectedIds.length > 0 || keyboard;
+
+  if (!hasContent) return null;
+
   return (
-    <div ref={panelRef} className="h-full overflow-y-auto p-3 text-gray-300">{content}</div>
+    <div className="w-72 border-l border-gray-800 bg-[#0d0d1a] flex-shrink-0">
+      <div ref={panelRef} className="h-full overflow-y-auto p-3 text-gray-300">{content}</div>
+    </div>
   );
 }

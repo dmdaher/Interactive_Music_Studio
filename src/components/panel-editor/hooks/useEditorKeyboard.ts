@@ -85,6 +85,14 @@ export function useEditorKeyboard() {
         }
       }
 
+      // ── Toggle layers panel: L ──────────────────────────────────────────
+      if (e.key === 'l' || e.key === 'L') {
+        if (!isMod) {
+          store.toggleLayers();
+          return;
+        }
+      }
+
       // ── Escape: clear selection ───────────────────────────────────────────
       if (e.key === 'Escape') {
         store.setSelectedIds([]);

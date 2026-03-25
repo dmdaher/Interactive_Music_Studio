@@ -167,7 +167,8 @@ function SectionItem({ sectionId }: { sectionId: string }) {
 
 export default function LayersPanel() {
   const sections = useEditorStore((s) => s.sections);
-  const [collapsed, setCollapsed] = useState(false);
+  const showLayers = useEditorStore((s) => s.showLayers);
+  const toggleLayers = useEditorStore((s) => s.toggleLayers);
 
   // Sort sections by Y position (top to bottom), then by X (left to right)
   const sortedSectionIds = useMemo(() => {
@@ -176,15 +177,11 @@ export default function LayersPanel() {
       .map((s) => s.id);
   }, [sections]);
 
-  const handleToggleCollapse = useCallback(() => {
-    setCollapsed((prev) => !prev);
-  }, []);
-
-  if (collapsed) {
+  if (!showLayers) {
     return (
       <div className="flex flex-col border-r border-gray-800 bg-[#0d0d1a]">
         <button
-          onClick={handleToggleCollapse}
+          onClick={toggleLayers}
           className="flex h-10 w-8 items-center justify-center text-gray-400 hover:text-gray-200"
           aria-label="Expand layers panel"
           title="Show Layers"
@@ -205,7 +202,7 @@ export default function LayersPanel() {
           Layers
         </span>
         <button
-          onClick={handleToggleCollapse}
+          onClick={toggleLayers}
           className="flex h-5 w-5 items-center justify-center rounded text-gray-500 hover:bg-white/10 hover:text-gray-300"
           aria-label="Collapse layers panel"
           title="Hide Layers"

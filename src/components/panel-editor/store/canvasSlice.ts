@@ -12,6 +12,7 @@ export interface CanvasSlice {
   snapGrid: SnapGrid;
   showGrid: boolean;
   showPhoto: boolean;
+  showLayers: boolean;
   photoMode: 'overlay' | 'side-by-side';
   photoOpacity: number;
   canvasWidth: number;
@@ -26,6 +27,7 @@ export interface CanvasSlice {
   setSnapGrid: (g: SnapGrid) => void;
   toggleGrid: () => void;
   togglePhoto: () => void;
+  toggleLayers: () => void;
   setPhotoMode: (mode: 'overlay' | 'side-by-side') => void;
   setPhotoOpacity: (o: number) => void;
   setCanvasSize: (w: number, h: number) => void;
@@ -48,6 +50,7 @@ export const createCanvasSlice: StateCreator<
   snapGrid: 8,
   showGrid: true,
   showPhoto: false,
+  showLayers: false, // Start collapsed for maximum canvas space
   photoMode: 'side-by-side' as const,
   photoOpacity: 0.3,
   canvasWidth: 1200,
@@ -64,6 +67,7 @@ export const createCanvasSlice: StateCreator<
   setSnapGrid: (g) => set({ snapGrid: g }),
 
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
+  toggleLayers: () => set((s) => ({ showLayers: !s.showLayers })),
 
   togglePhoto: () => set((s) => ({ showPhoto: !s.showPhoto })),
 

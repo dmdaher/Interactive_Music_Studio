@@ -234,12 +234,10 @@ function EditorShell({ deviceId }: { deviceId: string }) {
         </div>
       )}
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         <LayersPanel />
         <EditorWorkspace deviceId={deviceId} readOnly={previewMode} />
-        <div className="w-72 border-l border-gray-800 bg-[#0d0d1a]">
-          <PropertiesPanel />
-        </div>
+        <PropertiesPanel />
       </div>
       {!previewMode && <ContextMenu />}
 
