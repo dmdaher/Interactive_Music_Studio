@@ -119,32 +119,37 @@ function renderControl(
 
   switch (control.type) {
     case 'button': {
-      // Circle buttons — render custom circle div (same as editor)
-      if (control.shape === 'circle' && pxW && pxH) {
-        const diameter = Math.min(pxW, pxH);
-        const useIcon = resolvedIcon && control.labelDisplay === 'icon-only';
-        const displayText = useIcon ? escapeJsx(resolvedIcon!) : escapeJsx(label);
-        const fontSize = useIcon ? 14 : 8;
-        return [
+      // Circle buttons use PanelButton with variant="transport"
+      // The component handles circular shape, accent ring, surface color glow
+      if (control.shape === 'circle') {
+        // Force transport variant for circle buttons
+        const circleVariant = control.buttonStyle === 'transport' ? 'transport' : 'transport';
+        const circleSize = pxH && pxH <= 32 ? 'sm' : pxH && pxH <= 48 ? 'md' : 'lg';
+        const lines = [
           `${indent}<div>`,
-          `${indent}  <div`,
-          `${indent}    data-control-id="${controlId}"`,
-          `${indent}    className="rounded-full flex items-center justify-center cursor-pointer"`,
-          `${indent}    style={{`,
-          `${indent}      width: ${diameter},`,
-          `${indent}      height: ${diameter},`,
-          `${indent}      backgroundColor: '#2a2a2a',`,
-          `${indent}      border: '3px solid ${control.surfaceColor ?? '#444'}',`,
-          `${indent}      boxShadow: '${control.surfaceColor ? `inset 0 2px 4px rgba(0,0,0,0.4), 0 0 8px ${control.surfaceColor}40` : 'inset 0 2px 4px rgba(0,0,0,0.4)'}',`,
-          `${indent}    }}`,
+          `${indent}  <PanelButton`,
+          `${indent}    id="${controlId}"`,
+          `${indent}    label="${escapeJsx(label)}"`,
+          `${indent}    variant="${circleVariant}"`,
+          `${indent}    size="${circleSize}"`,
+        ];
+        if (control.surfaceColor) lines.push(`${indent}    surfaceColor="${control.surfaceColor}"`);
+        if (control.hasLed) {
+          lines.push(`${indent}    hasLed`);
+          if (control.ledColor) lines.push(`${indent}    ledColor="${control.ledColor}"`);
+          lines.push(`${indent}    ledOn={getState('${controlId}').active}`);
+        }
+        if (resolvedIcon && control.labelDisplay === 'icon-only') {
+          lines.push(`${indent}    iconContent="${escapeJsx(resolvedIcon)}"`);
+        }
+        lines.push(
+          `${indent}    active={getState('${controlId}').active}`,
+          `${indent}    highlighted={isHighlighted('${controlId}')}`,
           `${indent}    onClick={() => onButtonClick?.('${controlId}')}`,
-          `${indent}  >`,
-          `${indent}    <span className="font-medium text-gray-300 uppercase text-center" style={{ fontSize: ${fontSize} }}>`,
-          `${indent}      ${displayText}`,
-          `${indent}    </span>`,
-          `${indent}  </div>`,
+          `${indent}  />`,
           `${indent}</div>`,
-        ].join('\n');
+        );
+        return lines.join('\n');
       }
 
       // Rectangle buttons
