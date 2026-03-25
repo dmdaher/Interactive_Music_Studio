@@ -25,11 +25,13 @@ export default function EditorToolbar({
   const showPhoto = useEditorStore((s) => s.showPhoto);
   const photoMode = useEditorStore((s) => s.photoMode);
   const photoOpacity = useEditorStore((s) => s.photoOpacity);
+  const controlScale = useEditorStore((s) => s.controlScale);
   const past = useEditorStore((s) => s.past);
   const future = useEditorStore((s) => s.future);
 
   const setZoom = useEditorStore((s) => s.setZoom);
   const setSnapGrid = useEditorStore((s) => s.setSnapGrid);
+  const setControlScale = useEditorStore((s) => s.setControlScale);
   const toggleGrid = useEditorStore((s) => s.toggleGrid);
   const togglePhoto = useEditorStore((s) => s.togglePhoto);
   const setPhotoMode = useEditorStore((s) => s.setPhotoMode);
@@ -125,6 +127,29 @@ export default function EditorToolbar({
         >
           Redo
         </button>
+      </div>
+
+      {/* Divider */}
+      <div className="h-5 w-px bg-gray-800" />
+
+      {/* Control Scale Slider */}
+      <div className="flex items-center gap-1.5">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">
+          Scale
+        </label>
+        <input
+          type="range"
+          min={30}
+          max={100}
+          step={10}
+          value={Math.round(controlScale * 100)}
+          onChange={(e) => setControlScale(Number(e.target.value) / 100)}
+          className="h-1 w-16 cursor-pointer accent-blue-500"
+          title="Control Scale — shrink controls for positioning on photo ([ / ])"
+        />
+        <span className="w-8 text-center text-[10px] text-gray-400">
+          {Math.round(controlScale * 100)}%
+        </span>
       </div>
 
       {/* Divider */}

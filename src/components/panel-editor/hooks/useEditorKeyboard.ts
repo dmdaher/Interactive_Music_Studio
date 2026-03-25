@@ -93,6 +93,16 @@ export function useEditorKeyboard() {
         }
       }
 
+      // ── Control scale: [ to decrease, ] to increase ────────────────────
+      if (e.key === '[') {
+        store.setControlScale(store.controlScale - 0.1);
+        return;
+      }
+      if (e.key === ']') {
+        store.setControlScale(store.controlScale + 0.1);
+        return;
+      }
+
       // ── Escape: clear selection ───────────────────────────────────────────
       if (e.key === 'Escape') {
         store.setSelectedIds([]);

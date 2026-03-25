@@ -13,6 +13,7 @@ export interface CanvasSlice {
   showGrid: boolean;
   showPhoto: boolean;
   showLayers: boolean;
+  controlScale: number; // 0.3-1.0 — visual scale for controls in editor (positioning mode)
   photoMode: 'overlay' | 'side-by-side';
   photoOpacity: number;
   canvasWidth: number;
@@ -28,6 +29,7 @@ export interface CanvasSlice {
   toggleGrid: () => void;
   togglePhoto: () => void;
   toggleLayers: () => void;
+  setControlScale: (s: number) => void;
   setPhotoMode: (mode: 'overlay' | 'side-by-side') => void;
   setPhotoOpacity: (o: number) => void;
   setCanvasSize: (w: number, h: number) => void;
@@ -51,6 +53,7 @@ export const createCanvasSlice: StateCreator<
   showGrid: true,
   showPhoto: false,
   showLayers: false, // Start collapsed for maximum canvas space
+  controlScale: 1.0, // Full size by default; contractor scales down for positioning
   photoMode: 'side-by-side' as const,
   photoOpacity: 0.3,
   canvasWidth: 1200,
@@ -68,6 +71,7 @@ export const createCanvasSlice: StateCreator<
 
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
   toggleLayers: () => set((s) => ({ showLayers: !s.showLayers })),
+  setControlScale: (s) => set({ controlScale: Math.max(0.3, Math.min(1, s)) }),
 
   togglePhoto: () => set((s) => ({ showPhoto: !s.showPhoto })),
 

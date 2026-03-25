@@ -573,6 +573,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const selectedIds = useEditorStore((s) => s.selectedIds);
   const zoom = useEditorStore((s) => s.zoom);
   const snapGrid = useEditorStore((s) => s.snapGrid);
+  const controlScale = useEditorStore((s) => s.controlScale);
   const moveControl = useEditorStore((s) => s.moveControl);
   const moveSelectedControls = useEditorStore((s) => s.moveSelectedControls);
   const resizeControl = useEditorStore((s) => s.resizeControl);
@@ -633,8 +634,11 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       _delta: unknown,
       position: { x: number; y: number },
     ) => {
-      const newW = parseInt(ref.style.width, 10);
-      const newH = parseInt(ref.style.height, 10);
+      // Convert scaled dimensions back to unscaled for storage
+      const scaledW = parseInt(ref.style.width, 10);
+      const scaledH = parseInt(ref.style.height, 10);
+      const newW = Math.round(scaledW / controlScale);
+      const newH = Math.round(scaledH / controlScale);
       // Snapshot BEFORE mutation so undo restores the previous state
       pushSnapshot();
       // Handle position shift from top/left resize handles
@@ -730,7 +734,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
     <>
       <Rnd
         position={{ x: relX, y: relY }}
-        size={{ width: control.w, height: control.h }}
+        size={{ width: control.w * controlScale, height: control.h * controlScale }}
         scale={zoom}
         dragGrid={[snapGrid, snapGrid]}
         resizeGrid={[snapGrid, snapGrid]}
@@ -755,7 +759,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
           boxShadow: isSelected
             ? '0 0 8px 2px rgba(59,130,246,0.3)'
             : 'none',
-          opacity: isLocked ? 0.7 : 1,
+          opacity: isLocked ? 0.5 : controlScale < 1 ? (isSelected ? 1 : 0.7) : 1,
           cursor: isLocked ? 'not-allowed' : 'move',
         }}
         onClick={handleClick}
