@@ -28,35 +28,15 @@
 
 ---
 
-## Task 2: Controls fill their container (responsive components)
+## Note: Individual control resize NOT needed
 
-**Problem:** Some components (TouchDisplay, Slider) respect container dimensions. Others (PanelButton, Knob, PadButton) have fixed internal pixel sizes and ignore the container. When the contractor resizes a control's container, the component inside doesn't stretch.
+Controls are fixed physical sizes on real hardware. The contractor uses:
+- **sizeClass** property (xs/sm/md/lg/xl) in the properties panel to change a control's size
+- **Global scale slider** (30-100%) to shrink everything for positioning mode
 
-**Solution:** Make all control components accept and respect `width`/`height` props from their container.
+This should be explained in the onboarding tutorial (Task 14 in stabilization plan).
 
-**Components to update:**
-
-| Component | Current | Change needed |
-|---|---|---|
-| PanelButton | Uses `sizeClasses` with hardcoded px | Accept optional `width`/`height` props. If provided, use them instead of sizeClasses. Button face fills container. |
-| Knob | Fixed `sm=26px, md=34px` | Accept optional `outerSize` prop (already exists). Editor should pass container size. |
-| PadButton | Fixed `64x64px` default | Accept `width`/`height` props. Already has them but may not fully respect. |
-| ValueDial | Fixed `sm=48px, lg=96px` | Accept `outerSize` prop (already exists). Pass from container. |
-| Wheel | Fixed sizes per variant | Accept `width`/`height` props. |
-| TouchDisplay | Already respects `width`/`height` | No change needed ✓ |
-| Slider | Already respects container | No change needed ✓ |
-| LEDIndicator | Fixed sm/md/lg sizes | Accept size prop from container. |
-
-**The key change:** In ControlNode's `renderControl()` function, pass the container's `control.w` and `control.h` to each component so they fill their container. Components use these as their outer dimensions instead of hardcoded sizes.
-
-**Files:**
-- Modify: `src/components/panel-editor/ControlNode.tsx` — pass w/h to renderControl
-- Modify: `src/components/controls/PanelButton.tsx` — accept optional width/height
-- Modify: `src/components/controls/Knob.tsx` — use outerSize from container
-- Modify: `src/components/controls/PadButton.tsx` — respect width/height
-- Modify: `src/components/controls/ValueDial.tsx` — use outerSize from container
-
-**Important:** This only affects the EDITOR rendering. Codegen already passes `pxW`/`pxH` to components in the generated panel — those dimensions come from the manifest's editorPosition percentages. The editor just needs to do the same thing.
+Displays (TouchDisplay) are the exception — they vary widely in size and already accept width/height props.
 
 ---
 
