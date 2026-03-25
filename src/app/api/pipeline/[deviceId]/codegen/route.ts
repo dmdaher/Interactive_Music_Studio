@@ -108,6 +108,16 @@ export async function POST(
       }
     );
 
+    // Mark codegen as completed in pipeline state (for nav gating)
+    try {
+      const { readState: rs, writeState: ws } = await import('@/lib/pipeline/state-machine');
+      const pState = rs(deviceId);
+      if (pState) {
+        (pState as any).codegenCompleted = true;
+        ws(deviceId, pState);
+      }
+    } catch { /* best effort */ }
+
     return NextResponse.json({
       ok: true,
       output: codegenOutput.toString(),
