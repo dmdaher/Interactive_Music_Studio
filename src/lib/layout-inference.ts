@@ -53,7 +53,13 @@ const GRID_SPACING_TOLERANCE = 0.3; // 30% variance in spacing is acceptable
 
 // ─── Helper Functions ──────────────────────────────────────────────────────
 
-/** Group controls into clusters where values are within tolerance */
+/**
+ * Group controls into clusters where values are within tolerance.
+ * Uses gap-based comparison (distance to the FIRST item in the cluster)
+ * instead of mean-based comparison. This prevents "mean drift" where
+ * adding controls gradually shifts the mean and pulls in controls
+ * that are too far from the original group.
+ */
 function clusterByAxis(
   positions: ControlPos[],
   axis: 'x' | 'y',
@@ -67,11 +73,12 @@ function clusterByAxis(
 
   for (let i = 1; i < sorted.length; i++) {
     const currentCluster = clusters[clusters.length - 1];
-    // Compare against the mean of the current cluster for robustness
-    const clusterMean =
-      currentCluster.reduce((sum, c) => sum + c[axis], 0) / currentCluster.length;
+    // Compare against the FIRST item in the cluster (anchor point).
+    // This prevents mean drift — the cluster boundary is fixed by
+    // its first member, not shifting as more controls join.
+    const clusterAnchor = currentCluster[0][axis];
 
-    if (Math.abs(sorted[i][axis] - clusterMean) <= tolerance) {
+    if (Math.abs(sorted[i][axis] - clusterAnchor) <= tolerance) {
       currentCluster.push(sorted[i]);
     } else {
       clusters.push([sorted[i]]);
