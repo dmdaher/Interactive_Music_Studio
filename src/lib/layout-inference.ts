@@ -457,8 +457,11 @@ const SNAP_TOLERANCE = 15;
 /** Size normalization tolerance: sizes within 10% are normalized to average */
 const SIZE_NORM_TOLERANCE = 0.10;
 
-/** Gap normalization tolerance: gaps within this many pixels are normalized */
-const GAP_TOLERANCE = 6;
+/** Gap normalization tolerance: gaps within this many pixels are normalized.
+ *  Also used as a proportional fallback — if all gaps are within
+ *  GAP_PROPORTIONAL_TOLERANCE of average, they're equalized. */
+const GAP_TOLERANCE = 15;
+const GAP_PROPORTIONAL_TOLERANCE = 0.4; // 40% of average gap
 
 /** Edge padding snap tolerance: controls near section edge snap to consistent padding */
 const EDGE_SNAP_TOLERANCE = 10;
@@ -524,20 +527,9 @@ export function cleanupGeometry(
     // ── Column snapping: snap X centers within SNAP_TOLERANCE ────────
     snapAxis(sectionControls, 'x');
 
-    // ── Size normalization per type ─────────────────────────────────
-    // Group by control type (looked up from the original controls record)
-    const typeGroups = new Map<string, CleanedControl[]>();
-    for (const cc of sectionControls) {
-      const original = controls[cc.id];
-      const type = original?.type ?? 'unknown';
-      if (!typeGroups.has(type)) typeGroups.set(type, []);
-      typeGroups.get(type)!.push(cc);
-    }
-
-    for (const group of typeGroups.values()) {
-      if (group.length < 2) continue;
-      normalizeSizes(group);
-    }
+    // NOTE: Size normalization REMOVED. The contractor's custom sizes
+    // are intentional — normalizeSizes averaged them back to defaults.
+    // Position cleanup (snapping, spacing) is fine; size changes are not.
 
     // ── Equal spacing: normalize gaps in rows/columns ──────────────
     equalizeSpacing(sectionControls, 'x');
@@ -782,9 +774,14 @@ function equalizeSpacing(controls: CleanedControl[], axis: 'x' | 'y'): void {
 
     if (gaps.length === 0) continue;
 
-    // Check if gaps are similar (within GAP_TOLERANCE)
+    // Check if gaps are similar — two checks:
+    // 1. Absolute: all gaps within GAP_TOLERANCE pixels of average
+    // 2. Proportional: all gaps within GAP_PROPORTIONAL_TOLERANCE of average
+    // Either passing means the row/column gets equalized.
     const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
-    const allSimilar = gaps.every(g => Math.abs(g - avgGap) <= GAP_TOLERANCE);
+    const allSimilarAbs = gaps.every(g => Math.abs(g - avgGap) <= GAP_TOLERANCE);
+    const allSimilarProp = avgGap > 0 && gaps.every(g => Math.abs(g - avgGap) / avgGap <= GAP_PROPORTIONAL_TOLERANCE);
+    const allSimilar = allSimilarAbs || allSimilarProp;
 
     if (allSimilar && avgGap >= 0) {
       // Normalize: redistribute controls with equal gaps
