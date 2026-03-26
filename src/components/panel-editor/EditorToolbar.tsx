@@ -28,6 +28,8 @@ export default function EditorToolbar({
   const photoMode = useEditorStore((s) => s.photoMode);
   const photoOpacity = useEditorStore((s) => s.photoOpacity);
   const controlScale = useEditorStore((s) => s.controlScale);
+  const showLabels = useEditorStore((s) => s.showLabels);
+  const toggleLabels = useEditorStore((s) => s.toggleLabels);
   const past = useEditorStore((s) => s.past);
   const future = useEditorStore((s) => s.future);
 
@@ -169,6 +171,19 @@ export default function EditorToolbar({
         title="Toggle Grid (G)"
       >
         <span className="text-[10px]">Grid</span>
+      </button>
+
+      {/* Labels Toggle */}
+      <button
+        onClick={toggleLabels}
+        className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
+          showLabels
+            ? 'bg-blue-500/20 text-blue-400'
+            : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+        }`}
+        title="Toggle Labels (T)"
+      >
+        <span className="text-[10px]">Labels</span>
       </button>
 
       {/* Photo Overlay Toggle + Opacity */}

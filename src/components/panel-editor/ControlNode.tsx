@@ -574,6 +574,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const zoom = useEditorStore((s) => s.zoom);
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const controlScale = useEditorStore((s) => s.controlScale);
+  const showLabels = useEditorStore((s) => s.showLabels);
   const moveControl = useEditorStore((s) => s.moveControl);
   const moveSelectedControls = useEditorStore((s) => s.moveSelectedControls);
   const resizeControl = useEditorStore((s) => s.resizeControl);
@@ -791,7 +792,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       </Rnd>
 
       {/* Floating label — rendered OUTSIDE the Rnd container */}
-      {renderFloatingLabel(control, relX, relY)}
+      {showLabels && renderFloatingLabel(control, relX, relY)}
 
       {/* Inline label editor — positioned near the floating label */}
       {isEditing && (

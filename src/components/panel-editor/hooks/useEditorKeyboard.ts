@@ -95,6 +95,14 @@ export function useEditorKeyboard() {
         }
       }
 
+      // ── Toggle labels: T ───────────────────────────────────────────────
+      if (e.key === 't' || e.key === 'T') {
+        if (!isMod) {
+          store.toggleLabels();
+          return;
+        }
+      }
+
       // ── Control scale: [ to decrease, ] to increase ────────────────────
       if (e.key === '[') {
         store.setControlScale(store.controlScale - 0.1);
