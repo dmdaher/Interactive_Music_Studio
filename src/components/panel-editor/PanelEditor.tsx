@@ -47,14 +47,14 @@ function EditorShell({ deviceId }: { deviceId: string }) {
   const handleApproveAndBuild = useCallback(async () => {
     // Force-save current manifest (bypass debounce)
     const state = useEditorStore.getState();
-    const { sections, controls, canvasWidth, canvasHeight } = state;
+    const { sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom } = state;
     setBuildStatus('building');
     setCodegenError(null);
     try {
       await fetch(`/api/pipeline/${deviceId}/manifest`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight }),
+        body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom }),
       });
     } catch {
       // Best-effort save
@@ -305,6 +305,13 @@ export default function PanelEditor({ deviceId }: PanelEditorProps) {
             if (data.canvasWidth && data.canvasHeight) {
               canvasUpdate.canvasWidth = data.canvasWidth;
               canvasUpdate.canvasHeight = data.canvasHeight;
+            }
+            // Restore canvas settings (controlScale, zoom) if saved
+            if (typeof data.controlScale === 'number') {
+              canvasUpdate.controlScale = data.controlScale;
+            }
+            if (typeof data.zoom === 'number') {
+              canvasUpdate.zoom = data.zoom;
             }
 
             useEditorStore.setState({
