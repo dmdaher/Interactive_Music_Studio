@@ -160,6 +160,14 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
     [ids, updateControlProp, pushSnapshot],
   );
 
+  const handleRotationChange = useCallback(
+    (degrees: number) => {
+      pushSnapshot();
+      updateControlProp(ids, 'rotation', degrees);
+    },
+    [ids, updateControlProp, pushSnapshot],
+  );
+
   const handleXChange = useCallback(
     (val: number) => {
       pushSnapshot();
@@ -305,6 +313,26 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
         onWChange={handleWChange}
         onHChange={handleHChange}
       />
+
+      {/* Rotation */}
+      <div className="flex items-center justify-between">
+        <label className="text-[10px] text-gray-500 uppercase tracking-wider">Rotate</label>
+        <div className="flex gap-1">
+          {[0, 90, 180, 270].map((deg) => (
+            <button
+              key={deg}
+              onClick={() => handleRotationChange(deg)}
+              className={`px-2 py-0.5 text-[10px] rounded transition-colors ${
+                (control.rotation ?? 0) === deg
+                  ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                  : 'text-gray-500 hover:bg-white/5 hover:text-gray-300 border border-transparent'
+              }`}
+            >
+              {deg}°
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Divider */}
       <div className="h-px bg-gray-800" />

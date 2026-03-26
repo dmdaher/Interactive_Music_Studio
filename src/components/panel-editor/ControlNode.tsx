@@ -778,7 +778,13 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
         {/* Control rendering — component only, no label */}
         <div
           className="flex h-full w-full items-center justify-center pointer-events-none"
-          style={controlScale < 1 ? { transform: `scale(${controlScale})`, transformOrigin: 'center' } : undefined}
+          style={{
+            transform: [
+              controlScale < 1 ? `scale(${controlScale})` : '',
+              control.rotation ? `rotate(${control.rotation}deg)` : '',
+            ].filter(Boolean).join(' ') || undefined,
+            transformOrigin: 'center',
+          }}
         >
           {renderControl(control, isSelected, allControls)}
         </div>

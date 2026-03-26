@@ -1173,11 +1173,8 @@ function generateFlatPanel(
       const pxH = Math.round((ep.h / 100) * panelHeight);
       const controlJsx = renderControl(ctrl.id, ctrl, '          ', controlMap, pxW, pxH);
 
-      const parts = [
-        `        {/* ${ctrl.id} */}`,
-        `        <div`,
-        `          className="absolute"`,
-        `          style={{`,
+      const rotation = (ctrl as any).rotation as number | undefined;
+      const styleLines = [
         `            left: '${ep.x.toFixed(1)}%',`,
         `            top: '${ep.y.toFixed(1)}%',`,
         `            width: ${pxW},`,
@@ -1185,6 +1182,18 @@ function generateFlatPanel(
         `            display: 'flex',`,
         `            alignItems: 'center',`,
         `            justifyContent: 'center',`,
+      ];
+      if (rotation) {
+        styleLines.push(`            transform: 'rotate(${rotation}deg)',`);
+        styleLines.push(`            transformOrigin: 'center',`);
+      }
+
+      const parts = [
+        `        {/* ${ctrl.id} */}`,
+        `        <div`,
+        `          className="absolute"`,
+        `          style={{`,
+        ...styleLines,
         `          }}`,
         `        >`,
         controlJsx,

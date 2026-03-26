@@ -77,6 +77,7 @@ export interface ControlDef {
   sectionId: string;
   labelPosition: 'above' | 'below' | 'left' | 'right' | 'on-button' | 'hidden';
   locked: boolean;
+  rotation?: number; // 0, 90, 180, 270 degrees
   secondaryLabel?: string;
   spatialNeighbors?: {
     above: string | null;
