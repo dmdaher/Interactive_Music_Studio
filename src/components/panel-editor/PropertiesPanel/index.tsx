@@ -424,16 +424,16 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
 
   const handleWChange = useCallback(
     (val: number) => {
-      updateControlProp(ids, 'w', Math.max(8, val));
       pushSnapshot();
+      updateControlProp(ids, 'w', Math.max(8, val));
     },
     [ids, updateControlProp, pushSnapshot],
   );
 
   const handleHChange = useCallback(
     (val: number) => {
-      updateControlProp(ids, 'h', Math.max(8, val));
       pushSnapshot();
+      updateControlProp(ids, 'h', Math.max(8, val));
     },
     [ids, updateControlProp, pushSnapshot],
   );
@@ -528,6 +528,7 @@ function EmptyStatePanel() {
   }
 
   const handleLeftChange = (val: number) => {
+    useEditorStore.getState().pushSnapshot();
     useEditorStore.setState({
       keyboard: { ...keyboard, leftPercent: val },
       hasUserEdited: true,
@@ -535,6 +536,7 @@ function EmptyStatePanel() {
   };
 
   const handleWidthChange = (val: number) => {
+    useEditorStore.getState().pushSnapshot();
     useEditorStore.setState({
       keyboard: { ...keyboard, widthPercent: val },
       hasUserEdited: true,
