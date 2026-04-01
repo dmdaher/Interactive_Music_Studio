@@ -463,8 +463,8 @@ const MIN_GAP = 4;
 /** Gap normalization tolerance: gaps within this many pixels are normalized.
  *  Also used as a proportional fallback — if all gaps are within
  *  GAP_PROPORTIONAL_TOLERANCE of average, they're equalized. */
-const GAP_TOLERANCE = 8;
-const GAP_PROPORTIONAL_TOLERANCE = 0.25; // 25% of average gap
+const GAP_TOLERANCE = 4;
+const GAP_PROPORTIONAL_TOLERANCE = 0.15; // 15% of average gap
 
 /** Edge padding snap tolerance: controls near section edge snap to consistent padding */
 const EDGE_SNAP_TOLERANCE = 10;
@@ -532,19 +532,19 @@ export function cleanupGeometry(
     // ── Column snapping: snap X centers within SNAP_TOLERANCE ────────
     snapAxis(sectionControls, 'x');
 
-    // NOTE: Size normalization REMOVED. The contractor's custom sizes
-    // are intentional — normalizeSizes averaged them back to defaults.
-    // Position cleanup (snapping, spacing) is fine; size changes are not.
+    // NOTE: Size normalization REMOVED.
 
     // ── Equal spacing: normalize gaps in rows/columns ──────────────
     equalizeSpacing(sectionControls, 'x', targetGap, controlScale);
     equalizeSpacing(sectionControls, 'y', targetGap, controlScale);
 
-    // ── Center alignment: snap controls near section center ────────
-    centerSnapControls(sectionControls, section);
+    // NOTE: centerSnapControls DISABLED — it snaps individual controls
+    // to the section center, which breaks rows of controls near the center.
+    // centerSnapControls(sectionControls, section);
 
-    // ── Edge alignment: snap controls near section edges ──────────
-    edgeSnapControls(sectionControls, section);
+    // NOTE: edgeSnapControls DISABLED — it changes positions of controls
+    // near section edges which is too aggressive for hand-positioned layouts.
+    // edgeSnapControls(sectionControls, section);
 
     // ── Section auto-fit ────────────────────────────────────────────
     let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -582,11 +582,16 @@ export function cleanupGeometry(
  */
 function snapAxis(controls: CleanedControl[], axis: 'x' | 'y'): void {
   const sizeKey = axis === 'x' ? 'w' : 'h';
+  const perpAxis = axis === 'x' ? 'y' : 'x';
+  const perpSize = axis === 'x' ? 'h' : 'w';
 
-  // Compute centers
+  // Compute centers on both axes
   const centers = controls.map(c => c[axis] + c[sizeKey] / 2);
+  const perpCenters = controls.map(c => c[perpAxis] + c[perpSize] / 2);
 
-  // Cluster centers
+  // Cluster centers — only group controls that are also close on the
+  // PERPENDICULAR axis. This prevents a knob at y=47 from snapping
+  // to a slider at y=82 just because they share a similar X center.
   const assigned = new Set<number>();
   for (let i = 0; i < controls.length; i++) {
     if (assigned.has(i)) continue;
@@ -596,7 +601,11 @@ function snapAxis(controls: CleanedControl[], axis: 'x' | 'y'): void {
 
     for (let j = i + 1; j < controls.length; j++) {
       if (assigned.has(j)) continue;
-      if (Math.abs(centers[j] - centers[i]) <= SNAP_TOLERANCE) {
+      // Must be close on the snap axis AND close on the perpendicular axis
+      if (
+        Math.abs(centers[j] - centers[i]) <= SNAP_TOLERANCE &&
+        Math.abs(perpCenters[j] - perpCenters[i]) <= SNAP_TOLERANCE * 2
+      ) {
         cluster.push(j);
         assigned.add(j);
       }
@@ -607,9 +616,13 @@ function snapAxis(controls: CleanedControl[], axis: 'x' | 'y'): void {
     // Compute average center
     const avgCenter = cluster.reduce((sum, idx) => sum + centers[idx], 0) / cluster.length;
 
-    // Reposition each control so its center is at the average
+    // Reposition each control so its center is at the average.
+    // Skip if the adjustment is tiny (< 2px) — avoids surprising micro-movements.
     for (const idx of cluster) {
-      controls[idx][axis] = avgCenter - controls[idx][sizeKey] / 2;
+      const newPos = avgCenter - controls[idx][sizeKey] / 2;
+      if (Math.abs(newPos - controls[idx][axis]) >= 2) {
+        controls[idx][axis] = newPos;
+      }
     }
   }
 }
@@ -802,14 +815,9 @@ function equalizeSpacing(
     if (targetGap != null && targetGap > 0) {
       // Explicit target — always redistribute
       useGap = targetGap;
-    } else {
-      // Auto mode — equalize if gaps are similar
-      const allSimilarAbs = gaps.every(g => Math.abs(g - avgGap) <= GAP_TOLERANCE);
-      const allSimilarProp = avgGap > 0 && gaps.every(g => Math.abs(g - avgGap) / avgGap <= GAP_PROPORTIONAL_TOLERANCE);
-      if ((allSimilarAbs || allSimilarProp) && avgGap >= 0) {
-        useGap = Math.round(avgGap);
-      }
     }
+    // When no target gap (Gap=0), skip equalization entirely.
+    // Only snap alignment and overlap resolution run — no guessing.
 
     if (useGap != null && useGap >= 0) {
       // Redistribute controls with equal visual gaps.
@@ -824,9 +832,11 @@ function equalizeSpacing(
         group[i][centerKey] = Math.round(nextPos);
         currentPos = group[i][centerKey];
       }
-    } else if (avgGap < 0) {
-      // Overlapping controls — redistribute using visual sizes with MIN_GAP.
-      const overlapGap = targetGap ?? MIN_GAP;
+    } else if (avgGap < 0 && targetGap != null && targetGap > 0) {
+      // Overlapping controls — only redistribute when explicit gap is set.
+      // At Gap=0 (no target), overlaps are left alone — the user positioned
+      // at reduced scale where containers overlap but visuals don't.
+      const overlapGap = targetGap;
       let pos = group[0][centerKey];
       for (let i = 0; i < group.length; i++) {
         group[i][centerKey] = Math.round(pos);
