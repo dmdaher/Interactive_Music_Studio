@@ -48,12 +48,12 @@ export default function ControllerSection({
           className="absolute pointer-events-none"
           style={{
             left: '5.5%',
-            top: '5.2%',
+            top: '5.9%',
             width: '3.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             WHEEL1
           </span>
         </div>
@@ -78,12 +78,12 @@ export default function ControllerSection({
           className="absolute pointer-events-none"
           style={{
             left: '9.3%',
-            top: '5.2%',
+            top: '5.9%',
             width: '3.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             WHEEL2
           </span>
         </div>
@@ -111,12 +111,12 @@ export default function ControllerSection({
           className="absolute pointer-events-none"
           style={{
             left: '4.2%',
-            top: '63.9%',
+            top: '64.6%',
             width: '5.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             S1
           </span>
         </div>
@@ -144,12 +144,12 @@ export default function ControllerSection({
           className="absolute pointer-events-none"
           style={{
             left: '5.8%',
-            top: '63.6%',
+            top: '64.3%',
             width: '5.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             S2
           </span>
         </div>
@@ -175,12 +175,12 @@ export default function ControllerSection({
           className="absolute pointer-events-none"
           style={{
             left: '6.8%',
-            top: '57.8%',
+            top: '58.5%',
             width: '5.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             PITCH BEND/MOD
           </span>
         </div>

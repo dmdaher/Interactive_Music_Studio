@@ -49,12 +49,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '75.0%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             PATTERN
           </span>
         </div>
@@ -82,12 +82,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '75.0%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             GROUP
           </span>
         </div>
@@ -115,12 +115,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.9%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             SONG
           </span>
         </div>
@@ -148,12 +148,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.9%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             TR-REC
           </span>
         </div>
@@ -181,12 +181,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '79.8%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             RHYTHM PTN
           </span>
         </div>
@@ -214,12 +214,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '82.6%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             STOP
           </span>
         </div>
@@ -247,12 +247,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '83.9%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             PLAY
           </span>
         </div>
@@ -280,12 +280,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '85.4%',
-            top: '5.5%',
+            top: '6.2%',
             width: '2.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             REC
           </span>
         </div>
@@ -313,12 +313,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '74.2%',
-            top: '27.6%',
+            top: '28.3%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             A.PIANO
           </span>
         </div>
@@ -346,12 +346,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.3%',
-            top: '27.6%',
+            top: '28.3%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             E.PIANO
           </span>
         </div>
@@ -379,12 +379,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '79.5%',
-            top: '27.6%',
+            top: '28.3%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             ORGAN
           </span>
         </div>
@@ -412,12 +412,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '83.8%',
-            top: '27.6%',
+            top: '28.3%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             GUITAR/BASS
           </span>
         </div>
@@ -445,12 +445,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '74.2%',
-            top: '33.1%',
+            top: '33.8%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             STRINGS
           </span>
         </div>
@@ -478,12 +478,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.3%',
-            top: '33.1%',
+            top: '33.8%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             BRASS
           </span>
         </div>
@@ -511,12 +511,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '79.5%',
-            top: '33.1%',
+            top: '33.8%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             SYNTH LEAD
           </span>
         </div>
@@ -544,12 +544,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '83.8%',
-            top: '33.1%',
+            top: '33.8%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             SYNTH PAD
           </span>
         </div>
@@ -577,12 +577,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '74.2%',
-            top: '38.7%',
+            top: '39.4%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             BELL/MALLET
           </span>
         </div>
@@ -610,12 +610,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.3%',
-            top: '38.7%',
+            top: '39.4%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             HIT/OTHER
           </span>
         </div>
@@ -643,12 +643,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '79.5%',
-            top: '38.7%',
+            top: '39.4%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             RHYTHM
           </span>
         </div>
@@ -676,12 +676,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '83.8%',
-            top: '38.7%',
+            top: '39.4%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             S.N. ACOUSTIC
           </span>
         </div>
@@ -709,12 +709,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '74.2%',
-            top: '44.2%',
+            top: '44.9%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             S.N.S
           </span>
         </div>
@@ -742,12 +742,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '77.3%',
-            top: '44.2%',
+            top: '44.9%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             VTW
           </span>
         </div>
@@ -775,12 +775,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '79.5%',
-            top: '44.2%',
+            top: '44.9%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             MODEL
           </span>
         </div>
@@ -808,12 +808,12 @@ export default function SequencerSection({
           className="absolute pointer-events-none"
           style={{
             left: '83.8%',
-            top: '44.2%',
+            top: '44.9%',
             width: '2.8%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             DRUM
           </span>
         </div>

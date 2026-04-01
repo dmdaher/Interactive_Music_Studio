@@ -436,6 +436,7 @@ function renderFloatingLabel(
   ep: { x: number; y: number; w: number; h: number },
   panelWidth: number,
   panelHeight: number,
+  controlScale: number = 1,
 ): string | null {
   const floatingPos = resolveFloatingLabel(ctrl);
   if (!floatingPos) return null;
@@ -444,13 +445,14 @@ function renderFloatingLabel(
   const labelText = ctrl.verbatimLabel;
   if (!labelText) return null;
 
-  const fontSize = labelFontSize(ctrl.sizeClass);
-  const secFontSize = secondaryLabelFontSize(ctrl.sizeClass);
+  // Scale font sizes by controlScale so labels match the scaled-down controls
+  const fontSize = Math.max(Math.round(labelFontSize(ctrl.sizeClass) * controlScale), 4);
+  const secFontSize = Math.max(Math.round(secondaryLabelFontSize(ctrl.sizeClass) * controlScale), 4);
   const hasSecondary = ctrl.secondaryLabel && ctrl.secondaryLabel.length > 0;
 
   // Compute label position based on labelDisplay direction.
-  // Heights are in panel-% units. A label line is approximately 1.0-1.2% of panel height.
-  const labelHeightPct = 1.2;
+  // Heights are in panel-% units. Scale by controlScale for consistency.
+  const labelHeightPct = 1.2 * controlScale;
 
   let labelLeft = ep.x;
   let labelTop: number;
@@ -923,6 +925,7 @@ function renderAbsolutePositioned(
   controlMap: Map<string, ManifestControl>,
   panelWidth?: number,
   panelHeight?: number,
+  controlScale?: number,
 ): string | null {
   const sectionControls = section.controls
     .map(id => ({ id, ctrl: controlMap.get(id) }))
@@ -976,7 +979,7 @@ function renderAbsolutePositioned(
     ];
 
     // Add floating label if applicable
-    const labelJsx = renderFloatingLabel(ctrl!, ep, pw, ph);
+    const labelJsx = renderFloatingLabel(ctrl!, ep, pw, ph, controlScale);
     if (labelJsx) {
       parts.push(labelJsx);
     }
@@ -999,10 +1002,11 @@ function renderSectionBody(
   controlMap: Map<string, ManifestControl>,
   panelWidth?: number,
   panelHeight?: number,
+  controlScale?: number,
 ): string {
   // First: check if controls have editorPosition data (from geometry cleanup).
   // If they do, use percentage-based absolute positioning — bypasses archetypes.
-  const absoluteResult = renderAbsolutePositioned(section, controlMap, panelWidth, panelHeight);
+  const absoluteResult = renderAbsolutePositioned(section, controlMap, panelWidth, panelHeight, controlScale);
   if (absoluteResult) {
     return absoluteResult;
   }
@@ -1080,6 +1084,7 @@ function generateSectionFile(
   sectionIndex?: number,
   panelWidth?: number,
   panelHeight?: number,
+  controlScale?: number,
 ): string {
   const sectionPascal = sectionIdToPascal(section.id);
   const imports = collectImports(sectionControls, allControlMap);
@@ -1089,7 +1094,7 @@ function generateSectionFile(
     .map(([component, importPath]) => `import ${component} from '${importPath}';`)
     .join('\n');
 
-  const body = renderSectionBody(template, section, allControlMap, panelWidth, panelHeight);
+  const body = renderSectionBody(template, section, allControlMap, panelWidth, panelHeight, controlScale);
 
   const importBlock = importLines ? `${importLines}\n` : '';
 
@@ -1242,7 +1247,7 @@ function generateFlatPanel(
       ];
 
       // Floating label for this control
-      const labelJsx = renderFloatingLabel(ctrl, ep, panelWidth, panelHeight);
+      const labelJsx = renderFloatingLabel(ctrl, ep, panelWidth, panelHeight, controlScale);
       if (labelJsx) {
         parts.push(labelJsx);
       }
@@ -1712,7 +1717,7 @@ function main() {
 
     const sectionControls = manifest.controls.filter(c => c.section === section.id);
     const sectionPascal = sectionIdToPascal(section.id);
-    const content = generateSectionFile(template, section, sectionControls, controlMap, manifest.groupLabels, si, panelWidth, panelHeight);
+    const content = generateSectionFile(template, section, sectionControls, controlMap, manifest.groupLabels, si, panelWidth, panelHeight, controlScale);
     const filePath = path.join(sectionsDir, `${sectionPascal}Section.tsx`);
 
     sectionFiles.push({ path: filePath, content });

@@ -54,7 +54,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             MASTER VOLUME
           </span>
         </div>
@@ -82,12 +82,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '15.5%',
-            top: '11.7%',
+            top: '12.4%',
             width: '4.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             PAN/LEVEL
           </span>
         </div>
@@ -115,12 +115,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '18.5%',
-            top: '12.0%',
+            top: '12.7%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             CTRL
           </span>
         </div>
@@ -148,12 +148,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '16.9%',
-            top: '22.9%',
+            top: '23.6%',
             width: '5.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             ASSIGN
           </span>
         </div>
@@ -181,12 +181,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '16.1%',
-            top: '28.2%',
+            top: '28.9%',
             width: '3.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             ZONE 9-16
           </span>
         </div>
@@ -214,12 +214,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '16.9%',
-            top: '27.5%',
+            top: '28.2%',
             width: '5.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             ZONE SELECT
           </span>
         </div>
@@ -250,7 +250,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             1
           </span>
         </div>
@@ -281,7 +281,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             2
           </span>
         </div>
@@ -312,7 +312,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             3
           </span>
         </div>
@@ -343,7 +343,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             4
           </span>
         </div>
@@ -374,7 +374,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             5
           </span>
         </div>
@@ -405,7 +405,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             6
           </span>
         </div>
@@ -436,7 +436,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             7
           </span>
         </div>
@@ -467,7 +467,7 @@ export default function ZoneSection({
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             8
           </span>
         </div>
@@ -495,12 +495,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '20.2%',
-            top: '24.0%',
+            top: '24.7%',
             width: '3.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             1
           </span>
         </div>
@@ -528,12 +528,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '22.4%',
-            top: '23.7%',
+            top: '24.4%',
             width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             2
           </span>
         </div>
@@ -561,12 +561,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '24.6%',
-            top: '23.7%',
+            top: '24.4%',
             width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             3
           </span>
         </div>
@@ -594,12 +594,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '27.1%',
-            top: '23.4%',
+            top: '24.1%',
             width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             4
           </span>
         </div>
@@ -627,12 +627,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '29.1%',
-            top: '24.2%',
+            top: '24.9%',
             width: '3.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             5
           </span>
         </div>
@@ -660,12 +660,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '31.5%',
-            top: '24.2%',
+            top: '24.9%',
             width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             6
           </span>
         </div>
@@ -693,12 +693,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '33.7%',
-            top: '24.6%',
+            top: '25.3%',
             width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             7
           </span>
         </div>
@@ -726,20 +726,20 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '35.8%',
-            top: '24.2%',
+            top: '24.9%',
             width: '3.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             8
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '21.40%',
-              top: '24.70%',
+              left: '21.70%',
+              top: '24.40%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -756,21 +756,21 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '21.4%',
-            top: '60.4%',
+            left: '21.7%',
+            top: '60.1%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             1
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '23.80%',
-              top: '23.30%',
+              left: '23.90%',
+              top: '23.80%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -787,21 +787,21 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '23.8%',
-            top: '59.0%',
+            left: '23.9%',
+            top: '59.5%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             2
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '25.80%',
-              top: '23.30%',
+              left: '26.10%',
+              top: '24.10%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -818,21 +818,21 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '25.8%',
-            top: '59.0%',
+            left: '26.1%',
+            top: '59.8%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             3
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '27.80%',
-              top: '22.40%',
+              left: '28.30%',
+              top: '23.80%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -849,21 +849,21 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '27.8%',
-            top: '58.1%',
+            left: '28.3%',
+            top: '59.5%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             4
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '30.30%',
-              top: '22.40%',
+              left: '30.40%',
+              top: '24.10%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -880,21 +880,21 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '30.3%',
-            top: '58.1%',
+            left: '30.4%',
+            top: '59.8%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             5
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '32.40%',
-              top: '22.20%',
+              left: '32.70%',
+              top: '24.10%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -911,13 +911,13 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '32.4%',
-            top: '57.9%',
+            left: '32.7%',
+            top: '59.8%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             6
           </span>
         </div>
@@ -925,7 +925,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: '34.80%',
-              top: '23.00%',
+              top: '23.30%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -943,20 +943,20 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '34.8%',
-            top: '58.7%',
+            top: '59.0%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             7
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '36.90%',
-              top: '22.70%',
+              left: '37.00%',
+              top: '23.00%',
               width: '2.00%',
               height: '35.50%',
             }}
@@ -973,13 +973,13 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '36.9%',
-            top: '58.4%',
+            left: '37.0%',
+            top: '58.7%',
             width: '2.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             8
           </span>
         </div>
@@ -1007,12 +1007,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '13.3%',
-            top: '34.4%',
+            top: '35.1%',
             width: '4.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             SPLIT
           </span>
         </div>
@@ -1040,12 +1040,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '15.2%',
-            top: '34.0%',
+            top: '34.7%',
             width: '4.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             CHORD MEMORY
           </span>
         </div>
@@ -1073,12 +1073,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '18.0%',
-            top: '35.1%',
+            top: '35.8%',
             width: '3.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             ARPEGGIO
           </span>
         </div>
@@ -1106,12 +1106,12 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '12.6%',
-            top: '41.5%',
+            top: '42.2%',
             width: '5.0%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             TRANSPOSE
           </span>
         </div>
@@ -1139,22 +1139,22 @@ export default function ZoneSection({
           className="absolute pointer-events-none"
           style={{
             left: '15.2%',
-            top: '41.7%',
+            top: '42.4%',
             width: '4.7%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             DOWN
           </span>
         </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '17.00%',
-              top: '42.70%',
-              width: '5.00%',
-              height: '3.30%',
+              left: '18.30%',
+              top: '42.40%',
+              width: '3.30%',
+              height: '4.40%',
             }}
           >
             <div>
@@ -1171,13 +1171,13 @@ export default function ZoneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '17.0%',
-            top: '41.5%',
-            width: '5.0%',
+            left: '18.3%',
+            top: '41.9%',
+            width: '3.3%',
             textAlign: 'center',
           }}
         >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 4 }}>
             UP
           </span>
         </div>
