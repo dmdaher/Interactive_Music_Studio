@@ -29,109 +29,174 @@ export default function PadSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '91.50%',
-              top: '111.30%',
+              left: '94.70%',
+              top: '6.70%',
               width: '2.30%',
-              height: '15.20%',
+              height: '15.00%',
             }}
           >
             <div>
               <PanelButton
                 id="sampling"
                 label=""
-                size="md"
+                size="lg"
                 active={getState('sampling').active}
                 highlighted={isHighlighted('sampling')}
                 onClick={() => onButtonClick?.('sampling')}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '94.7%',
+            top: '5.5%',
+            width: '2.3%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            SAMPLING
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '94.20%',
-              top: '111.30%',
+              left: '97.20%',
+              top: '6.60%',
               width: '2.30%',
-              height: '15.20%',
+              height: '15.10%',
             }}
           >
             <div>
               <PanelButton
                 id="pad-mode"
                 label=""
-                size="md"
+                size="lg"
                 active={getState('pad-mode').active}
                 highlighted={isHighlighted('pad-mode')}
                 onClick={() => onButtonClick?.('pad-mode')}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '97.2%',
+            top: '5.4%',
+            width: '2.3%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            PAD MODE
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '95.50%',
-              top: '111.30%',
+              left: '99.70%',
+              top: '6.60%',
               width: '2.30%',
-              height: '15.20%',
+              height: '15.10%',
             }}
           >
             <div>
               <PanelButton
                 id="clip-board"
                 label=""
-                size="md"
+                size="lg"
                 active={getState('clip-board').active}
                 highlighted={isHighlighted('clip-board')}
                 onClick={() => onButtonClick?.('clip-board')}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '99.7%',
+            top: '5.4%',
+            width: '2.3%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            CLIP BOARD
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '96.90%',
-              top: '111.30%',
-              width: '2.30%',
-              height: '15.20%',
+              left: '102.10%',
+              top: '6.60%',
+              width: '2.50%',
+              height: '15.10%',
             }}
           >
             <div>
               <PanelButton
                 id="bank"
                 label=""
-                size="md"
+                size="lg"
                 active={getState('bank').active}
                 highlighted={isHighlighted('bank')}
                 onClick={() => onButtonClick?.('bank')}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '102.1%',
+            top: '5.4%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            BANK
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '99.50%',
-              top: '111.30%',
-              width: '2.30%',
-              height: '15.20%',
+              left: '104.80%',
+              top: '6.60%',
+              width: '2.50%',
+              height: '15.10%',
             }}
           >
             <div>
               <PanelButton
                 id="hold"
                 label=""
-                size="md"
+                size="lg"
                 active={getState('hold').active}
                 highlighted={isHighlighted('hold')}
                 onClick={() => onButtonClick?.('hold')}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '104.8%',
+            top: '5.4%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            HOLD
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '91.50%',
-              top: '129.30%',
-              width: '2.30%',
+              left: '88.20%',
+              top: '28.80%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -142,15 +207,30 @@ export default function PadSection({
                 active={getState('pad-1').active}
                 highlighted={isHighlighted('pad-1')}
                 onClick={() => onButtonClick?.('pad-1')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '88.2%',
+            top: '27.6%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            1
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '94.20%',
-              top: '129.30%',
-              width: '2.30%',
+              left: '91.00%',
+              top: '28.80%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -161,15 +241,30 @@ export default function PadSection({
                 active={getState('pad-2').active}
                 highlighted={isHighlighted('pad-2')}
                 onClick={() => onButtonClick?.('pad-2')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '91.0%',
+            top: '27.6%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            2
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '96.80%',
-              top: '129.30%',
-              width: '2.30%',
+              left: '93.80%',
+              top: '28.80%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -180,15 +275,30 @@ export default function PadSection({
                 active={getState('pad-3').active}
                 highlighted={isHighlighted('pad-3')}
                 onClick={() => onButtonClick?.('pad-3')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '93.8%',
+            top: '27.6%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            3
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '99.50%',
-              top: '129.30%',
-              width: '2.30%',
+              left: '96.60%',
+              top: '28.80%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -199,15 +309,30 @@ export default function PadSection({
                 active={getState('pad-4').active}
                 highlighted={isHighlighted('pad-4')}
                 onClick={() => onButtonClick?.('pad-4')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '96.6%',
+            top: '27.6%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            4
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '91.50%',
-              top: '139.00%',
-              width: '2.30%',
+              left: '97.90%',
+              top: '34.30%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -218,15 +343,30 @@ export default function PadSection({
                 active={getState('pad-5').active}
                 highlighted={isHighlighted('pad-5')}
                 onClick={() => onButtonClick?.('pad-5')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '97.9%',
+            top: '33.1%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            5
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '94.20%',
-              top: '139.00%',
-              width: '2.30%',
+              left: '103.30%',
+              top: '34.30%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -237,15 +377,30 @@ export default function PadSection({
                 active={getState('pad-6').active}
                 highlighted={isHighlighted('pad-6')}
                 onClick={() => onButtonClick?.('pad-6')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '103.3%',
+            top: '33.1%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            6
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '96.80%',
-              top: '139.00%',
-              width: '2.30%',
+              left: '108.60%',
+              top: '34.30%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -256,15 +411,30 @@ export default function PadSection({
                 active={getState('pad-7').active}
                 highlighted={isHighlighted('pad-7')}
                 onClick={() => onButtonClick?.('pad-7')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '108.6%',
+            top: '33.1%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            7
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '99.50%',
-              top: '139.00%',
-              width: '2.30%',
+              left: '113.90%',
+              top: '34.30%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -275,15 +445,30 @@ export default function PadSection({
                 active={getState('pad-8').active}
                 highlighted={isHighlighted('pad-8')}
                 onClick={() => onButtonClick?.('pad-8')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '113.9%',
+            top: '33.1%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            8
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '91.50%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '100.60%',
+              top: '39.90%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -294,15 +479,30 @@ export default function PadSection({
                 active={getState('pad-9').active}
                 highlighted={isHighlighted('pad-9')}
                 onClick={() => onButtonClick?.('pad-9')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '100.6%',
+            top: '38.7%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            9
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '94.20%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '105.90%',
+              top: '39.90%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -313,15 +513,30 @@ export default function PadSection({
                 active={getState('pad-10').active}
                 highlighted={isHighlighted('pad-10')}
                 onClick={() => onButtonClick?.('pad-10')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '105.9%',
+            top: '38.7%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            10
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '96.90%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '111.30%',
+              top: '39.90%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -332,15 +547,30 @@ export default function PadSection({
                 active={getState('pad-11').active}
                 highlighted={isHighlighted('pad-11')}
                 onClick={() => onButtonClick?.('pad-11')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '111.3%',
+            top: '38.7%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            11
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '99.50%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '116.60%',
+              top: '39.90%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -351,15 +581,30 @@ export default function PadSection({
                 active={getState('pad-12').active}
                 highlighted={isHighlighted('pad-12')}
                 onClick={() => onButtonClick?.('pad-12')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '116.6%',
+            top: '38.7%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            12
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '91.50%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '88.20%',
+              top: '45.40%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -370,15 +615,30 @@ export default function PadSection({
                 active={getState('pad-13').active}
                 highlighted={isHighlighted('pad-13')}
                 onClick={() => onButtonClick?.('pad-13')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '88.2%',
+            top: '44.2%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            13
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '94.20%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '91.00%',
+              top: '45.40%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -389,15 +649,30 @@ export default function PadSection({
                 active={getState('pad-14').active}
                 highlighted={isHighlighted('pad-14')}
                 onClick={() => onButtonClick?.('pad-14')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '91.0%',
+            top: '44.2%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            14
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '96.90%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '93.80%',
+              top: '45.40%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -408,15 +683,30 @@ export default function PadSection({
                 active={getState('pad-15').active}
                 highlighted={isHighlighted('pad-15')}
                 onClick={() => onButtonClick?.('pad-15')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '93.8%',
+            top: '44.2%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            15
+          </span>
+        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '99.50%',
-              top: '147.30%',
-              width: '2.30%',
+              left: '96.60%',
+              top: '45.40%',
+              width: '2.50%',
               height: '7.80%',
             }}
           >
@@ -427,9 +717,24 @@ export default function PadSection({
                 active={getState('pad-16').active}
                 highlighted={isHighlighted('pad-16')}
                 onClick={() => onButtonClick?.('pad-16')}
+                width={27}
+                height={25}
               />
             </div>
           </div>
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: '96.6%',
+            top: '44.2%',
+            width: '2.5%',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
+            16
+          </span>
+        </div>
       </div>
     </motion.div>
   );

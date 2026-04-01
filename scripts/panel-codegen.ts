@@ -382,7 +382,8 @@ function escapeJsx(text: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\{/g, '&#123;')
-    .replace(/\}/g, '&#125;');
+    .replace(/\}/g, '&#125;')
+    .replace(/\n/g, ' ');  // Multi-line labels → single line in JSX props
 }
 
 // ─── Floating Label Helpers ──────────────────────────────────────────────────
@@ -1455,7 +1456,7 @@ ${controlEntries}
 }
 
 function escapeTs(text: string): string {
-  return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
 }
 
 // ─── Device Registry Update ─────────────────────────────────────────────────

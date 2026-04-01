@@ -28,9 +28,9 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '7.30%',
-              width: '5.30%',
+              left: '14.10%',
+              top: '58.00%',
+              width: '4.30%',
               height: '7.80%',
             }}
           >
@@ -38,32 +38,19 @@ export default function SceneSection({
               <PanelButton
                 id="scene-select"
                 label=""
-                size="sm"
+                size="md"
                 active={getState('scene-select').active}
                 highlighted={isHighlighted('scene-select')}
                 onClick={() => onButtonClick?.('scene-select')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: '56.7%',
-            top: '6.1%',
-            width: '5.3%',
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
-            SCENE SELECT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '18.40%',
-              width: '5.30%',
+              left: '14.10%',
+              top: '66.80%',
+              width: '4.30%',
               height: '7.80%',
             }}
           >
@@ -71,32 +58,19 @@ export default function SceneSection({
               <PanelButton
                 id="scene-chain"
                 label=""
-                size="sm"
+                size="md"
                 active={getState('scene-chain').active}
                 highlighted={isHighlighted('scene-chain')}
                 onClick={() => onButtonClick?.('scene-chain')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: '56.7%',
-            top: '17.2%',
-            width: '5.3%',
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
-            SCENE CHAIN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '25.20%',
-              width: '5.30%',
+              left: '14.10%',
+              top: '75.70%',
+              width: '4.30%',
               height: '7.80%',
             }}
           >
@@ -104,32 +78,19 @@ export default function SceneSection({
               <PanelButton
                 id="zone-view"
                 label=""
-                size="sm"
+                size="md"
                 active={getState('zone-view').active}
                 highlighted={isHighlighted('zone-view')}
                 onClick={() => onButtonClick?.('zone-view')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: '56.7%',
-            top: '24.0%',
-            width: '5.3%',
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
-            ZONE VIEW
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '34.10%',
-              width: '5.30%',
+              left: '14.10%',
+              top: '84.60%',
+              width: '4.30%',
               height: '7.80%',
             }}
           >
@@ -137,26 +98,13 @@ export default function SceneSection({
               <PanelButton
                 id="single-tone"
                 label=""
-                size="sm"
+                size="md"
                 active={getState('single-tone').active}
                 highlighted={isHighlighted('single-tone')}
                 onClick={() => onButtonClick?.('single-tone')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: '56.7%',
-            top: '32.9%',
-            width: '5.3%',
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider break-words" style={{ fontSize: 8 }}>
-            SINGLE TONE
-          </span>
-        </div>
       </div>
     </motion.div>
   );
