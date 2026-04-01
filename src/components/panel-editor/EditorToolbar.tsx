@@ -2,11 +2,13 @@
 
 import { useEditorStore } from './store';
 import type { SnapGrid } from './store';
+import VersionHistoryDropdown from './VersionHistoryDropdown';
 
 const SNAP_OPTIONS: SnapGrid[] = [4, 8, 16, 32];
 const ZOOM_STEP = 0.1;
 
 interface EditorToolbarProps {
+  deviceId: string;
   previewMode: boolean;
   buildStatus: 'idle' | 'building' | 'approved';
   onApproveAndBuild: () => void;
@@ -15,6 +17,7 @@ interface EditorToolbarProps {
 }
 
 export default function EditorToolbar({
+  deviceId,
   previewMode,
   buildStatus,
   onApproveAndBuild,
@@ -275,6 +278,9 @@ export default function EditorToolbar({
 
       {/* Spacer to push right-side buttons */}
       <div className="flex-1" />
+
+      {/* Version History */}
+      <VersionHistoryDropdown deviceId={deviceId} />
 
       {/* Report Issue */}
       {onReportIssue && (

@@ -124,6 +124,7 @@ function EditorShell({ deviceId }: { deviceId: string }) {
     <div className="flex flex-col h-full bg-[#0d0d1a]" data-tutorial="canvas">
       <EditorTutorial deviceId={deviceId} />
       <EditorToolbar
+        deviceId={deviceId}
         previewMode={previewMode}
         buildStatus={buildStatus}
         onApproveAndBuild={handleApproveAndBuild}
