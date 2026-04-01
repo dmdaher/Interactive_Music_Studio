@@ -74,8 +74,8 @@ export default function TouchDisplay({
               {/* Mock waveform pattern */}
               <polyline
                 points={Array.from({ length: 40 }, (_, i) => {
-                  const x = (i / 39) * 200;
-                  const y = 65 + Math.sin(i * 0.6) * 20 + Math.sin(i * 1.3) * 10;
+                  const x = Math.round((i / 39) * 200 * 100) / 100;
+                  const y = Math.round((65 + Math.sin(i * 0.6) * 20 + Math.sin(i * 1.3) * 10) * 100) / 100;
                   return `${x},${y}`;
                 }).join(' ')}
                 fill="none"
@@ -85,8 +85,8 @@ export default function TouchDisplay({
               {/* Mirror waveform below center */}
               <polyline
                 points={Array.from({ length: 40 }, (_, i) => {
-                  const x = (i / 39) * 200;
-                  const y = 65 - Math.sin(i * 0.6) * 20 - Math.sin(i * 1.3) * 10;
+                  const x = Math.round((i / 39) * 200 * 100) / 100;
+                  const y = Math.round((65 - Math.sin(i * 0.6) * 20 - Math.sin(i * 1.3) * 10) * 100) / 100;
                   return `${x},${y}`;
                 }).join(' ')}
                 fill="none"
