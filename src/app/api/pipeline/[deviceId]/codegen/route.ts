@@ -87,6 +87,16 @@ export async function POST(
           }
         }
 
+        // ── Step 3: De-overlap pass ──
+        // When the contractor positions at reduced scale (e.g., 40%), the visual
+        // controls are small but the containers are full-size. Adjacent controls
+        // whose visuals look fine at 40% can have overlapping containers at 100%.
+        // This pass pushes overlapping containers apart from their visual centers.
+        const controlScale = (editorData.controlScale as number) ?? 1;
+        if (controlScale < 1) {
+          deOverlapControls(manifest.controls, canvasW, canvasH);
+        }
+
         // ── Step 4: Backup manifest.json before overwriting ──
         const backupDir = path.join(pipelineDir, 'backups');
         if (!fs.existsSync(backupDir)) fs.mkdirSync(backupDir, { recursive: true });
@@ -99,8 +109,17 @@ export async function POST(
     }
 
     // ── Step 5: Run codegen ──
+    // Apply panelScale if set — multiplies panel dimensions for proportional scaling
+    const editorDataForScale = fs.existsSync(path.join(pipelineDir, 'manifest-editor.json'))
+      ? JSON.parse(fs.readFileSync(path.join(pipelineDir, 'manifest-editor.json'), 'utf-8'))
+      : {};
+    const panelScale = (editorDataForScale.panelScale as number) ?? 1;
+    const scaleArgs = panelScale !== 1
+      ? ` --scale ${panelScale}`
+      : '';
+
     const codegenOutput = execSync(
-      `npx tsx scripts/panel-codegen.ts ${deviceId}`,
+      `npx tsx scripts/panel-codegen.ts ${deviceId}${scaleArgs}`,
       {
         cwd: process.cwd(),
         stdio: 'pipe',
@@ -137,5 +156,88 @@ export async function POST(
       },
       { status: 500 }
     );
+  }
+}
+
+// ─── De-overlap ─────────────────────────────────────────────────────────────
+
+const ROW_TOLERANCE = 15; // px — controls within 15px Y center are same row
+const MIN_DEOVERLAP_GAP = 2; // px — minimum gap between containers after de-overlap
+
+/**
+ * Push overlapping control containers apart while preserving their centers
+ * as much as possible. Groups controls into rows by Y center, then within
+ * each row, redistributes X positions to eliminate overlaps.
+ *
+ * Operates on editorPosition (percentages) and the control's pixel w/h
+ * derived from those percentages × canvas size.
+ */
+function deOverlapControls(
+  controls: Array<{ id: string; editorPosition?: { x: number; y: number; w: number; h: number }; [k: string]: unknown }>,
+  canvasW: number,
+  canvasH: number,
+) {
+  // Convert percentage positions to pixels for overlap math
+  const withPx = controls
+    .filter(c => (c as any).editorPosition)
+    .map(c => {
+      const ep = (c as any).editorPosition as { x: number; y: number; w: number; h: number };
+      return {
+        control: c,
+        x: (ep.x / 100) * canvasW,
+        y: (ep.y / 100) * canvasH,
+        w: (ep.w / 100) * canvasW,
+        h: (ep.h / 100) * canvasH,
+        centerY: ((ep.y + ep.h / 2) / 100) * canvasH,
+      };
+    });
+
+  if (withPx.length < 2) return;
+
+  // Group into rows by Y center
+  const assigned = new Set<string>();
+  const rows: typeof withPx[] = [];
+
+  for (const item of withPx) {
+    if (assigned.has(item.control.id)) continue;
+    const row = [item];
+    assigned.add(item.control.id);
+
+    for (const other of withPx) {
+      if (assigned.has(other.control.id)) continue;
+      if (Math.abs(other.centerY - item.centerY) <= ROW_TOLERANCE) {
+        row.push(other);
+        assigned.add(other.control.id);
+      }
+    }
+    if (row.length >= 2) rows.push(row);
+  }
+
+  // For each row, sort by X and fix overlaps
+  for (const row of rows) {
+    row.sort((a, b) => a.x - b.x);
+
+    let changed = false;
+    for (let i = 1; i < row.length; i++) {
+      const prev = row[i - 1];
+      const curr = row[i];
+      const prevEnd = prev.x + prev.w;
+      const overlap = prevEnd + MIN_DEOVERLAP_GAP - curr.x;
+
+      if (overlap > 0) {
+        // Push current control rightward to eliminate overlap
+        curr.x += overlap;
+        changed = true;
+      }
+    }
+
+    // Write adjusted positions back as percentages
+    if (changed) {
+      for (const item of row) {
+        const ep = (item.control as any).editorPosition;
+        ep.x = Math.round((item.x / canvasW) * 1000) / 10;
+        // y, w, h unchanged
+      }
+    }
   }
 }

@@ -1535,13 +1535,22 @@ function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; p
         process.exit(1);
       }
       i++;
+    } else if (args[i] === '--scale' && args[i + 1]) {
+      const s = parseFloat(args[i + 1]);
+      if (isNaN(s) || s <= 0) {
+        console.error(`Invalid --scale value: ${args[i + 1]}`);
+        process.exit(1);
+      }
+      // Scale will be applied after computing base dimensions
+      (globalThis as any).__panelScale = s;
+      i++;
     } else if (!args[i].startsWith('--')) {
       deviceId = args[i];
     }
   }
 
   if (!deviceId) {
-    console.error('Usage: npx tsx scripts/panel-codegen.ts <device-id> [--dry-run] [--panel-width N] [--panel-height N]');
+    console.error('Usage: npx tsx scripts/panel-codegen.ts <device-id> [--dry-run] [--panel-width N] [--panel-height N] [--scale N]');
     process.exit(1);
   }
 
@@ -1566,6 +1575,14 @@ function main() {
     const aspect = dims.widthMm / dims.depthMm;
     panelHeight = Math.round(panelWidth / aspect);
     console.log(`  Device dimensions: ${dims.widthMm}mm x ${dims.depthMm}mm → ${panelWidth}x${panelHeight}px`);
+  }
+
+  // Apply panel scale if provided (proportionally scales entire instrument)
+  const panelScaleVal = (globalThis as any).__panelScale as number | undefined;
+  if (panelScaleVal && panelScaleVal !== 1) {
+    panelWidth = Math.round(panelWidth * panelScaleVal);
+    panelHeight = Math.round(panelHeight * panelScaleVal);
+    console.log(`  Panel scale: ${panelScaleVal}x → ${panelWidth}x${panelHeight}px`);
   }
 
   // Read templates

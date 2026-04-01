@@ -22,6 +22,8 @@ export interface CanvasSlice {
   photoOffsetX: number;
   photoOffsetY: number;
   photoScale: number;
+  cleanupGap: number;  // target gap in px for Clean Up (0 = auto/average)
+  panelScale: number;  // 0.5-2.0 — scales entire generated panel proportionally
 
   // Actions
   setZoom: (z: number) => void;
@@ -37,6 +39,8 @@ export interface CanvasSlice {
   setCanvasSize: (w: number, h: number) => void;
   setPhotoOffset: (x: number, y: number) => void;
   setPhotoScale: (s: number) => void;
+  setCleanupGap: (gap: number) => void;
+  setPanelScale: (s: number) => void;
 }
 
 // ─── Slice Creator ──────────────────────────────────────────────────────────
@@ -64,6 +68,8 @@ export const createCanvasSlice: StateCreator<
   photoOffsetX: 0,
   photoOffsetY: 0,
   photoScale: 1,
+  cleanupGap: 8,   // 8px default gap for Clean Up
+  panelScale: 1.0, // 100% default panel scale
 
   // Actions
   setZoom: (z) => set({ zoom: Math.max(0.1, Math.min(5, z)) }),
@@ -88,4 +94,8 @@ export const createCanvasSlice: StateCreator<
   setPhotoOffset: (x, y) => set({ photoOffsetX: x, photoOffsetY: y }),
 
   setPhotoScale: (s) => set({ photoScale: Math.max(0.1, Math.min(5, s)) }),
+
+  setCleanupGap: (gap) => set({ cleanupGap: Math.max(0, Math.min(32, gap)) }),
+
+  setPanelScale: (s) => set({ panelScale: Math.max(0.5, Math.min(2, s)) }),
 });

@@ -490,6 +490,8 @@ export function cleanupGeometry(
   controls: Record<string, ControlDef>,
   canvasWidth: number,
   canvasHeight: number,
+  controlScale?: number,
+  targetGap?: number,
 ): GeometryCleanupResult {
   // Build a mutable copy of all controls keyed by ID
   const cleanedControls = new Map<string, CleanedControl>();
@@ -535,8 +537,8 @@ export function cleanupGeometry(
     // Position cleanup (snapping, spacing) is fine; size changes are not.
 
     // ── Equal spacing: normalize gaps in rows/columns ──────────────
-    equalizeSpacing(sectionControls, 'x');
-    equalizeSpacing(sectionControls, 'y');
+    equalizeSpacing(sectionControls, 'x', targetGap, controlScale);
+    equalizeSpacing(sectionControls, 'y', targetGap, controlScale);
 
     // ── Center alignment: snap controls near section center ────────
     centerSnapControls(sectionControls, section);
@@ -733,7 +735,12 @@ function resolveOverlaps(controls: CleanedControl[]): void {
  * Equalize spacing: if controls are in a row (same Y) or column (same X),
  * and the gaps between them are similar, normalize to equal spacing.
  */
-function equalizeSpacing(controls: CleanedControl[], axis: 'x' | 'y'): void {
+function equalizeSpacing(
+  controls: CleanedControl[],
+  axis: 'x' | 'y',
+  targetGap?: number,
+  controlScale?: number,
+): void {
   const sizeKey = axis === 'x' ? 'w' : 'h';
   const centerKey = axis;
 
@@ -767,55 +774,65 @@ function equalizeSpacing(controls: CleanedControl[], axis: 'x' | 'y'): void {
     // Sort by position on the primary axis
     group.sort((a, b) => a[centerKey] - b[centerKey]);
 
-    // Compute gaps between adjacent controls
+    // Compute gaps between adjacent controls.
+    // When controlScale < 1, use VISUAL edges (size × scale) for gap measurement
+    // so the cleanup produces visually correct spacing at the working scale.
+    const scale = controlScale ?? 1;
+    const visualSize = (c: CleanedControl) => c[sizeKey] * scale;
+    const visualOffset = (c: CleanedControl) => c[sizeKey] * (1 - scale) / 2; // unused space on each side
+
     const gaps: number[] = [];
     for (let i = 1; i < group.length; i++) {
-      const prevEnd = group[i - 1][centerKey] + group[i - 1][sizeKey];
-      const nextStart = group[i][centerKey];
-      gaps.push(nextStart - prevEnd);
+      // Visual end of previous control = position + full size - unused trailing space
+      const prevVisualEnd = group[i - 1][centerKey] + group[i - 1][sizeKey] - visualOffset(group[i - 1]);
+      // Visual start of next control = position + unused leading space
+      const nextVisualStart = group[i][centerKey] + visualOffset(group[i]);
+      gaps.push(nextVisualStart - prevVisualEnd);
     }
 
     if (gaps.length === 0) continue;
 
-    // Check if gaps are similar — two checks:
-    // 1. Absolute: all gaps within GAP_TOLERANCE pixels of average
-    // 2. Proportional: all gaps within GAP_PROPORTIONAL_TOLERANCE of average
-    // Either passing means the row/column gets equalized.
+    // If a target gap is provided, use it directly instead of averaging.
+    // Otherwise check if existing gaps are similar enough to equalize.
     const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
-    const allSimilarAbs = gaps.every(g => Math.abs(g - avgGap) <= GAP_TOLERANCE);
-    const allSimilarProp = avgGap > 0 && gaps.every(g => Math.abs(g - avgGap) / avgGap <= GAP_PROPORTIONAL_TOLERANCE);
-    const allSimilar = allSimilarAbs || allSimilarProp;
 
-    if (allSimilar && avgGap >= 0) {
-      // Normalize: redistribute controls with equal gaps
-      const roundedGap = Math.round(avgGap);
+    // Determine the gap to use for redistribution
+    let useGap: number | null = null;
+
+    if (targetGap != null && targetGap > 0) {
+      // Explicit target — always redistribute
+      useGap = targetGap;
+    } else {
+      // Auto mode — equalize if gaps are similar
+      const allSimilarAbs = gaps.every(g => Math.abs(g - avgGap) <= GAP_TOLERANCE);
+      const allSimilarProp = avgGap > 0 && gaps.every(g => Math.abs(g - avgGap) / avgGap <= GAP_PROPORTIONAL_TOLERANCE);
+      if ((allSimilarAbs || allSimilarProp) && avgGap >= 0) {
+        useGap = Math.round(avgGap);
+      }
+    }
+
+    if (useGap != null && useGap >= 0) {
+      // Redistribute controls with equal visual gaps.
+      // Position each control so its visual edge is `useGap` from the previous.
       let currentPos = group[0][centerKey]; // keep first control's position
       for (let i = 1; i < group.length; i++) {
-        currentPos = group[i - 1][centerKey] + group[i - 1][sizeKey] + roundedGap;
-        group[i][centerKey] = currentPos;
+        // Previous visual end + gap = next visual start
+        // next visual start = next position + visualOffset
+        // So: next position = prev visual end + gap - visualOffset
+        const prevVisEnd = currentPos + group[i - 1][sizeKey] - visualOffset(group[i - 1]);
+        const nextPos = prevVisEnd + useGap - visualOffset(group[i]);
+        group[i][centerKey] = Math.round(nextPos);
+        currentPos = group[i][centerKey];
       }
     } else if (avgGap < 0) {
-      // Overlapping controls — redistribute with equal positive gaps.
-      // Calculate the total span and content to find room for even spacing.
-      const totalContent = group.reduce((sum, c) => sum + c[sizeKey], 0);
-      const spanStart = group[0][centerKey];
-      const spanEnd = group[group.length - 1][centerKey] + group[group.length - 1][sizeKey];
-      const availableSpace = spanEnd - spanStart;
-
-      if (availableSpace >= totalContent + (group.length - 1) * MIN_GAP) {
-        // Enough room in current span — distribute evenly within it
-        const gap = Math.round((availableSpace - totalContent) / (group.length - 1));
-        let pos = spanStart;
-        for (const ctrl of group) {
-          ctrl[centerKey] = pos;
-          pos += ctrl[sizeKey] + gap;
-        }
-      } else {
-        // Not enough room — expand rightward from first control with MIN_GAP
-        let pos = group[0][centerKey];
-        for (const ctrl of group) {
-          ctrl[centerKey] = pos;
-          pos += ctrl[sizeKey] + MIN_GAP;
+      // Overlapping controls — redistribute using visual sizes with MIN_GAP.
+      const overlapGap = targetGap ?? MIN_GAP;
+      let pos = group[0][centerKey];
+      for (let i = 0; i < group.length; i++) {
+        group[i][centerKey] = Math.round(pos);
+        if (i < group.length - 1) {
+          const prevVisEnd = pos + group[i][sizeKey] - visualOffset(group[i]);
+          pos = prevVisEnd + overlapGap - visualOffset(group[i + 1]);
         }
       }
     }

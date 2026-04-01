@@ -47,7 +47,9 @@ export function useAutoSave(deviceId: string) {
           state.sections === prevState.sections &&
           state.controls === prevState.controls &&
           state.controlScale === prevState.controlScale &&
-          state.zoom === prevState.zoom
+          state.zoom === prevState.zoom &&
+          state.cleanupGap === prevState.cleanupGap &&
+          state.panelScale === prevState.panelScale
         ) {
           return;
         }
@@ -63,7 +65,9 @@ export function useAutoSave(deviceId: string) {
         // triggering auto-save and clobbering fresh pipeline data.
         // Canvas settings (controlScale, zoom) are always user-initiated — bypass guard.
         const canvasChanged = state.controlScale !== prevState.controlScale ||
-          state.zoom !== prevState.zoom;
+          state.zoom !== prevState.zoom ||
+          state.cleanupGap !== prevState.cleanupGap ||
+          state.panelScale !== prevState.panelScale;
         if (!canvasChanged && !useEditorStore.getState().hasUserEdited) {
           return;
         }
@@ -71,11 +75,11 @@ export function useAutoSave(deviceId: string) {
         // Debounce the save
         if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
         saveTimerRef.current = setTimeout(() => {
-          const { sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom } = useEditorStore.getState();
+          const { sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom, cleanupGap, panelScale } = useEditorStore.getState();
           fetch(`/api/pipeline/${deviceId}/manifest`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom }),
+            body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom, cleanupGap, panelScale }),
           }).catch(() => {
             // Silent fail — auto-save is best-effort
           });

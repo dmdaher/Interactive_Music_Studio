@@ -44,6 +44,10 @@ export default function EditorToolbar({
   const setPhotoOpacity = useEditorStore((s) => s.setPhotoOpacity);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
+  const cleanupGap = useEditorStore((s) => s.cleanupGap);
+  const setCleanupGap = useEditorStore((s) => s.setCleanupGap);
+  const panelScale = useEditorStore((s) => s.panelScale);
+  const setPanelScale = useEditorStore((s) => s.setPanelScale);
 
   const zoomPercent = Math.round(zoom * 100);
 
@@ -267,7 +271,19 @@ export default function EditorToolbar({
         ?
       </button>
 
-      {/* Clean Up + Approve & Build */}
+      {/* Gap + Clean Up + Panel Scale + Approve & Build */}
+      <div className="flex items-center gap-1">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">Gap</label>
+        <input
+          type="number"
+          min={0}
+          max={32}
+          value={cleanupGap}
+          onChange={(e) => setCleanupGap(Number(e.target.value))}
+          className="h-6 w-10 rounded border border-gray-700 bg-gray-900 px-1 text-xs text-gray-300 outline-none focus:border-blue-500"
+          title="Gap between controls in pixels (used by Clean Up)"
+        />
+      </div>
       <button
         onClick={onCleanUp}
         disabled={previewMode || buildStatus === 'building'}
@@ -276,6 +292,28 @@ export default function EditorToolbar({
       >
         Clean Up
       </button>
+
+      {/* Divider */}
+      <div className="h-5 w-px bg-gray-800" />
+
+      {/* Panel Scale */}
+      <div className="flex items-center gap-1">
+        <label className="text-[10px] uppercase tracking-wider text-gray-500">Panel</label>
+        <input
+          type="range"
+          min={50}
+          max={200}
+          step={10}
+          value={Math.round(panelScale * 100)}
+          onChange={(e) => setPanelScale(Number(e.target.value) / 100)}
+          className="h-1 w-14 cursor-pointer accent-blue-500"
+          title={`Panel Scale: ${Math.round(panelScale * 100)}% — scales entire generated panel`}
+        />
+        <span className="w-8 text-center text-[10px] text-gray-400">
+          {Math.round(panelScale * 100)}%
+        </span>
+      </div>
+
       <button
         data-tutorial="approve"
         onClick={onApproveAndBuild}

@@ -34,13 +34,20 @@ function EditorShell({ deviceId }: { deviceId: string }) {
   // ── Clean Up: optional inference pass (snap rows, equalize spacing) ──────
   const handleCleanUp = useCallback(() => {
     const state = useEditorStore.getState();
-    const { sections, controls, canvasWidth, canvasHeight } = state;
+    const { sections, controls, canvasWidth, canvasHeight, controlScale } = state;
+    // Read cleanupGap if available (Part 3 adds this to store)
+    const cleanupGap = (state as any).cleanupGap as number | undefined;
 
     // Push snapshot so Cmd+Z reverts the cleanup
     state.pushSnapshot();
 
     // Run geometry cleanup (snap alignment, equalize spacing)
-    const cleaned = cleanupGeometry(sections, controls, canvasWidth, canvasHeight);
+    // Pass controlScale so spacing uses visual sizes, not container sizes.
+    // Pass cleanupGap so the contractor's target gap is used instead of averaging.
+    const cleaned = cleanupGeometry(
+      sections, controls, canvasWidth, canvasHeight,
+      controlScale, cleanupGap && cleanupGap > 0 ? cleanupGap : undefined,
+    );
 
     // Apply cleaned positions — sizes are NOT modified (sacred)
     const updatedControls = { ...controls };
@@ -69,6 +76,8 @@ function EditorShell({ deviceId }: { deviceId: string }) {
   const handleApproveAndBuild = useCallback(async () => {
     const state = useEditorStore.getState();
     const { sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom } = state;
+    const cleanupGap = (state as any).cleanupGap as number | undefined;
+    const panelScale = (state as any).panelScale as number | undefined;
     setBuildStatus('building');
     setCodegenError(null);
 
@@ -77,7 +86,7 @@ function EditorShell({ deviceId }: { deviceId: string }) {
       await fetch(`/api/pipeline/${deviceId}/manifest`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom }),
+        body: JSON.stringify({ sections, controls, canvasWidth, canvasHeight, _manifestVersion, controlScale, zoom, cleanupGap, panelScale }),
       });
 
       // Trigger codegen directly — no cleanup, no inference.
@@ -247,12 +256,18 @@ export default function PanelEditor({ deviceId }: PanelEditorProps) {
               canvasUpdate.canvasWidth = data.canvasWidth;
               canvasUpdate.canvasHeight = data.canvasHeight;
             }
-            // Restore canvas settings (controlScale, zoom) if saved
+            // Restore canvas settings if saved
             if (typeof data.controlScale === 'number') {
               canvasUpdate.controlScale = data.controlScale;
             }
             if (typeof data.zoom === 'number') {
               canvasUpdate.zoom = data.zoom;
+            }
+            if (typeof data.cleanupGap === 'number') {
+              canvasUpdate.cleanupGap = data.cleanupGap;
+            }
+            if (typeof data.panelScale === 'number') {
+              canvasUpdate.panelScale = data.panelScale;
             }
 
             useEditorStore.setState({
