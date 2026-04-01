@@ -124,10 +124,13 @@ export default function ControlTypeSelector({
       </label>
       <div className="grid grid-cols-3 gap-1.5">
         {CONTROL_TYPES.map((type) => (
-          <button
+          <div
             key={type}
+            role="button"
+            tabIndex={0}
             onClick={() => handleSelect(type)}
-            className={`flex flex-col items-center gap-0.5 rounded border p-1.5 transition-colors ${
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleSelect(type); }}
+            className={`flex flex-col items-center gap-0.5 rounded border p-1.5 transition-colors cursor-pointer ${
               currentType === type
                 ? 'border-blue-500 bg-blue-500/10'
                 : 'border-gray-700 bg-gray-900 hover:border-gray-600 hover:bg-gray-800'
@@ -138,7 +141,7 @@ export default function ControlTypeSelector({
               <TypeThumbnail type={type} />
             </div>
             <span className="text-[9px] capitalize text-gray-400">{type}</span>
-          </button>
+          </div>
         ))}
       </div>
     </div>
