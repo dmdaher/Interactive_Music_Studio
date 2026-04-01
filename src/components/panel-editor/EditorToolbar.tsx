@@ -58,148 +58,84 @@ export default function EditorToolbar({
 
   const zoomPercent = Math.round(zoom * 100);
 
+  // Shared styles
+  const toggleBtn = (active: boolean) =>
+    `flex h-6 items-center rounded px-1.5 text-[10px] transition-colors whitespace-nowrap ${
+      active
+        ? 'bg-blue-500/20 text-blue-400'
+        : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
+    }`;
+  const iconBtn =
+    'flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30';
+  const divider = <div className="h-5 w-px bg-gray-800 flex-shrink-0" />;
+
   return (
-    <div className="flex h-10 items-center gap-3 border-b border-gray-800 bg-[#0d0d1a] px-3">
+    <div className="flex h-10 items-center gap-1 border-b border-gray-800 bg-[#0d0d1a] px-2">
+
+      {/* ── LEFT: Device + View ────────────────────────────────── */}
+
       {/* Device name */}
       {deviceName && (
-        <div className="flex items-center gap-1.5 border-r border-gray-700 pr-3 mr-1">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+        <div className="flex items-center gap-1 border-r border-gray-700 pr-2 mr-0.5 flex-shrink-0">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">
             {manufacturer}
           </span>
-          <span className="text-[11px] font-semibold text-gray-200">
+          <span className="text-[10px] font-semibold text-gray-300 whitespace-nowrap">
             {deviceName}
           </span>
         </div>
       )}
-      {/* Snap Grid Selector */}
-      <div className="flex items-center gap-1.5">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">
-          Snap
-        </label>
-        <select
-          value={snapGrid}
-          onChange={(e) => setSnapGrid(Number(e.target.value) as SnapGrid)}
-          className="h-6 rounded border border-gray-700 bg-gray-900 px-1.5 text-xs text-gray-300 outline-none focus:border-blue-500"
-          title="Snap Grid Size"
-        >
-          {SNAP_OPTIONS.map((v) => (
-            <option key={v} value={v}>
-              {v}px
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Divider */}
-      <div className="h-5 w-px bg-gray-800" />
-
-      {/* Zoom Controls */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={() => setZoom(zoom - ZOOM_STEP)}
-          disabled={zoom <= 0.1}
-          className="flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Zoom Out (Cmd+-)"
-        >
-          -
-        </button>
-        <span className="w-10 text-center text-xs text-gray-400">
-          {zoomPercent}%
-        </span>
-        <button
-          onClick={() => setZoom(zoom + ZOOM_STEP)}
-          disabled={zoom >= 5}
-          className="flex h-6 w-6 items-center justify-center rounded text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Zoom In (Cmd+=)"
-        >
-          +
-        </button>
-        <button
-          onClick={() => setZoom(1)}
-          className="ml-1 flex h-6 items-center rounded px-1.5 text-[10px] text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-300"
-          title="Reset Zoom"
-        >
-          Reset
-        </button>
-      </div>
-
-      {/* Divider */}
-      <div className="h-5 w-px bg-gray-800" />
 
       {/* Undo / Redo */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={undo}
-          disabled={past.length === 0}
-          className="flex h-6 items-center rounded px-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Undo (Cmd+Z)"
-        >
-          Undo
-        </button>
-        <button
-          onClick={redo}
-          disabled={future.length === 0}
-          className="flex h-6 items-center rounded px-1.5 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30 disabled:hover:bg-transparent"
-          title="Redo (Cmd+Shift+Z)"
-        >
-          Redo
-        </button>
+      <button onClick={undo} disabled={past.length === 0} className={iconBtn} title="Undo (Cmd+Z)">
+        <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor"><path d="M4.5 2L1 5.5 4.5 9V6.5C8.5 6.5 11 8 12.5 11c-1-3.5-3.5-6-8-6.5V2z" /></svg>
+      </button>
+      <button onClick={redo} disabled={future.length === 0} className={iconBtn} title="Redo (Cmd+Shift+Z)">
+        <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 2L15 5.5 11.5 9V6.5C7.5 6.5 5 8 3.5 11c1-3.5 3.5-6 8-6.5V2z" /></svg>
+      </button>
+
+      {divider}
+
+      {/* Snap */}
+      <select
+        value={snapGrid}
+        onChange={(e) => setSnapGrid(Number(e.target.value) as SnapGrid)}
+        className="h-6 rounded border border-gray-700 bg-gray-900 px-1 text-[10px] text-gray-300 outline-none"
+        title="Snap Grid"
+      >
+        {SNAP_OPTIONS.map((v) => (
+          <option key={v} value={v}>{v}px</option>
+        ))}
+      </select>
+
+      {/* Zoom */}
+      <div className="flex items-center gap-0.5">
+        <button onClick={() => setZoom(zoom - ZOOM_STEP)} disabled={zoom <= 0.1} className={iconBtn} title="Zoom Out">-</button>
+        <span className="w-8 text-center text-[10px] text-gray-400">{zoomPercent}%</span>
+        <button onClick={() => setZoom(zoom + ZOOM_STEP)} disabled={zoom >= 5} className={iconBtn} title="Zoom In">+</button>
       </div>
 
-      {/* Divider */}
-      <div className="h-5 w-px bg-gray-800" />
-
-      {/* Control Scale Slider */}
-      <div className="flex items-center gap-1.5" data-tutorial="scale">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">
-          Scale
-        </label>
+      {/* Scale */}
+      <div className="flex items-center gap-0.5" data-tutorial="scale">
         <input
-          type="range"
-          min={30}
-          max={100}
-          step={10}
+          type="range" min={30} max={100} step={10}
           value={Math.round(controlScale * 100)}
           onChange={(e) => setControlScale(Number(e.target.value) / 100)}
-          className="h-1 w-16 cursor-pointer accent-blue-500"
-          title="Control Scale — shrink controls for positioning on photo ([ / ])"
+          className="h-1 w-12 cursor-pointer accent-blue-500"
+          title="Control Scale ([ / ])"
         />
-        <span className="w-8 text-center text-[10px] text-gray-400">
-          {Math.round(controlScale * 100)}%
-        </span>
+        <span className="w-6 text-center text-[9px] text-gray-500">{Math.round(controlScale * 100)}%</span>
       </div>
 
-      {/* Divider */}
-      <div className="h-5 w-px bg-gray-800" />
+      {divider}
 
-      {/* Grid Toggle */}
-      <button
-        data-tutorial="grid"
-        onClick={toggleGrid}
-        className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
-          showGrid
-            ? 'bg-blue-500/20 text-blue-400'
-            : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
-        }`}
-        title="Toggle Grid (G)"
-      >
-        <span className="text-[10px]">Grid</span>
-      </button>
+      {/* ── MIDDLE: Overlays ───────────────────────────────────── */}
 
-      {/* Labels Toggle */}
-      <button
-        onClick={toggleLabels}
-        className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
-          showLabels
-            ? 'bg-blue-500/20 text-blue-400'
-            : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
-        }`}
-        title="Toggle Labels (T)"
-      >
-        <span className="text-[10px]">Labels</span>
-      </button>
+      <button data-tutorial="grid" onClick={toggleGrid} className={toggleBtn(showGrid)} title="Grid (G)">Grid</button>
 
-      {/* Label Size — set all labels to the same font size */}
+      <button onClick={toggleLabels} className={toggleBtn(showLabels)} title="Labels (T)">Labels</button>
+
+      {/* Label size (only when labels visible) */}
       {showLabels && (
         <select
           value=""
@@ -209,165 +145,119 @@ export default function EditorToolbar({
             pushSnapshot();
             setAllLabelFontSize(val === 'auto' ? undefined : Number(val));
           }}
-          className="h-6 rounded border border-gray-700 bg-gray-900 px-1 text-[10px] text-gray-400 outline-none focus:border-blue-500"
+          className="h-6 rounded border border-gray-700 bg-gray-900 px-0.5 text-[9px] text-gray-400 outline-none"
           title="Set all label sizes"
         >
-          <option value="">Size</option>
+          <option value="">Sz</option>
           <option value="auto">Auto</option>
-          <option value="5">5px</option>
-          <option value="6">6px</option>
-          <option value="7">7px</option>
-          <option value="8">8px</option>
-          <option value="9">9px</option>
-          <option value="10">10px</option>
-          <option value="12">12px</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
         </select>
       )}
 
-      {/* Photo Overlay Toggle + Opacity */}
-      <div className="flex items-center gap-1.5" data-tutorial="photo">
-        <button
-          onClick={togglePhoto}
-          className={`flex h-6 items-center gap-1 rounded px-2 text-xs transition-colors ${
-            showPhoto
-              ? 'bg-blue-500/20 text-blue-400'
-              : 'text-gray-500 hover:bg-gray-800 hover:text-gray-300'
-          }`}
-          title="Toggle Photo Overlay (P)"
-        >
-          <span className="text-[10px]">Photo</span>
-        </button>
+      {/* Photo */}
+      <div className="flex items-center gap-1" data-tutorial="photo">
+        <button onClick={togglePhoto} className={toggleBtn(showPhoto)} title="Photo (P)">Photo</button>
         {showPhoto && (
           <>
             <div className="flex rounded overflow-hidden border border-gray-700">
               <button
                 onClick={() => setPhotoMode('side-by-side')}
-                className={`px-1.5 py-0.5 text-[9px] ${
-                  photoMode === 'side-by-side'
-                    ? 'bg-blue-500/20 text-blue-400'
-                    : 'bg-gray-900 text-gray-500 hover:text-gray-300'
-                }`}
-                title="Side-by-side view"
-              >
-                Side
-              </button>
+                className={`px-1 py-0.5 text-[8px] ${photoMode === 'side-by-side' ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-900 text-gray-500'}`}
+              >Side</button>
               <button
                 onClick={() => setPhotoMode('overlay')}
-                className={`px-1.5 py-0.5 text-[9px] ${
-                  photoMode === 'overlay'
-                    ? 'bg-blue-500/20 text-blue-400'
-                    : 'bg-gray-900 text-gray-500 hover:text-gray-300'
-                }`}
-                title="Overlay on canvas"
-              >
-                Over
-              </button>
+                className={`px-1 py-0.5 text-[8px] ${photoMode === 'overlay' ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-900 text-gray-500'}`}
+              >Over</button>
             </div>
             {photoMode === 'overlay' && (
               <input
-                type="range"
-                min={0}
-                max={100}
+                type="range" min={0} max={100}
                 value={Math.round(photoOpacity * 100)}
                 onChange={(e) => setPhotoOpacity(Number(e.target.value) / 100)}
-                className="h-1 w-16 cursor-pointer accent-blue-500"
-                title={`Photo Opacity: ${Math.round(photoOpacity * 100)}%`}
+                className="h-1 w-12 cursor-pointer accent-blue-500"
+                title={`Opacity: ${Math.round(photoOpacity * 100)}%`}
               />
             )}
           </>
         )}
       </div>
 
-      {/* Spacer to push right-side buttons */}
-      <div className="flex-1" />
+      {/* ── SPACER ─────────────────────────────────────────────── */}
+      <div className="flex-1 min-w-2" />
 
-      {/* Version History */}
+      {/* ── RIGHT: Actions ─────────────────────────────────────── */}
+
+      {/* History + Report + Help */}
       <VersionHistoryDropdown deviceId={deviceId} onRestore={onRestoreVersion} />
 
-      {/* Report Issue */}
       {onReportIssue && (
-        <button
-          data-tutorial="report"
-          onClick={onReportIssue}
-          className="flex h-7 items-center gap-1 rounded px-2 text-xs text-gray-400 transition-colors hover:bg-gray-800 hover:text-gray-200"
-          title="Report an issue (missing control, wrong type, etc.)"
-        >
-          <span>⚑</span>
-          <span>Report Issue</span>
+        <button onClick={onReportIssue} className={iconBtn} title="Report Issue" data-tutorial="report">
+          <span className="text-[10px]">⚑</span>
         </button>
       )}
 
-      {/* Help — replay tutorial */}
       <button
         onClick={() => window.dispatchEvent(new Event('editor-tutorial-replay'))}
-        className="flex h-7 w-7 items-center justify-center rounded text-xs text-gray-500 transition-colors hover:bg-gray-800 hover:text-gray-200"
-        title="Replay editor tutorial"
-      >
-        ?
-      </button>
+        className={iconBtn}
+        title="Help"
+      >?</button>
 
-      {/* Gap + Clean Up + Panel Scale + Approve & Build */}
-      <div className="flex items-center gap-1">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">Gap</label>
+      {divider}
+
+      {/* Gap + Clean Up */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        <label className="text-[9px] text-gray-500">Gap</label>
         <input
-          type="number"
-          min={0}
-          max={32}
+          type="number" min={0} max={32}
           value={cleanupGap}
           onChange={(e) => setCleanupGap(Number(e.target.value))}
-          className="h-6 w-10 rounded border border-gray-700 bg-gray-900 px-1 text-xs text-gray-300 outline-none focus:border-blue-500"
-          title="Gap between controls in pixels (used by Clean Up)"
+          className="h-6 w-8 rounded border border-gray-700 bg-gray-900 px-1 text-[10px] text-gray-300 outline-none focus:border-blue-500"
+          title="Gap px (used by Clean Up)"
         />
+        <button
+          onClick={onCleanUp}
+          disabled={previewMode || buildStatus === 'building'}
+          className="flex h-7 items-center rounded px-2 text-[10px] font-medium whitespace-nowrap transition-colors border border-blue-600 bg-blue-700/30 text-blue-300 hover:bg-blue-700/50 disabled:opacity-30"
+          title="Clean Up — snap rows, equalize spacing (Cmd+Z to undo)"
+        >Clean Up</button>
       </div>
-      <button
-        onClick={onCleanUp}
-        disabled={previewMode || buildStatus === 'building'}
-        className="flex h-7 items-center rounded px-3 text-xs font-medium transition-colors border border-blue-600 bg-blue-700/30 text-blue-300 hover:bg-blue-700/50 disabled:opacity-30 disabled:hover:bg-transparent"
-        title="Clean Up — snap rows, equalize spacing (Cmd+Z to undo)"
-      >
-        Clean Up
-      </button>
 
-      {/* Divider */}
-      <div className="h-5 w-px bg-gray-800" />
+      {divider}
 
-      {/* Panel Scale */}
-      <div className="flex items-center gap-1">
-        <label className="text-[10px] uppercase tracking-wider text-gray-500">Panel</label>
+      {/* Panel Scale + Approve & Build */}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        <label className="text-[9px] text-gray-500">Panel</label>
         <input
-          type="range"
-          min={50}
-          max={200}
-          step={10}
+          type="range" min={50} max={200} step={10}
           value={Math.round(panelScale * 100)}
           onChange={(e) => setPanelScale(Number(e.target.value) / 100)}
-          className="h-1 w-14 cursor-pointer accent-blue-500"
-          title={`Panel Scale: ${Math.round(panelScale * 100)}% — scales entire generated panel`}
+          className="h-1 w-10 cursor-pointer accent-blue-500"
+          title={`Panel Scale: ${Math.round(panelScale * 100)}%`}
         />
-        <span className="w-8 text-center text-[10px] text-gray-400">
-          {Math.round(panelScale * 100)}%
-        </span>
+        <span className="text-[9px] text-gray-500 w-6">{Math.round(panelScale * 100)}%</span>
+        <button
+          data-tutorial="approve"
+          onClick={onApproveAndBuild}
+          disabled={previewMode || buildStatus === 'building'}
+          className={`flex h-7 items-center rounded px-2 text-[10px] font-medium whitespace-nowrap transition-colors ${
+            previewMode
+              ? 'border border-green-700 bg-green-700/20 text-green-400 cursor-default'
+              : buildStatus === 'building'
+                ? 'border border-gray-600 bg-gray-800 text-gray-400 cursor-wait'
+                : 'border border-green-600 bg-green-700/30 text-green-300 hover:bg-green-700/50'
+          }`}
+          title="Approve & Build Panel"
+        >
+          {buildStatus === 'building'
+            ? 'Building...'
+            : previewMode
+              ? 'Preview'
+              : 'Approve & Build'}
+        </button>
       </div>
-
-      <button
-        data-tutorial="approve"
-        onClick={onApproveAndBuild}
-        disabled={previewMode || buildStatus === 'building'}
-        className={`flex h-7 items-center rounded px-3 text-xs font-medium transition-colors ${
-          previewMode
-            ? 'border border-green-700 bg-green-700/20 text-green-400 cursor-default'
-            : buildStatus === 'building'
-              ? 'border border-gray-600 bg-gray-800 text-gray-400 cursor-wait'
-              : 'border border-green-600 bg-green-700/30 text-green-300 hover:bg-green-700/50'
-        }`}
-        title="Approve & Build Panel"
-      >
-        {buildStatus === 'building'
-          ? 'Building panel...'
-          : previewMode
-            ? 'In Preview'
-            : 'Approve & Build'}
-      </button>
     </div>
   );
 }

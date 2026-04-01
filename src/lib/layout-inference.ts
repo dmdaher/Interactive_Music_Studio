@@ -463,8 +463,8 @@ const MIN_GAP = 4;
 /** Gap normalization tolerance: gaps within this many pixels are normalized.
  *  Also used as a proportional fallback — if all gaps are within
  *  GAP_PROPORTIONAL_TOLERANCE of average, they're equalized. */
-const GAP_TOLERANCE = 15;
-const GAP_PROPORTIONAL_TOLERANCE = 0.4; // 40% of average gap
+const GAP_TOLERANCE = 8;
+const GAP_PROPORTIONAL_TOLERANCE = 0.25; // 25% of average gap
 
 /** Edge padding snap tolerance: controls near section edge snap to consistent padding */
 const EDGE_SNAP_TOLERANCE = 10;
