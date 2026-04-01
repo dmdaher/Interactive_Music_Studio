@@ -78,9 +78,13 @@ function renderFloatingLabel(
   control: ControlDef,
   relX: number,
   relY: number,
+  scale: number = 1,
 ): React.ReactNode {
   if (!shouldShowFloatingLabel(control)) return null;
 
+  // Use visual dimensions (scaled) for label positioning
+  const visW = control.w * scale;
+  const visH = control.h * scale;
   const pos = control.labelPosition;
   const fontSize = labelFontSize(control);
   const effectivePos = control.labelDisplay ?? pos;
@@ -92,8 +96,8 @@ function renderFloatingLabel(
         className="absolute pointer-events-none"
         style={{
           left: relX,
-          top: relY + control.h + 2,
-          width: control.w,
+          top: relY + visH + 2,
+          width: visW,
           zIndex: 1,
         }}
       >
@@ -165,26 +169,25 @@ function renderFloatingLabel(
     case 'above':
       labelStyle.left = relX;
       labelStyle.top = relY - totalLabelH - 2;
-      labelStyle.width = control.w;
+      labelStyle.width = visW;
       labelStyle.textAlign = 'center';
       break;
     case 'below':
     default:
       labelStyle.left = relX;
-      labelStyle.top = relY + control.h + 2;
-      labelStyle.width = control.w;
+      labelStyle.top = relY + visH + 2;
+      labelStyle.width = visW;
       labelStyle.textAlign = 'center';
       break;
     case 'left':
-      // Position to the left of the control, vertically centered
-      labelStyle.top = relY + (control.h - totalLabelH) / 2;
+      labelStyle.top = relY + (visH - totalLabelH) / 2;
       labelStyle.left = relX - 60;
       labelStyle.width = 56;
       labelStyle.textAlign = 'right';
       break;
     case 'right':
-      labelStyle.left = relX + control.w + 4;
-      labelStyle.top = relY + (control.h - totalLabelH) / 2;
+      labelStyle.left = relX + visW + 4;
+      labelStyle.top = relY + (visH - totalLabelH) / 2;
       labelStyle.width = 56;
       labelStyle.textAlign = 'left';
       break;
@@ -646,8 +649,9 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       _delta: unknown,
       position: { x: number; y: number },
     ) => {
-      const newW = parseInt(ref.style.width, 10);
-      const newH = parseInt(ref.style.height, 10);
+      // Rnd reports the visual size (scaled). Divide by controlScale to get the stored "full size".
+      const newW = Math.round(parseInt(ref.style.width, 10) / controlScale);
+      const newH = Math.round(parseInt(ref.style.height, 10) / controlScale);
       // Snapshot BEFORE mutation so undo restores the previous state
       pushSnapshot();
       // Handle position shift from top/left resize handles
@@ -745,7 +749,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
     <>
       <Rnd
         position={{ x: relX, y: relY }}
-        size={{ width: control.w, height: control.h }}
+        size={{ width: control.w * controlScale, height: control.h * controlScale }}
         scale={zoom}
         dragGrid={[snapGrid, snapGrid]}
         resizeGrid={[snapGrid, snapGrid]}
@@ -793,11 +797,8 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
         <div
           className="flex h-full w-full items-center justify-center pointer-events-none"
           style={{
-            transform: [
-              controlScale < 1 ? `scale(${controlScale})` : '',
-              control.rotation ? `rotate(${control.rotation}deg)` : '',
-            ].filter(Boolean).join(' ') || undefined,
-            transformOrigin: 'center',
+            transform: control.rotation ? `rotate(${control.rotation}deg)` : undefined,
+            transformOrigin: control.rotation ? 'center' : undefined,
           }}
         >
           {renderControl(control, isSelected, allControls)}
@@ -805,7 +806,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       </Rnd>
 
       {/* Floating label — rendered OUTSIDE the Rnd container */}
-      {showLabels && renderFloatingLabel(control, relX, relY)}
+      {showLabels && renderFloatingLabel(control, relX, relY, controlScale)}
 
       {/* Inline label editor — positioned near the floating label */}
       {isEditing && (
@@ -815,8 +816,8 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
             left: relX,
             top: control.labelPosition === 'above'
               ? relY - 16
-              : relY + control.h + 2,
-            width: control.w,
+              : relY + control.h * controlScale + 2,
+            width: Math.max(control.w * controlScale, 80),
             zIndex: 60,
             pointerEvents: 'auto',
           }}

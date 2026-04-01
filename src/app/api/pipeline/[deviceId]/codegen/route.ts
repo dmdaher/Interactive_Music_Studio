@@ -76,14 +76,16 @@ export async function POST(
             if (editorControl.type) control.type = editorControl.type;
           }
 
-          // Use editor positions directly — no transformations.
-          // Positions and sizes go through as-is from the editor.
+          // Positions pass through as-is. Sizes are scaled by controlScale
+          // because the editor's Rnd containers are now scaled (container = visual).
+          // The generated panel should render at the same visual size.
           if (editorControl) {
+            const scale = (editorData.controlScale as number) ?? 1;
             (control as any).editorPosition = {
               x: Math.round((editorControl.x / canvasW) * 1000) / 10,
               y: Math.round((editorControl.y / canvasH) * 1000) / 10,
-              w: Math.round((editorControl.w / canvasW) * 1000) / 10,
-              h: Math.round((editorControl.h / canvasH) * 1000) / 10,
+              w: Math.round((editorControl.w * scale / canvasW) * 1000) / 10,
+              h: Math.round((editorControl.h * scale / canvasH) * 1000) / 10,
             };
           }
         }
