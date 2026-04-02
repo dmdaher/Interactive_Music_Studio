@@ -10,6 +10,8 @@ import type { EditorLabel } from './store';
  */
 export default function LabelLayer() {
   const editorLabels = useEditorStore((s) => s.editorLabels) as EditorLabel[];
+  const controls = useEditorStore((s) => s.controls);
+  const controlScale = useEditorStore((s) => s.controlScale);
   const showLabels = useEditorStore((s) => s.showLabels);
   const moveLabel = useEditorStore((s) => s.moveLabel);
   const updateLabel = useEditorStore((s) => s.updateLabel);
@@ -24,7 +26,26 @@ export default function LabelLayer() {
   const dragStart = useRef<{ x: number; y: number; labelX: number; labelY: number } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Keyboard: Delete selected label, Escape deselects
+  // Center a label horizontally on its linked control
+  const centerOnControl = useCallback((labelId: string) => {
+    const label = editorLabels.find(l => l.id === labelId);
+    if (!label || !label.controlId) return;
+    const ctrl = controls[label.controlId];
+    if (!ctrl) return;
+
+    // Measure label width from the DOM
+    const labelEl = document.querySelector(`[data-label-id="${labelId}"]`);
+    const labelW = labelEl ? labelEl.getBoundingClientRect().width / zoom : 60;
+
+    const ctrlVisW = ctrl.w * controlScale;
+    const ctrlCenterX = ctrl.x + ctrlVisW / 2;
+    const newX = Math.round(ctrlCenterX - labelW / 2);
+
+    pushSnapshot();
+    updateLabel(labelId, { x: newX });
+  }, [editorLabels, controls, controlScale, zoom, pushSnapshot, updateLabel]);
+
+  // Keyboard: Delete, Escape, C (center on control)
   useEffect(() => {
     if (!selectedLabel || editing) return;
     const handler = (e: KeyboardEvent) => {
@@ -35,11 +56,16 @@ export default function LabelLayer() {
         setSelectedLabel(null);
       } else if (e.key === 'Escape') {
         setSelectedLabel(null);
+      } else if (e.key === 'c' || e.key === 'C') {
+        if (!e.metaKey && !e.ctrlKey) {
+          e.preventDefault();
+          centerOnControl(selectedLabel);
+        }
       }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, [selectedLabel, editing, pushSnapshot, deleteLabel]);
+  }, [selectedLabel, editing, pushSnapshot, deleteLabel, centerOnControl]);
 
   if (!showLabels) return null;
 
@@ -127,6 +153,7 @@ export default function LabelLayer() {
               <span
                 className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap pointer-events-auto cursor-move"
                 style={{ padding: '4px 6px', margin: '-4px -6px', display: 'inline-block' }}
+                data-label-id={label.id}
                 onMouseDown={(e) => handleMouseDown(e, label)}
                 onDoubleClick={() => handleDoubleClick(label)}
               >
