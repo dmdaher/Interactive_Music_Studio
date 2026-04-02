@@ -38,7 +38,7 @@ export default function LabelLayer() {
     // text naturally centers regardless of text length.
     const ctrlVisW = ctrl.w * controlScale;
     const ctrlCenterX = ctrl.x + ctrlVisW / 2;
-    const labelW = Math.max(ctrlVisW, 120); // generous width for centering
+    const labelW = Math.max(ctrlVisW, 60); // just wide enough to center on control
     pushSnapshot();
     updateLabel(labelId, {
       x: Math.round(ctrlCenterX - labelW / 2),
