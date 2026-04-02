@@ -46,18 +46,9 @@ export async function POST(
         // The editor applies geometry cleanup on Approve & Build, then auto-saves
         // the cleaned positions to manifest-editor.json. No need to run cleanup again.
 
-        // Update section bounding boxes — convert gatekeeper percentages to pixels
-        for (const section of manifest.sections) {
-          const editorSection = editorSections[section.id];
-          if (editorSection) {
-            section.panelBoundingBox = {
-              x: Math.round(editorSection.x),
-              y: Math.round(editorSection.y),
-              w: Math.round(editorSection.w),
-              h: Math.round(editorSection.h),
-            };
-          }
-        }
+        // Section bounding boxes: leave as-is (gatekeeper percentages).
+        // Sections are not rendered in the generated flat panel.
+        // Overwriting with pixels would corrupt manifest.json for future pipeline runs.
 
         // ── Step 2: Merge editor overrides + positions into controls ──
         for (const control of manifest.controls) {
