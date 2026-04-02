@@ -186,6 +186,7 @@ export interface ManifestSlice {
   addControl: (sectionId: string, type: string, label: string) => void;
   setAllLabelFontSize: (size: number | undefined) => void;
   resetAllSizes: () => void;
+  scaleCanvas: (factor: number) => void;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -900,6 +901,41 @@ export const createManifestSlice: StateCreator<
         updated[id] = { ...ctrl, w: def.w, h: def.h };
       }
       return { controls: updated };
+    });
+  },
+
+  scaleCanvas: (factor) => {
+    set((s) => {
+      // Scale all control positions and sizes
+      const updatedControls: Record<string, ControlDef> = {};
+      for (const [id, ctrl] of Object.entries(s.controls)) {
+        updatedControls[id] = {
+          ...ctrl,
+          x: Math.round(ctrl.x * factor),
+          y: Math.round(ctrl.y * factor),
+          w: Math.round(ctrl.w * factor),
+          h: Math.round(ctrl.h * factor),
+        };
+      }
+
+      // Scale all section positions and sizes
+      const updatedSections: Record<string, SectionDef> = {};
+      for (const [id, sec] of Object.entries(s.sections)) {
+        updatedSections[id] = {
+          ...sec,
+          x: Math.round(sec.x * factor),
+          y: Math.round(sec.y * factor),
+          w: Math.round(sec.w * factor),
+          h: Math.round(sec.h * factor),
+        };
+      }
+
+      return {
+        controls: updatedControls,
+        sections: updatedSections,
+        canvasWidth: Math.round(s.canvasWidth * factor),
+        canvasHeight: Math.round(s.canvasHeight * factor),
+      };
     });
   },
 });

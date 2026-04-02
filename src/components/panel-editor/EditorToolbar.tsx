@@ -51,11 +51,10 @@ export default function EditorToolbar({
   const redo = useEditorStore((s) => s.redo);
   const cleanupGap = useEditorStore((s) => s.cleanupGap);
   const setCleanupGap = useEditorStore((s) => s.setCleanupGap);
-  const panelScale = useEditorStore((s) => s.panelScale);
-  const setPanelScale = useEditorStore((s) => s.setPanelScale);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const setAllLabelFontSize = useEditorStore((s) => s.setAllLabelFontSize);
   const resetAllSizes = useEditorStore((s) => s.resetAllSizes);
+  const scaleCanvas = useEditorStore((s) => s.scaleCanvas);
 
   const zoomPercent = Math.round(zoom * 100);
 
@@ -236,17 +235,21 @@ export default function EditorToolbar({
 
       {divider}
 
-      {/* Panel Scale + Approve & Build */}
+      {/* Canvas Scale + Approve & Build */}
       <div className="flex items-center gap-1 flex-shrink-0">
-        <label className="text-[9px] text-gray-500">Panel</label>
-        <input
-          type="range" min={50} max={200} step={10}
-          value={Math.round(panelScale * 100)}
-          onChange={(e) => setPanelScale(Number(e.target.value) / 100)}
-          className="h-1 w-10 cursor-pointer accent-blue-500"
-          title={`Panel Scale: ${Math.round(panelScale * 100)}%`}
-        />
-        <span className="text-[9px] text-gray-500 w-6">{Math.round(panelScale * 100)}%</span>
+        <button
+          onClick={() => { pushSnapshot(); scaleCanvas(0.8); }}
+          disabled={previewMode}
+          className="flex h-6 w-6 items-center justify-center rounded text-[10px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30"
+          title="Scale canvas down 80%"
+        >-</button>
+        <span className="text-[9px] text-gray-500">Canvas</span>
+        <button
+          onClick={() => { pushSnapshot(); scaleCanvas(1.25); }}
+          disabled={previewMode}
+          className="flex h-6 w-6 items-center justify-center rounded text-[10px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30"
+          title="Scale canvas up 125%"
+        >+</button>
         <button
           data-tutorial="approve"
           onClick={onApproveAndBuild}
