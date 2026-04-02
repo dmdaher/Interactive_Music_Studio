@@ -1,66 +1,99 @@
-# Standalone Labels — Design Brief
+# Standalone Labels — Design
 
-> **For Claude:** Use superpowers-extended-cc:brainstorming skill to design this feature fully before implementation.
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers-extended-cc:executing-plans to implement this plan task-by-task.
 
-**Problem:** Labels are computed at render time with different math in editor vs codegen. Despite 5+ attempts to align them, they never match visually. The root cause: computed positions always introduce variance.
+**Goal:** Labels become stored pixel positions — same approach that fixed component positioning. Editor labels and generated panel labels are pixel-identical because the codegen reads stored values directly.
 
-**Solution direction:** Labels become stored pixel positions — same approach that fixed component positioning. But the full design needs brainstorming first.
+**Branch:** `feature/pipeline-architecture-upgrade`
 
-## Questions to Answer Before Implementation
+---
 
-### 1. Label-Component Relationship
-- Should labels be linked to their control (move when control moves)?
-- Or fully independent (like Figma text layers)?
-- Or linked by default but unlinkable?
-- What happens when you delete a control — does its label delete too?
-- What happens when you duplicate a control — does the label duplicate?
+## Data Model
 
-### 2. Figma's Text Layer Model
-- How does Figma handle text near components?
-- Figma has auto-layout labels (inside components) AND standalone text layers
-- Which model fits our use case better?
-- What does Figma do for text sizing, font, color, alignment?
+```typescript
+interface EditorLabel {
+  id: string;                          // "label-pan-level"
+  controlId: string | null;            // linked control ID, or null for standalone
+  text: string;                        // "MASTER\nVOLUME"
+  x: number;                          // absolute pixel position
+  y: number;
+  fontSize: number;                    // px
+  align: 'left' | 'center' | 'right';
+}
+```
 
-### 3. Data Model
-- Where do label positions live? On the control (control._label.x/y)? Or in a separate array (editorLabels[])?
-- We already have `editorLabels: unknown[]` in the store and undo snapshots
-- What fields does each label need? (x, y, w, h, text, fontSize, color, align, controlId?)
+- **Linked** (`controlId: "pan-level"`) — moves with control, deleted with control
+- **Standalone** (`controlId: null`) — free text, fully independent
+- No w/h — labels auto-size from text (whitespace-nowrap, no wrapping)
+- Stored in `editorLabels[]` in the editor store (already in undo + auto-save)
 
-### 4. Scale Slider Impact
-- When controlScale changes, do label positions scale too?
-- Label font size — does it scale with the slider or stay fixed?
-- The container=visual rule — does it apply to labels?
+## Linking Behavior
 
-### 5. Codegen Impact
-- Codegen reads label x/y/w/fontSize directly — no computation
-- What CSS does the generated label use? (position:absolute, left, top, width, fontSize)
-- How do multi-line labels (\n) render?
-- Label text alignment (center/left/right)
+- When control moves by (dx, dy), all labels with matching controlId move by same delta
+- When control is deleted, linked labels are deleted
+- When control is duplicated, linked labels are duplicated with offset
+- Labels can be dragged independently (overrides the auto-computed position)
+- Scale slider scales label x/y/fontSize proportionally with controls
 
-### 6. Editor UI
-- How does the contractor interact with labels?
-- Can they drag labels? Resize them? Edit text inline?
-- Properties panel — what label properties are editable?
-- How to add/remove labels?
+## Editor Rendering
 
-### 7. Migration
-- Existing controls have computed label positions
-- How to initialize stored positions for all existing controls?
-- Default: compute once from current rules, store, never recompute
+- **Remove** renderFloatingLabel from ControlNode — controls render without labels
+- **New** LabelLayer component renders ALL labels as a flat overlay on EditorWorkspace
+- Click label → select (shows in Properties panel)
+- Drag label → move independently (stores new x/y)
+- Double-click → inline text editing (Shift+Enter for new lines)
+- Delete → removes from editorLabels
+- Labels visible/hidden via the Labels toggle (existing)
 
-### 8. What Else Figma Does
-- Text auto-sizing (grow/shrink to fit content)
-- Text truncation vs overflow
-- Text styles (bold, color, letter-spacing, uppercase)
-- Text alignment within its bounding box
-- Multiple text layers per component (primary + secondary)
+## Codegen
 
-## Remaining Active Plans
-| Plan | Status |
+- **Remove** old renderFloatingLabel from panel-codegen.ts
+- **Remove** _labelPos computation from codegen/route.ts
+- **Add** simple loop over editorLabels that renders each at stored position:
+
+```tsx
+// Generated panel:
+<div className="absolute pointer-events-none"
+  style={{ left: label.x, top: label.y, fontSize: label.fontSize, textAlign: label.align }}>
+  MASTER<br />VOLUME
+</div>
+```
+
+Zero computation. Pixel-identical to editor.
+
+## Migration
+
+On first load when editorLabels is empty:
+1. For each control with visible label (not on-button, not hidden)
+2. Compute default position using computeLabelPosition() ONE TIME
+3. Store as EditorLabel in editorLabels[]
+4. Auto-save — never recomputed
+
+computeLabelPosition() stays as a utility for this one-time initialization only.
+
+## Label Sizing
+
+- Individual: select control → Properties panel → adjust label fontSize
+- Group: select multiple → set all label sizes
+- Global: "Sz" dropdown in toolbar (already exists)
+- Scale slider: fontSize scales proportionally
+
+## Files Changed
+
+| File | Change |
 |------|--------|
-| Alignment + Distribution + Grouping | `docs/plans/2026-03-31-alignment-distribution-tools.md` |
-| Keyboard Persistence | FIXED this session |
-| Missing Common Controls | 22 added this session (need proper positioning) |
-| CDJ-3000 Codegen Diff | `docs/plans/2026-03-31-cdj3000-codegen-diff-review.md` |
-| Pixel Positioning Migration | DONE this session |
-| Container Component Sizing | DONE this session |
+| `src/components/panel-editor/store/historySlice.ts` | Replace EditorLabel placeholder type |
+| `src/components/panel-editor/store/manifestSlice.ts` | Add label management actions |
+| `src/components/panel-editor/ControlNode.tsx` | Remove renderFloatingLabel |
+| `src/components/panel-editor/LabelLayer.tsx` | NEW — renders all labels |
+| `src/components/panel-editor/EditorWorkspace.tsx` | Mount LabelLayer |
+| `scripts/panel-codegen.ts` | Remove renderFloatingLabel, add editorLabels loop |
+| `src/app/api/pipeline/[deviceId]/codegen/route.ts` | Remove _labelPos computation |
+| `src/lib/label-position.ts` | Keep as migration utility only |
+
+## Files NOT Changed
+
+- useAutoSave.ts — editorLabels already in PUT body
+- historySlice.ts — editorLabels already in snapshots (just update the type)
+- PanelShell.tsx — no changes
+- Fantom-08 — hand-built, no editorLabels
