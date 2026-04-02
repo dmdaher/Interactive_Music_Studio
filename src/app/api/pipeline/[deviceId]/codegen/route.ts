@@ -67,6 +67,16 @@ export async function POST(
             if (editorControl.surfaceColor !== undefined) control.surfaceColor = editorControl.surfaceColor;
             if (editorControl.buttonStyle) control.buttonStyle = editorControl.buttonStyle;
             if (editorControl.labelDisplay) control.labelDisplay = editorControl.labelDisplay;
+            // Map editor's labelPosition to codegen's labelDisplay if not already set
+            if (editorControl.labelPosition && !editorControl.labelDisplay) {
+              const posMap: Record<string, string> = {
+                'above': 'above', 'below': 'below', 'left': 'left', 'right': 'right',
+                'on-button': 'on-button', 'hidden': 'hidden',
+              };
+              if (posMap[editorControl.labelPosition]) {
+                control.labelDisplay = posMap[editorControl.labelPosition];
+              }
+            }
             if (editorControl.icon !== undefined) control.icon = editorControl.icon;
             if (editorControl.label) control.verbatimLabel = editorControl.label;
             if (editorControl.secondaryLabel !== undefined) control.secondaryLabel = editorControl.secondaryLabel;
