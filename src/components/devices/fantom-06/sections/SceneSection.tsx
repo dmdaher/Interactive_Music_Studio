@@ -28,10 +28,10 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '13.40%',
-              width: '5.30%',
-              height: '14.10%',
+              left: 680,
+              top: 27,
+              width: 64,
+              height: 28,
             }}
           >
             <div>
@@ -39,7 +39,7 @@ export default function SceneSection({
                 id="scene-select"
                 label=""
                 width={64}
-                height={51}
+                height={28}
                 active={getState('scene-select').active}
                 highlighted={isHighlighted('scene-select')}
                 onClick={() => onButtonClick?.('scene-select')}
@@ -49,9 +49,9 @@ export default function SceneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '56.7%',
-            top: '12.2%',
-            width: '5.3%',
+            left: 680,
+            top: 15,
+            width: 64,
             textAlign: 'center',
           }}
         >
@@ -62,10 +62,10 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '33.50%',
-              width: '5.30%',
-              height: '14.10%',
+              left: 680,
+              top: 67,
+              width: 64,
+              height: 28,
             }}
           >
             <div>
@@ -73,7 +73,7 @@ export default function SceneSection({
                 id="scene-chain"
                 label=""
                 width={64}
-                height={51}
+                height={28}
                 active={getState('scene-chain').active}
                 highlighted={isHighlighted('scene-chain')}
                 onClick={() => onButtonClick?.('scene-chain')}
@@ -83,9 +83,9 @@ export default function SceneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '56.7%',
-            top: '32.3%',
-            width: '5.3%',
+            left: 680,
+            top: 55,
+            width: 64,
             textAlign: 'center',
           }}
         >
@@ -96,10 +96,10 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '45.80%',
-              width: '5.30%',
-              height: '14.10%',
+              left: 680,
+              top: 91,
+              width: 64,
+              height: 28,
             }}
           >
             <div>
@@ -107,7 +107,7 @@ export default function SceneSection({
                 id="zone-view"
                 label=""
                 width={64}
-                height={51}
+                height={28}
                 active={getState('zone-view').active}
                 highlighted={isHighlighted('zone-view')}
                 onClick={() => onButtonClick?.('zone-view')}
@@ -117,9 +117,9 @@ export default function SceneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '56.7%',
-            top: '44.6%',
-            width: '5.3%',
+            left: 680,
+            top: 79,
+            width: 64,
             textAlign: 'center',
           }}
         >
@@ -130,10 +130,10 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '56.70%',
-              top: '61.90%',
-              width: '5.30%',
-              height: '14.10%',
+              left: 680,
+              top: 123,
+              width: 64,
+              height: 28,
             }}
           >
             <div>
@@ -141,7 +141,7 @@ export default function SceneSection({
                 id="single-tone"
                 label=""
                 width={64}
-                height={51}
+                height={28}
                 active={getState('single-tone').active}
                 highlighted={isHighlighted('single-tone')}
                 onClick={() => onButtonClick?.('single-tone')}
@@ -151,9 +151,9 @@ export default function SceneSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '56.7%',
-            top: '60.7%',
-            width: '5.3%',
+            left: 680,
+            top: 111,
+            width: 64,
             textAlign: 'center',
           }}
         >

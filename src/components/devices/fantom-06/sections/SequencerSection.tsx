@@ -28,10 +28,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '75.00%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 900,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -39,7 +39,7 @@ export default function SequencerSection({
                 id="pattern"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('pattern').active}
                 highlighted={isHighlighted('pattern')}
                 onClick={() => onButtonClick?.('pattern')}
@@ -49,9 +49,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '75.0%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 900,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -62,10 +62,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '75.00%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 900,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -73,7 +73,7 @@ export default function SequencerSection({
                 id="group"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('group').active}
                 highlighted={isHighlighted('group')}
                 onClick={() => onButtonClick?.('group')}
@@ -83,9 +83,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '75.0%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 900,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -96,10 +96,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.90%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 935,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -107,7 +107,7 @@ export default function SequencerSection({
                 id="song"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('song').active}
                 highlighted={isHighlighted('song')}
                 onClick={() => onButtonClick?.('song')}
@@ -117,9 +117,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.9%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 935,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -130,10 +130,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.90%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 935,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -141,7 +141,7 @@ export default function SequencerSection({
                 id="tr-rec"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('tr-rec').active}
                 highlighted={isHighlighted('tr-rec')}
                 onClick={() => onButtonClick?.('tr-rec')}
@@ -151,9 +151,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.9%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 935,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -164,10 +164,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '79.80%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 958,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -175,7 +175,7 @@ export default function SequencerSection({
                 id="rhythm-ptn"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('rhythm-ptn').active}
                 highlighted={isHighlighted('rhythm-ptn')}
                 onClick={() => onButtonClick?.('rhythm-ptn')}
@@ -185,9 +185,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '79.8%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 958,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -198,10 +198,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '82.60%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 991,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -209,7 +209,7 @@ export default function SequencerSection({
                 id="stop"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('stop').active}
                 highlighted={isHighlighted('stop')}
                 onClick={() => onButtonClick?.('stop')}
@@ -219,9 +219,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '82.6%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 991,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -232,10 +232,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.90%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 1007,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -243,7 +243,7 @@ export default function SequencerSection({
                 id="play"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('play').active}
                 highlighted={isHighlighted('play')}
                 onClick={() => onButtonClick?.('play')}
@@ -253,9 +253,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '83.9%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 1007,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -266,10 +266,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '85.40%',
-              top: '12.20%',
-              width: '2.30%',
-              height: '27.40%',
+              left: 1025,
+              top: 24,
+              width: 28,
+              height: 54,
             }}
           >
             <div>
@@ -277,7 +277,7 @@ export default function SequencerSection({
                 id="rec"
                 label=""
                 width={28}
-                height={99}
+                height={54}
                 active={getState('rec').active}
                 highlighted={isHighlighted('rec')}
                 onClick={() => onButtonClick?.('rec')}
@@ -287,9 +287,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '85.4%',
-            top: '11.0%',
-            width: '2.3%',
+            left: 1025,
+            top: 12,
+            width: 28,
             textAlign: 'center',
           }}
         >
@@ -300,10 +300,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '74.20%',
-              top: '52.40%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 890,
+              top: 104,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -311,7 +311,7 @@ export default function SequencerSection({
                 id="tone-cat-1"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-1').active}
                 highlighted={isHighlighted('tone-cat-1')}
                 onClick={() => onButtonClick?.('tone-cat-1')}
@@ -321,9 +321,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '74.2%',
-            top: '51.2%',
-            width: '2.8%',
+            left: 890,
+            top: 92,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -334,10 +334,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.30%',
-              top: '52.40%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 928,
+              top: 104,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -345,7 +345,7 @@ export default function SequencerSection({
                 id="tone-cat-2"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-2').active}
                 highlighted={isHighlighted('tone-cat-2')}
                 onClick={() => onButtonClick?.('tone-cat-2')}
@@ -355,9 +355,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.3%',
-            top: '51.2%',
-            width: '2.8%',
+            left: 928,
+            top: 92,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -368,10 +368,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '79.50%',
-              top: '52.40%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 955,
+              top: 104,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -379,7 +379,7 @@ export default function SequencerSection({
                 id="tone-cat-3"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-3').active}
                 highlighted={isHighlighted('tone-cat-3')}
                 onClick={() => onButtonClick?.('tone-cat-3')}
@@ -389,9 +389,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '79.5%',
-            top: '51.2%',
-            width: '2.8%',
+            left: 955,
+            top: 92,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -402,10 +402,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.80%',
-              top: '52.40%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 1006,
+              top: 104,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -413,7 +413,7 @@ export default function SequencerSection({
                 id="tone-cat-4"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-4').active}
                 highlighted={isHighlighted('tone-cat-4')}
                 onClick={() => onButtonClick?.('tone-cat-4')}
@@ -423,9 +423,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '83.8%',
-            top: '51.2%',
-            width: '2.8%',
+            left: 1006,
+            top: 92,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -436,10 +436,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '74.20%',
-              top: '62.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 890,
+              top: 124,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -447,7 +447,7 @@ export default function SequencerSection({
                 id="tone-cat-5"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-5').active}
                 highlighted={isHighlighted('tone-cat-5')}
                 onClick={() => onButtonClick?.('tone-cat-5')}
@@ -457,9 +457,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '74.2%',
-            top: '61.3%',
-            width: '2.8%',
+            left: 890,
+            top: 112,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -470,10 +470,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.30%',
-              top: '62.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 928,
+              top: 124,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -481,7 +481,7 @@ export default function SequencerSection({
                 id="tone-cat-6"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-6').active}
                 highlighted={isHighlighted('tone-cat-6')}
                 onClick={() => onButtonClick?.('tone-cat-6')}
@@ -491,9 +491,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.3%',
-            top: '61.3%',
-            width: '2.8%',
+            left: 928,
+            top: 112,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -504,10 +504,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '79.50%',
-              top: '62.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 955,
+              top: 124,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -515,7 +515,7 @@ export default function SequencerSection({
                 id="tone-cat-7"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-7').active}
                 highlighted={isHighlighted('tone-cat-7')}
                 onClick={() => onButtonClick?.('tone-cat-7')}
@@ -525,9 +525,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '79.5%',
-            top: '61.3%',
-            width: '2.8%',
+            left: 955,
+            top: 112,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -538,10 +538,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.80%',
-              top: '62.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 1006,
+              top: 124,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -549,7 +549,7 @@ export default function SequencerSection({
                 id="tone-cat-8"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-8').active}
                 highlighted={isHighlighted('tone-cat-8')}
                 onClick={() => onButtonClick?.('tone-cat-8')}
@@ -559,9 +559,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '83.8%',
-            top: '61.3%',
-            width: '2.8%',
+            left: 1006,
+            top: 112,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -572,10 +572,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '74.20%',
-              top: '72.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 890,
+              top: 144,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -583,7 +583,7 @@ export default function SequencerSection({
                 id="tone-cat-9"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-9').active}
                 highlighted={isHighlighted('tone-cat-9')}
                 onClick={() => onButtonClick?.('tone-cat-9')}
@@ -593,9 +593,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '74.2%',
-            top: '71.3%',
-            width: '2.8%',
+            left: 890,
+            top: 132,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -606,10 +606,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.30%',
-              top: '72.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 928,
+              top: 144,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -617,7 +617,7 @@ export default function SequencerSection({
                 id="tone-cat-10"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-10').active}
                 highlighted={isHighlighted('tone-cat-10')}
                 onClick={() => onButtonClick?.('tone-cat-10')}
@@ -627,9 +627,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.3%',
-            top: '71.3%',
-            width: '2.8%',
+            left: 928,
+            top: 132,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -640,10 +640,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '79.50%',
-              top: '72.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 955,
+              top: 144,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -651,7 +651,7 @@ export default function SequencerSection({
                 id="tone-cat-11"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-11').active}
                 highlighted={isHighlighted('tone-cat-11')}
                 onClick={() => onButtonClick?.('tone-cat-11')}
@@ -661,9 +661,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '79.5%',
-            top: '71.3%',
-            width: '2.8%',
+            left: 955,
+            top: 132,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -674,10 +674,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.80%',
-              top: '72.50%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 1006,
+              top: 144,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -685,7 +685,7 @@ export default function SequencerSection({
                 id="tone-cat-12"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-12').active}
                 highlighted={isHighlighted('tone-cat-12')}
                 onClick={() => onButtonClick?.('tone-cat-12')}
@@ -695,9 +695,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '83.8%',
-            top: '71.3%',
-            width: '2.8%',
+            left: 1006,
+            top: 132,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -708,10 +708,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '74.20%',
-              top: '82.60%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 890,
+              top: 164,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -719,7 +719,7 @@ export default function SequencerSection({
                 id="tone-cat-13"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-13').active}
                 highlighted={isHighlighted('tone-cat-13')}
                 onClick={() => onButtonClick?.('tone-cat-13')}
@@ -729,9 +729,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '74.2%',
-            top: '81.4%',
-            width: '2.8%',
+            left: 890,
+            top: 152,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -742,10 +742,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '77.30%',
-              top: '82.60%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 928,
+              top: 164,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -753,7 +753,7 @@ export default function SequencerSection({
                 id="tone-cat-14"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-14').active}
                 highlighted={isHighlighted('tone-cat-14')}
                 onClick={() => onButtonClick?.('tone-cat-14')}
@@ -763,9 +763,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '77.3%',
-            top: '81.4%',
-            width: '2.8%',
+            left: 928,
+            top: 152,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -776,10 +776,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '79.50%',
-              top: '82.60%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 955,
+              top: 164,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -787,7 +787,7 @@ export default function SequencerSection({
                 id="tone-cat-15"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-15').active}
                 highlighted={isHighlighted('tone-cat-15')}
                 onClick={() => onButtonClick?.('tone-cat-15')}
@@ -797,9 +797,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '79.5%',
-            top: '81.4%',
-            width: '2.8%',
+            left: 955,
+            top: 152,
+            width: 34,
             textAlign: 'center',
           }}
         >
@@ -810,10 +810,10 @@ export default function SequencerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '83.80%',
-              top: '82.60%',
-              width: '2.80%',
-              height: '14.10%',
+              left: 1006,
+              top: 164,
+              width: 34,
+              height: 28,
             }}
           >
             <div>
@@ -821,7 +821,7 @@ export default function SequencerSection({
                 id="tone-cat-16"
                 label=""
                 width={34}
-                height={51}
+                height={28}
                 active={getState('tone-cat-16').active}
                 highlighted={isHighlighted('tone-cat-16')}
                 onClick={() => onButtonClick?.('tone-cat-16')}
@@ -831,9 +831,9 @@ export default function SequencerSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '83.8%',
-            top: '81.4%',
-            width: '2.8%',
+            left: 1006,
+            top: 152,
+            width: 34,
             textAlign: 'center',
           }}
         >

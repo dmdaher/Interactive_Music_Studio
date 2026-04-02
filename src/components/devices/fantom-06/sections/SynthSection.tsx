@@ -29,10 +29,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '63.70%',
-              top: '12.10%',
-              width: '4.00%',
-              height: '19.70%',
+              left: 764,
+              top: 24,
+              width: 48,
+              height: 39,
             }}
           >
             <Knob
@@ -40,16 +40,16 @@ export default function SynthSection({
               label=""
               value={getState('cutoff').value ?? 64}
               highlighted={isHighlighted('cutoff')}
-              outerSize={48}
-              innerSize={34}
+              outerSize={39}
+              innerSize={27}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '63.7%',
-            top: '32.0%',
-            width: '4.0%',
+            left: 764,
+            top: 65,
+            width: 48,
             textAlign: 'center',
           }}
         >
@@ -60,10 +60,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '68.90%',
-              top: '12.10%',
-              width: '4.00%',
-              height: '19.70%',
+              left: 827,
+              top: 24,
+              width: 48,
+              height: 39,
             }}
           >
             <Knob
@@ -71,16 +71,16 @@ export default function SynthSection({
               label=""
               value={getState('resonance').value ?? 64}
               highlighted={isHighlighted('resonance')}
-              outerSize={48}
-              innerSize={34}
+              outerSize={39}
+              innerSize={27}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '68.9%',
-            top: '32.0%',
-            width: '4.0%',
+            left: 827,
+            top: 65,
+            width: 48,
             textAlign: 'center',
           }}
         >
@@ -91,10 +91,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '64.40%',
-              top: '36.30%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 773,
+              top: 72,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -102,7 +102,7 @@ export default function SynthSection({
                 id="osc"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('osc').active}
                 highlighted={isHighlighted('osc')}
                 onClick={() => onButtonClick?.('osc')}
@@ -112,9 +112,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '64.4%',
-            top: '35.1%',
-            width: '2.6%',
+            left: 773,
+            top: 60,
+            width: 31,
             textAlign: 'center',
           }}
         >
@@ -125,10 +125,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '67.10%',
-              top: '36.30%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 805,
+              top: 72,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -136,7 +136,7 @@ export default function SynthSection({
                 id="filter-type"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('filter-type').active}
                 highlighted={isHighlighted('filter-type')}
                 onClick={() => onButtonClick?.('filter-type')}
@@ -146,9 +146,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '67.1%',
-            top: '35.1%',
-            width: '2.6%',
+            left: 805,
+            top: 60,
+            width: 31,
             textAlign: 'center',
           }}
         >
@@ -159,10 +159,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '69.80%',
-              top: '36.30%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 837,
+              top: 72,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -170,7 +170,7 @@ export default function SynthSection({
                 id="param"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('param').active}
                 highlighted={isHighlighted('param')}
                 onClick={() => onButtonClick?.('param')}
@@ -180,9 +180,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '69.8%',
-            top: '35.1%',
-            width: '2.6%',
+            left: 837,
+            top: 60,
+            width: 31,
             textAlign: 'center',
           }}
         >
@@ -193,10 +193,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '64.40%',
-              top: '48.40%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 773,
+              top: 96,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -204,7 +204,7 @@ export default function SynthSection({
                 id="amp"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('amp').active}
                 highlighted={isHighlighted('amp')}
                 onClick={() => onButtonClick?.('amp')}
@@ -214,9 +214,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '64.4%',
-            top: '47.2%',
-            width: '2.6%',
+            left: 773,
+            top: 84,
+            width: 31,
             textAlign: 'center',
           }}
         >
@@ -227,10 +227,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '67.10%',
-              top: '48.40%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 805,
+              top: 96,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -238,7 +238,7 @@ export default function SynthSection({
                 id="fx"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('fx').active}
                 highlighted={isHighlighted('fx')}
                 onClick={() => onButtonClick?.('fx')}
@@ -248,9 +248,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '67.1%',
-            top: '47.2%',
-            width: '2.6%',
+            left: 805,
+            top: 84,
+            width: 31,
             textAlign: 'center',
           }}
         >
@@ -261,10 +261,10 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '69.80%',
-              top: '48.40%',
-              width: '2.60%',
-              height: '14.10%',
+              left: 837,
+              top: 96,
+              width: 31,
+              height: 28,
             }}
           >
             <div>
@@ -272,7 +272,7 @@ export default function SynthSection({
                 id="lfo"
                 label=""
                 width={31}
-                height={51}
+                height={28}
                 active={getState('lfo').active}
                 highlighted={isHighlighted('lfo')}
                 onClick={() => onButtonClick?.('lfo')}
@@ -282,9 +282,9 @@ export default function SynthSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '69.8%',
-            top: '47.2%',
-            width: '2.6%',
+            left: 837,
+            top: 84,
+            width: 31,
             textAlign: 'center',
           }}
         >

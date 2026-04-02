@@ -45,15 +45,15 @@ export async function POST(
         // The editor applies geometry cleanup on Approve & Build, then auto-saves
         // the cleaned positions to manifest-editor.json. No need to run cleanup again.
 
-        // Update section bounding boxes from editor section positions
+        // Update section bounding boxes — convert gatekeeper percentages to pixels
         for (const section of manifest.sections) {
           const editorSection = editorSections[section.id];
           if (editorSection) {
             section.panelBoundingBox = {
-              x: Math.round((editorSection.x / canvasW) * 100 * 10) / 10,
-              y: Math.round((editorSection.y / canvasH) * 100 * 10) / 10,
-              w: Math.round((editorSection.w / canvasW) * 100 * 10) / 10,
-              h: Math.round((editorSection.h / canvasH) * 100 * 10) / 10,
+              x: Math.round(editorSection.x),
+              y: Math.round(editorSection.y),
+              w: Math.round(editorSection.w),
+              h: Math.round(editorSection.h),
             };
           }
         }
@@ -76,21 +76,14 @@ export async function POST(
             if (editorControl.type) control.type = editorControl.type;
           }
 
-          // Positions and sizes pass through as-is. controlScale is editor-only.
-          // CRITICAL: PanelShell wraps controls in a div that's panelHeightPercent%
-          // of the full panel height (for keyboard space). Control Y positions must
-          // be relative to that panel AREA, not the full canvas.
+          // Pass editor pixel positions straight through — no conversion.
+          // PanelShell now renders in full space (no keyboard height split).
           if (editorControl) {
-            const kb = (manifest as any).keyboard ?? (editorData as any).keyboard;
-            const panelHeightPct = kb?.panelHeightPercent ?? 100;
-            // Panel area height in canvas pixels
-            const panelAreaH = canvasH * (panelHeightPct / 100);
-
             (control as any).editorPosition = {
-              x: Math.round((editorControl.x / canvasW) * 1000) / 10,
-              y: Math.round((editorControl.y / panelAreaH) * 1000) / 10,
-              w: Math.round((editorControl.w / canvasW) * 1000) / 10,
-              h: Math.round((editorControl.h / panelAreaH) * 1000) / 10,
+              x: Math.round(editorControl.x),
+              y: Math.round(editorControl.y),
+              w: Math.round(editorControl.w),
+              h: Math.round(editorControl.h),
             };
           }
         }

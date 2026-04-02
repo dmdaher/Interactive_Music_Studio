@@ -27,10 +27,10 @@ export default function SectionContainer({
       className="absolute rounded-lg"
       data-section-id={id}
       style={{
-        left: `${x}%`,
-        top: `${y}%`,
-        width: `${w}%`,
-        height: `${h}%`,
+        left: x,
+        top: y,
+        width: w,
+        height: h,
         backgroundColor: 'rgba(0,0,0,0.12)',
         boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.25)',
       }}

@@ -31,18 +31,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '34.20%',
-              top: '84.00%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 34.2,
+              top: 84,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="write"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('write').active}
                 highlighted={isHighlighted('write')}
                 onClick={() => onButtonClick?.('write')}
@@ -52,9 +52,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '34.2%',
-            top: '82.8%',
-            width: '4.2%',
+            left: 34,
+            top: 72,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -65,18 +65,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '38.70%',
-              top: '84.00%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 38.7,
+              top: 84,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="master-fx"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('master-fx').active}
                 highlighted={isHighlighted('master-fx')}
                 onClick={() => onButtonClick?.('master-fx')}
@@ -86,9 +86,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '38.7%',
-            top: '82.8%',
-            width: '4.2%',
+            left: 39,
+            top: 72,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -99,18 +99,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '43.20%',
-              top: '84.00%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 43.2,
+              top: 84,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="motional-pad"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('motional-pad').active}
                 highlighted={isHighlighted('motional-pad')}
                 onClick={() => onButtonClick?.('motional-pad')}
@@ -120,9 +120,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '43.2%',
-            top: '82.8%',
-            width: '4.2%',
+            left: 43,
+            top: 72,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -133,18 +133,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '47.70%',
-              top: '84.00%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 47.7,
+              top: 84,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="daw-ctrl"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('daw-ctrl').active}
                 highlighted={isHighlighted('daw-ctrl')}
                 onClick={() => onButtonClick?.('daw-ctrl')}
@@ -154,9 +154,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '47.7%',
-            top: '82.8%',
-            width: '4.2%',
+            left: 48,
+            top: 72,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -167,18 +167,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '52.20%',
-              top: '84.00%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 52.2,
+              top: 84,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="menu"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('menu').active}
                 highlighted={isHighlighted('menu')}
                 onClick={() => onButtonClick?.('menu')}
@@ -188,9 +188,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '52.2%',
-            top: '82.8%',
-            width: '4.2%',
+            left: 52,
+            top: 72,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -201,10 +201,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '43.50%',
-              top: '24.70%',
-              width: '11.30%',
-              height: '44.30%',
+              left: 522,
+              top: 49,
+              width: 136,
+              height: 88,
             }}
           >
             <TouchDisplay
@@ -213,16 +213,16 @@ export default function CommonSection({
               variant="main"
               showMockContent
               width={136}
-              height={160}
+              height={88}
               highlighted={isHighlighted('display')}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '43.5%',
-            top: '23.5%',
-            width: '11.3%',
+            left: 522,
+            top: 37,
+            width: 136,
             textAlign: 'center',
           }}
         >
@@ -233,10 +233,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '34.20%',
-              top: '92.80%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 34.2,
+              top: 92.8,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -244,16 +244,16 @@ export default function CommonSection({
               label=""
               value={getState('e1').value ?? 64}
               highlighted={isHighlighted('e1')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '34.2%',
-            top: '100.8%',
-            width: '4.2%',
+            left: 34,
+            top: 103,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -264,10 +264,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '38.70%',
-              top: '92.80%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 38.7,
+              top: 92.8,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -275,16 +275,16 @@ export default function CommonSection({
               label=""
               value={getState('e2').value ?? 64}
               highlighted={isHighlighted('e2')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '38.7%',
-            top: '100.8%',
-            width: '4.2%',
+            left: 39,
+            top: 103,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -295,10 +295,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '43.20%',
-              top: '92.80%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 43.2,
+              top: 92.8,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -306,16 +306,16 @@ export default function CommonSection({
               label=""
               value={getState('e3').value ?? 64}
               highlighted={isHighlighted('e3')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '43.2%',
-            top: '100.8%',
-            width: '4.2%',
+            left: 43,
+            top: 103,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -326,10 +326,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '47.70%',
-              top: '92.80%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 47.7,
+              top: 92.8,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -337,16 +337,16 @@ export default function CommonSection({
               label=""
               value={getState('e4').value ?? 64}
               highlighted={isHighlighted('e4')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '47.7%',
-            top: '100.8%',
-            width: '4.2%',
+            left: 48,
+            top: 103,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -357,10 +357,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '52.20%',
-              top: '92.80%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 52.2,
+              top: 92.8,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -368,16 +368,16 @@ export default function CommonSection({
               label=""
               value={getState('e5').value ?? 64}
               highlighted={isHighlighted('e5')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '52.2%',
-            top: '100.8%',
-            width: '4.2%',
+            left: 52,
+            top: 103,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -388,10 +388,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '34.20%',
-              top: '101.70%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 34.2,
+              top: 101.7,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <Knob
@@ -399,16 +399,16 @@ export default function CommonSection({
               label=""
               value={getState('e6').value ?? 64}
               highlighted={isHighlighted('e6')}
-              outerSize={28}
-              innerSize={20}
+              outerSize={4.2}
+              innerSize={3}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '34.2%',
-            top: '109.7%',
-            width: '4.2%',
+            left: 34,
+            top: 112,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -419,18 +419,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '38.70%',
-              top: '101.70%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 38.7,
+              top: 101.7,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="tempo"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('tempo').active}
                 highlighted={isHighlighted('tempo')}
                 onClick={() => onButtonClick?.('tempo')}
@@ -440,9 +440,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '38.7%',
-            top: '100.5%',
-            width: '4.2%',
+            left: 39,
+            top: 90,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -453,25 +453,25 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '43.20%',
-              top: '101.70%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 43.2,
+              top: 101.7,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <ValueDial
               id="value-dial"
               label=""
-              outerSize={28}
+              outerSize={4.2}
               highlighted={isHighlighted('value-dial')}
             />
           </div>
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '43.2%',
-            top: '109.7%',
-            width: '4.2%',
+            left: 43,
+            top: 112,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -482,18 +482,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '47.70%',
-              top: '101.70%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 47.7,
+              top: 101.7,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="dec"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('dec').active}
                 highlighted={isHighlighted('dec')}
                 onClick={() => onButtonClick?.('dec')}
@@ -503,9 +503,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '47.7%',
-            top: '100.5%',
-            width: '4.2%',
+            left: 48,
+            top: 90,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -516,18 +516,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '52.20%',
-              top: '101.70%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 52.2,
+              top: 101.7,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="inc"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('inc').active}
                 highlighted={isHighlighted('inc')}
                 onClick={() => onButtonClick?.('inc')}
@@ -537,9 +537,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '52.2%',
-            top: '100.5%',
-            width: '4.2%',
+            left: 52,
+            top: 90,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -550,18 +550,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '34.20%',
-              top: '110.50%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 34.2,
+              top: 110.5,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="cursor-up"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('cursor-up').active}
                 highlighted={isHighlighted('cursor-up')}
                 onClick={() => onButtonClick?.('cursor-up')}
@@ -571,9 +571,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '34.2%',
-            top: '109.3%',
-            width: '4.2%',
+            left: 34,
+            top: 99,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -584,18 +584,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '47.70%',
-              top: '110.50%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 47.7,
+              top: 110.5,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="cursor-down"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('cursor-down').active}
                 highlighted={isHighlighted('cursor-down')}
                 onClick={() => onButtonClick?.('cursor-down')}
@@ -605,9 +605,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '47.7%',
-            top: '109.3%',
-            width: '4.2%',
+            left: 48,
+            top: 99,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -618,18 +618,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '38.70%',
-              top: '110.50%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 38.7,
+              top: 110.5,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="cursor-left"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('cursor-left').active}
                 highlighted={isHighlighted('cursor-left')}
                 onClick={() => onButtonClick?.('cursor-left')}
@@ -639,9 +639,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '38.7%',
-            top: '109.3%',
-            width: '4.2%',
+            left: 39,
+            top: 99,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -652,18 +652,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '43.20%',
-              top: '110.50%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 43.2,
+              top: 110.5,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="cursor-right"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('cursor-right').active}
                 highlighted={isHighlighted('cursor-right')}
                 onClick={() => onButtonClick?.('cursor-right')}
@@ -673,9 +673,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '43.2%',
-            top: '109.3%',
-            width: '4.2%',
+            left: 43,
+            top: 99,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -686,18 +686,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '52.20%',
-              top: '110.50%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 52.2,
+              top: 110.5,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="shift"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('shift').active}
                 highlighted={isHighlighted('shift')}
                 onClick={() => onButtonClick?.('shift')}
@@ -707,9 +707,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '52.2%',
-            top: '109.3%',
-            width: '4.2%',
+            left: 52,
+            top: 99,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -720,18 +720,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '34.20%',
-              top: '119.40%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 34.2,
+              top: 119.4,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="exit"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('exit').active}
                 highlighted={isHighlighted('exit')}
                 onClick={() => onButtonClick?.('exit')}
@@ -741,9 +741,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '34.2%',
-            top: '118.2%',
-            width: '4.2%',
+            left: 34,
+            top: 107,
+            width: 4,
             textAlign: 'center',
           }}
         >
@@ -754,18 +754,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: '38.70%',
-              top: '119.40%',
-              width: '4.20%',
-              height: '7.80%',
+              left: 38.7,
+              top: 119.4,
+              width: 4.2,
+              height: 7.8,
             }}
           >
             <div>
               <PanelButton
                 id="enter"
                 label=""
-                width={50}
-                height={28}
+                width={4.2}
+                height={7.8}
                 active={getState('enter').active}
                 highlighted={isHighlighted('enter')}
                 onClick={() => onButtonClick?.('enter')}
@@ -775,9 +775,9 @@ export default function CommonSection({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: '38.7%',
-            top: '118.2%',
-            width: '4.2%',
+            left: 39,
+            top: 107,
+            width: 4,
             textAlign: 'center',
           }}
         >

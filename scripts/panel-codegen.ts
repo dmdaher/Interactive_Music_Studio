@@ -461,9 +461,8 @@ function renderFloatingLabel(
   const secFontSize = secondaryLabelFontSize(ctrl.sizeClass);
   const hasSecondary = ctrl.secondaryLabel && ctrl.secondaryLabel.length > 0;
 
-  // Compute label position based on labelDisplay direction.
-  // Heights are in panel-% units. A label line is approximately 1.0-1.2% of panel height.
-  const labelHeightPct = 1.2;
+  // Compute label position in PIXELS (ep is now raw pixels).
+  const labelHeightPx = fontSize + 4; // approximate line height in pixels
 
   let labelLeft = ep.x;
   let labelTop: number;
@@ -471,29 +470,26 @@ function renderFloatingLabel(
 
   switch (floatingPos) {
     case 'above':
-      labelTop = ep.y - labelHeightPct;
+      labelTop = ep.y - labelHeightPx;
       break;
     case 'below':
-      labelTop = ep.y + ep.h + 0.2;
+      labelTop = ep.y + ep.h + 2;
       break;
     case 'left':
-      // Position to the left of the control, vertically centered
-      labelWidth = ep.w * 1.5; // wider for side labels
-      labelLeft = ep.x - labelWidth - 0.3;
-      labelTop = ep.y + ep.h / 2 - labelHeightPct / 2;
+      labelWidth = ep.w * 1.5;
+      labelLeft = ep.x - labelWidth - 4;
+      labelTop = ep.y + ep.h / 2 - labelHeightPx / 2;
       break;
     case 'right':
-      // Position to the right of the control, vertically centered
       labelWidth = ep.w * 1.5;
-      labelLeft = ep.x + ep.w + 0.3;
-      labelTop = ep.y + ep.h / 2 - labelHeightPct / 2;
+      labelLeft = ep.x + ep.w + 4;
+      labelTop = ep.y + ep.h / 2 - labelHeightPx / 2;
       break;
     case 'icon-only':
-      // icon-only controls still get a floating label — default to above
-      labelTop = ep.y - labelHeightPct;
+      labelTop = ep.y - labelHeightPx;
       break;
     default:
-      labelTop = ep.y - labelHeightPct;
+      labelTop = ep.y - labelHeightPx;
       break;
   }
 
@@ -505,9 +501,9 @@ function renderFloatingLabel(
     `        <div`,
     `          className="absolute pointer-events-none"`,
     `          style={{`,
-    `            left: '${labelLeft.toFixed(1)}%',`,
-    `            top: '${labelTop.toFixed(1)}%',`,
-    `            width: '${labelWidth.toFixed(1)}%',`,
+    `            left: ${Math.round(labelLeft)},`,
+    `            top: ${Math.round(labelTop)},`,
+    `            width: ${Math.round(labelWidth)},`,
     `            textAlign: '${textAlign}',`,
     `          }}`,
     `        >`,
@@ -555,14 +551,13 @@ function renderGroupLabels(
       const maxYH = Math.max(...memberPositions.map(ep => ep.y + ep.h));
 
       const spanWidth = maxXW - minX;
-      const labelHeightPct = 1.2;
+      const labelHeightPx = 14; // approximate label line height in pixels
 
       let labelTop: number;
       if (gl.position === 'below') {
-        labelTop = maxYH + 0.2;
+        labelTop = maxYH + 2;
       } else {
-        // 'above' or default
-        labelTop = minY - labelHeightPct;
+        labelTop = minY - labelHeightPx;
       }
 
       return [
@@ -570,9 +565,9 @@ function renderGroupLabels(
         `        <div`,
         `          className="absolute pointer-events-none text-center"`,
         `          style={{`,
-        `            left: '${minX.toFixed(1)}%',`,
-        `            top: '${labelTop.toFixed(1)}%',`,
-        `            width: '${spanWidth.toFixed(1)}%',`,
+        `            left: ${Math.round(minX)},`,
+        `            top: ${Math.round(labelTop)},`,
+        `            width: ${Math.round(spanWidth)},`,
         `          }}`,
         `        >`,
         `          <span className="font-semibold text-gray-400 uppercase tracking-widest" style={{ fontSize: 9 }}>`,
@@ -960,18 +955,17 @@ function renderAbsolutePositioned(
   const controlJsx = sectionControls.map(({ id, ctrl }) => {
     const ep = (ctrl as any).editorPosition as { x: number; y: number; w: number; h: number };
 
-    // Compute pixel dimensions from editor percentages — same as generateFlatPanel.
-    // Without this, renderControl falls back to hardcoded sizes (size="lg" etc.).
-    const pxW = Math.round((ep.w / 100) * pw);
-    const pxH = Math.round((ep.h / 100) * ph);
+    // editorPosition is now raw pixels — use directly
+    const pxW = ep.w;
+    const pxH = ep.h;
     const controlJsxStr = renderControl(id, ctrl!, '            ', controlMap, pxW, pxH);
 
     const rotation = (ctrl as any).rotation as number | undefined;
     const styleLines = [
-      `              left: '${ep.x.toFixed(2)}%',`,
-      `              top: '${ep.y.toFixed(2)}%',`,
-      `              width: '${ep.w.toFixed(2)}%',`,
-      `              height: '${ep.h.toFixed(2)}%',`,
+      `              left: ${ep.x},`,
+      `              top: ${ep.y},`,
+      `              width: ${ep.w},`,
+      `              height: ${ep.h},`,
     ];
     if (rotation) {
       styleLines.push(`              transform: 'rotate(${rotation}deg)',`);
@@ -1217,22 +1211,18 @@ function generateFlatPanel(
       const ep = (ctrl as any).editorPosition as { x: number; y: number; w: number; h: number } | undefined;
       if (!ep) return null; // Should not happen in flat mode, but guard
 
-      // Compute pixel dimensions for component sizing
-      const pxW = Math.round((ep.w / 100) * panelWidth);
-      const pxH = Math.round((ep.h / 100) * panelHeight);
-      // Render control at full size — the inner div scales it down
+      // editorPosition is now raw pixels — use directly
+      const pxW = ep.w;
+      const pxH = ep.h;
       const controlJsx = renderControl(ctrl.id, ctrl, '            ', controlMap, pxW, pxH);
 
       const rotation = (ctrl as any).rotation as number | undefined;
-      // Inner transform — only rotation, NOT controlScale.
-      // controlScale is an editor-only tool for photo overlay positioning.
-      // The generated panel renders controls at 100% within their containers.
       const innerTransforms: string[] = [];
       if (rotation) innerTransforms.push(`rotate(${rotation}deg)`);
 
       const styleLines = [
-        `            left: '${ep.x.toFixed(1)}%',`,
-        `            top: '${ep.y.toFixed(1)}%',`,
+        `            left: ${ep.x},`,
+        `            top: ${ep.y},`,
         `            width: ${pxW},`,
         `            height: ${pxH},`,
         `            display: 'flex',`,
@@ -1271,14 +1261,14 @@ function generateFlatPanel(
         ctrl.secondaryLabel.length > 0
       ) {
         const secFontSize = secondaryLabelFontSize(ctrl.sizeClass);
-        const secTop = ep.y + ep.h + 0.2;
+        const secTop = ep.y + ep.h + 2;
         parts.push([
           `        <div`,
           `          className="absolute pointer-events-none text-center"`,
           `          style={{`,
-          `            left: '${ep.x.toFixed(1)}%',`,
-          `            top: '${secTop.toFixed(1)}%',`,
-          `            width: '${ep.w.toFixed(1)}%',`,
+          `            left: ${ep.x},`,
+          `            top: ${Math.round(secTop)},`,
+          `            width: ${ep.w},`,
           `          }}`,
           `        >`,
           `          <span className="text-gray-500 uppercase" style={{ fontSize: ${secFontSize} }}>`,

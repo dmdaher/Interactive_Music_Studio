@@ -79,23 +79,18 @@ export default function PanelShell({
           </span>
         </div>
 
-        {/* Panel content (sections + controls) */}
-        {keyboard ? (
-          <>
-            <div style={{ height: `${keyboard.panelHeightPercent}%`, position: 'relative' }}>
-              {children}
-            </div>
-            <div style={{
-              height: `${100 - keyboard.panelHeightPercent}%`,
-              position: 'relative',
-              marginLeft: keyboard.leftPercent ? `${keyboard.leftPercent}%` : undefined,
-              width: keyboard.widthPercent ? `${keyboard.widthPercent}%` : undefined,
-            }}>
-              <Keyboard keys={keyboard.keys} startNote={keyboard.startNote} />
-            </div>
-          </>
-        ) : (
-          children
+        {/* Panel content — full space, keyboard absolutely positioned at bottom */}
+        {children}
+        {keyboard && (
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: keyboard.leftPercent ? `${keyboard.leftPercent}%` : 0,
+            width: keyboard.widthPercent ? `${keyboard.widthPercent}%` : '100%',
+            height: height * (1 - keyboard.panelHeightPercent / 100),
+          }}>
+            <Keyboard keys={keyboard.keys} startNote={keyboard.startNote} />
+          </div>
         )}
       </motion.div>
     </div>

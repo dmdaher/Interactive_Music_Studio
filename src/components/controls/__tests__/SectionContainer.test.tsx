@@ -11,17 +11,17 @@ describe('SectionContainer', () => {
     expect(screen.getByTestId('child')).toBeInTheDocument();
   });
 
-  it('positions absolutely with percentage values', () => {
+  it('positions absolutely with pixel values', () => {
     const { container } = render(
       <SectionContainer id="tempo" x={60} y={40} w={35} h={50}>
         <div />
       </SectionContainer>
     );
     const section = container.firstChild as HTMLElement;
-    expect(section.style.left).toBe('60%');
-    expect(section.style.top).toBe('40%');
-    expect(section.style.width).toBe('35%');
-    expect(section.style.height).toBe('50%');
+    expect(section.style.left).toBe('60px');
+    expect(section.style.top).toBe('40px');
+    expect(section.style.width).toBe('35px');
+    expect(section.style.height).toBe('50px');
   });
 
   it('renders header label when provided', () => {
