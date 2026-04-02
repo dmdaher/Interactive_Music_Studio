@@ -319,7 +319,8 @@ function renderControl(control: ControlDef, isSelected: boolean, allControls: Re
       return buttonEl;
     }
     case 'knob': {
-      const knobSize = Math.min(visW, visH);
+      // Subtract shadow space (4px) so the knob + shadow fits within the container
+      const knobSize = Math.max(Math.min(visW, visH) - 4, 12);
       return (
         <Knob
           id={control.id}
@@ -797,7 +798,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
 
         {/* Control rendering — fills the container (container = visual) */}
         <div
-          className="flex h-full w-full items-center justify-center pointer-events-none"
+          className="flex h-full w-full items-center justify-center pointer-events-none overflow-hidden"
           style={{
             transform: control.rotation ? `rotate(${control.rotation}deg)` : undefined,
             transformOrigin: control.rotation ? 'center' : undefined,
