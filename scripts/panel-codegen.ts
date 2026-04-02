@@ -1532,12 +1532,13 @@ function updateDeviceRegistry(
 
 // ─── Main ───────────────────────────────────────────────────────────────────
 
-function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; panelHeight: number } {
+function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; panelHeight: number; explicitDims: boolean } {
   const args = process.argv.slice(2);
   let deviceId = '';
   let dryRun = false;
   let panelWidth = DEFAULT_PANEL_WIDTH;
   let panelHeight = DEFAULT_PANEL_HEIGHT;
+  let explicitDims = false;
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--dry-run') {
@@ -1548,6 +1549,7 @@ function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; p
         console.error(`Invalid --panel-width value: ${args[i + 1]}`);
         process.exit(1);
       }
+      explicitDims = true;
       i++;
     } else if (args[i] === '--panel-height' && args[i + 1]) {
       panelHeight = parseInt(args[i + 1], 10);
@@ -1555,6 +1557,7 @@ function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; p
         console.error(`Invalid --panel-height value: ${args[i + 1]}`);
         process.exit(1);
       }
+      explicitDims = true;
       i++;
     } else if (args[i] === '--scale' && args[i + 1]) {
       const s = parseFloat(args[i + 1]);
@@ -1575,11 +1578,11 @@ function parseArgs(): { deviceId: string; dryRun: boolean; panelWidth: number; p
     process.exit(1);
   }
 
-  return { deviceId, dryRun, panelWidth, panelHeight };
+  return { deviceId, dryRun, panelWidth, panelHeight, explicitDims };
 }
 
 function main() {
-  let { deviceId, dryRun, panelWidth, panelHeight } = parseArgs();
+  let { deviceId, dryRun, panelWidth, panelHeight, explicitDims } = parseArgs();
 
   // Read manifest
   const manifestPath = path.join(PROJECT_ROOT, `.pipeline/${deviceId}/manifest.json`);
@@ -1590,12 +1593,18 @@ function main() {
   }
   const manifest: MasterManifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
-  // Compute panel dimensions from deviceDimensions if available
-  const dims = (manifest as any).deviceDimensions;
-  if (dims && dims.widthMm > 0 && dims.depthMm > 0) {
-    const aspect = dims.widthMm / dims.depthMm;
-    panelHeight = Math.round(panelWidth / aspect);
-    console.log(`  Device dimensions: ${dims.widthMm}mm x ${dims.depthMm}mm → ${panelWidth}x${panelHeight}px`);
+  // Compute panel dimensions from deviceDimensions — ONLY if not explicitly provided.
+  // When the editor passes --panel-width/--panel-height, those are the canvas dimensions
+  // (which may have been scaled by the user). Use them as-is.
+  if (!explicitDims) {
+    const dims = (manifest as any).deviceDimensions;
+    if (dims && dims.widthMm > 0 && dims.depthMm > 0) {
+      const aspect = dims.widthMm / dims.depthMm;
+      panelHeight = Math.round(panelWidth / aspect);
+      console.log(`  Device dimensions: ${dims.widthMm}mm x ${dims.depthMm}mm → ${panelWidth}x${panelHeight}px`);
+    }
+  } else {
+    console.log(`  Editor canvas: ${panelWidth}x${panelHeight}px (explicit)`);
   }
 
   // Apply panel scale if provided (proportionally scales entire instrument)

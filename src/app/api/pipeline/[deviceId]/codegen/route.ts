@@ -106,16 +106,18 @@ export async function POST(
 
     // ── Step 5: Run codegen ──
     // Apply panelScale if set — multiplies panel dimensions for proportional scaling
-    const editorDataForScale = fs.existsSync(path.join(pipelineDir, 'manifest-editor.json'))
+    // Pass editor canvas dimensions to codegen so PanelShell matches
+    const editorDataForDims = fs.existsSync(path.join(pipelineDir, 'manifest-editor.json'))
       ? JSON.parse(fs.readFileSync(path.join(pipelineDir, 'manifest-editor.json'), 'utf-8'))
       : {};
-    const panelScale = (editorDataForScale.panelScale as number) ?? 1;
-    const scaleArgs = panelScale !== 1
-      ? ` --scale ${panelScale}`
+    const edCanvasW = (editorDataForDims.canvasWidth as number) || 0;
+    const edCanvasH = (editorDataForDims.canvasHeight as number) || 0;
+    const dimArgs = edCanvasW && edCanvasH
+      ? ` --panel-width ${edCanvasW} --panel-height ${edCanvasH}`
       : '';
 
     const codegenOutput = execSync(
-      `npx tsx scripts/panel-codegen.ts ${deviceId}${scaleArgs}`,
+      `npx tsx scripts/panel-codegen.ts ${deviceId}${dimArgs}`,
       {
         cwd: process.cwd(),
         stdio: 'pipe',
