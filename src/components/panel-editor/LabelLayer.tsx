@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEditorStore } from './store';
 import type { EditorLabel } from './store';
 
@@ -17,18 +17,37 @@ export default function LabelLayer() {
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const zoom = useEditorStore((s) => s.zoom);
 
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
   const dragStart = useRef<{ x: number; y: number; labelX: number; labelY: number } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Keyboard: Delete selected label, Escape deselects
+  useEffect(() => {
+    if (!selectedLabel || editing) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        e.preventDefault();
+        pushSnapshot();
+        deleteLabel(selectedLabel);
+        setSelectedLabel(null);
+      } else if (e.key === 'Escape') {
+        setSelectedLabel(null);
+      }
+    };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [selectedLabel, editing, pushSnapshot, deleteLabel]);
+
   if (!showLabels) return null;
 
   const handleMouseDown = useCallback((e: React.MouseEvent, label: EditorLabel) => {
-    if (editing === label.id) return; // Don't drag while editing
+    if (editing === label.id) return;
     e.stopPropagation();
     e.preventDefault();
+    setSelectedLabel(label.id);
     setDragging(label.id);
     dragStart.current = {
       x: e.clientX,
@@ -97,8 +116,12 @@ export default function LabelLayer() {
                 top: label.y,
                 fontSize: label.fontSize,
                 textAlign: label.align,
-                zIndex: dragging === label.id ? 50 : 5,
+                zIndex: dragging === label.id ? 50 : selectedLabel === label.id ? 10 : 5,
                 opacity: dragging === label.id ? 0.7 : 1,
+                outline: selectedLabel === label.id ? '1px solid rgba(59,130,246,0.8)' : 'none',
+                outlineOffset: 2,
+                borderRadius: 2,
+                padding: '1px 3px',
               }}
               onMouseDown={(e) => handleMouseDown(e, label)}
               onDoubleClick={() => handleDoubleClick(label)}
