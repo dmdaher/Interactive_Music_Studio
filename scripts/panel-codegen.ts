@@ -453,6 +453,44 @@ function renderFloatingLabel(
   const floatingPos = resolveFloatingLabel(ctrl);
   if (!floatingPos) return null;
 
+  // If the codegen API pre-computed label positions, use them directly.
+  // This is the single source of truth — same math as the editor.
+  const precomputed = (ctrl as any)._labelPos as { x: number; y: number; w: number; align: string; fontSize: number } | undefined;
+  if (precomputed) {
+    const labelText = ctrl.verbatimLabel;
+    if (!labelText) return null;
+    const secFontSize = Math.max(precomputed.fontSize - 1, 6);
+    const hasSecondary = ctrl.secondaryLabel && ctrl.secondaryLabel.length > 0;
+
+    const lines: string[] = [
+      `        <div`,
+      `          className="absolute pointer-events-none"`,
+      `          style={{`,
+      `            left: ${precomputed.x},`,
+      `            top: ${precomputed.y},`,
+      `            width: ${precomputed.w},`,
+      `            textAlign: '${precomputed.align}',`,
+      `          }}`,
+      `        >`,
+      `          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: ${precomputed.fontSize} }}>`,
+      ...labelText.split('\n').flatMap((line, i, arr) => {
+        const parts = [`            ${escapeJsx(line)}`];
+        if (i < arr.length - 1) parts.push(`            <br />`);
+        return parts;
+      }),
+      `          </span>`,
+    ];
+    if (hasSecondary) {
+      lines.push(
+        `          <span className="text-gray-500 uppercase block whitespace-nowrap" style={{ fontSize: ${secFontSize} }}>`,
+        `            ${escapeJsx(ctrl.secondaryLabel!)}`,
+        `          </span>`,
+      );
+    }
+    lines.push(`        </div>`);
+    return lines.join('\n');
+  }
+
   // For icon-only, we still show the verbatimLabel as a floating label
   const labelText = ctrl.verbatimLabel;
   if (!labelText) return null;

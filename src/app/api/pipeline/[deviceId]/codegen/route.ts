@@ -90,12 +90,61 @@ export async function POST(
           // generated panel matches what the editor shows (container = visual).
           if (editorControl) {
             const scale = (editorData.controlScale as number) ?? 1;
+            const visW = Math.round(editorControl.w * scale);
+            const visH = Math.round(editorControl.h * scale);
             (control as any).editorPosition = {
               x: Math.round(editorControl.x),
               y: Math.round(editorControl.y),
-              w: Math.round(editorControl.w * scale),
-              h: Math.round(editorControl.h * scale),
+              w: visW,
+              h: visH,
             };
+
+            // Compute label position using the SAME math as the editor's
+            // ControlNode renderFloatingLabel — single source of truth.
+            const labelPos = control.labelDisplay ?? editorControl.labelPosition ?? 'below';
+            if (labelPos !== 'on-button' && labelPos !== 'hidden') {
+              const label = control.verbatimLabel ?? editorControl.label ?? '';
+              const fontSize = { xs: 7, sm: 7, md: 8, lg: 10, xl: 11 }[control.sizeClass as string] ?? 8;
+              const lineH = fontSize + 2;
+              const primaryLines = label.split('\n').length;
+              const hasSecondary = control.secondaryLabel && control.secondaryLabel.length > 0;
+              const totalLabelH = (primaryLines + (hasSecondary ? 1 : 0)) * lineH;
+              const minLabelW = 60;
+              const ctrlX = Math.round(editorControl.x);
+              const ctrlY = Math.round(editorControl.y);
+
+              let labelX: number, labelY: number, labelW: number;
+              switch (labelPos) {
+                case 'above':
+                default:
+                  labelW = Math.max(visW, minLabelW);
+                  labelX = ctrlX + visW / 2 - labelW / 2;
+                  labelY = ctrlY - totalLabelH - 6;
+                  break;
+                case 'below':
+                  labelW = Math.max(visW, minLabelW);
+                  labelX = ctrlX + visW / 2 - labelW / 2;
+                  labelY = ctrlY + visH + 6;
+                  break;
+                case 'left':
+                  labelW = Math.max(visW * 1.5, minLabelW);
+                  labelX = ctrlX - labelW - 4;
+                  labelY = ctrlY + visH / 2 - totalLabelH / 2;
+                  break;
+                case 'right':
+                  labelW = Math.max(visW * 1.5, minLabelW);
+                  labelX = ctrlX + visW + 4;
+                  labelY = ctrlY + visH / 2 - totalLabelH / 2;
+                  break;
+              }
+              (control as any)._labelPos = {
+                x: Math.round(labelX!),
+                y: Math.round(labelY!),
+                w: Math.round(labelW!),
+                align: (labelPos === 'left') ? 'right' : (labelPos === 'right') ? 'left' : 'center',
+                fontSize,
+              };
+            }
           } else {
             // Control not in editor manifest — clear any stale editorPosition
             // from a previous build (which may have been percentage-based)
