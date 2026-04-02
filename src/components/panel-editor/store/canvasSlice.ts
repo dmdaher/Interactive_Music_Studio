@@ -81,7 +81,7 @@ export const createCanvasSlice: StateCreator<
   toggleGrid: () => set((s) => ({ showGrid: !s.showGrid })),
   toggleLayers: () => set((s) => ({ showLayers: !s.showLayers })),
   toggleLabels: () => set((s) => ({ showLabels: !s.showLabels })),
-  setControlScale: (s) => set({ controlScale: Math.max(0.3, Math.min(1, s)) }),
+  setControlScale: (s) => set({ controlScale: Math.max(0.2, Math.min(2, s)) }),
 
   togglePhoto: () => set((s) => ({ showPhoto: !s.showPhoto })),
 
