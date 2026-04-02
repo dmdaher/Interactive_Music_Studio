@@ -30,8 +30,8 @@ export default function ControllerSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 129,
-              top: 104,
+              left: 130,
+              top: 105,
               width: 14,
               height: 75,
             }}
@@ -44,19 +44,6 @@ export default function ControllerSection({
               highlighted={isHighlighted('wheel-1')}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 106,
-            top: 185,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            WHEEL1
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -74,19 +61,6 @@ export default function ControllerSection({
               highlighted={isHighlighted('wheel-2')}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 171,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            WHEEL2
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -108,19 +82,6 @@ export default function ControllerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 96,
-            top: 347,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S1
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -142,19 +103,6 @@ export default function ControllerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 130,
-            top: 345,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S2
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -173,19 +121,6 @@ export default function ControllerSection({
               height={61}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 136,
-            top: 477,
-            width: 61,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PITCH BEND/MOD
-          </span>
-        </div>
       </div>
     </motion.div>
   );

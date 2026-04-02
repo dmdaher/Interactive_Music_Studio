@@ -46,19 +46,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1391,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PATTERN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -80,19 +67,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1391,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            GROUP
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -114,19 +88,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1446,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SONG
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -148,19 +109,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1446,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            TR-REC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -182,19 +130,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1483,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RHYTHM PTN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -216,19 +151,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1534,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            STOP
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -250,19 +172,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1559,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PLAY
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -284,19 +193,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1586,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            REC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -318,19 +214,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            A.PIANO
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -352,19 +235,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            E.PIANO
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -386,19 +256,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ORGAN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -420,19 +277,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            GUITAR/BASS
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -454,19 +298,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            STRINGS
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -488,19 +319,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BRASS
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -522,19 +340,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SYNTH LEAD
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -556,19 +361,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SYNTH PAD
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -590,19 +382,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BELL/MALLET
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -624,19 +403,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            HIT/OTHER
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -658,19 +424,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RHYTHM
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -692,19 +445,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S.N. ACOUSTIC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -726,19 +466,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S.N.S
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -760,19 +487,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            VTW
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -794,19 +508,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            MODEL
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -828,19 +529,6 @@ export default function SequencerSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            DRUM
-          </span>
-        </div>
       </div>
     </motion.div>
   );

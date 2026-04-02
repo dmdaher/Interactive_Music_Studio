@@ -30,9 +30,9 @@ export default function ZoneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 273,
-              top: 126,
-              width: 38,
+              left: 269,
+              top: 134,
+              width: 39,
               height: 32,
             }}
           >
@@ -45,28 +45,13 @@ export default function ZoneSection({
               innerSize={22}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 262,
-            top: 100,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            MASTER
-            <br />
-            VOLUME
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 316,
+              left: 318,
               top: 98,
               width: 30,
-              height: 19,
+              height: 18,
             }}
           >
             <div>
@@ -74,66 +59,38 @@ export default function ZoneSection({
                 id="pan-level"
                 label=""
                 width={30}
-                height={19}
+                height={18}
                 active={getState('pan-level').active}
                 highlighted={isHighlighted('pan-level')}
                 onClick={() => onButtonClick?.('pan-level')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 301,
-            top: 72,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PAN/
-            <br />
-            LEVEL
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 353,
-              top: 97,
-              width: 30,
-              height: 19,
+              top: 96,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="ctrl"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('ctrl').active}
                 highlighted={isHighlighted('ctrl')}
                 onClick={() => onButtonClick?.('ctrl')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 338,
-            top: 81,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CTRL
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 350,
+              left: 352,
               top: 139,
               width: 30,
               height: 19,
@@ -151,58 +108,32 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 335,
-            top: 123,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ASSIGN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 313,
-              top: 176,
-              width: 30,
-              height: 19,
+              left: 318,
+              top: 179,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="zone-9-16"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-9-16').active}
                 highlighted={isHighlighted('zone-9-16')}
                 onClick={() => onButtonClick?.('zone-9-16')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 298,
-            top: 160,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE 9-16
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 349,
-              top: 175,
+              left: 357,
+              top: 178,
               width: 30,
               height: 19,
             }}
@@ -219,26 +150,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 334,
-            top: 149,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE
-            <br />
-            SELECT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 392,
-              top: 87,
+              left: 393,
+              top: 86,
               width: 30,
               height: 30,
             }}
@@ -255,8 +171,8 @@ export default function ZoneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 434,
-              top: 85,
+              left: 435,
+              top: 84,
               width: 30,
               height: 30,
             }}
@@ -274,7 +190,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 474,
-              top: 86,
+              top: 84,
               width: 30,
               height: 30,
             }}
@@ -292,7 +208,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 516,
-              top: 86,
+              top: 84,
               width: 30,
               height: 30,
             }}
@@ -310,7 +226,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 562,
-              top: 86,
+              top: 84,
               width: 30,
               height: 30,
             }}
@@ -328,7 +244,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 606,
-              top: 88,
+              top: 86,
               width: 30,
               height: 30,
             }}
@@ -346,7 +262,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 646,
-              top: 85,
+              top: 83,
               width: 30,
               height: 30,
             }}
@@ -364,7 +280,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 687,
-              top: 87,
+              top: 85,
               width: 30,
               height: 30,
             }}
@@ -381,42 +297,29 @@ export default function ZoneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 395,
-              top: 150,
-              width: 30,
-              height: 19,
+              left: 394,
+              top: 148,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="zone-int-ext-1"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-1').active}
                 highlighted={isHighlighted('zone-int-ext-1')}
                 onClick={() => onButtonClick?.('zone-int-ext-1')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 380,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            1
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 438,
-              top: 150,
+              top: 148,
               width: 30,
               height: 19,
             }}
@@ -433,24 +336,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 423,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            2
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 481,
-              top: 149,
+              top: 147,
               width: 30,
               height: 19,
             }}
@@ -467,24 +357,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 466,
-            top: 133,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            3
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 522,
-              top: 150,
+              top: 148,
               width: 30,
               height: 19,
             }}
@@ -501,24 +378,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 507,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            4
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 566,
-              top: 150,
+              top: 148,
               width: 30,
               height: 19,
             }}
@@ -535,24 +399,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 551,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            5
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 609,
-              top: 150,
+              top: 148,
               width: 30,
               height: 19,
             }}
@@ -569,24 +420,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 594,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            6
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 648,
-              top: 151,
+              top: 149,
               width: 30,
               height: 19,
             }}
@@ -603,24 +441,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 633,
-            top: 135,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            7
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 688,
-              top: 150,
+              top: 148,
               width: 30,
               height: 19,
             }}
@@ -637,24 +462,11 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 673,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            8
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
               left: 404,
-              top: 181,
+              top: 179,
               width: 19,
               height: 75,
             }}
@@ -672,7 +484,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 446,
-              top: 181,
+              top: 179,
               width: 19,
               height: 75,
             }}
@@ -690,7 +502,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 486,
-              top: 181,
+              top: 179,
               width: 19,
               height: 75,
             }}
@@ -708,7 +520,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 527,
-              top: 178,
+              top: 176,
               width: 19,
               height: 75,
             }}
@@ -726,7 +538,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 573,
-              top: 178,
+              top: 176,
               width: 19,
               height: 75,
             }}
@@ -744,7 +556,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 613,
-              top: 178,
+              top: 176,
               width: 19,
               height: 75,
             }}
@@ -762,7 +574,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 657,
-              top: 179,
+              top: 177,
               width: 19,
               height: 75,
             }}
@@ -780,7 +592,7 @@ export default function ZoneSection({
             className="absolute flex items-center justify-center"
             style={{
               left: 696,
-              top: 179,
+              top: 177,
               width: 19,
               height: 75,
             }}
@@ -797,78 +609,50 @@ export default function ZoneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 282,
-              top: 214,
-              width: 30,
-              height: 19,
+              left: 278,
+              top: 224,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="split"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('split').active}
                 highlighted={isHighlighted('split')}
                 onClick={() => onButtonClick?.('split')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 267,
-            top: 198,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SPLIT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 318,
-              top: 215,
-              width: 30,
-              height: 19,
+              left: 323,
+              top: 222,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="chord-memory"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('chord-memory').active}
                 highlighted={isHighlighted('chord-memory')}
                 onClick={() => onButtonClick?.('chord-memory')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 303,
-            top: 189,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CHORD
-            <br />
-            MEMORY
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 357,
-              top: 213,
+              left: 363,
+              top: 221,
               width: 30,
               height: 19,
             }}
@@ -885,92 +669,53 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 342,
-            top: 197,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ARPEGGIO
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 281,
-              top: 251,
-              width: 30,
-              height: 19,
+              left: 277,
+              top: 267,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="transpose"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('transpose').active}
                 highlighted={isHighlighted('transpose')}
                 onClick={() => onButtonClick?.('transpose')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 266,
-            top: 235,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            TRANSPOSE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 318,
-              top: 251,
-              width: 29,
-              height: 19,
+              left: 322,
+              top: 266,
+              width: 28,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="octave-down"
                 label=""
-                width={29}
-                height={19}
+                width={28}
+                height={20}
                 active={getState('octave-down').active}
                 highlighted={isHighlighted('octave-down')}
                 onClick={() => onButtonClick?.('octave-down')}
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 303,
-            top: 235,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            DOWN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 353,
-              top: 249,
+              left: 360,
+              top: 265,
               width: 30,
               height: 19,
             }}
@@ -987,19 +732,6 @@ export default function ZoneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 338,
-            top: 233,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            UP
-          </span>
-        </div>
       </div>
     </motion.div>
   );

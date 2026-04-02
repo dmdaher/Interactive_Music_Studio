@@ -47,19 +47,6 @@ export default function PadSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1639,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SAMPLING
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -81,19 +68,6 @@ export default function PadSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1689,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PAD MODE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -115,19 +89,6 @@ export default function PadSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1718,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CLIP BOARD
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -149,19 +110,6 @@ export default function PadSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1743,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BANK
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -183,19 +131,6 @@ export default function PadSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1796,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            HOLD
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{

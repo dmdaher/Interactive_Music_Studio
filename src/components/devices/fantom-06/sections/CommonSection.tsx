@@ -49,19 +49,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            WRITE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -83,19 +70,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MASTER FX
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -117,19 +91,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MOTIONAL PAD
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -151,19 +112,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            DAW CTRL
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -185,19 +133,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MENU
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -217,19 +152,6 @@ export default function CommonSection({
               highlighted={isHighlighted('display')}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 773,
-            top: 244,
-            width: 281,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            Display
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -248,19 +170,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 393,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E1
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -279,19 +188,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 393,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E2
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -310,19 +206,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E3
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -341,19 +224,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E4
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -372,19 +242,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E5
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -403,19 +260,6 @@ export default function CommonSection({
               innerSize={17}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E6
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -437,19 +281,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 474,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            TEMPO
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -466,19 +297,6 @@ export default function CommonSection({
               highlighted={isHighlighted('value-dial')}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            VALUE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -500,19 +318,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 474,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            DEC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -534,19 +339,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            INC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -568,19 +360,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR UP
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -602,19 +381,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR DOWN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -636,19 +402,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR LEFT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -670,19 +423,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR RIGHT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -704,19 +444,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            SHIFT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -738,19 +465,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            EXIT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -772,19 +486,6 @@ export default function CommonSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 624,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            ENTER
-          </span>
-        </div>
       </div>
     </motion.div>
   );

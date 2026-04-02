@@ -44,19 +44,6 @@ export default function SynthSection({
               innerSize={21}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1179,
-            top: 74,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CUTOFF
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -75,19 +62,6 @@ export default function SynthSection({
               innerSize={21}
             />
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1278,
-            top: 74,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RESONANCE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -109,19 +83,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1193,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            OSC
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -143,19 +104,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1243,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            FILTER TYPE
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -177,19 +125,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1293,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PARAM
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -211,19 +146,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1193,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            AMP
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -245,19 +167,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1243,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            FX
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -279,19 +188,6 @@ export default function SynthSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1293,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            LFO
-          </span>
-        </div>
       </div>
     </motion.div>
   );

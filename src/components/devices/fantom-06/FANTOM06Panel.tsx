@@ -45,8 +45,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 129,
-            top: 104,
+            left: 130,
+            top: 105,
             width: 14,
             height: 75,
             display: 'flex',
@@ -61,19 +61,6 @@ export default function FANTOM06Panel({
               height={75}
               highlighted={isHighlighted('wheel-1')}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 106,
-            top: 185,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            WHEEL1
-          </span>
         </div>
 
         {/* wheel-2 */}
@@ -96,19 +83,6 @@ export default function FANTOM06Panel({
               height={71}
               highlighted={isHighlighted('wheel-2')}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 171,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            WHEEL2
-          </span>
         </div>
 
         {/* s1 */}
@@ -136,19 +110,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 96,
-            top: 347,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S1
-          </span>
-        </div>
 
         {/* s2 */}
         <div
@@ -175,19 +136,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 130,
-            top: 345,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S2
-          </span>
-        </div>
 
         {/* pitch-bend-lever */}
         <div
@@ -211,27 +159,14 @@ export default function FANTOM06Panel({
               height={61}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 136,
-            top: 477,
-            width: 61,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PITCH BEND/MOD
-          </span>
-        </div>
 
         {/* master-volume */}
         <div
           className="absolute"
           style={{
-            left: 273,
-            top: 126,
-            width: 38,
+            left: 269,
+            top: 134,
+            width: 39,
             height: 32,
             display: 'flex',
             alignItems: 'center',
@@ -247,30 +182,15 @@ export default function FANTOM06Panel({
               innerSize={22}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 262,
-            top: 100,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            MASTER
-            <br />
-            VOLUME
-          </span>
-        </div>
 
         {/* pan-level */}
         <div
           className="absolute"
           style={{
-            left: 316,
+            left: 318,
             top: 98,
             width: 30,
-            height: 19,
+            height: 18,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -281,27 +201,12 @@ export default function FANTOM06Panel({
                 id="pan-level"
                 label=""
                 width={30}
-                height={19}
+                height={18}
                 active={getState('pan-level').active}
                 highlighted={isHighlighted('pan-level')}
                 onClick={() => onButtonClick?.('pan-level')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 301,
-            top: 72,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PAN/
-            <br />
-            LEVEL
-          </span>
         </div>
 
         {/* ctrl */}
@@ -309,9 +214,9 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 353,
-            top: 97,
-            width: 30,
-            height: 19,
+            top: 96,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -321,33 +226,20 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="ctrl"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('ctrl').active}
                 highlighted={isHighlighted('ctrl')}
                 onClick={() => onButtonClick?.('ctrl')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 338,
-            top: 81,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CTRL
-          </span>
-        </div>
 
         {/* assign */}
         <div
           className="absolute"
           style={{
-            left: 350,
+            left: 352,
             top: 139,
             width: 30,
             height: 19,
@@ -368,28 +260,15 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 335,
-            top: 123,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ASSIGN
-          </span>
-        </div>
 
         {/* zone-9-16 */}
         <div
           className="absolute"
           style={{
-            left: 313,
-            top: 176,
-            width: 30,
-            height: 19,
+            left: 318,
+            top: 179,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -399,34 +278,21 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-9-16"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-9-16').active}
                 highlighted={isHighlighted('zone-9-16')}
                 onClick={() => onButtonClick?.('zone-9-16')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 298,
-            top: 160,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE 9-16
-          </span>
-        </div>
 
         {/* zone-select */}
         <div
           className="absolute"
           style={{
-            left: 349,
-            top: 175,
+            left: 357,
+            top: 178,
             width: 30,
             height: 19,
             display: 'flex',
@@ -446,28 +312,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 334,
-            top: 149,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE
-            <br />
-            SELECT
-          </span>
-        </div>
 
         {/* knob-1 */}
         <div
           className="absolute"
           style={{
-            left: 392,
-            top: 87,
+            left: 393,
+            top: 86,
             width: 30,
             height: 30,
             display: 'flex',
@@ -489,8 +340,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 434,
-            top: 85,
+            left: 435,
+            top: 84,
             width: 30,
             height: 30,
             display: 'flex',
@@ -513,7 +364,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 474,
-            top: 86,
+            top: 84,
             width: 30,
             height: 30,
             display: 'flex',
@@ -536,7 +387,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 516,
-            top: 86,
+            top: 84,
             width: 30,
             height: 30,
             display: 'flex',
@@ -559,7 +410,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 562,
-            top: 86,
+            top: 84,
             width: 30,
             height: 30,
             display: 'flex',
@@ -582,7 +433,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 606,
-            top: 88,
+            top: 86,
             width: 30,
             height: 30,
             display: 'flex',
@@ -605,7 +456,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 646,
-            top: 85,
+            top: 83,
             width: 30,
             height: 30,
             display: 'flex',
@@ -628,7 +479,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 687,
-            top: 87,
+            top: 85,
             width: 30,
             height: 30,
             display: 'flex',
@@ -650,10 +501,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 395,
-            top: 150,
-            width: 30,
-            height: 19,
+            left: 394,
+            top: 148,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -663,26 +514,13 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-1"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-1').active}
                 highlighted={isHighlighted('zone-int-ext-1')}
                 onClick={() => onButtonClick?.('zone-int-ext-1')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 380,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            1
-          </span>
         </div>
 
         {/* zone-int-ext-2 */}
@@ -690,7 +528,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 438,
-            top: 150,
+            top: 148,
             width: 30,
             height: 19,
             display: 'flex',
@@ -710,26 +548,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 423,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            2
-          </span>
-        </div>
 
         {/* zone-int-ext-3 */}
         <div
           className="absolute"
           style={{
             left: 481,
-            top: 149,
+            top: 147,
             width: 30,
             height: 19,
             display: 'flex',
@@ -749,26 +574,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 466,
-            top: 133,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            3
-          </span>
-        </div>
 
         {/* zone-int-ext-4 */}
         <div
           className="absolute"
           style={{
             left: 522,
-            top: 150,
+            top: 148,
             width: 30,
             height: 19,
             display: 'flex',
@@ -788,26 +600,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 507,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            4
-          </span>
-        </div>
 
         {/* zone-int-ext-5 */}
         <div
           className="absolute"
           style={{
             left: 566,
-            top: 150,
+            top: 148,
             width: 30,
             height: 19,
             display: 'flex',
@@ -827,26 +626,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 551,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            5
-          </span>
-        </div>
 
         {/* zone-int-ext-6 */}
         <div
           className="absolute"
           style={{
             left: 609,
-            top: 150,
+            top: 148,
             width: 30,
             height: 19,
             display: 'flex',
@@ -866,26 +652,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 594,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            6
-          </span>
-        </div>
 
         {/* zone-int-ext-7 */}
         <div
           className="absolute"
           style={{
             left: 648,
-            top: 151,
+            top: 149,
             width: 30,
             height: 19,
             display: 'flex',
@@ -905,26 +678,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 633,
-            top: 135,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            7
-          </span>
-        </div>
 
         {/* zone-int-ext-8 */}
         <div
           className="absolute"
           style={{
             left: 688,
-            top: 150,
+            top: 148,
             width: 30,
             height: 19,
             display: 'flex',
@@ -944,26 +704,13 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 673,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            8
-          </span>
-        </div>
 
         {/* slider-1 */}
         <div
           className="absolute"
           style={{
             left: 404,
-            top: 181,
+            top: 179,
             width: 19,
             height: 75,
             display: 'flex',
@@ -986,7 +733,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 446,
-            top: 181,
+            top: 179,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1009,7 +756,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 486,
-            top: 181,
+            top: 179,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1032,7 +779,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 527,
-            top: 178,
+            top: 176,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1055,7 +802,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 573,
-            top: 178,
+            top: 176,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1078,7 +825,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 613,
-            top: 178,
+            top: 176,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1101,7 +848,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 657,
-            top: 179,
+            top: 177,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1124,7 +871,7 @@ export default function FANTOM06Panel({
           className="absolute"
           style={{
             left: 696,
-            top: 179,
+            top: 177,
             width: 19,
             height: 75,
             display: 'flex',
@@ -1146,10 +893,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 282,
-            top: 214,
-            width: 30,
-            height: 19,
+            left: 278,
+            top: 224,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1159,36 +906,23 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="split"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('split').active}
                 highlighted={isHighlighted('split')}
                 onClick={() => onButtonClick?.('split')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 267,
-            top: 198,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SPLIT
-          </span>
-        </div>
 
         {/* chord-memory */}
         <div
           className="absolute"
           style={{
-            left: 318,
-            top: 215,
-            width: 30,
-            height: 19,
+            left: 323,
+            top: 222,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1198,36 +932,21 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="chord-memory"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('chord-memory').active}
                 highlighted={isHighlighted('chord-memory')}
                 onClick={() => onButtonClick?.('chord-memory')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 303,
-            top: 189,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CHORD
-            <br />
-            MEMORY
-          </span>
-        </div>
 
         {/* arpeggio */}
         <div
           className="absolute"
           style={{
-            left: 357,
-            top: 213,
+            left: 363,
+            top: 221,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1247,28 +966,15 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 342,
-            top: 197,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ARPEGGIO
-          </span>
-        </div>
 
         {/* transpose */}
         <div
           className="absolute"
           style={{
-            left: 281,
-            top: 251,
-            width: 30,
-            height: 19,
+            left: 277,
+            top: 267,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1278,36 +984,23 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="transpose"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('transpose').active}
                 highlighted={isHighlighted('transpose')}
                 onClick={() => onButtonClick?.('transpose')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 266,
-            top: 235,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            TRANSPOSE
-          </span>
-        </div>
 
         {/* octave-down */}
         <div
           className="absolute"
           style={{
-            left: 318,
-            top: 251,
-            width: 29,
-            height: 19,
+            left: 322,
+            top: 266,
+            width: 28,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1317,34 +1010,21 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="octave-down"
                 label=""
-                width={29}
-                height={19}
+                width={28}
+                height={20}
                 active={getState('octave-down').active}
                 highlighted={isHighlighted('octave-down')}
                 onClick={() => onButtonClick?.('octave-down')}
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 303,
-            top: 235,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            DOWN
-          </span>
-        </div>
 
         {/* octave-up */}
         <div
           className="absolute"
           style={{
-            left: 353,
-            top: 249,
+            left: 360,
+            top: 265,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1363,19 +1043,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('octave-up')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 338,
-            top: 233,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            UP
-          </span>
         </div>
 
         {/* write */}
@@ -1403,19 +1070,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            WRITE
-          </span>
-        </div>
 
         {/* master-fx */}
         <div
@@ -1441,19 +1095,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('master-fx')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MASTER FX
-          </span>
         </div>
 
         {/* motional-pad */}
@@ -1481,19 +1122,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MOTIONAL PAD
-          </span>
-        </div>
 
         {/* daw-ctrl */}
         <div
@@ -1519,19 +1147,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('daw-ctrl')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            DAW CTRL
-          </span>
         </div>
 
         {/* menu */}
@@ -1559,19 +1174,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 384,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            MENU
-          </span>
-        </div>
 
         {/* display */}
         <div
@@ -1596,19 +1198,6 @@ export default function FANTOM06Panel({
               highlighted={isHighlighted('display')}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 773,
-            top: 244,
-            width: 281,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            Display
-          </span>
-        </div>
 
         {/* e1 */}
         <div
@@ -1631,19 +1220,6 @@ export default function FANTOM06Panel({
               outerSize={24}
               innerSize={17}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 393,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E1
-          </span>
         </div>
 
         {/* e2 */}
@@ -1668,19 +1244,6 @@ export default function FANTOM06Panel({
               innerSize={17}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 393,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E2
-          </span>
-        </div>
 
         {/* e3 */}
         <div
@@ -1703,19 +1266,6 @@ export default function FANTOM06Panel({
               outerSize={24}
               innerSize={17}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E3
-          </span>
         </div>
 
         {/* e4 */}
@@ -1740,19 +1290,6 @@ export default function FANTOM06Panel({
               innerSize={17}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E4
-          </span>
-        </div>
 
         {/* e5 */}
         <div
@@ -1776,19 +1313,6 @@ export default function FANTOM06Panel({
               innerSize={17}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E5
-          </span>
-        </div>
 
         {/* e6 */}
         <div
@@ -1811,19 +1335,6 @@ export default function FANTOM06Panel({
               outerSize={24}
               innerSize={17}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            E6
-          </span>
         </div>
 
         {/* tempo */}
@@ -1851,19 +1362,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 474,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            TEMPO
-          </span>
-        </div>
 
         {/* value-dial */}
         <div
@@ -1884,19 +1382,6 @@ export default function FANTOM06Panel({
               outerSize={24}
               highlighted={isHighlighted('value-dial')}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 483,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            VALUE
-          </span>
         </div>
 
         {/* dec */}
@@ -1924,19 +1409,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 474,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            DEC
-          </span>
-        </div>
 
         {/* inc */}
         <div
@@ -1962,19 +1434,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('inc')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            INC
-          </span>
         </div>
 
         {/* cursor-up */}
@@ -2002,19 +1461,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR UP
-          </span>
-        </div>
 
         {/* cursor-down */}
         <div
@@ -2040,19 +1486,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('cursor-down')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 700,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR DOWN
-          </span>
         </div>
 
         {/* cursor-left */}
@@ -2080,19 +1513,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 790,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR LEFT
-          </span>
-        </div>
 
         {/* cursor-right */}
         <div
@@ -2118,19 +1538,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('cursor-right')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            CURSOR RIGHT
-          </span>
         </div>
 
         {/* shift */}
@@ -2158,19 +1565,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            SHIFT
-          </span>
-        </div>
 
         {/* exit */}
         <div
@@ -2196,19 +1590,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('exit')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1060,
-            top: 564,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            EXIT
-          </span>
         </div>
 
         {/* enter */}
@@ -2236,19 +1617,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 520,
-            top: 624,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 8 }}>
-            ENTER
-          </span>
-        </div>
 
         {/* scene-select */}
         <div
@@ -2274,19 +1642,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('scene-select')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 25,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SCENE SELECT
-          </span>
         </div>
 
         {/* scene-chain */}
@@ -2314,19 +1669,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 88,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SCENE CHAIN
-          </span>
-        </div>
 
         {/* zone-view */}
         <div
@@ -2352,19 +1694,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('zone-view')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 127,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE VIEW
-          </span>
         </div>
 
         {/* single-tone */}
@@ -2392,19 +1721,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 177,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SINGLE TONE
-          </span>
-        </div>
 
         {/* cutoff */}
         <div
@@ -2428,19 +1744,6 @@ export default function FANTOM06Panel({
               innerSize={21}
             />
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1179,
-            top: 74,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CUTOFF
-          </span>
-        </div>
 
         {/* resonance */}
         <div
@@ -2463,19 +1766,6 @@ export default function FANTOM06Panel({
               outerSize={30}
               innerSize={21}
             />
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1278,
-            top: 74,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RESONANCE
-          </span>
         </div>
 
         {/* osc */}
@@ -2503,19 +1793,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1193,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            OSC
-          </span>
-        </div>
 
         {/* filter-type */}
         <div
@@ -2541,19 +1818,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('filter-type')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1243,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            FILTER TYPE
-          </span>
         </div>
 
         {/* param */}
@@ -2581,19 +1845,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1293,
-            top: 97,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PARAM
-          </span>
-        </div>
 
         {/* amp */}
         <div
@@ -2619,19 +1870,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('amp')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1193,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            AMP
-          </span>
         </div>
 
         {/* fx */}
@@ -2659,19 +1897,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1243,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            FX
-          </span>
-        </div>
 
         {/* lfo */}
         <div
@@ -2697,19 +1922,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('lfo')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1293,
-            top: 134,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            LFO
-          </span>
         </div>
 
         {/* pattern */}
@@ -2737,19 +1949,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1391,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PATTERN
-          </span>
-        </div>
 
         {/* group */}
         <div
@@ -2775,19 +1974,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('group')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1391,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            GROUP
-          </span>
         </div>
 
         {/* song */}
@@ -2815,19 +2001,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1446,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SONG
-          </span>
-        </div>
 
         {/* tr-rec */}
         <div
@@ -2853,19 +2026,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tr-rec')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1446,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            TR-REC
-          </span>
         </div>
 
         {/* rhythm-ptn */}
@@ -2893,19 +2053,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1483,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RHYTHM PTN
-          </span>
-        </div>
 
         {/* stop */}
         <div
@@ -2931,19 +2078,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('stop')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1534,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            STOP
-          </span>
         </div>
 
         {/* play */}
@@ -2971,19 +2105,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1559,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PLAY
-          </span>
-        </div>
 
         {/* rec */}
         <div
@@ -3009,19 +2130,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('rec')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1586,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            REC
-          </span>
         </div>
 
         {/* tone-cat-1 */}
@@ -3049,19 +2157,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            A.PIANO
-          </span>
-        </div>
 
         {/* tone-cat-2 */}
         <div
@@ -3087,19 +2182,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-2')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            E.PIANO
-          </span>
         </div>
 
         {/* tone-cat-3 */}
@@ -3127,19 +2209,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ORGAN
-          </span>
-        </div>
 
         {/* tone-cat-4 */}
         <div
@@ -3165,19 +2234,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-4')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 147,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            GUITAR/BASS
-          </span>
         </div>
 
         {/* tone-cat-5 */}
@@ -3205,19 +2261,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            STRINGS
-          </span>
-        </div>
 
         {/* tone-cat-6 */}
         <div
@@ -3243,19 +2286,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-6')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BRASS
-          </span>
         </div>
 
         {/* tone-cat-7 */}
@@ -3283,19 +2313,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SYNTH LEAD
-          </span>
-        </div>
 
         {/* tone-cat-8 */}
         <div
@@ -3321,19 +2338,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-8')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 178,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SYNTH PAD
-          </span>
         </div>
 
         {/* tone-cat-9 */}
@@ -3361,19 +2365,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BELL/MALLET
-          </span>
-        </div>
 
         {/* tone-cat-10 */}
         <div
@@ -3399,19 +2390,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-10')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            HIT/OTHER
-          </span>
         </div>
 
         {/* tone-cat-11 */}
@@ -3439,19 +2417,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            RHYTHM
-          </span>
-        </div>
 
         {/* tone-cat-12 */}
         <div
@@ -3477,19 +2442,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-12')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 209,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S.N. ACOUSTIC
-          </span>
         </div>
 
         {/* tone-cat-13 */}
@@ -3517,19 +2469,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1376,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            S.N.S
-          </span>
-        </div>
 
         {/* tone-cat-14 */}
         <div
@@ -3555,19 +2494,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-14')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1435,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            VTW
-          </span>
         </div>
 
         {/* tone-cat-15 */}
@@ -3595,19 +2521,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1476,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            MODEL
-          </span>
-        </div>
 
         {/* tone-cat-16 */}
         <div
@@ -3633,19 +2546,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('tone-cat-16')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1558,
-            top: 240,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            DRUM
-          </span>
         </div>
 
         {/* sampling */}
@@ -3673,19 +2573,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1639,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SAMPLING
-          </span>
-        </div>
 
         {/* pad-mode */}
         <div
@@ -3711,19 +2598,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('pad-mode')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1689,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            PAD MODE
-          </span>
         </div>
 
         {/* clip-board */}
@@ -3751,19 +2625,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1718,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            CLIP BOARD
-          </span>
-        </div>
 
         {/* bank */}
         <div
@@ -3790,19 +2651,6 @@ export default function FANTOM06Panel({
               />
             </div>
         </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1743,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            BANK
-          </span>
-        </div>
 
         {/* hold */}
         <div
@@ -3828,19 +2676,6 @@ export default function FANTOM06Panel({
                 onClick={() => onButtonClick?.('hold')}
               />
             </div>
-        </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1796,
-            top: 22,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            HOLD
-          </span>
         </div>
 
         {/* pad-1 */}
@@ -4261,6 +3096,1346 @@ export default function FANTOM06Panel({
 
         {/* Group labels */}
 
+
+        {/* Floating labels — stored positions from editor */}
+        {/* label: WHEEL1 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 107.1,
+            top: 186.1,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            WHEEL1
+          </span>
+        </div>
+
+        {/* label: WHEEL2 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 171,
+            top: 178,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            WHEEL2
+          </span>
+        </div>
+
+        {/* label: S1 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 95,
+            top: 347,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            S1
+          </span>
+        </div>
+
+        {/* label: S2 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 129,
+            top: 345,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            S2
+          </span>
+        </div>
+
+        {/* label: PITCH BEND/MOD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 136,
+            top: 477,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PITCH BEND/MOD
+          </span>
+        </div>
+
+        {/* label: SPLIT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 282.07269355202476,
+            top: 211.34548977006406,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SPLIT
+          </span>
+        </div>
+
+        {/* label: CHORD MEMORY */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 320.32731514670655,
+            top: 199.05453843550276,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CHORD<br />
+            MEMORY
+          </span>
+        </div>
+
+        {/* label: ARPEGGIO */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 356.01821233576015,
+            top: 206.4727455832741,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ARPEGGIO
+          </span>
+        </div>
+
+        {/* label: TRANSPOSE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 269.109109219638,
+            top: 252.65453935102977,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            TRANSPOSE
+          </span>
+        </div>
+
+        {/* label: DOWN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 321.31823949640517,
+            top: 251.31821544855293,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            DOWN
+          </span>
+        </div>
+
+        {/* label: UP */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 367.472708962181,
+            top: 249.74548506303256,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            UP
+          </span>
+        </div>
+
+        {/* label: MASTER VOLUME */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 271.2908562027259,
+            top: 109.56363315880238,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MASTER<br />
+            VOLUME
+          </span>
+        </div>
+
+        {/* label: PAN/ LEVEL */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 319.563636058461,
+            top: 76.01818151300603,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PAN/<br />
+            LEVEL
+          </span>
+        </div>
+
+        {/* label: CTRL */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 357.29093793002085,
+            top: 81.29092682162197,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CTRL
+          </span>
+        </div>
+
+        {/* label: ASSIGN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 350.83638835560214,
+            top: 125.19997772216797,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ASSIGN
+          </span>
+        </div>
+
+        {/* label: ZONE 9-16 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 312.02730568625725,
+            top: 165.84553730912646,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ZONE 9-16
+          </span>
+        </div>
+
+        {/* label: ZONE SELECT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 355.0999969482425,
+            top: 159.19093045321375,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ZONE<br />
+            SELECT
+          </span>
+        </div>
+
+        {/* label: 1 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 400.0091122713962,
+            top: 133.19089383212003,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            1
+          </span>
+        </div>
+
+        {/* label: 2 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 444.8181818181822,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            2
+          </span>
+        </div>
+
+        {/* label: 3 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 491.4545454545461,
+            top: 133,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            3
+          </span>
+        </div>
+
+        {/* label: 4 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 531.5454545454539,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            4
+          </span>
+        </div>
+
+        {/* label: 5 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 551,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            5
+          </span>
+        </div>
+
+        {/* label: 6 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 594,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            6
+          </span>
+        </div>
+
+        {/* label: 7 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 633,
+            top: 135,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            7
+          </span>
+        </div>
+
+        {/* label: 8 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 673,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            8
+          </span>
+        </div>
+
+        {/* label: Display */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 773,
+            top: 244,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            Display
+          </span>
+        </div>
+
+        {/* label: SCENE SELECT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1048,
+            top: 25,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SCENE SELECT
+          </span>
+        </div>
+
+        {/* label: SCENE CHAIN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1048,
+            top: 88,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SCENE CHAIN
+          </span>
+        </div>
+
+        {/* label: ZONE VIEW */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1048,
+            top: 127,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ZONE VIEW
+          </span>
+        </div>
+
+        {/* label: SINGLE TONE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1048,
+            top: 177,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SINGLE TONE
+          </span>
+        </div>
+
+        {/* label: CUTOFF */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1179,
+            top: 74,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CUTOFF
+          </span>
+        </div>
+
+        {/* label: RESONANCE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1278,
+            top: 74,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            RESONANCE
+          </span>
+        </div>
+
+        {/* label: OSC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1193,
+            top: 97,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            OSC
+          </span>
+        </div>
+
+        {/* label: FILTER TYPE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1243,
+            top: 97,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            FILTER TYPE
+          </span>
+        </div>
+
+        {/* label: PARAM */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1293,
+            top: 97,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PARAM
+          </span>
+        </div>
+
+        {/* label: AMP */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1193,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            AMP
+          </span>
+        </div>
+
+        {/* label: FX */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1243,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            FX
+          </span>
+        </div>
+
+        {/* label: LFO */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1293,
+            top: 134,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            LFO
+          </span>
+        </div>
+
+        {/* label: PATTERN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1391,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PATTERN
+          </span>
+        </div>
+
+        {/* label: GROUP */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1391,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            GROUP
+          </span>
+        </div>
+
+        {/* label: SONG */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1446,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SONG
+          </span>
+        </div>
+
+        {/* label: TR-REC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1446,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            TR-REC
+          </span>
+        </div>
+
+        {/* label: RHYTHM PTN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1483,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            RHYTHM PTN
+          </span>
+        </div>
+
+        {/* label: STOP */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1534,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            STOP
+          </span>
+        </div>
+
+        {/* label: PLAY */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1559,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PLAY
+          </span>
+        </div>
+
+        {/* label: REC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1586,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            REC
+          </span>
+        </div>
+
+        {/* label: A.PIANO */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1376,
+            top: 147,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            A.PIANO
+          </span>
+        </div>
+
+        {/* label: E.PIANO */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1435,
+            top: 147,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E.PIANO
+          </span>
+        </div>
+
+        {/* label: ORGAN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1476,
+            top: 147,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ORGAN
+          </span>
+        </div>
+
+        {/* label: GUITAR/BASS */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1558,
+            top: 147,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            GUITAR/BASS
+          </span>
+        </div>
+
+        {/* label: STRINGS */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1376,
+            top: 178,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            STRINGS
+          </span>
+        </div>
+
+        {/* label: BRASS */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1435,
+            top: 178,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            BRASS
+          </span>
+        </div>
+
+        {/* label: SYNTH LEAD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1476,
+            top: 178,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SYNTH LEAD
+          </span>
+        </div>
+
+        {/* label: SYNTH PAD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1558,
+            top: 178,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SYNTH PAD
+          </span>
+        </div>
+
+        {/* label: BELL/MALLET */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1376,
+            top: 209,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            BELL/MALLET
+          </span>
+        </div>
+
+        {/* label: HIT/OTHER */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1435,
+            top: 209,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            HIT/OTHER
+          </span>
+        </div>
+
+        {/* label: RHYTHM */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1476,
+            top: 209,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            RHYTHM
+          </span>
+        </div>
+
+        {/* label: S.N. ACOUSTIC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1558,
+            top: 209,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            S.N. ACOUSTIC
+          </span>
+        </div>
+
+        {/* label: S.N.S */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1376,
+            top: 240,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            S.N.S
+          </span>
+        </div>
+
+        {/* label: VTW */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1435,
+            top: 240,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            VTW
+          </span>
+        </div>
+
+        {/* label: MODEL */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1476,
+            top: 240,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MODEL
+          </span>
+        </div>
+
+        {/* label: DRUM */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1558,
+            top: 240,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            DRUM
+          </span>
+        </div>
+
+        {/* label: SAMPLING */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1639,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SAMPLING
+          </span>
+        </div>
+
+        {/* label: PAD MODE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1689,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            PAD MODE
+          </span>
+        </div>
+
+        {/* label: CLIP BOARD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1718,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CLIP BOARD
+          </span>
+        </div>
+
+        {/* label: BANK */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1743,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            BANK
+          </span>
+        </div>
+
+        {/* label: HOLD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1796,
+            top: 22,
+            fontSize: 6,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            HOLD
+          </span>
+        </div>
+
+        {/* label: WRITE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 520,
+            top: 384,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            WRITE
+          </span>
+        </div>
+
+        {/* label: MASTER FX */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 610,
+            top: 384,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MASTER FX
+          </span>
+        </div>
+
+        {/* label: MOTIONAL PAD */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 700,
+            top: 384,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MOTIONAL PAD
+          </span>
+        </div>
+
+        {/* label: DAW CTRL */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 790,
+            top: 384,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            DAW CTRL
+          </span>
+        </div>
+
+        {/* label: MENU */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 880,
+            top: 384,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MENU
+          </span>
+        </div>
+
+        {/* label: E1 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 970,
+            top: 393,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E1
+          </span>
+        </div>
+
+        {/* label: E2 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1060,
+            top: 393,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E2
+          </span>
+        </div>
+
+        {/* label: E3 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 520,
+            top: 483,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E3
+          </span>
+        </div>
+
+        {/* label: E4 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 610,
+            top: 483,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E4
+          </span>
+        </div>
+
+        {/* label: E5 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 700,
+            top: 483,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E5
+          </span>
+        </div>
+
+        {/* label: E6 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 790,
+            top: 483,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E6
+          </span>
+        </div>
+
+        {/* label: TEMPO */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 880,
+            top: 474,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            TEMPO
+          </span>
+        </div>
+
+        {/* label: VALUE */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 970,
+            top: 483,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            VALUE
+          </span>
+        </div>
+
+        {/* label: DEC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1060,
+            top: 474,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            DEC
+          </span>
+        </div>
+
+        {/* label: INC */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 520,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            INC
+          </span>
+        </div>
+
+        {/* label: CURSOR UP */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 610,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CURSOR UP
+          </span>
+        </div>
+
+        {/* label: CURSOR DOWN */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 700,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CURSOR DOWN
+          </span>
+        </div>
+
+        {/* label: CURSOR LEFT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 790,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CURSOR LEFT
+          </span>
+        </div>
+
+        {/* label: CURSOR RIGHT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 880,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            CURSOR RIGHT
+          </span>
+        </div>
+
+        {/* label: SHIFT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 970,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            SHIFT
+          </span>
+        </div>
+
+        {/* label: EXIT */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 1060,
+            top: 564,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            EXIT
+          </span>
+        </div>
+
+        {/* label: ENTER */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 520,
+            top: 624,
+            fontSize: 8,
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            ENTER
+          </span>
+        </div>
     </PanelShell>
   );
 }

@@ -46,19 +46,6 @@ export default function SceneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 25,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SCENE SELECT
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -80,19 +67,6 @@ export default function SceneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 88,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SCENE CHAIN
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -114,19 +88,6 @@ export default function SceneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 127,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            ZONE VIEW
-          </span>
-        </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
@@ -148,19 +109,6 @@ export default function SceneSection({
               />
             </div>
           </div>
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 1048,
-            top: 177,
-            width: 60,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider" style={{ fontSize: 6 }}>
-            SINGLE TONE
-          </span>
-        </div>
       </div>
     </motion.div>
   );
