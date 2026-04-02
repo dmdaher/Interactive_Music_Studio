@@ -138,13 +138,13 @@ export default function PreviewPage() {
       </div>
 
       {/* Panel */}
-      <div className="flex-1 overflow-auto flex items-start justify-center p-8">
+      <div className="flex-1 overflow-auto p-8">
         {PanelComponent ? (
           <div
-            className="shadow-2xl"
+            className="shadow-2xl inline-block"
             style={{
               transform: `scale(${previewScale})`,
-              transformOrigin: 'top center',
+              transformOrigin: 'top left',
             }}
           >
             <PanelComponent
