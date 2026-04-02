@@ -26,24 +26,26 @@ export default function LabelLayer() {
   const dragStart = useRef<{ x: number; y: number; labelX: number; labelY: number } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Center a label horizontally on its linked control
+  // Center a label horizontally on its linked control (Figma-style: align center points)
   const centerOnControl = useCallback((labelId: string) => {
     const label = editorLabels.find(l => l.id === labelId);
     if (!label || !label.controlId) return;
     const ctrl = controls[label.controlId];
     if (!ctrl) return;
 
-    // Measure label text width from the DOM (subtract padding: 6px each side)
-    const labelEl = document.querySelector(`[data-label-id="${labelId}"]`);
-    const labelW = labelEl ? (labelEl.getBoundingClientRect().width / zoom) - 12 : 60;
-
+    // Figma-style: align label center X to control center X.
+    // Give label a generous width and use textAlign:center so
+    // text naturally centers regardless of text length.
     const ctrlVisW = ctrl.w * controlScale;
     const ctrlCenterX = ctrl.x + ctrlVisW / 2;
-    const newX = Math.round(ctrlCenterX - labelW / 2);
-
+    const labelW = Math.max(ctrlVisW, 120); // generous width for centering
     pushSnapshot();
-    updateLabel(labelId, { x: newX });
-  }, [editorLabels, controls, controlScale, zoom, pushSnapshot, updateLabel]);
+    updateLabel(labelId, {
+      x: Math.round(ctrlCenterX - labelW / 2),
+      w: Math.round(labelW),
+      align: 'center',
+    });
+  }, [editorLabels, controls, controlScale, pushSnapshot, updateLabel]);
 
   // Keyboard: Delete, Escape, C (center on control)
   useEffect(() => {
@@ -140,6 +142,7 @@ export default function LabelLayer() {
               style={{
                 left: label.x,
                 top: label.y,
+                width: label.w ?? undefined,
                 fontSize: label.fontSize,
                 textAlign: label.align,
                 zIndex: dragging === label.id ? 200 : selectedLabel === label.id ? 100 : 60,

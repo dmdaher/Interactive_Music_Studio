@@ -10,6 +10,7 @@ export interface EditorLabel {
   text: string;
   x: number;
   y: number;
+  w?: number;  // optional width for text centering
   fontSize: number;
   align: 'left' | 'center' | 'right';
 }
