@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { useEditorStore } from './store';
 import type { ControlDef } from './store';
@@ -592,6 +592,16 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
   const allControls = useEditorStore((s) => s.controls);
   const section = useEditorStore((s) => s.sections[sectionId]);
   const selectedIds = useEditorStore((s) => s.selectedIds);
+  const [shiftHeld, setShiftHeld] = useState(false);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => { if (e.key === 'Shift') setShiftHeld(true); };
+    const up = (e: KeyboardEvent) => { if (e.key === 'Shift') setShiftHeld(false); };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
+  }, []);
+
   const zoom = useEditorStore((s) => s.zoom);
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const controlScale = useEditorStore((s) => s.controlScale);
@@ -760,7 +770,7 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
         scale={zoom}
         dragGrid={[snapGrid, snapGrid]}
         resizeGrid={[snapGrid, snapGrid]}
-        lockAspectRatio
+        lockAspectRatio={shiftHeld}
         disableDragging={isLocked}
         enableResizing={!isLocked}
         resizeHandleStyles={isSelected ? {
