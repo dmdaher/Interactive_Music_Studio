@@ -104,7 +104,7 @@ export default function LabelLayer() {
   }, [commitEdit]);
 
   return (
-    <>
+    <div className="absolute inset-0" style={{ zIndex: 150, pointerEvents: 'none' }}>
       {editorLabels.map((label) => (
         <div key={label.id}>
           {/* Label text */}
@@ -164,6 +164,6 @@ export default function LabelLayer() {
           )}
         </div>
       ))}
-    </>
+    </div>
   );
 }
