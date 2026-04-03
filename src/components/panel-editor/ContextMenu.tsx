@@ -76,12 +76,43 @@ export default function ContextMenu() {
     setMenu(null);
   }, [menu]);
 
+  const handleAlign = useCallback((mode: 'left' | 'center-x' | 'right' | 'top' | 'center-y' | 'bottom') => {
+    const store = useEditorStore.getState();
+    store.pushSnapshot();
+    store.alignControls(mode);
+    setMenu(null);
+  }, []);
+
+  const handleDistribute = useCallback((axis: 'horizontal' | 'vertical') => {
+    const store = useEditorStore.getState();
+    store.pushSnapshot();
+    store.distributeControls(axis);
+    setMenu(null);
+  }, []);
+
+  const handleGroup = useCallback(() => {
+    const store = useEditorStore.getState();
+    if (store.selectedIds.length >= 2) {
+      store.pushSnapshot();
+      store.createGroup(`Group ${Date.now()}`);
+    }
+    setMenu(null);
+  }, []);
+
+  const handleUngroup = useCallback(() => {
+    const store = useEditorStore.getState();
+    store.pushSnapshot();
+    store.ungroupControls();
+    setMenu(null);
+  }, []);
+
   if (!menu) return null;
 
   const control = useEditorStore.getState().controls[menu.controlId];
   if (!control) return null;
 
   const isLocked = control.locked;
+  const selectedCount = useEditorStore.getState().selectedIds.length;
 
   return createPortal(
     <div
@@ -121,6 +152,94 @@ export default function ContextMenu() {
         >
           {isLocked ? 'Unlock' : 'Lock'}
         </button>
+
+        {/* Multi-select: Alignment & Grouping */}
+        {selectedCount >= 2 && (
+          <>
+            {/* Separator */}
+            <div className="my-1 h-px bg-gray-800" />
+
+            {/* Align */}
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('left')}
+            >
+              <span>Align Left</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('center-x')}
+            >
+              <span>Align Center H</span>
+              <span className="text-gray-600 ml-4 text-[9px]">&#8679;H</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('right')}
+            >
+              <span>Align Right</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('top')}
+            >
+              <span>Align Top</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('center-y')}
+            >
+              <span>Align Middle V</span>
+              <span className="text-gray-600 ml-4 text-[9px]">&#8679;V</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={() => handleAlign('bottom')}
+            >
+              <span>Align Bottom</span>
+            </button>
+
+            {/* Distribute (only when 3+ selected) */}
+            {selectedCount >= 3 && (
+              <>
+                <div className="my-1 h-px bg-gray-800" />
+                <button
+                  className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+                  onClick={() => handleDistribute('horizontal')}
+                >
+                  <span>Distribute H</span>
+                  <span className="text-gray-600 ml-4 text-[9px]">&#8984;&#8679;H</span>
+                </button>
+                <button
+                  className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+                  onClick={() => handleDistribute('vertical')}
+                >
+                  <span>Distribute V</span>
+                  <span className="text-gray-600 ml-4 text-[9px]">&#8984;&#8679;V</span>
+                </button>
+              </>
+            )}
+
+            {/* Separator */}
+            <div className="my-1 h-px bg-gray-800" />
+
+            {/* Group / Ungroup */}
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={handleGroup}
+            >
+              <span>Group</span>
+              <span className="text-gray-600 ml-4 text-[9px]">&#8984;G</span>
+            </button>
+            <button
+              className="flex w-full items-center justify-between px-3 py-1.5 hover:bg-gray-800 hover:text-white transition-colors text-left"
+              onClick={handleUngroup}
+            >
+              <span>Ungroup</span>
+              <span className="text-gray-600 ml-4 text-[9px]">&#8984;&#8679;G</span>
+            </button>
+          </>
+        )}
       </div>
     </div>,
     document.body,
