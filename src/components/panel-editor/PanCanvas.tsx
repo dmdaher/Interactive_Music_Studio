@@ -4,6 +4,7 @@ import { useEditorStore } from './store';
 import SectionFrame from './SectionFrame';
 import GroupLabelNode from './GroupLabelNode';
 import LabelLayer from './LabelLayer';
+import GroupOverlay from './GroupOverlay';
 import GridOverlay from './GridOverlay';
 import PhotoOverlay from './PhotoOverlay';
 import DragSelectRect from './DragSelectRect';
@@ -54,6 +55,9 @@ export default function PanCanvas() {
       {sectionEntries.map((section, index) => (
         <SectionFrame key={section.id} sectionId={section.id} zIndex={index + 1} />
       ))}
+
+      {/* Group bounding-box overlays (hovered / selected) */}
+      <GroupOverlay />
 
       {/* Group labels (spanning across controls) */}
       {groupLabels.map((gl) => (

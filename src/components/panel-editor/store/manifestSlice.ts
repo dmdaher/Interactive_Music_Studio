@@ -170,6 +170,7 @@ export interface ManifestSlice {
   // never by store mutations. Prevents programmatic state changes from triggering auto-save.
   hasUserEdited: boolean;
   focusedSectionId: string | null;
+  hoveredGroupId: string | null;
 
   // Actions
   loadFromManifest: (manifest: MasterManifestInput) => void;
@@ -197,6 +198,7 @@ export interface ManifestSlice {
   distributeControls: (axis: 'horizontal' | 'vertical') => void;
   createGroup: (name: string) => void;
   ungroupControls: () => void;
+  setHoveredGroup: (id: string | null) => void;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -262,6 +264,7 @@ export const createManifestSlice: StateCreator<
   _manifestVersion: null,
   hasUserEdited: false,
   focusedSectionId: null,
+  hoveredGroupId: null,
 
   // ── Actions ─────────────────────────────────────────────────────────────
 
@@ -1141,6 +1144,8 @@ export const createManifestSlice: StateCreator<
 
     set({ controlGroups: updated });
   },
+
+  setHoveredGroup: (id) => set({ hoveredGroupId: id }),
 
   initLabelsFromControls: () => {
     const { controls, editorLabels } = get();
