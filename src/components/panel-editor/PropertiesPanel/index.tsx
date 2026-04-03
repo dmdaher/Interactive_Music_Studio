@@ -6,6 +6,17 @@ import type { ControlDef, SectionDef } from '../store';
 import ControlTypeSelector from './ControlTypeSelector';
 import LabelEditor from './LabelEditor';
 import GeometryFields from './GeometryFields';
+import {
+  AlignLeftIcon,
+  AlignCenterHIcon,
+  AlignRightIcon,
+  AlignTopIcon,
+  AlignMiddleVIcon,
+  AlignBottomIcon,
+  DistributeHIcon,
+  DistributeVIcon,
+} from '../icons/alignment';
+import type { ControlGroup } from '../store/historySlice';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -356,8 +367,17 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const updateControlProp = useEditorStore((s) => s.updateControlProp);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+  const alignControls = useEditorStore((s) => s.alignControls);
+  const distributeControls = useEditorStore((s) => s.distributeControls);
+  const createGroup = useEditorStore((s) => s.createGroup);
+  const ungroupControls = useEditorStore((s) => s.ungroupControls);
+  const controlGroups = useEditorStore((s) => s.controlGroups) as ControlGroup[];
 
   const ids = useMemo(() => controls.map((c) => c.id), [controls]);
+
+  const hasGroupInSelection = controlGroups.some((g) =>
+    g.controlIds.some((id) => ids.includes(id))
+  );
 
   const types = controls.map((c) => c.type);
   const labels = controls.map((c) => c.label);
@@ -506,6 +526,121 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
           >
             Match Sizes ({controls[0].w}×{controls[0].h})
           </button>
+        </>
+      )}
+
+      {/* ── Alignment ──────────────────────────────────────────────── */}
+      {controls.length >= 2 && (
+        <>
+          <div className="h-px bg-gray-800" />
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wide text-gray-500">
+              Align
+            </label>
+            <div className="flex items-center rounded border border-gray-700 bg-gray-900/60 overflow-hidden">
+              {/* Horizontal alignment */}
+              {([
+                { mode: 'left' as const, Icon: AlignLeftIcon, title: 'Align left edges' },
+                { mode: 'center-x' as const, Icon: AlignCenterHIcon, title: 'Align horizontal centers' },
+                { mode: 'right' as const, Icon: AlignRightIcon, title: 'Align right edges' },
+              ]).map(({ mode, Icon, title }) => (
+                <button
+                  key={mode}
+                  onClick={() => { pushSnapshot(); alignControls(mode); }}
+                  className="flex h-7 w-9 items-center justify-center text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+                  title={title}
+                >
+                  <Icon className="h-3 w-3" />
+                </button>
+              ))}
+
+              {/* Divider between H and V */}
+              <div className="w-px h-5 bg-gray-700 flex-shrink-0" />
+
+              {/* Vertical alignment */}
+              {([
+                { mode: 'top' as const, Icon: AlignTopIcon, title: 'Align top edges' },
+                { mode: 'center-y' as const, Icon: AlignMiddleVIcon, title: 'Align vertical centers' },
+                { mode: 'bottom' as const, Icon: AlignBottomIcon, title: 'Align bottom edges' },
+              ]).map(({ mode, Icon, title }) => (
+                <button
+                  key={mode}
+                  onClick={() => { pushSnapshot(); alignControls(mode); }}
+                  className="flex h-7 w-9 items-center justify-center text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+                  title={title}
+                >
+                  <Icon className="h-3 w-3" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Distribute ─────────────────────────────────────────────── */}
+      {controls.length >= 3 && (
+        <>
+          <div className="h-px bg-gray-800" />
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wide text-gray-500">
+              Distribute
+            </label>
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => { pushSnapshot(); distributeControls('horizontal'); }}
+                className="flex-1 flex h-7 items-center justify-center gap-1.5 rounded border border-gray-700 bg-gray-900/60 text-[10px] text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+                title="Distribute horizontal spacing evenly"
+              >
+                <DistributeHIcon className="h-3 w-3" />
+                Horizontal
+              </button>
+              <button
+                onClick={() => { pushSnapshot(); distributeControls('vertical'); }}
+                className="flex-1 flex h-7 items-center justify-center gap-1.5 rounded border border-gray-700 bg-gray-900/60 text-[10px] text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+                title="Distribute vertical spacing evenly"
+              >
+                <DistributeVIcon className="h-3 w-3" />
+                Vertical
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ── Group / Ungroup ────────────────────────────────────────── */}
+      {controls.length >= 2 && (
+        <>
+          <div className="h-px bg-gray-800" />
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wide text-gray-500">
+              Grouping
+            </label>
+            <div className="flex gap-1.5">
+              <button
+                onClick={() => { pushSnapshot(); createGroup(`Group ${controlGroups.length + 1}`); }}
+                className="flex-1 flex h-7 items-center justify-center gap-1.5 rounded border border-gray-700 bg-gray-900/60 text-[10px] text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+                title="Group selected controls"
+              >
+                Group
+              </button>
+              <button
+                onClick={() => {
+                  if (!hasGroupInSelection) return;
+                  pushSnapshot();
+                  ungroupControls();
+                }}
+                className={`flex-1 flex h-7 items-center justify-center gap-1.5 rounded border border-gray-700 bg-gray-900/60 text-[10px] transition-colors ${
+                  hasGroupInSelection
+                    ? 'text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 cursor-pointer'
+                    : 'text-gray-400 opacity-30 cursor-not-allowed'
+                }`}
+                title={hasGroupInSelection ? 'Ungroup selected controls' : 'No group in selection'}
+                disabled={!hasGroupInSelection}
+              >
+                Ungroup
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>
