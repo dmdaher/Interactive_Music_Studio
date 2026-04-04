@@ -28,7 +28,7 @@ export function computeLabelPosition(
   const secondaryLines = secondaryLabel ? 1 : 0;
   const totalLabelH = (primaryLines + secondaryLines) * lineH;
   const minLabelW = 60;
-  const gap = 6;
+  const gap = 3;
 
   let x: number, y: number, w: number;
   let align: 'left' | 'center' | 'right' = 'center';
