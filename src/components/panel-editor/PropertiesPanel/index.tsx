@@ -26,6 +26,73 @@ function allSame<T>(values: T[]): boolean {
   return values.every((v) => v === values[0]);
 }
 
+// ─── Gap Input ───────────────────────────────────────────────────────────────
+
+/**
+ * Gap input with local state — commits on blur or Enter, not on every keystroke.
+ * Without this pattern, typing "20" would fire distributeWithGap(2) first,
+ * redistributing controls with gap=2, then the displayed gap becomes 2, making
+ * the "0" keystroke impossible to enter.
+ */
+function GapInput({
+  label,
+  value,
+  mixed,
+  onCommit,
+  title,
+}: {
+  label: string;
+  value: number | null;
+  mixed: boolean;
+  onCommit: (val: number) => void;
+  title: string;
+}) {
+  // Local string state — only syncs from props when the external value changes
+  const [localValue, setLocalValue] = useState<string>('');
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Sync from props when not focused (so external changes reflect in input)
+  useEffect(() => {
+    if (!isFocused) {
+      setLocalValue(mixed ? '' : value != null ? String(value) : '');
+    }
+  }, [value, mixed, isFocused]);
+
+  const commit = useCallback(() => {
+    const parsed = parseInt(localValue, 10);
+    if (!isNaN(parsed) && parsed >= 0 && parsed !== value) {
+      onCommit(parsed);
+    } else {
+      // Revert to current value on invalid input
+      setLocalValue(mixed ? '' : value != null ? String(value) : '');
+    }
+  }, [localValue, value, mixed, onCommit]);
+
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-[10px] text-gray-500 w-7">{label}</span>
+      <input
+        type="number"
+        value={localValue}
+        placeholder={mixed ? 'Mixed' : '\u2014'}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => { setIsFocused(false); commit(); }}
+        onChange={(e) => setLocalValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); }
+          if (e.key === 'Escape') {
+            setLocalValue(mixed ? '' : value != null ? String(value) : '');
+            (e.target as HTMLInputElement).blur();
+          }
+        }}
+        className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-0.5 text-[10px] text-gray-200 text-center outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        title={title}
+      />
+      <span className="text-[9px] text-gray-600">px</span>
+    </div>
+  );
+}
+
 // ─── Section Properties ──────────────────────────────────────────────────────
 
 function SectionProperties({ section }: { section: SectionDef }) {
@@ -604,42 +671,20 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
       {/* ── Gap Input ──────────────────────────────────────────────── */}
       {controls.length >= 2 && (
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <span className="text-[10px] text-gray-500 w-7">Gap H</span>
-            <input
-              type="number"
-              value={gapH?.mixed ? '' : (gapH?.value ?? '')}
-              placeholder={gapH?.mixed ? 'Mixed' : '\u2014'}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10);
-                if (!isNaN(val) && val >= 0) {
-                  pushSnapshot();
-                  distributeWithGap('horizontal', val);
-                }
-              }}
-              className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-0.5 text-[10px] text-gray-200 text-center outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              title="Horizontal gap between controls (px)"
-            />
-            <span className="text-[9px] text-gray-600">px</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-[10px] text-gray-500 w-7">Gap V</span>
-            <input
-              type="number"
-              value={gapV?.mixed ? '' : (gapV?.value ?? '')}
-              placeholder={gapV?.mixed ? 'Mixed' : '\u2014'}
-              onChange={(e) => {
-                const val = parseInt(e.target.value, 10);
-                if (!isNaN(val) && val >= 0) {
-                  pushSnapshot();
-                  distributeWithGap('vertical', val);
-                }
-              }}
-              className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-0.5 text-[10px] text-gray-200 text-center outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              title="Vertical gap between controls (px)"
-            />
-            <span className="text-[9px] text-gray-600">px</span>
-          </div>
+          <GapInput
+            label="Gap H"
+            value={gapH?.value ?? null}
+            mixed={gapH?.mixed ?? false}
+            onCommit={(val) => { pushSnapshot(); distributeWithGap('horizontal', val); }}
+            title="Horizontal gap between controls (px)"
+          />
+          <GapInput
+            label="Gap V"
+            value={gapV?.value ?? null}
+            mixed={gapV?.mixed ?? false}
+            onCommit={(val) => { pushSnapshot(); distributeWithGap('vertical', val); }}
+            title="Vertical gap between controls (px)"
+          />
         </div>
       )}
 
