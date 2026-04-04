@@ -135,7 +135,7 @@ export default function LabelLayer() {
 
   return (
     <div className="absolute inset-0" style={{ zIndex: 150, pointerEvents: 'none' }}>
-      {editorLabels.map((label) => (
+      {editorLabels.filter((l) => !l.hidden).map((label) => (
         <div key={label.id}>
           {/* Label text */}
           {editing !== label.id && (

@@ -1125,9 +1125,9 @@ function generateFlatPanel(
   // Render stored labels from editorLabels[] — pixel-identical to editor.
   // Must match LabelLayer.tsx styles exactly: explicit lineHeight and width
   // are required or the generated panel will render differently.
-  const editorLabelsArr = ((manifest as any).editorLabels ?? []) as Array<{
-    id: string; text: string; x: number; y: number; w?: number; fontSize: number; align: string;
-  }>;
+  const editorLabelsArr = (((manifest as any).editorLabels ?? []) as Array<{
+    id: string; text: string; x: number; y: number; w?: number; fontSize: number; align: string; hidden?: boolean;
+  }>).filter((l) => !l.hidden);
   const labelRenderings = editorLabelsArr.map(label => {
     const textLines = label.text.split('\n');
     const textJsx = textLines.length > 1

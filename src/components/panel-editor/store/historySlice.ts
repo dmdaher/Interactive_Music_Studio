@@ -13,6 +13,7 @@ export interface EditorLabel {
   w?: number;  // optional width for text centering
   fontSize: number;
   align: 'left' | 'center' | 'right';
+  hidden?: boolean;  // soft-hide: preserves position, just not rendered
 }
 export interface ControlGroup {
   id: string;

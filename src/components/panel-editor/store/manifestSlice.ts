@@ -1629,12 +1629,14 @@ export const createManifestSlice: StateCreator<
     }
 
     if (position === 'hidden' || position === 'on-button') {
-      // Remove editorLabels linked to these controls
-      updatedLabels = updatedLabels.filter(
-        (l) => !l.controlId || !idSet.has(l.controlId),
+      // SOFT HIDE — mark labels as hidden but preserve position/text.
+      // User can toggle back to 'above'/'below' to reveal at stored position.
+      updatedLabels = updatedLabels.map((l) =>
+        l.controlId && idSet.has(l.controlId) ? { ...l, hidden: true } : l,
       );
     } else {
-      // Compute fresh position for each linked label (or create if missing)
+      // Compute fresh position for each linked label (or create if missing).
+      // Also unhide any previously-hidden label.
       const existingByCtrlId = new Map<string, EditorLabel>();
       for (const l of updatedLabels) {
         if (l.controlId) existingByCtrlId.set(l.controlId, l);
@@ -1658,14 +1660,19 @@ export const createManifestSlice: StateCreator<
 
         const existing = existingByCtrlId.get(id);
         if (existing) {
-          updateMap.set(existing.id, {
-            ...existing,
-            x: lp.x,
-            y: lp.y,
-            w: lp.w,
-            align: lp.align,
-            fontSize: lp.fontSize,
-          });
+          // If label was previously hidden, preserve its x/y (just unhide).
+          // If visible, recompute to the new position.
+          updateMap.set(existing.id, existing.hidden
+            ? { ...existing, hidden: false }
+            : {
+                ...existing,
+                hidden: false,
+                x: lp.x,
+                y: lp.y,
+                w: lp.w,
+                align: lp.align,
+                fontSize: lp.fontSize,
+              });
         } else {
           newLabels.push({
             id: `label-${id}`,
