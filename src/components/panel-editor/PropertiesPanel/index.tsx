@@ -948,8 +948,140 @@ function EmptyStatePanel() {
 
 // ─── Main Properties Panel ──────────────────────────────────────────────────
 
+// ─── Label Properties ────────────────────────────────────────────────────────
+
+function LabelProperties({ label }: { label: any }) {
+  const updateLabel = useEditorStore((s) => s.updateLabel);
+  const deleteLabel = useEditorStore((s) => s.deleteLabel);
+  const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+  const setSelectedLabel = useEditorStore((s) => s.setSelectedLabel);
+  const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+  const controls = useEditorStore((s) => s.controls);
+
+  const linkedControl = label.controlId ? controls[label.controlId] : null;
+  const isStandalone = !label.controlId;
+
+  const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    pushSnapshot();
+    updateLabel(label.id, { text: e.target.value });
+  }, [label.id, updateLabel, pushSnapshot]);
+
+  const handleFontSizeChange = useCallback((val: number) => {
+    pushSnapshot();
+    updateLabel(label.id, { fontSize: val });
+  }, [label.id, updateLabel, pushSnapshot]);
+
+  const handleToggleHidden = useCallback(() => {
+    pushSnapshot();
+    updateLabel(label.id, { hidden: !label.hidden });
+  }, [label.id, label.hidden, updateLabel, pushSnapshot]);
+
+  const handleDelete = useCallback(() => {
+    pushSnapshot();
+    deleteLabel(label.id);
+    setSelectedLabel(null);
+  }, [label.id, deleteLabel, setSelectedLabel, pushSnapshot]);
+
+  const handleSelectControl = useCallback(() => {
+    if (!label.controlId) return;
+    setSelectedLabel(null);
+    setSelectedIds([label.controlId]);
+  }, [label.controlId, setSelectedLabel, setSelectedIds]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="border-b border-gray-800 pb-2">
+        <h3 className="text-sm font-medium text-gray-200">Label</h3>
+        <p className="text-xs text-gray-500 mt-0.5">
+          {isStandalone ? 'Standalone' : `Linked to ${label.controlId}`}
+        </p>
+      </div>
+
+      {/* Text */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">Text</label>
+        <textarea
+          value={label.text}
+          onChange={handleTextChange}
+          rows={Math.max(1, label.text.split('\n').length)}
+          className="w-full rounded border border-gray-700 bg-gray-900 px-2 py-1 text-xs text-gray-300 outline-none focus:border-blue-500 placeholder:text-gray-600 resize-none"
+        />
+        <p className="text-[9px] text-gray-600">Shift+Enter for new line</p>
+      </div>
+
+      {/* Font size */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">Font Size</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="range"
+            min={4}
+            max={20}
+            value={label.fontSize}
+            onChange={(e) => handleFontSizeChange(Number(e.target.value))}
+            className="h-1 flex-1 cursor-pointer accent-blue-500"
+          />
+          <span className="text-[10px] text-gray-500 w-7">{label.fontSize}px</span>
+        </div>
+      </div>
+
+      {/* Position info */}
+      <div className="space-y-1">
+        <label className="text-[10px] uppercase tracking-wide text-gray-500">Position</label>
+        <div className="text-[10px] text-gray-400">
+          x: {Math.round(label.x)} · y: {Math.round(label.y)}
+          {label.w != null && <> · w: {Math.round(label.w)}</>}
+        </div>
+      </div>
+
+      <div className="h-px bg-gray-800" />
+
+      {/* Linked control */}
+      {linkedControl && (
+        <div className="space-y-1">
+          <label className="text-[10px] uppercase tracking-wide text-gray-500">Linked Control</label>
+          <button
+            onClick={handleSelectControl}
+            className="flex w-full h-7 items-center justify-between rounded border border-gray-700 bg-gray-900/60 px-2 text-[10px] text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+            title="Select the linked control"
+          >
+            <span className="truncate">{label.controlId}</span>
+            <span className="text-gray-600">→</span>
+          </button>
+        </div>
+      )}
+
+      <div className="h-px bg-gray-800" />
+
+      {/* Actions */}
+      <div className="flex gap-1.5">
+        <button
+          onClick={handleToggleHidden}
+          className={`flex-1 flex h-7 items-center justify-center rounded border text-[10px] transition-colors ${
+            label.hidden
+              ? 'border-amber-600/40 bg-amber-600/10 text-amber-400 hover:bg-amber-600/20'
+              : 'border-gray-700 bg-gray-900/60 text-gray-400 hover:bg-gray-700/60 hover:text-gray-200'
+          }`}
+          title={label.hidden ? 'Show label' : 'Hide label (preserves position)'}
+        >
+          {label.hidden ? 'Show' : 'Hide'}
+        </button>
+        <button
+          onClick={handleDelete}
+          className="flex-1 flex h-7 items-center justify-center rounded border border-red-700/30 bg-red-900/10 px-2 text-[10px] text-red-400 hover:bg-red-900/20 transition-colors"
+          title="Delete label permanently"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function PropertiesPanel() {
   const selectedIds = useEditorStore((s) => s.selectedIds);
+  const selectedLabelId = useEditorStore((s) => s.selectedLabelId);
+  const editorLabels = useEditorStore((s) => s.editorLabels) as any[];
   const controls = useEditorStore((s) => s.controls);
   const sections = useEditorStore((s) => s.sections);
 
@@ -966,10 +1098,18 @@ export default function PropertiesPanel() {
     return null;
   }, [selectedIds, sections]);
 
+  const selectedLabel = useMemo(() => {
+    if (!selectedLabelId) return null;
+    return editorLabels.find((l: any) => l.id === selectedLabelId) ?? null;
+  }, [selectedLabelId, editorLabels]);
+
   // Render based on selection state
   let content: React.ReactNode;
 
-  if (selectedIds.length === 0) {
+  if (selectedLabel) {
+    // A label is selected — show label properties
+    content = <LabelProperties label={selectedLabel} />;
+  } else if (selectedIds.length === 0) {
     // Nothing selected — show keyboard offset if keyboard exists
     content = <EmptyStatePanel />;
   } else if (selectedSection && selectedControls.length === 0) {

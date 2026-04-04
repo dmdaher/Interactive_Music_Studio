@@ -171,6 +171,7 @@ export interface ManifestSlice {
   hasUserEdited: boolean;
   focusedSectionId: string | null;
   hoveredGroupId: string | null;
+  selectedLabelId: string | null;
 
   // Actions
   loadFromManifest: (manifest: MasterManifestInput) => void;
@@ -205,6 +206,7 @@ export interface ManifestSlice {
   createGroup: (name: string) => void;
   ungroupControls: () => void;
   setHoveredGroup: (id: string | null) => void;
+  setSelectedLabel: (id: string | null) => void;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -407,6 +409,7 @@ export const createManifestSlice: StateCreator<
   hasUserEdited: false,
   focusedSectionId: null,
   hoveredGroupId: null,
+  selectedLabelId: null,
 
   // ── Actions ─────────────────────────────────────────────────────────────
 
@@ -1032,7 +1035,7 @@ export const createManifestSlice: StateCreator<
     });
   },
 
-  setSelectedIds: (ids) => set({ selectedIds: ids }),
+  setSelectedIds: (ids) => set({ selectedIds: ids, selectedLabelId: ids.length > 0 ? null : get().selectedLabelId }),
 
   toggleSelected: (id) => {
     const { selectedIds } = get();
@@ -1549,6 +1552,15 @@ export const createManifestSlice: StateCreator<
   },
 
   setHoveredGroup: (id) => set({ hoveredGroupId: id }),
+
+  setSelectedLabel: (id) => {
+    // Selecting a label clears control selection (mutually exclusive).
+    if (id !== null) {
+      set({ selectedLabelId: id, selectedIds: [] });
+    } else {
+      set({ selectedLabelId: null });
+    }
+  },
 
   initLabelsFromControls: () => {
     const { controls, editorLabels } = get();

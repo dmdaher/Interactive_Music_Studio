@@ -18,8 +18,9 @@ export default function LabelLayer() {
   const deleteLabel = useEditorStore((s) => s.deleteLabel);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const zoom = useEditorStore((s) => s.zoom);
+  const selectedLabel = useEditorStore((s) => s.selectedLabelId);
+  const setSelectedLabel = useEditorStore((s) => s.setSelectedLabel);
 
-  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [editing, setEditing] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -135,9 +136,11 @@ export default function LabelLayer() {
 
   return (
     <div className="absolute inset-0" style={{ zIndex: 150, pointerEvents: 'none' }}>
-      {editorLabels.filter((l) => !l.hidden).map((label) => (
+      {editorLabels.map((label) => (
         <div key={label.id}>
-          {/* Label text */}
+          {/* Label text — hidden labels render at low opacity so they're
+              still findable and clickable in the editor (codegen skips them
+              entirely in the generated panel). */}
           {editing !== label.id && (
             <div
               className="absolute pointer-events-none select-none"
@@ -153,8 +156,10 @@ export default function LabelLayer() {
                 lineHeight: `${label.fontSize + 2}px`,
                 textAlign: label.align,
                 zIndex: dragging === label.id ? 200 : selectedLabel === label.id ? 100 : 60,
-                opacity: dragging === label.id ? 0.7 : 1,
-                outline: selectedLabel === label.id ? '1px solid rgba(59,130,246,0.8)' : 'none',
+                opacity: label.hidden ? 0.25 : (dragging === label.id ? 0.7 : 1),
+                outline: selectedLabel === label.id
+                  ? '1px solid rgba(59,130,246,0.8)'
+                  : label.hidden ? '1px dashed rgba(251,191,36,0.4)' : 'none',
                 outlineOffset: 2,
                 borderRadius: 2,
                 padding: '1px 3px',
