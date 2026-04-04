@@ -449,28 +449,35 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
 
   const ids = useMemo(() => controls.map((c) => c.id), [controls]);
 
-  // Compute current gaps between selected controls
-  const gapH = useMemo(() => {
+  // Compute current gaps between selected controls.
+  // Tolerance: gaps within 2px of each other are treated as equal, since
+  // distributeControls rounds positions to integers which can produce
+  // 1-2px variance between consecutive gaps. Shows the mode (most common
+  // value) when gaps are "approximately equal".
+  const computeGaps = (axis: 'x' | 'y', size: 'w' | 'h') => {
     if (controls.length < 2) return null;
-    const sorted = [...controls].sort((a, b) => a.x - b.x);
+    const sorted = [...controls].sort((a, b) => a[axis] - b[axis]);
     const gaps: number[] = [];
     for (let i = 1; i < sorted.length; i++) {
-      gaps.push(Math.round(sorted[i].x - (sorted[i - 1].x + sorted[i - 1].w)));
+      gaps.push(Math.round(sorted[i][axis] - (sorted[i - 1][axis] + sorted[i - 1][size])));
     }
-    const allEqual = gaps.every(g => g === gaps[0]);
-    return { value: allEqual ? gaps[0] : null, mixed: !allEqual };
-  }, [controls]);
+    const min = Math.min(...gaps);
+    const max = Math.max(...gaps);
+    const approxEqual = max - min <= 2;
+    if (approxEqual) {
+      // Return the mode (most common value) as the representative gap
+      const counts = new Map<number, number>();
+      for (const g of gaps) counts.set(g, (counts.get(g) ?? 0) + 1);
+      let mode = gaps[0];
+      let maxCount = 0;
+      for (const [v, c] of counts) if (c > maxCount) { mode = v; maxCount = c; }
+      return { value: mode, mixed: false };
+    }
+    return { value: null, mixed: true };
+  };
 
-  const gapV = useMemo(() => {
-    if (controls.length < 2) return null;
-    const sorted = [...controls].sort((a, b) => a.y - b.y);
-    const gaps: number[] = [];
-    for (let i = 1; i < sorted.length; i++) {
-      gaps.push(Math.round(sorted[i].y - (sorted[i - 1].y + sorted[i - 1].h)));
-    }
-    const allEqual = gaps.every(g => g === gaps[0]);
-    return { value: allEqual ? gaps[0] : null, mixed: !allEqual };
-  }, [controls]);
+  const gapH = useMemo(() => computeGaps('x', 'w'), [controls]);
+  const gapV = useMemo(() => computeGaps('y', 'h'), [controls]);
 
   const hasGroupInSelection = controlGroups.some((g) =>
     g.controlIds.some((id) => ids.includes(id))
