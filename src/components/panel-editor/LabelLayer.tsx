@@ -69,8 +69,6 @@ export default function LabelLayer() {
     return () => document.removeEventListener('keydown', handler);
   }, [selectedLabel, editing, pushSnapshot, deleteLabel, centerOnControl]);
 
-  if (!showLabels) return null;
-
   const handleMouseDown = useCallback((e: React.MouseEvent, label: EditorLabel) => {
     if (editing === label.id) return;
     e.stopPropagation();
@@ -130,6 +128,10 @@ export default function LabelLayer() {
       e.stopPropagation();
     }
   }, [commitEdit]);
+
+  // Early return AFTER all hooks — React's Rules of Hooks require consistent
+  // hook counts across renders. Toggling showLabels can't change hook count.
+  if (!showLabels) return null;
 
   return (
     <div className="absolute inset-0" style={{ zIndex: 150, pointerEvents: 'none' }}>
