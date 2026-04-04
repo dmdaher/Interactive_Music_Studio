@@ -1520,13 +1520,19 @@ export const createManifestSlice: StateCreator<
   initLabelsFromControls: () => {
     const { controls, editorLabels } = get();
     const controlScale = (get() as any).controlScale ?? 1;
-    // Only initialize if no labels exist yet (migration)
-    if ((editorLabels as EditorLabel[]).length > 0) return;
 
-    // computeLabelPosition imported at top of file
-    const labels: EditorLabel[] = [];
+    // Idempotent backfill: create EditorLabels for controls that don't have one yet.
+    // Preserves existing labels (user-edited positions) and only creates new ones
+    // for controls missing them. Handles controls added after initial migration.
+    const existing = editorLabels as EditorLabel[];
+    const existingControlIds = new Set(
+      existing.filter((l) => l.controlId).map((l) => l.controlId),
+    );
+
+    const newLabels: EditorLabel[] = [];
 
     for (const ctrl of Object.values(controls)) {
+      if (existingControlIds.has(ctrl.id)) continue; // already has a label
       const pos = ctrl.labelPosition;
       if (pos === 'on-button' || pos === 'hidden') continue;
       if (!ctrl.label) continue;
@@ -1542,7 +1548,7 @@ export const createManifestSlice: StateCreator<
       );
       if (!lp) continue;
 
-      labels.push({
+      newLabels.push({
         id: `label-${ctrl.id}`,
         controlId: ctrl.id,
         text: ctrl.label,
@@ -1553,6 +1559,8 @@ export const createManifestSlice: StateCreator<
       });
     }
 
-    set({ editorLabels: labels });
+    if (newLabels.length > 0) {
+      set({ editorLabels: [...existing, ...newLabels] });
+    }
   },
 });
