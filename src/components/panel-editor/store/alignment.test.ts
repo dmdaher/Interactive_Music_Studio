@@ -93,7 +93,6 @@ describe('alignControls', () => {
   });
 
   it('centers linked labels on their controls after alignment', () => {
-    // Add labels linked to controls a and b
     useEditorStore.setState({
       editorLabels: [
         { id: 'la', controlId: 'a', text: 'Label A', x: 5, y: 10, w: 40, fontSize: 8, align: 'left' },
@@ -104,24 +103,45 @@ describe('alignControls', () => {
     } as any);
 
     useEditorStore.getState().alignControls('left');
-    const { controls, editorLabels } = useEditorStore.getState();
+    const { editorLabels } = useEditorStore.getState();
 
-    // All controls aligned left to x=10, w=40 → center at 30, label width = max(40,60) = 60
-    // Label x should be centered: 30 - 30 = 0
     const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
     const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
     const ls = (editorLabels as any[]).find((l: any) => l.id === 'ls');
 
+    // X centered: all controls at x=10, w=40 → center=30, labelW=60 → x=0
     expect(la.align).toBe('center');
-    expect(la.w).toBe(60); // max(40, 60)
-    expect(la.x).toBe(0);  // centerX(10+20) - 30 = 0
-
-    // b also moved to x=10, same centering
+    expect(la.w).toBe(60);
+    expect(la.x).toBe(0);
     expect(lb.x).toBe(0);
-    expect(lb.align).toBe('center');
 
-    // Standalone label unchanged
+    // Standalone unchanged
     expect(ls.x).toBe(200);
+  });
+
+  it('aligns label Y positions to same row (above labels snap to min Y)', () => {
+    // Labels at different Y positions above their controls
+    useEditorStore.setState({
+      editorLabels: [
+        { id: 'la', controlId: 'a', text: 'ZONE 1', x: 5, y: 5, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'ZONE 2', x: 90, y: 12, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lc', controlId: 'c', text: 'ZONE 3', x: 55, y: 8, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    // Controls: a(y=20), b(y=50), c(y=80) — all labels are above their controls
+    useEditorStore.getState().alignControls('left');
+    const { editorLabels } = useEditorStore.getState();
+
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
+    const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
+
+    // All labels were above their controls → snap to min Y = 5
+    expect(la.y).toBe(5);
+    expect(lb.y).toBe(5);
+    expect(lc.y).toBe(5);
   });
 });
 

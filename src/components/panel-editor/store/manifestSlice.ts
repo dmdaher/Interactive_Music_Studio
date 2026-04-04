@@ -229,17 +229,21 @@ function defaultSize(type: string, sizeClass?: SizeClass): { w: number; h: numbe
 let addCounter = 0;
 
 /**
- * Re-center labels that are linked to the given controls.
- * Used after align/distribute to keep labels centered on their controls.
+ * Re-center and align labels linked to the given controls.
+ * After align/distribute: centers labels on controls (X axis) AND
+ * aligns all labels to the same Y row (so "ZONE 1", "ZONE 2", etc.
+ * form a neat horizontal line instead of staggered heights).
  */
-function centerLinkedLabels(
+function alignLinkedLabels(
   labels: EditorLabel[],
   controls: Record<string, ControlDef>,
   controlIds: string[],
   controlScale: number,
 ): EditorLabel[] {
   const idSet = new Set(controlIds);
-  return labels.map((l) => {
+
+  // Pass 1: center X on each control
+  let result = labels.map((l) => {
     if (!l.controlId || !idSet.has(l.controlId)) return l;
     const ctrl = controls[l.controlId];
     if (!ctrl) return l;
@@ -248,6 +252,42 @@ function centerLinkedLabels(
     const labelW = Math.max(ctrlVisW, 60);
     return { ...l, x: Math.round(ctrlCenterX - labelW / 2), w: Math.round(labelW), align: 'center' as const };
   });
+
+  // Pass 2: align Y positions — labels above controls snap to min Y,
+  // labels below controls snap to max Y, so they form neat rows
+  const affected = result.filter((l) => l.controlId && idSet.has(l.controlId));
+  if (affected.length < 2) return result;
+
+  // Classify labels as above or below their control
+  const above: EditorLabel[] = [];
+  const below: EditorLabel[] = [];
+  for (const l of affected) {
+    const ctrl = controls[l.controlId!];
+    if (!ctrl) continue;
+    const ctrlVisH = ctrl.h * controlScale;
+    const ctrlCenterY = ctrl.y + ctrlVisH / 2;
+    if (l.y < ctrlCenterY) {
+      above.push(l);
+    } else {
+      below.push(l);
+    }
+  }
+
+  // Snap all "above" labels to the same Y (topmost = min Y)
+  if (above.length >= 2) {
+    const targetY = Math.min(...above.map((l) => l.y));
+    const aboveIds = new Set(above.map((l) => l.id));
+    result = result.map((l) => aboveIds.has(l.id) ? { ...l, y: targetY } : l);
+  }
+
+  // Snap all "below" labels to the same Y (bottommost = max Y)
+  if (below.length >= 2) {
+    const targetY = Math.max(...below.map((l) => l.y));
+    const belowIds = new Set(below.map((l) => l.id));
+    result = result.map((l) => belowIds.has(l.id) ? { ...l, y: targetY } : l);
+  }
+
+  return result;
 }
 
 // ─── Combined state shape for cross-slice access ──────────────────────────
@@ -1080,7 +1120,7 @@ export const createManifestSlice: StateCreator<
       }
     }
     const controlScale = (get() as any).controlScale ?? 1;
-    const updatedLabels = centerLinkedLabels(
+    const updatedLabels = alignLinkedLabels(
       get().editorLabels as EditorLabel[], updated, movable, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
@@ -1138,7 +1178,7 @@ export const createManifestSlice: StateCreator<
       cursor += (isH ? c.w : c.h) + gap;
     }
     const controlScale = (get() as any).controlScale ?? 1;
-    const updatedLabels = centerLinkedLabels(
+    const updatedLabels = alignLinkedLabels(
       get().editorLabels as EditorLabel[], updated, sorted, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
