@@ -119,17 +119,8 @@ export default function EditorToolbar({
         <button onClick={() => setZoom(zoom + ZOOM_STEP)} disabled={zoom >= 5} className={iconBtn} title="Zoom In">+</button>
       </div>
 
-      {/* Scale */}
-      <div className="flex items-center gap-0.5" data-tutorial="scale">
-        <input
-          type="range" min={20} max={200} step={10}
-          value={Math.round(controlScale * 100)}
-          onChange={(e) => setControlScale(Number(e.target.value) / 100)}
-          className="h-1 w-12 cursor-pointer accent-blue-500"
-          title="Control Scale ([ / ])"
-        />
-        <span className="w-6 text-center text-[9px] text-gray-500">{Math.round(controlScale * 100)}%</span>
-      </div>
+      {/* Control Scale slider — HIDDEN for now (redundant with Zoom).
+          Keep code intact for potential future use. Use Zoom or Canvas W×H instead. */}
 
       {divider}
 

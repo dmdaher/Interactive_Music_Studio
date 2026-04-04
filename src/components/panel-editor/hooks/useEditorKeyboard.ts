@@ -154,15 +154,8 @@ export function useEditorKeyboard() {
         }
       }
 
-      // ── Control scale: [ to decrease, ] to increase ────────────────────
-      if (e.key === '[') {
-        store.setControlScale(store.controlScale - 0.1);
-        return;
-      }
-      if (e.key === ']') {
-        store.setControlScale(store.controlScale + 0.1);
-        return;
-      }
+      // [ and ] shortcuts removed — controlScale hidden for now (redundant with Zoom).
+      // Use Cmd+= / Cmd+- for Zoom instead.
 
       // ── Escape: clear selection ───────────────────────────────────────────
       if (e.key === 'Escape') {
