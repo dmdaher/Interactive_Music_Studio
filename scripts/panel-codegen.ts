@@ -513,12 +513,14 @@ function renderFloatingLabel(
   let labelLeft = ep.x + ep.w / 2 - labelWidth / 2;
   let labelTop: number;
 
+  // Gap between label and control edge (matches editor's label-position.ts)
+  const gap = 3;
   switch (floatingPos) {
     case 'above':
-      labelTop = ep.y - totalLabelH - 6;
+      labelTop = ep.y - totalLabelH - gap;
       break;
     case 'below':
-      labelTop = ep.y + ep.h + 6;
+      labelTop = ep.y + ep.h + gap;
       break;
     case 'left':
       labelWidth = Math.max(ep.w * 1.5, minLabelW);
@@ -531,10 +533,10 @@ function renderFloatingLabel(
       labelTop = ep.y + ep.h / 2 - totalLabelH / 2;
       break;
     case 'icon-only':
-      labelTop = ep.y - totalLabelH - 6;
+      labelTop = ep.y - totalLabelH - gap;
       break;
     default:
-      labelTop = ep.y - totalLabelH - 6;
+      labelTop = ep.y - totalLabelH - gap;
       break;
   }
 
@@ -552,7 +554,7 @@ function renderFloatingLabel(
     `            textAlign: '${textAlign}',`,
     `          }}`,
     `        >`,
-    `          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap" style={{ fontSize: ${fontSize} }}>`,
+    `          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap" style={{ fontSize: ${fontSize}, lineHeight: '${fontSize + 2}px' }}>`,
     `            ${escapeJsx(labelText)}`,
     `          </span>`,
   ];

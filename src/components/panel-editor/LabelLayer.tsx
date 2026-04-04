@@ -144,6 +144,11 @@ export default function LabelLayer() {
                 top: label.y,
                 width: label.w ?? undefined,
                 fontSize: label.fontSize,
+                // Explicit line-height matches computeLabelPosition's lineH = fontSize + 2.
+                // This keeps computed label height consistent with rendered height,
+                // so 1-line and 2-line labels have identical bottom-to-control spacing.
+                // +2 (not +4) gives tight spacing between lines for multi-line labels.
+                lineHeight: `${label.fontSize + 2}px`,
                 textAlign: label.align,
                 zIndex: dragging === label.id ? 200 : selectedLabel === label.id ? 100 : 60,
                 opacity: dragging === label.id ? 0.7 : 1,

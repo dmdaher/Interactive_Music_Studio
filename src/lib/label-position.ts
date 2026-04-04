@@ -23,7 +23,7 @@ export function computeLabelPosition(
 ): LabelPositionResult | null {
   if (labelPosition === 'on-button' || labelPosition === 'hidden') return null;
 
-  const lineH = fontSize + 4; // match actual CSS line-height (leading-tight + padding)
+  const lineH = fontSize + 2; // tight line-height — matches CSS lineHeight on LabelLayer
   const primaryLines = (labelText ?? '').split('\n').length;
   const secondaryLines = secondaryLabel ? 1 : 0;
   const totalLabelH = (primaryLines + secondaryLines) * lineH;
