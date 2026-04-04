@@ -55,6 +55,10 @@ export default function EditorToolbar({
   const setAllLabelFontSize = useEditorStore((s) => s.setAllLabelFontSize);
   const resetAllSizes = useEditorStore((s) => s.resetAllSizes);
   const scaleCanvas = useEditorStore((s) => s.scaleCanvas);
+  const addStandaloneLabel = useEditorStore((s) => s.addStandaloneLabel);
+  const canvasWidth = useEditorStore((s) => s.canvasWidth);
+  const canvasHeight = useEditorStore((s) => s.canvasHeight);
+  const setCanvasSize = useEditorStore((s) => s.setCanvasSize);
 
   const zoomPercent = Math.round(zoom * 100);
 
@@ -134,6 +138,20 @@ export default function EditorToolbar({
       <button data-tutorial="grid" onClick={toggleGrid} className={toggleBtn(showGrid)} title="Grid (G)">Grid</button>
 
       <button onClick={toggleLabels} className={toggleBtn(showLabels)} title="Labels (T)">Labels</button>
+
+      {/* Add standalone label */}
+      <button
+        onClick={() => {
+          pushSnapshot();
+          // Create at center of canvas area
+          addStandaloneLabel(canvasWidth / 2 - 30, canvasHeight / 2);
+        }}
+        disabled={previewMode}
+        className={iconBtn}
+        title="Add standalone label at canvas center"
+      >
+        +L
+      </button>
 
       {/* Label size (only when labels visible) */}
       {showLabels && (
@@ -255,6 +273,44 @@ export default function EditorToolbar({
           className="flex h-6 w-6 items-center justify-center rounded text-[10px] text-gray-400 hover:bg-gray-800 hover:text-gray-200 disabled:opacity-30"
           title="Scale canvas up 125%"
         >+</button>
+
+        {/* Manual canvas W/H inputs (independent of proportional scale) */}
+        <div className="flex items-center gap-0.5 ml-1">
+          <input
+            type="number"
+            defaultValue={canvasWidth}
+            key={`w-${canvasWidth}`}
+            onBlur={(e) => {
+              const val = parseInt(e.target.value, 10);
+              if (!isNaN(val) && val !== canvasWidth && val >= 400) {
+                pushSnapshot();
+                setCanvasSize(val, canvasHeight);
+              }
+            }}
+            onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+            disabled={previewMode}
+            className="w-12 h-6 rounded border border-gray-700 bg-gray-900 px-1 text-[9px] text-gray-300 text-center outline-none focus:border-blue-500 disabled:opacity-30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            title="Canvas width (px) — widens canvas without scaling controls"
+          />
+          <span className="text-[9px] text-gray-600">×</span>
+          <input
+            type="number"
+            defaultValue={canvasHeight}
+            key={`h-${canvasHeight}`}
+            onBlur={(e) => {
+              const val = parseInt(e.target.value, 10);
+              if (!isNaN(val) && val !== canvasHeight && val >= 300) {
+                pushSnapshot();
+                setCanvasSize(canvasWidth, val);
+              }
+            }}
+            onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+            disabled={previewMode}
+            className="w-12 h-6 rounded border border-gray-700 bg-gray-900 px-1 text-[9px] text-gray-300 text-center outline-none focus:border-blue-500 disabled:opacity-30 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            title="Canvas height (px) — heightens canvas without scaling controls"
+          />
+        </div>
+
         <button
           data-tutorial="approve"
           onClick={onApproveAndBuild}

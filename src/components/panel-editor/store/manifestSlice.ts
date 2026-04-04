@@ -195,6 +195,7 @@ export interface ManifestSlice {
   moveLabel: (labelId: string, dx: number, dy: number) => void;
   updateLabel: (labelId: string, updates: Partial<EditorLabel>) => void;
   deleteLabel: (labelId: string) => void;
+  addStandaloneLabel: (x: number, y: number, text?: string) => string;
   initLabelsFromControls: () => void;
   setLabelPosition: (ids: string[], position: ControlDef['labelPosition']) => void;
   alignControls: (mode: 'left' | 'center-x' | 'right' | 'top' | 'center-y' | 'bottom') => void;
@@ -1195,6 +1196,26 @@ export const createManifestSlice: StateCreator<
     set((s) => ({
       editorLabels: (s.editorLabels as EditorLabel[]).filter(l => l.id !== labelId),
     }));
+  },
+
+  addStandaloneLabel: (x, y, text = 'Label') => {
+    const id = `label-standalone-${Date.now()}`;
+    const newLabel: EditorLabel = {
+      id,
+      controlId: null,
+      text,
+      x: Math.round(x),
+      y: Math.round(y),
+      w: 60,
+      fontSize: 8,
+      align: 'center',
+    };
+    set((s) => ({
+      editorLabels: [...(s.editorLabels as EditorLabel[]), newLabel],
+      selectedLabelId: id,
+      selectedIds: [],
+    }));
+    return id;
   },
 
   alignControls: (mode) => {
