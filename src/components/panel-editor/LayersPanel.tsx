@@ -82,12 +82,34 @@ function GroupItem({ group, sectionChildIds }: { group: ControlGroup; sectionChi
     }
   }, [hasSelectedChild, expanded]);
 
+  const childIds = memberIds;
+
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      setSelectedIds(memberIds);
+      if (e.shiftKey) {
+        // Shift+click: ADD group members to current selection
+        const current = useEditorStore.getState().selectedIds;
+        const combined = [...new Set([...current, ...childIds])];
+        setSelectedIds(combined);
+      } else if (e.metaKey) {
+        // Cmd+click: TOGGLE group members in/out of selection
+        const current = useEditorStore.getState().selectedIds;
+        const groupSet = new Set(childIds);
+        const allIn = childIds.every(id => current.includes(id));
+        if (allIn) {
+          // Remove all group members
+          setSelectedIds(current.filter(id => !groupSet.has(id)));
+        } else {
+          // Add all group members
+          setSelectedIds([...new Set([...current, ...childIds])]);
+        }
+      } else {
+        // Plain click: select only this group's members
+        setSelectedIds(childIds);
+      }
     },
-    [memberIds, setSelectedIds],
+    [childIds, setSelectedIds],
   );
 
   const handleToggle = useCallback(

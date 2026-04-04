@@ -372,8 +372,32 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   const createGroup = useEditorStore((s) => s.createGroup);
   const ungroupControls = useEditorStore((s) => s.ungroupControls);
   const controlGroups = useEditorStore((s) => s.controlGroups) as ControlGroup[];
+  const distributeWithGap = useEditorStore((s) => s.distributeWithGap);
 
   const ids = useMemo(() => controls.map((c) => c.id), [controls]);
+
+  // Compute current gaps between selected controls
+  const gapH = useMemo(() => {
+    if (controls.length < 2) return null;
+    const sorted = [...controls].sort((a, b) => a.x - b.x);
+    const gaps: number[] = [];
+    for (let i = 1; i < sorted.length; i++) {
+      gaps.push(Math.round(sorted[i].x - (sorted[i - 1].x + sorted[i - 1].w)));
+    }
+    const allEqual = gaps.every(g => g === gaps[0]);
+    return { value: allEqual ? gaps[0] : null, mixed: !allEqual };
+  }, [controls]);
+
+  const gapV = useMemo(() => {
+    if (controls.length < 2) return null;
+    const sorted = [...controls].sort((a, b) => a.y - b.y);
+    const gaps: number[] = [];
+    for (let i = 1; i < sorted.length; i++) {
+      gaps.push(Math.round(sorted[i].y - (sorted[i - 1].y + sorted[i - 1].h)));
+    }
+    const allEqual = gaps.every(g => g === gaps[0]);
+    return { value: allEqual ? gaps[0] : null, mixed: !allEqual };
+  }, [controls]);
 
   const hasGroupInSelection = controlGroups.some((g) =>
     g.controlIds.some((id) => ids.includes(id))
@@ -575,6 +599,48 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
             </div>
           </div>
         </>
+      )}
+
+      {/* ── Gap Input ──────────────────────────────────────────────── */}
+      {controls.length >= 2 && (
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-500 w-7">Gap H</span>
+            <input
+              type="number"
+              value={gapH?.mixed ? '' : (gapH?.value ?? '')}
+              placeholder={gapH?.mixed ? 'Mixed' : '\u2014'}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10);
+                if (!isNaN(val) && val >= 0) {
+                  pushSnapshot();
+                  distributeWithGap('horizontal', val);
+                }
+              }}
+              className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-0.5 text-[10px] text-gray-200 text-center outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              title="Horizontal gap between controls (px)"
+            />
+            <span className="text-[9px] text-gray-600">px</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-500 w-7">Gap V</span>
+            <input
+              type="number"
+              value={gapV?.mixed ? '' : (gapV?.value ?? '')}
+              placeholder={gapV?.mixed ? 'Mixed' : '\u2014'}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10);
+                if (!isNaN(val) && val >= 0) {
+                  pushSnapshot();
+                  distributeWithGap('vertical', val);
+                }
+              }}
+              className="w-12 bg-gray-800 border border-gray-700 rounded px-1 py-0.5 text-[10px] text-gray-200 text-center outline-none focus:border-blue-500 transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              title="Vertical gap between controls (px)"
+            />
+            <span className="text-[9px] text-gray-600">px</span>
+          </div>
+        </div>
       )}
 
       {/* ── Distribute ─────────────────────────────────────────────── */}
