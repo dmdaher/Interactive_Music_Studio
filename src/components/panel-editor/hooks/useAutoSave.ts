@@ -37,9 +37,10 @@ export function useAutoSave(deviceId: string) {
       }
     }
 
-    // Subscribe to store changes for auto-save (sections + controls)
-    // Skip the first change (initial loadFromManifest) to avoid overwriting saved edits
-    let isFirstChange = true;
+    // Subscribe to store changes for auto-save (sections + controls).
+    // hasUserEdited guards against programmatic changes (loadFromManifest,
+    // restore) overwriting saved edits — those actions set hasUserEdited=false.
+    // User actions (pushSnapshot, direct UI handlers) set it to true.
     const unsubSave = useEditorStore.subscribe(
       (state, prevState) => {
         // Only trigger if sections, controls, or canvas settings changed
@@ -54,12 +55,6 @@ export function useAutoSave(deviceId: string) {
           state.panelScale === prevState.panelScale &&
           state.keyboard === prevState.keyboard
         ) {
-          return;
-        }
-
-        // Skip the initial load — don't overwrite saved edits
-        if (isFirstChange) {
-          isFirstChange = false;
           return;
         }
 
