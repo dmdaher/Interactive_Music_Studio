@@ -18,6 +18,7 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
   const snapGrid = useEditorStore((s) => s.snapGrid);
   const moveSection = useEditorStore((s) => s.moveSection);
   const resizeSection = useEditorStore((s) => s.resizeSection);
+  const setSectionPosition = useEditorStore((s) => s.setSectionPosition);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
 
@@ -49,14 +50,15 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
       const newW = parseInt(ref.style.width, 10);
       const newH = parseInt(ref.style.height, 10);
       pushSnapshot();
-      const dx = position.x - sx;
-      const dy = position.y - sy;
-      if (dx !== 0 || dy !== 0) {
-        moveSection(sectionId, dx, dy);
+      // Update section position independently — do NOT move child controls.
+      // Controls have absolute coordinates and should stay in place in world space
+      // when the section box is resized around them.
+      if (position.x !== sx || position.y !== sy) {
+        setSectionPosition(sectionId, position.x, position.y);
       }
       resizeSection(sectionId, newW, newH);
     },
-    [sx, sy, sectionId, moveSection, resizeSection, pushSnapshot],
+    [sx, sy, sectionId, setSectionPosition, resizeSection, pushSnapshot],
   );
 
   const handleClick = useCallback(
