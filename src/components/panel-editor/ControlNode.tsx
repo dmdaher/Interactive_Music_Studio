@@ -670,19 +670,37 @@ export default function ControlNode({ controlId, sectionId }: ControlNodeProps) 
       // Focus the parent section so it raises above other sections
       setFocusedSection(sectionId);
 
-      if (e.shiftKey || e.metaKey) {
-        // Modifier click: always toggle individual (deep-select / multi-select)
+      const store = useEditorStore.getState();
+      const groups = store.controlGroups as ControlGroup[];
+      const group = groups.find((g) => g.controlIds.includes(controlId));
+
+      if (e.metaKey) {
+        // Cmd+click: deep-select — toggle just this individual control (bypass group)
         toggleSelected(controlId);
-      } else {
-        // Check if this control is in a group
-        const groups = useEditorStore.getState().controlGroups as ControlGroup[];
-        const group = groups.find((g) => g.controlIds.includes(controlId));
+      } else if (e.shiftKey) {
+        // Shift+click: add to selection at the group level
+        // If control is in a group, add whole group. Otherwise toggle individual.
+        const current = store.selectedIds;
         if (group) {
-          // Single click on grouped control: select entire group
-          setSelectedIds(group.controlIds);
+          // Check if all members of this group are already selected
+          const allIn = group.controlIds.every((id) => current.includes(id));
+          if (allIn) {
+            // Remove the whole group from selection
+            const groupSet = new Set(group.controlIds);
+            setSelectedIds(current.filter((id) => !groupSet.has(id)));
+          } else {
+            // Add all group members to selection
+            setSelectedIds([...new Set([...current, ...group.controlIds])]);
+          }
         } else {
-          setSelectedIds([controlId]);
+          // Not in a group — toggle individual
+          toggleSelected(controlId);
         }
+      } else if (group) {
+        // Plain click on grouped control: select entire group
+        setSelectedIds(group.controlIds);
+      } else {
+        setSelectedIds([controlId]);
       }
     },
     [controlId, sectionId, toggleSelected, setSelectedIds, setFocusedSection],
