@@ -21,6 +21,9 @@ interface LabelEditorProps {
   labelMixed?: boolean;
   positionMixed?: boolean;
   secondaryMixed?: boolean;
+  /** Count of distinct values when labelMixed is true (for warning label) */
+  labelDistinctCount?: number;
+  secondaryDistinctCount?: number;
   onLabelChange: (value: string) => void;
   onPositionChange: (value: ControlDef['labelPosition']) => void;
   onSecondaryLabelChange: (value: string) => void;
@@ -35,6 +38,8 @@ export default function LabelEditor({
   labelMixed,
   positionMixed,
   secondaryMixed,
+  labelDistinctCount,
+  secondaryDistinctCount,
   onLabelChange,
   onPositionChange,
   onSecondaryLabelChange,
@@ -74,10 +79,21 @@ export default function LabelEditor({
         <input
           type="text"
           value={labelMixed ? '' : label}
-          placeholder={labelMixed ? 'Mixed' : 'Label text'}
+          placeholder={labelMixed
+            ? `Mixed${labelDistinctCount && labelDistinctCount > 1 ? ` (${labelDistinctCount} different)` : ''}`
+            : 'Label text'}
           onChange={handleLabelChange}
-          className="h-7 w-full rounded border border-gray-700 bg-gray-900 px-2 text-xs text-gray-300 outline-none focus:border-blue-500 placeholder:text-gray-600"
+          className={`h-7 w-full rounded border bg-gray-900 px-2 text-xs text-gray-300 outline-none placeholder:text-gray-600 transition-colors ${
+            labelMixed
+              ? 'border-amber-600/40 focus:border-amber-500'
+              : 'border-gray-700 focus:border-blue-500'
+          }`}
         />
+        {labelMixed && labelDistinctCount && labelDistinctCount > 1 && (
+          <p className="text-[9px] text-amber-500/70 leading-tight">
+            Typing here overwrites all {labelDistinctCount} different labels.
+          </p>
+        )}
       </div>
 
       {/* Label position dropdown */}
@@ -126,9 +142,15 @@ export default function LabelEditor({
           <input
             type="text"
             value={secondaryMixed ? '' : (secondaryLabel ?? '')}
-            placeholder={secondaryMixed ? 'Mixed' : 'Secondary label'}
+            placeholder={secondaryMixed
+              ? `Mixed${secondaryDistinctCount && secondaryDistinctCount > 1 ? ` (${secondaryDistinctCount} different)` : ''}`
+              : 'Secondary label'}
             onChange={handleSecondaryChange}
-            className="h-7 w-full rounded border border-gray-700 bg-gray-900 px-2 text-xs text-gray-300 outline-none focus:border-blue-500 placeholder:text-gray-600"
+            className={`h-7 w-full rounded border bg-gray-900 px-2 text-xs text-gray-300 outline-none placeholder:text-gray-600 transition-colors ${
+              secondaryMixed
+                ? 'border-amber-600/40 focus:border-amber-500'
+                : 'border-gray-700 focus:border-blue-500'
+            }`}
           />
         </div>
       ) : (

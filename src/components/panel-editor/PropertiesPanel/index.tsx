@@ -612,6 +612,8 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
         labelMixed={labelMixed}
         positionMixed={positionMixed}
         secondaryMixed={secondaryMixed}
+        labelDistinctCount={new Set(labels).size}
+        secondaryDistinctCount={new Set(secondaryLabels.filter((s) => s !== undefined)).size}
         onLabelChange={handleLabelChange}
         onPositionChange={handlePositionChange}
         onSecondaryLabelChange={handleSecondaryLabelChange}
