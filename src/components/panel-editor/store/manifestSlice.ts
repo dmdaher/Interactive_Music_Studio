@@ -893,20 +893,27 @@ export const createManifestSlice: StateCreator<
     const { selectedIds, lockedIds, controls } = get();
     const lockedSet = new Set(lockedIds);
     const updated = { ...controls };
-    let changed = false;
+    const movedIds = new Set<string>();
 
     for (const id of selectedIds) {
       if (lockedSet.has(id)) continue;
       const ctrl = updated[id];
       if (ctrl) {
         updated[id] = { ...ctrl, x: ctrl.x + dx, y: ctrl.y + dy };
-        changed = true;
+        movedIds.add(id);
       }
     }
 
-    if (changed) {
-      set({ controls: updated });
-    }
+    if (movedIds.size === 0) return;
+
+    // Move linked labels with the controls
+    const updatedLabels = (get().editorLabels as EditorLabel[]).map((l) =>
+      l.controlId && movedIds.has(l.controlId)
+        ? { ...l, x: Math.round(l.x + dx), y: Math.round(l.y + dy) }
+        : l,
+    );
+
+    set({ controls: updated, editorLabels: updatedLabels });
   },
 
   updateControlProp: (ids, field, value) => {
