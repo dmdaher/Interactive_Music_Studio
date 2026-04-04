@@ -260,7 +260,7 @@ function alignLinkedLabels(
 
     // Move label by same delta as control — preserves Y offset
     const dy = newCtrl.y - oldCtrl.y;
-    const movedY = l.y + dy;
+    const movedY = Math.round(l.y + dy);
 
     // Re-center X on the control (keeps label centered horizontally)
     const ctrlVisW = newCtrl.w * controlScale;
@@ -820,7 +820,7 @@ export const createManifestSlice: StateCreator<
       },
       // Move linked labels with the control
       editorLabels: (s.editorLabels as EditorLabel[]).map(l =>
-        l.controlId === id ? { ...l, x: l.x + dx, y: l.y + dy } : l
+        l.controlId === id ? { ...l, x: Math.round(l.x + dx), y: Math.round(l.y + dy) } : l
       ),
     }));
   },
@@ -853,7 +853,7 @@ export const createManifestSlice: StateCreator<
     // Move linked labels for any child control that was moved
     const updatedLabels = (get().editorLabels as EditorLabel[]).map((l) =>
       l.controlId && childSet.has(l.controlId)
-        ? { ...l, x: l.x + dx, y: l.y + dy }
+        ? { ...l, x: Math.round(l.x + dx), y: Math.round(l.y + dy) }
         : l
     );
 
@@ -1140,9 +1140,11 @@ export const createManifestSlice: StateCreator<
   },
 
   moveLabel: (labelId, dx, dy) => {
+    // Round to integers — invariant: label positions are always integer.
+    // This lets us detect non-integer positions as "broken data" for auto-repair.
     set((s) => ({
       editorLabels: (s.editorLabels as EditorLabel[]).map(l =>
-        l.id === labelId ? { ...l, x: l.x + dx, y: l.y + dy } : l
+        l.id === labelId ? { ...l, x: Math.round(l.x + dx), y: Math.round(l.y + dy) } : l
       ),
     }));
   },
@@ -1521,46 +1523,63 @@ export const createManifestSlice: StateCreator<
     const { controls, editorLabels } = get();
     const controlScale = (get() as any).controlScale ?? 1;
 
-    // Idempotent backfill: create EditorLabels for controls that don't have one yet.
-    // Preserves existing labels (user-edited positions) and only creates new ones
-    // for controls missing them. Handles controls added after initial migration.
-    const existing = editorLabels as EditorLabel[];
-    const existingControlIds = new Set(
-      existing.filter((l) => l.controlId).map((l) => l.controlId),
-    );
-
-    const newLabels: EditorLabel[] = [];
-
-    for (const ctrl of Object.values(controls)) {
-      if (existingControlIds.has(ctrl.id)) continue; // already has a label
+    // Helper: compute label position for a control
+    const computePos = (ctrl: ControlDef) => {
       const pos = ctrl.labelPosition;
-      if (pos === 'on-button' || pos === 'hidden') continue;
-      if (!ctrl.label) continue;
-
+      if (pos === 'on-button' || pos === 'hidden') return null;
+      if (!ctrl.label) return null;
       const visW = ctrl.w * controlScale;
       const visH = ctrl.h * controlScale;
       const fontSize = ctrl.labelFontSize
         ?? (ctrl.sizeClass === 'xl' ? 11 : ctrl.sizeClass === 'lg' ? 10 : ctrl.sizeClass === 'sm' ? 7 : 8);
-
-      const lp = computeLabelPosition(
+      return computeLabelPosition(
         ctrl.x, ctrl.y, visW, visH,
         pos, ctrl.label, fontSize, ctrl.secondaryLabel,
       );
-      if (!lp) continue;
+    };
 
+    const existing = editorLabels as EditorLabel[];
+
+    // Pass 1: Auto-repair labels with non-integer positions.
+    // These are artifacts from old percentage-based math — any label with
+    // fractional x/y that's linked to a valid control gets regenerated.
+    // User-positioned labels always have integer positions (our mutations round).
+    let repaired = 0;
+    const repairedLabels = existing.map((l) => {
+      const xIsInt = typeof l.x === 'number' && l.x === Math.trunc(l.x);
+      const yIsInt = typeof l.y === 'number' && l.y === Math.trunc(l.y);
+      if (xIsInt && yIsInt) return l;
+      if (!l.controlId || !controls[l.controlId]) return l;
+      const lp = computePos(controls[l.controlId]);
+      if (!lp) return l;
+      repaired++;
+      return { ...l, x: lp.x, y: lp.y, w: lp.w, align: lp.align, fontSize: lp.fontSize };
+    });
+
+    // Pass 2: Backfill — create EditorLabels for controls that don't have one yet.
+    const existingControlIds = new Set(
+      repairedLabels.filter((l) => l.controlId).map((l) => l.controlId),
+    );
+
+    const newLabels: EditorLabel[] = [];
+    for (const ctrl of Object.values(controls)) {
+      if (existingControlIds.has(ctrl.id)) continue;
+      const lp = computePos(ctrl);
+      if (!lp) continue;
       newLabels.push({
         id: `label-${ctrl.id}`,
         controlId: ctrl.id,
         text: ctrl.label,
         x: lp.x,
         y: lp.y,
+        w: lp.w,
         fontSize: lp.fontSize,
         align: lp.align,
       });
     }
 
-    if (newLabels.length > 0) {
-      set({ editorLabels: [...existing, ...newLabels] });
+    if (repaired > 0 || newLabels.length > 0) {
+      set({ editorLabels: [...repairedLabels, ...newLabels] });
     }
   },
 });
