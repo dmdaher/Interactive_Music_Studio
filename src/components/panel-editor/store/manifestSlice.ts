@@ -199,6 +199,7 @@ export interface ManifestSlice {
   distributeWithGap: (axis: 'horizontal' | 'vertical', gap: number) => void;
   alignColumns: () => void;
   alignRows: () => void;
+  normalizeLabelSpacing: () => void;
   createGroup: (name: string) => void;
   ungroupControls: () => void;
   setHoveredGroup: (id: string | null) => void;
@@ -1373,6 +1374,86 @@ export const createManifestSlice: StateCreator<
       get().editorLabels as EditorLabel[], controls, updated, movedIds, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
+  },
+
+  normalizeLabelSpacing: () => {
+    const { selectedIds, controls, editorLabels } = get();
+    const labels = editorLabels as EditorLabel[];
+    const controlScale = (get() as any).controlScale ?? 1;
+    const selectedSet = new Set(selectedIds);
+
+    // Find all linked labels whose controls are in the selection
+    const linkedLabels = labels.filter(
+      (l) => l.controlId && selectedSet.has(l.controlId) && controls[l.controlId],
+    );
+    if (linkedLabels.length < 2) return;
+
+    // For each label, compute: position (above/below), line count, and current distance.
+    // Line height estimate: fontSize * 1.2 per line (standard text line-height).
+    type LabelInfo = {
+      id: string;
+      position: 'above' | 'below';
+      lineCount: number;
+      distance: number;
+      control: ControlDef;
+      label: EditorLabel;
+    };
+    const infos: LabelInfo[] = [];
+    for (const l of linkedLabels) {
+      const ctrl = controls[l.controlId!];
+      const ctrlVisH = ctrl.h * controlScale;
+      const ctrlTop = ctrl.y;
+      const ctrlBottom = ctrl.y + ctrlVisH;
+      const ctrlCenterY = ctrl.y + ctrlVisH / 2;
+
+      const lineCount = l.text.split('\n').length;
+      const labelHeight = l.fontSize * lineCount * 1.2;
+      const labelTop = l.y;
+      const labelBottom = l.y + labelHeight;
+
+      // Determine position by comparing label center to control center
+      const labelCenterY = l.y + labelHeight / 2;
+      const isAbove = labelCenterY < ctrlCenterY;
+      const distance = isAbove
+        ? ctrlTop - labelBottom  // gap from label's bottom to control's top
+        : labelTop - ctrlBottom; // gap from label's top to control's bottom
+      infos.push({
+        id: l.id,
+        position: isAbove ? 'above' : 'below',
+        lineCount,
+        distance,
+        control: ctrl,
+        label: l,
+      });
+    }
+
+    // Group by (position, lineCount) — each group gets the tightest distance
+    const groupKey = (i: LabelInfo) => `${i.position}-${i.lineCount}`;
+    const groups = new Map<string, LabelInfo[]>();
+    for (const info of infos) {
+      const key = groupKey(info);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(info);
+    }
+
+    // For each group with 2+ labels, find min distance and snap all to it
+    const updatedLabels: Record<string, EditorLabel> = {};
+    for (const [, group] of groups) {
+      if (group.length < 2) continue;
+      const targetDistance = Math.min(...group.map((i) => i.distance));
+      for (const info of group) {
+        const labelHeight = info.label.fontSize * info.lineCount * 1.2;
+        const newY = info.position === 'above'
+          ? info.control.y - targetDistance - labelHeight
+          : info.control.y + info.control.h * controlScale + targetDistance;
+        updatedLabels[info.id] = { ...info.label, y: Math.round(newY) };
+      }
+    }
+
+    if (Object.keys(updatedLabels).length === 0) return;
+    set({
+      editorLabels: labels.map((l) => updatedLabels[l.id] ?? l),
+    });
   },
 
   createGroup: (name) => {

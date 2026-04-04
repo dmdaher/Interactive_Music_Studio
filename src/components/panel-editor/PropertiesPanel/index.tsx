@@ -444,6 +444,8 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   const distributeWithGap = useEditorStore((s) => s.distributeWithGap);
   const alignColumns = useEditorStore((s) => s.alignColumns);
   const alignRows = useEditorStore((s) => s.alignRows);
+  const normalizeLabelSpacing = useEditorStore((s) => s.normalizeLabelSpacing);
+  const editorLabels = useEditorStore((s) => s.editorLabels) as any[];
 
   const ids = useMemo(() => controls.map((c) => c.id), [controls]);
 
@@ -497,6 +499,12 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
       columnCount: clusterBy('x', 'w'),
     };
   }, [controls]);
+
+  // Count linked labels among selected controls (for Normalize Label Spacing)
+  const linkedLabelCount = useMemo(() => {
+    const idSet = new Set(controls.map((c) => c.id));
+    return editorLabels.filter((l) => l.controlId && idSet.has(l.controlId)).length;
+  }, [controls, editorLabels]);
 
   const types = controls.map((c) => c.type);
   const labels = controls.map((c) => c.label);
@@ -788,6 +796,30 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
                 Align Rows ({columnCount} cols)
               </button>
             )}
+          </div>
+        </>
+      )}
+
+      {/* ── Normalize Label Spacing ────────────────────────────────── */}
+      {linkedLabelCount >= 2 && (
+        <>
+          <div className="h-px bg-gray-800" />
+          <div className="space-y-1.5">
+            <label className="text-[10px] uppercase tracking-wide text-gray-500">
+              Label Spacing
+            </label>
+            <button
+              onClick={() => { pushSnapshot(); normalizeLabelSpacing(); }}
+              className="w-full flex h-7 items-center justify-center gap-1.5 rounded border border-gray-700 bg-gray-900/60 text-[10px] text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 transition-colors"
+              title={`Snap ${linkedLabelCount} labels to matching distance from their controls (grouped by line count)`}
+            >
+              <svg className="h-3 w-3" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="2" y="1" width="8" height="2" rx="0.5" fill="currentColor" stroke="none" />
+                <line x1="6" y1="4" x2="6" y2="6" strokeDasharray="1 1" />
+                <rect x="1" y="7" width="10" height="4" rx="0.5" />
+              </svg>
+              Normalize Label Spacing
+            </button>
           </div>
         </>
       )}

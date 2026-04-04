@@ -432,7 +432,7 @@ describe('alignRows', () => {
     expect(controls.c2r3.y).toBe(200); // center 215 - 15
   });
 
-  it('no-ops when only 1 column detected', () => {
+  it('no-ops when only 1 column detected (alignRows)', () => {
     useEditorStore.setState({
       controls: {
         a: { id: 'a', x: 100, y: 0, w: 50, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
@@ -450,6 +450,104 @@ describe('alignRows', () => {
     expect(controls.a.y).toBe(0);
     expect(controls.b.y).toBe(50);
     expect(controls.c.y).toBe(100);
+  });
+});
+
+// ─── normalizeLabelSpacing ─────────────────────────────────────────────────
+
+describe('normalizeLabelSpacing', () => {
+  it('snaps same-line-count labels to tightest distance', () => {
+    // 3 controls with labels above at different distances
+    useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 100, y: 100, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        b: { id: 'b', x: 100, y: 200, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        c: { id: 'c', x: 100, y: 300, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a', 'b', 'c'],
+      lockedIds: [],
+      editorLabels: [
+        // label height with fontSize=8, 1 line = 8 * 1 * 1.2 = 9.6
+        // a's label: y=85, bottom=94.6, control.y=100 → distance=5.4
+        // b's label: y=180, bottom=189.6, control.y=200 → distance=10.4 (further)
+        // c's label: y=270, bottom=279.6, control.y=300 → distance=20.4 (furthest)
+        { id: 'la', controlId: 'a', text: 'A', x: 100, y: 85, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'B', x: 100, y: 180, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lc', controlId: 'c', text: 'C', x: 100, y: 270, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    useEditorStore.getState().normalizeLabelSpacing();
+    const { editorLabels } = useEditorStore.getState();
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
+    const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
+
+    // Min distance = 5.4, labelHeight = 9.6
+    // newY = control.y - 5.4 - 9.6 = control.y - 15
+    expect(la.y).toBe(85);  // 100 - 15
+    expect(lb.y).toBe(185); // 200 - 15
+    expect(lc.y).toBe(285); // 300 - 15
+  });
+
+  it('keeps different line counts in separate groups', () => {
+    // 2 controls with 1-line labels, 2 controls with 2-line labels
+    useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 100, y: 100, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        b: { id: 'b', x: 100, y: 200, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        c: { id: 'c', x: 100, y: 300, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        d: { id: 'd', x: 100, y: 400, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a', 'b', 'c', 'd'],
+      lockedIds: [],
+      editorLabels: [
+        // 1-line labels (height = 9.6)
+        { id: 'la', controlId: 'a', text: 'A', x: 100, y: 85, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'B', x: 100, y: 170, w: 40, fontSize: 8, align: 'center' },
+        // 2-line labels (height = 19.2)
+        { id: 'lc', controlId: 'c', text: 'C\nCTRL', x: 100, y: 275, w: 40, fontSize: 8, align: 'center' },
+        { id: 'ld', controlId: 'd', text: 'D\nCTRL', x: 100, y: 360, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    useEditorStore.getState().normalizeLabelSpacing();
+    const { editorLabels } = useEditorStore.getState();
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
+    const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
+    const ld = (editorLabels as any[]).find((l: any) => l.id === 'ld');
+
+    // 1-line group: distances are 5.4 (a: 100-85-9.6) and 20.4 (b: 200-170-9.6) → min=5.4
+    // newY = control.y - 5.4 - 9.6 = control.y - 15
+    expect(la.y).toBe(85);  // 100 - 15
+    expect(lb.y).toBe(185); // 200 - 15
+
+    // 2-line group: distances are 5.8 (c: 300-275-19.2) and 20.8 (d: 400-360-19.2) → min=5.8
+    // newY = control.y - 5.8 - 19.2 = control.y - 25
+    expect(lc.y).toBe(275); // 300 - 25
+    expect(ld.y).toBe(375); // 400 - 25
+  });
+
+  it('no-ops with fewer than 2 linked labels', () => {
+    useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 100, y: 100, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a'],
+      lockedIds: [],
+      editorLabels: [
+        { id: 'la', controlId: 'a', text: 'A', x: 100, y: 85, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    useEditorStore.getState().normalizeLabelSpacing();
+    const { editorLabels } = useEditorStore.getState();
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    expect(la.y).toBe(85); // unchanged
   });
 });
 
