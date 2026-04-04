@@ -241,27 +241,42 @@ let addCounter = 0;
  */
 function alignLinkedLabels(
   labels: EditorLabel[],
-  controls: Record<string, ControlDef>,
+  oldControls: Record<string, ControlDef>,
+  newControls: Record<string, ControlDef>,
   controlIds: string[],
   controlScale: number,
 ): EditorLabel[] {
   const idSet = new Set(controlIds);
 
-  // Pass 1: center X on each control
+  // Pass 1: move each label by the same delta as its control (preserves offset),
+  // then re-center X on the control's new center (keeps labels visually centered).
   let result = labels.map((l) => {
     if (!l.controlId || !idSet.has(l.controlId)) return l;
-    const ctrl = controls[l.controlId];
-    if (!ctrl) return l;
-    const ctrlVisW = ctrl.w * controlScale;
-    const ctrlCenterX = ctrl.x + ctrlVisW / 2;
+    const oldCtrl = oldControls[l.controlId];
+    const newCtrl = newControls[l.controlId];
+    if (!oldCtrl || !newCtrl) return l;
+
+    // Move label by same delta as control — preserves Y offset
+    const dy = newCtrl.y - oldCtrl.y;
+    const movedY = l.y + dy;
+
+    // Re-center X on the control (keeps label centered horizontally)
+    const ctrlVisW = newCtrl.w * controlScale;
+    const ctrlCenterX = newCtrl.x + ctrlVisW / 2;
     const labelW = Math.max(ctrlVisW, 60);
-    return { ...l, x: Math.round(ctrlCenterX - labelW / 2), w: Math.round(labelW), align: 'center' as const };
+    return {
+      ...l,
+      x: Math.round(ctrlCenterX - labelW / 2),
+      y: movedY,
+      w: Math.round(labelW),
+      align: 'center' as const,
+    };
   });
 
-  // Pass 2: Detect if controls form a horizontal row (vs vertical column).
-  // Only snap labels to shared Y positions if the controls themselves are
-  // in a row. For columns, each label should track its own control's Y.
-  const affectedCtrls = controlIds.map((id) => controls[id]).filter(Boolean);
+  // Pass 2: If controls form a horizontal row (all aligned on Y), snap labels
+  // to shared Y rows (top and bottom). Skipped for vertical columns — each
+  // label keeps its preserved offset from Pass 1.
+  const affectedCtrls = controlIds.map((id) => newControls[id]).filter(Boolean);
   if (affectedCtrls.length < 2) return result;
 
   const ys = affectedCtrls.map((c) => c.y);
@@ -270,8 +285,6 @@ function alignLinkedLabels(
   const xSpread = Math.max(...xs) - Math.min(...xs);
   const avgH = affectedCtrls.reduce((acc, c) => acc + c.h, 0) / affectedCtrls.length;
 
-  // Controls are in a "horizontal row" if Y spread is less than half average height
-  // AND X spread is greater than Y spread (they extend more horizontally)
   const isHorizontalRow = ySpread < avgH / 2 && xSpread > ySpread;
   if (!isHorizontalRow) return result;
 
@@ -280,7 +293,7 @@ function alignLinkedLabels(
   const above: EditorLabel[] = [];
   const below: EditorLabel[] = [];
   for (const l of affected) {
-    const ctrl = controls[l.controlId!];
+    const ctrl = newControls[l.controlId!];
     if (!ctrl) continue;
     const ctrlVisH = ctrl.h * controlScale;
     const ctrlCenterY = ctrl.y + ctrlVisH / 2;
@@ -1185,7 +1198,7 @@ export const createManifestSlice: StateCreator<
     }
     const controlScale = (get() as any).controlScale ?? 1;
     const updatedLabels = alignLinkedLabels(
-      get().editorLabels as EditorLabel[], updated, movable, controlScale,
+      get().editorLabels as EditorLabel[], controls, updated, movable, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
   },
@@ -1243,7 +1256,7 @@ export const createManifestSlice: StateCreator<
     }
     const controlScale = (get() as any).controlScale ?? 1;
     const updatedLabels = alignLinkedLabels(
-      get().editorLabels as EditorLabel[], updated, sorted, controlScale,
+      get().editorLabels as EditorLabel[], controls, updated, sorted, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
   },
@@ -1278,7 +1291,7 @@ export const createManifestSlice: StateCreator<
 
     const controlScale = (get() as any).controlScale ?? 1;
     const updatedLabels = alignLinkedLabels(
-      get().editorLabels as EditorLabel[], updated, sorted, controlScale,
+      get().editorLabels as EditorLabel[], controls, updated, sorted, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
   },
@@ -1318,7 +1331,7 @@ export const createManifestSlice: StateCreator<
     // Re-center linked labels on the moved controls
     const controlScale = (get() as any).controlScale ?? 1;
     const updatedLabels = alignLinkedLabels(
-      get().editorLabels as EditorLabel[], updated, movedIds, controlScale,
+      get().editorLabels as EditorLabel[], controls, updated, movedIds, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
   },
@@ -1357,7 +1370,7 @@ export const createManifestSlice: StateCreator<
 
     const controlScale = (get() as any).controlScale ?? 1;
     const updatedLabels = alignLinkedLabels(
-      get().editorLabels as EditorLabel[], updated, movedIds, controlScale,
+      get().editorLabels as EditorLabel[], controls, updated, movedIds, controlScale,
     );
     set({ controls: updated, editorLabels: updatedLabels });
   },

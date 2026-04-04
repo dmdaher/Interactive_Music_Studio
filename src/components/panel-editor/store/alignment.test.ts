@@ -143,11 +143,15 @@ describe('alignControls', () => {
     const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
     const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
 
-    // Controls form a horizontal row (Y spread = 4, avg H = 30, 4 < 15) → Y-snap applies
-    // All labels were above their controls → snap to min Y = 85
-    expect(la.y).toBe(85);
-    expect(lb.y).toBe(85);
-    expect(lc.y).toBe(85);
+    // Controls form a horizontal row → Y-snap applies after delta movement.
+    // alignControls('top'): target=min(100,102,98)=98
+    //   a(100→98) dy=-2 → la: 85+(-2)=83
+    //   b(102→98) dy=-4 → lb: 92+(-4)=88
+    //   c(98→98) dy=0 → lc: 88+0=88
+    // Then snap to min Y = 83
+    expect(la.y).toBe(83);
+    expect(lb.y).toBe(83);
+    expect(lc.y).toBe(83);
   });
 
   it('does NOT snap label Y when controls form a vertical column', () => {
@@ -175,11 +179,50 @@ describe('alignControls', () => {
     const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
 
     // Controls form a vertical column (Y spread = 80, X spread = 10, avg H = 30)
-    // 80 > 15 AND 10 < 80 → NOT a horizontal row → Y-snap SKIPPED
-    // Each label should keep its own Y position
+    // alignControls('center-x') moves X only, dy=0 for all → labels keep Y
     expect(la.y).toBe(0);
     expect(lb.y).toBe(40);
     expect(lc.y).toBe(80);
+  });
+
+  it('preserves label Y offset when controls move vertically (distribute V)', () => {
+    // Vertical column with labels above each control.
+    // After distribute V, controls move to different Y positions.
+    // Labels should move by the same delta to stay close to their controls.
+    useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 100, y: 0, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        b: { id: 'b', x: 100, y: 35, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+        c: { id: 'c', x: 100, y: 100, w: 40, h: 30, sectionId: 's1', label: '', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a', 'b', 'c'],
+      lockedIds: [],
+      editorLabels: [
+        // Each label 15px above its control
+        { id: 'la', controlId: 'a', text: 'A', x: 100, y: -15, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'B', x: 100, y: 20, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lc', controlId: 'c', text: 'C', x: 100, y: 85, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    useEditorStore.getState().distributeControls('vertical');
+    const { controls, editorLabels } = useEditorStore.getState();
+
+    // distributeControls: first (a, y=0) and last (c, y=100) anchored.
+    // total span = (100 + 30) - 0 = 130; total h = 90; gap = 40/2 = 20
+    // b new y = 0 + 30 + 20 = 50
+    expect(controls.a.y).toBe(0);
+    expect(controls.b.y).toBe(50);  // moved by +15
+    expect(controls.c.y).toBe(100);
+
+    // Labels should move by same dy as their control — preserving 15px offset
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
+    const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
+    expect(la.y).toBe(-15); // dy=0, stays at -15 (still 15 above control)
+    expect(lb.y).toBe(35);  // dy=+15, moved 20+15=35 (still 15 above control at y=50)
+    expect(lc.y).toBe(85);  // dy=0, stays at 85 (still 15 above control)
   });
 });
 
