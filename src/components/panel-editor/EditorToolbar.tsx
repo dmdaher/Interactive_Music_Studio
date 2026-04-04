@@ -47,6 +47,10 @@ export default function EditorToolbar({
   const togglePhoto = useEditorStore((s) => s.togglePhoto);
   const setPhotoMode = useEditorStore((s) => s.setPhotoMode);
   const setPhotoOpacity = useEditorStore((s) => s.setPhotoOpacity);
+  const photoOffsetX = useEditorStore((s) => s.photoOffsetX);
+  const photoOffsetY = useEditorStore((s) => s.photoOffsetY);
+  const setPhotoOffset = useEditorStore((s) => s.setPhotoOffset);
+  const setPhotoScale = useEditorStore((s) => s.setPhotoScale);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const cleanupGap = useEditorStore((s) => s.cleanupGap);
@@ -187,13 +191,35 @@ export default function EditorToolbar({
               >Over</button>
             </div>
             {photoMode === 'overlay' && (
-              <input
-                type="range" min={0} max={100}
-                value={Math.round(photoOpacity * 100)}
-                onChange={(e) => setPhotoOpacity(Number(e.target.value) / 100)}
-                className="h-1 w-12 cursor-pointer accent-blue-500"
-                title={`Opacity: ${Math.round(photoOpacity * 100)}%`}
-              />
+              <>
+                <input
+                  type="range" min={0} max={100}
+                  value={Math.round(photoOpacity * 100)}
+                  onChange={(e) => setPhotoOpacity(Number(e.target.value) / 100)}
+                  className="h-1 w-12 cursor-pointer accent-blue-500"
+                  title={`Opacity: ${Math.round(photoOpacity * 100)}%`}
+                />
+                {/* Photo offset inputs — shift the photo without moving controls */}
+                <input
+                  type="number"
+                  value={photoOffsetX}
+                  onChange={(e) => setPhotoOffset(Number(e.target.value) || 0, photoOffsetY)}
+                  className="w-10 h-5 rounded border border-gray-700 bg-gray-900 px-0.5 text-[9px] text-gray-400 text-center outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  title="Photo X offset (px)"
+                />
+                <input
+                  type="number"
+                  value={photoOffsetY}
+                  onChange={(e) => setPhotoOffset(photoOffsetX, Number(e.target.value) || 0)}
+                  className="w-10 h-5 rounded border border-gray-700 bg-gray-900 px-0.5 text-[9px] text-gray-400 text-center outline-none focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  title="Photo Y offset (px)"
+                />
+                <button
+                  onClick={() => { setPhotoOffset(0, 0); setPhotoScale(1); }}
+                  className="text-[8px] text-gray-500 hover:text-gray-300 px-1"
+                  title="Reset photo offset + scale"
+                >Rst</button>
+              </>
             )}
           </>
         )}
