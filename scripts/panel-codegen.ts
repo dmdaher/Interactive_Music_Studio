@@ -1294,9 +1294,11 @@ function generateFlatPanel(
     ? renderGroupLabels(manifest.groupLabels, controlMap)
     : '';
 
-  // Render stored labels from editorLabels[] — pixel-identical to editor
+  // Render stored labels from editorLabels[] — pixel-identical to editor.
+  // Must match LabelLayer.tsx styles exactly: explicit lineHeight and width
+  // are required or the generated panel will render differently.
   const editorLabelsArr = ((manifest as any).editorLabels ?? []) as Array<{
-    id: string; text: string; x: number; y: number; fontSize: number; align: string;
+    id: string; text: string; x: number; y: number; w?: number; fontSize: number; align: string;
   }>;
   const labelRenderings = editorLabelsArr.map(label => {
     const textLines = label.text.split('\n');
@@ -1306,15 +1308,20 @@ function generateFlatPanel(
           : escapeJsx(line)
         ).join('\n            ')
       : escapeJsx(label.text);
+    const styleLines = [
+      `            left: ${label.x},`,
+      `            top: ${label.y},`,
+      ...(label.w != null ? [`            width: ${label.w},`] : []),
+      `            fontSize: ${label.fontSize},`,
+      `            lineHeight: '${label.fontSize + 2}px',`,
+      `            textAlign: '${label.align}',`,
+    ];
     return [
       `        {/* label: ${escapeJsx(label.text.replace(/\n/g, ' '))} */}`,
       `        <div`,
       `          className="absolute pointer-events-none"`,
       `          style={{`,
-      `            left: ${label.x},`,
-      `            top: ${label.y},`,
-      `            fontSize: ${label.fontSize},`,
-      `            textAlign: '${label.align}',`,
+      ...styleLines,
       `          }}`,
       `        >`,
       `          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">`,
