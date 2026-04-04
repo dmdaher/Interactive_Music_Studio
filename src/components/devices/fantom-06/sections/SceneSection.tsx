@@ -28,8 +28,8 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1063,
-              top: 41,
+              left: 1110,
+              top: 16,
               width: 30,
               height: 19,
             }}
@@ -49,8 +49,8 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1063,
-              top: 104,
+              left: 1110,
+              top: 79,
               width: 30,
               height: 19,
             }}
@@ -70,8 +70,8 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1063,
-              top: 143,
+              left: 1110,
+              top: 118,
               width: 30,
               height: 19,
             }}
@@ -91,8 +91,8 @@ export default function SceneSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1063,
-              top: 193,
+              left: 1110,
+              top: 168,
               width: 30,
               height: 19,
             }}

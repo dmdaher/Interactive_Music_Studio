@@ -31,18 +31,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 538,
-              top: 363,
-              width: 24,
-              height: 15,
+              left: 753,
+              top: 74,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="write"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('write').active}
                 highlighted={isHighlighted('write')}
                 onClick={() => onButtonClick?.('write')}
@@ -52,18 +52,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 628,
-              top: 363,
-              width: 24,
-              height: 15,
+              left: 753,
+              top: 118,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="master-fx"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('master-fx').active}
                 highlighted={isHighlighted('master-fx')}
                 onClick={() => onButtonClick?.('master-fx')}
@@ -73,18 +73,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 718,
-              top: 363,
-              width: 24,
-              height: 15,
+              left: 754,
+              top: 162,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="motional-pad"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('motional-pad').active}
                 highlighted={isHighlighted('motional-pad')}
                 onClick={() => onButtonClick?.('motional-pad')}
@@ -94,18 +94,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 808,
-              top: 363,
-              width: 24,
-              height: 15,
+              left: 754,
+              top: 206,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="daw-ctrl"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('daw-ctrl').active}
                 highlighted={isHighlighted('daw-ctrl')}
                 onClick={() => onButtonClick?.('daw-ctrl')}
@@ -115,18 +115,18 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 898,
-              top: 363,
-              width: 24,
-              height: 15,
+              left: 755,
+              top: 250,
+              width: 32,
+              height: 20,
             }}
           >
             <div>
               <PanelButton
                 id="menu"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('menu').active}
                 highlighted={isHighlighted('menu')}
                 onClick={() => onButtonClick?.('menu')}
@@ -136,10 +136,10 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 773,
-              top: 69,
+              left: 800,
+              top: 56,
               width: 281,
-              height: 169,
+              height: 168,
             }}
           >
             <TouchDisplay
@@ -148,15 +148,15 @@ export default function CommonSection({
               variant="main"
               showMockContent
               width={281}
-              height={169}
+              height={168}
               highlighted={isHighlighted('display')}
             />
           </div>
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 988,
-              top: 363,
+              left: 820,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -173,8 +173,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1078,
-              top: 363,
+              left: 870,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -191,8 +191,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 538,
-              top: 453,
+              left: 920,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -209,8 +209,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 628,
-              top: 453,
+              left: 970,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -227,8 +227,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 718,
-              top: 453,
+              left: 1019,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -245,8 +245,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 808,
-              top: 453,
+              left: 1069,
+              top: 242,
               width: 24,
               height: 24,
             }}
@@ -263,8 +263,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 898,
-              top: 453,
+              left: 916,
+              top: 449,
               width: 24,
               height: 15,
             }}
@@ -284,8 +284,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 988,
-              top: 453,
+              left: 1006,
+              top: 449,
               width: 24,
               height: 24,
             }}
@@ -300,8 +300,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1078,
-              top: 453,
+              left: 1096,
+              top: 449,
               width: 24,
               height: 15,
             }}
@@ -321,8 +321,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 538,
-              top: 543,
+              left: 556,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -342,8 +342,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 628,
-              top: 543,
+              left: 646,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -363,8 +363,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 718,
-              top: 543,
+              left: 736,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -384,8 +384,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 808,
-              top: 543,
+              left: 826,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -405,8 +405,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 898,
-              top: 543,
+              left: 916,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -426,8 +426,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 988,
-              top: 543,
+              left: 1006,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -447,8 +447,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1078,
-              top: 543,
+              left: 1096,
+              top: 539,
               width: 24,
               height: 15,
             }}
@@ -468,8 +468,8 @@ export default function CommonSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 538,
-              top: 603,
+              left: 556,
+              top: 599,
               width: 24,
               height: 15,
             }}

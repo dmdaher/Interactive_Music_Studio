@@ -45,10 +45,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 130,
-            top: 105,
-            width: 14,
-            height: 75,
+            left: 126,
+            top: 107,
+            width: 20,
+            height: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -57,8 +57,8 @@ export default function FANTOM06Panel({
             <Wheel
               id="wheel-1"
               label=""
-              width={14}
-              height={75}
+              width={20}
+              height={100}
               highlighted={isHighlighted('wheel-1')}
             />
         </div>
@@ -67,10 +67,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 194,
-            top: 101,
-            width: 14,
-            height: 71,
+            left: 188,
+            top: 107,
+            width: 20,
+            height: 100,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -79,8 +79,8 @@ export default function FANTOM06Panel({
             <Wheel
               id="wheel-2"
               label=""
-              width={14}
-              height={71}
+              width={20}
+              height={100}
               highlighted={isHighlighted('wheel-2')}
             />
         </div>
@@ -89,10 +89,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 116,
-            top: 363,
-            width: 19,
-            height: 14,
+            left: 110,
+            top: 359,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -102,8 +102,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="s1"
                 label=""
-                width={19}
-                height={14}
+                width={32}
+                height={20}
                 active={getState('s1').active}
                 highlighted={isHighlighted('s1')}
                 onClick={() => onButtonClick?.('s1')}
@@ -115,10 +115,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 150,
-            top: 361,
-            width: 19,
-            height: 14,
+            left: 155,
+            top: 359,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -128,8 +128,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="s2"
                 label=""
-                width={19}
-                height={14}
+                width={32}
+                height={20}
                 active={getState('s2').active}
                 highlighted={isHighlighted('s2')}
                 onClick={() => onButtonClick?.('s2')}
@@ -141,10 +141,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 136,
-            top: 410,
-            width: 61,
-            height: 61,
+            left: 126,
+            top: 400,
+            width: 86,
+            height: 86,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -155,8 +155,8 @@ export default function FANTOM06Panel({
               label=""
               positions={["FWD","REV","SLIP REV"]}
               highlighted={isHighlighted('pitch-bend-lever')}
-              width={61}
-              height={61}
+              width={86}
+              height={86}
             />
         </div>
 
@@ -164,8 +164,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 269,
-            top: 134,
+            left: 265,
+            top: 118,
             width: 39,
             height: 32,
             display: 'flex',
@@ -187,10 +187,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 318,
-            top: 98,
-            width: 30,
-            height: 18,
+            left: 312,
+            top: 81,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -200,8 +200,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="pan-level"
                 label=""
-                width={30}
-                height={18}
+                width={32}
+                height={20}
                 active={getState('pan-level').active}
                 highlighted={isHighlighted('pan-level')}
                 onClick={() => onButtonClick?.('pan-level')}
@@ -213,8 +213,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 353,
-            top: 96,
+            left: 351,
+            top: 83,
             width: 32,
             height: 20,
             display: 'flex',
@@ -239,10 +239,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 352,
-            top: 139,
-            width: 30,
-            height: 19,
+            left: 351,
+            top: 124,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -252,8 +252,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="assign"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('assign').active}
                 highlighted={isHighlighted('assign')}
                 onClick={() => onButtonClick?.('assign')}
@@ -265,8 +265,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 318,
-            top: 179,
+            left: 312,
+            top: 165,
             width: 32,
             height: 20,
             display: 'flex',
@@ -291,10 +291,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 357,
-            top: 178,
-            width: 30,
-            height: 19,
+            left: 351,
+            top: 164,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -304,8 +304,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-select"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-select').active}
                 highlighted={isHighlighted('zone-select')}
                 onClick={() => onButtonClick?.('zone-select')}
@@ -317,10 +317,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 393,
-            top: 86,
-            width: 30,
-            height: 30,
+            left: 402,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -331,8 +331,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-1').value ?? 64}
               highlighted={isHighlighted('knob-1')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -340,10 +340,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 435,
-            top: 84,
-            width: 30,
-            height: 30,
+            left: 445,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -354,8 +354,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-2').value ?? 64}
               highlighted={isHighlighted('knob-2')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -363,10 +363,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 474,
-            top: 84,
-            width: 30,
-            height: 30,
+            left: 487,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -377,8 +377,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-3').value ?? 64}
               highlighted={isHighlighted('knob-3')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -386,10 +386,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 516,
-            top: 84,
-            width: 30,
-            height: 30,
+            left: 529,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -400,8 +400,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-4').value ?? 64}
               highlighted={isHighlighted('knob-4')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -409,10 +409,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 562,
-            top: 84,
-            width: 30,
-            height: 30,
+            left: 572,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -423,8 +423,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-5').value ?? 64}
               highlighted={isHighlighted('knob-5')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -432,10 +432,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 606,
-            top: 86,
-            width: 30,
-            height: 30,
+            left: 614,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -446,8 +446,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-6').value ?? 64}
               highlighted={isHighlighted('knob-6')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -455,10 +455,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 646,
-            top: 83,
-            width: 30,
-            height: 30,
+            left: 656,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -469,8 +469,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-7').value ?? 64}
               highlighted={isHighlighted('knob-7')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -478,10 +478,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 687,
-            top: 85,
-            width: 30,
-            height: 30,
+            left: 698,
+            top: 77,
+            width: 32,
+            height: 32,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -492,8 +492,8 @@ export default function FANTOM06Panel({
               label=""
               value={getState('knob-8').value ?? 64}
               highlighted={isHighlighted('knob-8')}
-              outerSize={30}
-              innerSize={21}
+              outerSize={32}
+              innerSize={22}
             />
         </div>
 
@@ -501,8 +501,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 394,
-            top: 148,
+            left: 400,
+            top: 139,
             width: 32,
             height: 20,
             display: 'flex',
@@ -527,10 +527,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 438,
-            top: 148,
-            width: 30,
-            height: 19,
+            left: 443,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -540,8 +540,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-2"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-2').active}
                 highlighted={isHighlighted('zone-int-ext-2')}
                 onClick={() => onButtonClick?.('zone-int-ext-2')}
@@ -553,10 +553,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 481,
-            top: 147,
-            width: 30,
-            height: 19,
+            left: 484,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -566,8 +566,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-3"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-3').active}
                 highlighted={isHighlighted('zone-int-ext-3')}
                 onClick={() => onButtonClick?.('zone-int-ext-3')}
@@ -579,10 +579,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 522,
-            top: 148,
-            width: 30,
-            height: 19,
+            left: 527,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -592,8 +592,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-4"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-4').active}
                 highlighted={isHighlighted('zone-int-ext-4')}
                 onClick={() => onButtonClick?.('zone-int-ext-4')}
@@ -605,10 +605,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 566,
-            top: 148,
-            width: 30,
-            height: 19,
+            left: 568,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -618,8 +618,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-5"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-5').active}
                 highlighted={isHighlighted('zone-int-ext-5')}
                 onClick={() => onButtonClick?.('zone-int-ext-5')}
@@ -631,10 +631,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 609,
-            top: 148,
-            width: 30,
-            height: 19,
+            left: 611,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -644,8 +644,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-6"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-6').active}
                 highlighted={isHighlighted('zone-int-ext-6')}
                 onClick={() => onButtonClick?.('zone-int-ext-6')}
@@ -657,10 +657,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 648,
-            top: 149,
-            width: 30,
-            height: 19,
+            left: 652,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -670,8 +670,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-7"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-7').active}
                 highlighted={isHighlighted('zone-int-ext-7')}
                 onClick={() => onButtonClick?.('zone-int-ext-7')}
@@ -683,10 +683,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 688,
-            top: 148,
-            width: 30,
-            height: 19,
+            left: 695,
+            top: 139,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -696,8 +696,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="zone-int-ext-8"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('zone-int-ext-8').active}
                 highlighted={isHighlighted('zone-int-ext-8')}
                 onClick={() => onButtonClick?.('zone-int-ext-8')}
@@ -709,9 +709,9 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 404,
-            top: 179,
-            width: 19,
+            left: 408,
+            top: 187,
+            width: 18,
             height: 75,
             display: 'flex',
             alignItems: 'center',
@@ -724,7 +724,7 @@ export default function FANTOM06Panel({
               value={getState('slider-1').value ?? 64}
               highlighted={isHighlighted('slider-1')}
               trackHeight={55}
-              trackWidth={9}
+              trackWidth={8}
             />
         </div>
 
@@ -732,8 +732,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 446,
-            top: 179,
+            left: 449,
+            top: 187,
             width: 19,
             height: 75,
             display: 'flex',
@@ -755,8 +755,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 486,
-            top: 179,
+            left: 490,
+            top: 187,
             width: 19,
             height: 75,
             display: 'flex',
@@ -778,8 +778,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 527,
-            top: 176,
+            left: 533,
+            top: 187,
             width: 19,
             height: 75,
             display: 'flex',
@@ -801,9 +801,9 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 573,
-            top: 176,
-            width: 19,
+            left: 576,
+            top: 187,
+            width: 18,
             height: 75,
             display: 'flex',
             alignItems: 'center',
@@ -816,7 +816,7 @@ export default function FANTOM06Panel({
               value={getState('slider-5').value ?? 64}
               highlighted={isHighlighted('slider-5')}
               trackHeight={55}
-              trackWidth={9}
+              trackWidth={8}
             />
         </div>
 
@@ -824,8 +824,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 613,
-            top: 176,
+            left: 617,
+            top: 187,
             width: 19,
             height: 75,
             display: 'flex',
@@ -847,9 +847,9 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 657,
-            top: 177,
-            width: 19,
+            left: 660,
+            top: 187,
+            width: 18,
             height: 75,
             display: 'flex',
             alignItems: 'center',
@@ -862,7 +862,7 @@ export default function FANTOM06Panel({
               value={getState('slider-7').value ?? 64}
               highlighted={isHighlighted('slider-7')}
               trackHeight={55}
-              trackWidth={9}
+              trackWidth={8}
             />
         </div>
 
@@ -870,9 +870,9 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 696,
-            top: 177,
-            width: 19,
+            left: 703,
+            top: 187,
+            width: 18,
             height: 75,
             display: 'flex',
             alignItems: 'center',
@@ -885,7 +885,7 @@ export default function FANTOM06Panel({
               value={getState('slider-8').value ?? 64}
               highlighted={isHighlighted('slider-8')}
               trackHeight={55}
-              trackWidth={9}
+              trackWidth={8}
             />
         </div>
 
@@ -893,8 +893,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 278,
-            top: 224,
+            left: 271,
+            top: 204,
             width: 32,
             height: 20,
             display: 'flex',
@@ -919,8 +919,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 323,
-            top: 222,
+            left: 312,
+            top: 204,
             width: 32,
             height: 20,
             display: 'flex',
@@ -945,10 +945,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 363,
-            top: 221,
-            width: 30,
-            height: 19,
+            left: 351,
+            top: 205,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -958,8 +958,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="arpeggio"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('arpeggio').active}
                 highlighted={isHighlighted('arpeggio')}
                 onClick={() => onButtonClick?.('arpeggio')}
@@ -971,8 +971,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 277,
-            top: 267,
+            left: 271,
+            top: 245,
             width: 32,
             height: 20,
             display: 'flex',
@@ -997,9 +997,9 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 322,
-            top: 266,
-            width: 28,
+            left: 312,
+            top: 245,
+            width: 32,
             height: 20,
             display: 'flex',
             alignItems: 'center',
@@ -1010,7 +1010,7 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="octave-down"
                 label=""
-                width={28}
+                width={32}
                 height={20}
                 active={getState('octave-down').active}
                 highlighted={isHighlighted('octave-down')}
@@ -1023,10 +1023,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 360,
-            top: 265,
-            width: 30,
-            height: 19,
+            left: 351,
+            top: 245,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1036,8 +1036,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="octave-up"
                 label=""
-                width={30}
-                height={19}
+                width={32}
+                height={20}
                 active={getState('octave-up').active}
                 highlighted={isHighlighted('octave-up')}
                 onClick={() => onButtonClick?.('octave-up')}
@@ -1049,10 +1049,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 538,
-            top: 363,
-            width: 24,
-            height: 15,
+            left: 753,
+            top: 74,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1062,8 +1062,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="write"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('write').active}
                 highlighted={isHighlighted('write')}
                 onClick={() => onButtonClick?.('write')}
@@ -1075,10 +1075,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 628,
-            top: 363,
-            width: 24,
-            height: 15,
+            left: 753,
+            top: 118,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1088,8 +1088,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="master-fx"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('master-fx').active}
                 highlighted={isHighlighted('master-fx')}
                 onClick={() => onButtonClick?.('master-fx')}
@@ -1101,10 +1101,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 718,
-            top: 363,
-            width: 24,
-            height: 15,
+            left: 754,
+            top: 162,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1114,8 +1114,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="motional-pad"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('motional-pad').active}
                 highlighted={isHighlighted('motional-pad')}
                 onClick={() => onButtonClick?.('motional-pad')}
@@ -1127,10 +1127,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 808,
-            top: 363,
-            width: 24,
-            height: 15,
+            left: 754,
+            top: 206,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1140,8 +1140,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="daw-ctrl"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('daw-ctrl').active}
                 highlighted={isHighlighted('daw-ctrl')}
                 onClick={() => onButtonClick?.('daw-ctrl')}
@@ -1153,10 +1153,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 898,
-            top: 363,
-            width: 24,
-            height: 15,
+            left: 755,
+            top: 250,
+            width: 32,
+            height: 20,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1166,8 +1166,8 @@ export default function FANTOM06Panel({
               <PanelButton
                 id="menu"
                 label=""
-                width={24}
-                height={15}
+                width={32}
+                height={20}
                 active={getState('menu').active}
                 highlighted={isHighlighted('menu')}
                 onClick={() => onButtonClick?.('menu')}
@@ -1179,10 +1179,10 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 773,
-            top: 69,
+            left: 800,
+            top: 56,
             width: 281,
-            height: 169,
+            height: 168,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -1194,7 +1194,7 @@ export default function FANTOM06Panel({
               variant="main"
               showMockContent
               width={281}
-              height={169}
+              height={168}
               highlighted={isHighlighted('display')}
             />
         </div>
@@ -1203,8 +1203,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 988,
-            top: 363,
+            left: 820,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1226,8 +1226,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1078,
-            top: 363,
+            left: 870,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1249,8 +1249,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 538,
-            top: 453,
+            left: 920,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1272,8 +1272,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 628,
-            top: 453,
+            left: 970,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1295,8 +1295,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 718,
-            top: 453,
+            left: 1019,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1318,8 +1318,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 808,
-            top: 453,
+            left: 1069,
+            top: 242,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1341,8 +1341,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 898,
-            top: 453,
+            left: 916,
+            top: 449,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1367,8 +1367,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 988,
-            top: 453,
+            left: 1006,
+            top: 449,
             width: 24,
             height: 24,
             display: 'flex',
@@ -1388,8 +1388,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1078,
-            top: 453,
+            left: 1096,
+            top: 449,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1414,8 +1414,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 538,
-            top: 543,
+            left: 556,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1440,8 +1440,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 628,
-            top: 543,
+            left: 646,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1466,8 +1466,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 718,
-            top: 543,
+            left: 736,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1492,8 +1492,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 808,
-            top: 543,
+            left: 826,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1518,8 +1518,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 898,
-            top: 543,
+            left: 916,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1544,8 +1544,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 988,
-            top: 543,
+            left: 1006,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1570,8 +1570,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1078,
-            top: 543,
+            left: 1096,
+            top: 539,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1596,8 +1596,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 538,
-            top: 603,
+            left: 556,
+            top: 599,
             width: 24,
             height: 15,
             display: 'flex',
@@ -1622,8 +1622,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1063,
-            top: 41,
+            left: 1110,
+            top: 16,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1648,8 +1648,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1063,
-            top: 104,
+            left: 1110,
+            top: 79,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1674,8 +1674,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1063,
-            top: 143,
+            left: 1110,
+            top: 118,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1700,8 +1700,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1063,
-            top: 193,
+            left: 1110,
+            top: 168,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1726,8 +1726,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1194,
-            top: 38,
+            left: 1238,
+            top: 16,
             width: 30,
             height: 30,
             display: 'flex',
@@ -1749,8 +1749,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1293,
-            top: 38,
+            left: 1337,
+            top: 16,
             width: 30,
             height: 30,
             display: 'flex',
@@ -1772,8 +1772,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1208,
-            top: 113,
+            left: 1252,
+            top: 91,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1798,8 +1798,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1258,
-            top: 113,
+            left: 1302,
+            top: 91,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1824,8 +1824,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1308,
-            top: 113,
+            left: 1352,
+            top: 91,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1850,8 +1850,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1208,
-            top: 150,
+            left: 1252,
+            top: 128,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1876,8 +1876,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1258,
-            top: 150,
+            left: 1302,
+            top: 128,
             width: 30,
             height: 19,
             display: 'flex',
@@ -1902,8 +1902,8 @@ export default function FANTOM06Panel({
         <div
           className="absolute"
           style={{
-            left: 1308,
-            top: 150,
+            left: 1352,
+            top: 128,
             width: 30,
             height: 19,
             display: 'flex',
@@ -3102,9 +3102,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 107.1,
-            top: 186.1,
-            fontSize: 6,
+            left: 106,
+            top: 210,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3117,9 +3119,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 171,
-            top: 178,
-            fontSize: 6,
+            left: 168,
+            top: 210,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3132,9 +3136,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 95,
-            top: 347,
-            fontSize: 6,
+            left: 96,
+            top: 348,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3147,9 +3153,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 129,
-            top: 345,
-            fontSize: 6,
+            left: 141,
+            top: 348,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3162,9 +3170,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 136,
-            top: 477,
-            fontSize: 6,
+            left: 126,
+            top: 489,
+            width: 86,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3177,9 +3187,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 282.07269355202476,
-            top: 211.34548977006406,
-            fontSize: 6,
+            left: 258,
+            top: 193,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3192,9 +3204,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 320.32731514670655,
-            top: 199.05453843550276,
-            fontSize: 6,
+            left: 299,
+            top: 185,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3208,9 +3222,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 356.01821233576015,
-            top: 206.4727455832741,
-            fontSize: 6,
+            left: 337,
+            top: 194,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3223,9 +3239,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 269.109109219638,
-            top: 252.65453935102977,
-            fontSize: 6,
+            left: 258,
+            top: 234,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3238,9 +3256,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 321.31823949640517,
-            top: 251.31821544855293,
-            fontSize: 6,
+            left: 299,
+            top: 234,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3253,9 +3273,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 367.472708962181,
-            top: 249.74548506303256,
-            fontSize: 6,
+            left: 338,
+            top: 234,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3268,9 +3290,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 271.2908562027259,
-            top: 109.56363315880238,
-            fontSize: 6,
+            left: 255,
+            top: 99,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3284,9 +3308,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 319.563636058461,
-            top: 76.01818151300603,
-            fontSize: 6,
+            left: 299,
+            top: 62,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3300,9 +3326,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 357.29093793002085,
-            top: 81.29092682162197,
-            fontSize: 6,
+            left: 337,
+            top: 72,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3315,9 +3343,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 350.83638835560214,
-            top: 125.19997772216797,
-            fontSize: 6,
+            left: 337,
+            top: 113,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3330,9 +3360,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 312.02730568625725,
-            top: 165.84553730912646,
-            fontSize: 6,
+            left: 299,
+            top: 154,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3345,9 +3377,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 355.0999969482425,
-            top: 159.19093045321375,
-            fontSize: 6,
+            left: 337,
+            top: 145,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3361,9 +3395,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 400.0091122713962,
-            top: 133.19089383212003,
-            fontSize: 6,
+            left: 387,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3376,9 +3412,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 444.8181818181822,
-            top: 134,
-            fontSize: 6,
+            left: 430,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3391,9 +3429,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 491.4545454545461,
-            top: 133,
-            fontSize: 6,
+            left: 471,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3406,9 +3446,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 531.5454545454539,
-            top: 134,
-            fontSize: 6,
+            left: 514,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3421,9 +3463,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 551,
-            top: 134,
-            fontSize: 6,
+            left: 555,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3436,9 +3480,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 594,
-            top: 134,
-            fontSize: 6,
+            left: 598,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3451,9 +3497,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 633,
-            top: 135,
-            fontSize: 6,
+            left: 639,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3466,9 +3514,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 673,
-            top: 134,
-            fontSize: 6,
+            left: 682,
+            top: 128,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3481,9 +3531,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 773,
-            top: 244,
-            fontSize: 6,
+            left: 800,
+            top: 227,
+            width: 281,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3496,9 +3548,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1048,
-            top: 25,
-            fontSize: 6,
+            left: 1095,
+            top: 5,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3511,9 +3565,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1048,
-            top: 88,
-            fontSize: 6,
+            left: 1095,
+            top: 68,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3526,9 +3582,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1048,
-            top: 127,
-            fontSize: 6,
+            left: 1095,
+            top: 107,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3541,9 +3599,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1048,
-            top: 177,
-            fontSize: 6,
+            left: 1095,
+            top: 157,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3556,9 +3616,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1179,
-            top: 74,
-            fontSize: 6,
+            left: 1223,
+            top: 49,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3571,9 +3633,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1278,
-            top: 74,
-            fontSize: 6,
+            left: 1322,
+            top: 49,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3586,9 +3650,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1193,
-            top: 97,
-            fontSize: 6,
+            left: 1237,
+            top: 80,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3601,9 +3667,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1243,
-            top: 97,
-            fontSize: 6,
+            left: 1287,
+            top: 80,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3616,9 +3684,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1293,
-            top: 97,
-            fontSize: 6,
+            left: 1337,
+            top: 80,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3631,9 +3701,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1193,
-            top: 134,
-            fontSize: 6,
+            left: 1237,
+            top: 117,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3646,9 +3718,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1243,
-            top: 134,
-            fontSize: 6,
+            left: 1287,
+            top: 117,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3661,9 +3735,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1293,
-            top: 134,
-            fontSize: 6,
+            left: 1337,
+            top: 117,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3677,8 +3753,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1391,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3692,8 +3770,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1391,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3707,8 +3787,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1446,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3722,8 +3804,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1446,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3737,8 +3821,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1483,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3752,8 +3838,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1534,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3767,8 +3855,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1559,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3782,8 +3872,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1586,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3797,8 +3889,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1376,
-            top: 147,
-            fontSize: 6,
+            top: 152,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3812,8 +3906,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1435,
-            top: 147,
-            fontSize: 6,
+            top: 152,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3827,8 +3923,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1476,
-            top: 147,
-            fontSize: 6,
+            top: 152,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3842,8 +3940,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1558,
-            top: 147,
-            fontSize: 6,
+            top: 152,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3857,8 +3957,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1376,
-            top: 178,
-            fontSize: 6,
+            top: 183,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3872,8 +3974,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1435,
-            top: 178,
-            fontSize: 6,
+            top: 183,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3887,8 +3991,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1476,
-            top: 178,
-            fontSize: 6,
+            top: 183,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3902,8 +4008,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1558,
-            top: 178,
-            fontSize: 6,
+            top: 183,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3917,8 +4025,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1376,
-            top: 209,
-            fontSize: 6,
+            top: 214,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3932,8 +4042,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1435,
-            top: 209,
-            fontSize: 6,
+            top: 214,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3947,8 +4059,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1476,
-            top: 209,
-            fontSize: 6,
+            top: 214,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3962,8 +4076,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1558,
-            top: 209,
-            fontSize: 6,
+            top: 214,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3977,8 +4093,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1376,
-            top: 240,
-            fontSize: 6,
+            top: 245,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -3992,8 +4110,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1435,
-            top: 240,
-            fontSize: 6,
+            top: 245,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4007,8 +4127,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1476,
-            top: 240,
-            fontSize: 6,
+            top: 245,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4022,8 +4144,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1558,
-            top: 240,
-            fontSize: 6,
+            top: 245,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4037,8 +4161,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1639,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4052,8 +4178,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1689,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4067,8 +4195,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1718,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4082,8 +4212,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1743,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4097,8 +4229,10 @@ export default function FANTOM06Panel({
           className="absolute pointer-events-none"
           style={{
             left: 1796,
-            top: 22,
-            fontSize: 6,
+            top: 27,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4111,9 +4245,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 520,
-            top: 384,
-            fontSize: 8,
+            left: 739,
+            top: 63,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4122,33 +4258,21 @@ export default function FANTOM06Panel({
           </span>
         </div>
 
-        {/* label: MASTER FX */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 610,
-            top: 384,
-            fontSize: 8,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
-            MASTER FX
-          </span>
-        </div>
-
         {/* label: MOTIONAL PAD */}
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 700,
-            top: 384,
-            fontSize: 8,
+            left: 740,
+            top: 143,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
           <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
-            MOTIONAL PAD
+            MOTIONAL<br />
+            PAD
           </span>
         </div>
 
@@ -4156,9 +4280,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 790,
-            top: 384,
-            fontSize: 8,
+            left: 740,
+            top: 195,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4167,43 +4293,15 @@ export default function FANTOM06Panel({
           </span>
         </div>
 
-        {/* label: MENU */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 880,
-            top: 384,
-            fontSize: 8,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
-            MENU
-          </span>
-        </div>
-
-        {/* label: E1 */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: 970,
-            top: 393,
-            fontSize: 8,
-            textAlign: 'center',
-          }}
-        >
-          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
-            E1
-          </span>
-        </div>
-
         {/* label: E2 */}
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1060,
-            top: 393,
-            fontSize: 8,
+            left: 852,
+            top: 274,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4216,9 +4314,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 520,
-            top: 483,
-            fontSize: 8,
+            left: 902,
+            top: 224,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4231,9 +4331,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 610,
-            top: 483,
-            fontSize: 8,
+            left: 952,
+            top: 274,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4246,9 +4348,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 700,
-            top: 483,
-            fontSize: 8,
+            left: 1001,
+            top: 274,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4261,9 +4365,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 790,
-            top: 483,
-            fontSize: 8,
+            left: 1051,
+            top: 274,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4276,9 +4382,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 880,
-            top: 474,
-            fontSize: 8,
+            left: 898,
+            top: 467,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4291,9 +4399,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 970,
-            top: 483,
-            fontSize: 8,
+            left: 988,
+            top: 476,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4306,9 +4416,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1060,
-            top: 474,
-            fontSize: 8,
+            left: 1078,
+            top: 467,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4321,9 +4433,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 520,
-            top: 564,
-            fontSize: 8,
+            left: 538,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4336,9 +4450,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 610,
-            top: 564,
-            fontSize: 8,
+            left: 628,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4351,9 +4467,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 700,
-            top: 564,
-            fontSize: 8,
+            left: 718,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4366,9 +4484,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 790,
-            top: 564,
-            fontSize: 8,
+            left: 808,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4381,9 +4501,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 880,
-            top: 564,
-            fontSize: 8,
+            left: 898,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4396,9 +4518,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 970,
-            top: 564,
-            fontSize: 8,
+            left: 988,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4411,9 +4535,11 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 1060,
-            top: 564,
-            fontSize: 8,
+            left: 1078,
+            top: 557,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
@@ -4426,14 +4552,67 @@ export default function FANTOM06Panel({
         <div
           className="absolute pointer-events-none"
           style={{
-            left: 520,
-            top: 624,
-            fontSize: 8,
+            left: 538,
+            top: 617,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
             textAlign: 'center',
           }}
         >
           <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
             ENTER
+          </span>
+        </div>
+
+        {/* label: MASTER FX */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 739,
+            top: 107,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MASTER FX
+          </span>
+        </div>
+
+        {/* label: MENU */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 741,
+            top: 239,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            MENU
+          </span>
+        </div>
+
+        {/* label: E1 */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: 802,
+            top: 274,
+            width: 60,
+            fontSize: 5,
+            lineHeight: '7px',
+            textAlign: 'center',
+          }}
+        >
+          <span className="font-medium text-gray-400 uppercase tracking-wider whitespace-nowrap">
+            E1
           </span>
         </div>
     </PanelShell>

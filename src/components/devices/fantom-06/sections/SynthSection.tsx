@@ -29,8 +29,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1194,
-              top: 38,
+              left: 1238,
+              top: 16,
               width: 30,
               height: 30,
             }}
@@ -47,8 +47,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1293,
-              top: 38,
+              left: 1337,
+              top: 16,
               width: 30,
               height: 30,
             }}
@@ -65,8 +65,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1208,
-              top: 113,
+              left: 1252,
+              top: 91,
               width: 30,
               height: 19,
             }}
@@ -86,8 +86,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1258,
-              top: 113,
+              left: 1302,
+              top: 91,
               width: 30,
               height: 19,
             }}
@@ -107,8 +107,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1308,
-              top: 113,
+              left: 1352,
+              top: 91,
               width: 30,
               height: 19,
             }}
@@ -128,8 +128,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1208,
-              top: 150,
+              left: 1252,
+              top: 128,
               width: 30,
               height: 19,
             }}
@@ -149,8 +149,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1258,
-              top: 150,
+              left: 1302,
+              top: 128,
               width: 30,
               height: 19,
             }}
@@ -170,8 +170,8 @@ export default function SynthSection({
           <div
             className="absolute flex items-center justify-center"
             style={{
-              left: 1308,
-              top: 150,
+              left: 1352,
+              top: 128,
               width: 30,
               height: 19,
             }}
