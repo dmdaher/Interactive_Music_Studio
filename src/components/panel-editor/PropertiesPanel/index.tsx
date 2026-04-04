@@ -205,6 +205,7 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
   const moveControl = useEditorStore((s) => s.moveControl);
   const resizeControl = useEditorStore((s) => s.resizeControl);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
+  const setLabelPosition = useEditorStore((s) => s.setLabelPosition);
 
   const ids = useMemo(() => [control.id], [control.id]);
 
@@ -227,9 +228,9 @@ function SingleControlProperties({ control }: { control: ControlDef }) {
   const handlePositionChange = useCallback(
     (value: ControlDef['labelPosition']) => {
       pushSnapshot();
-      updateControlProp(ids, 'labelPosition', value);
+      setLabelPosition(ids, value);
     },
-    [ids, updateControlProp, pushSnapshot],
+    [ids, setLabelPosition, pushSnapshot],
   );
 
   const handleSecondaryLabelChange = useCallback(
@@ -445,6 +446,7 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   const alignColumns = useEditorStore((s) => s.alignColumns);
   const alignRows = useEditorStore((s) => s.alignRows);
   const normalizeLabelSpacing = useEditorStore((s) => s.normalizeLabelSpacing);
+  const setLabelPosition = useEditorStore((s) => s.setLabelPosition);
   const editorLabels = useEditorStore((s) => s.editorLabels) as any[];
 
   const ids = useMemo(() => controls.map((c) => c.id), [controls]);
@@ -546,9 +548,9 @@ function MultiControlProperties({ controls }: { controls: ControlDef[] }) {
   const handlePositionChange = useCallback(
     (value: ControlDef['labelPosition']) => {
       pushSnapshot();
-      updateControlProp(ids, 'labelPosition', value);
+      setLabelPosition(ids, value);
     },
-    [ids, updateControlProp, pushSnapshot],
+    [ids, setLabelPosition, pushSnapshot],
   );
 
   const handleSecondaryLabelChange = useCallback(

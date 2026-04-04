@@ -195,6 +195,7 @@ export interface ManifestSlice {
   updateLabel: (labelId: string, updates: Partial<EditorLabel>) => void;
   deleteLabel: (labelId: string) => void;
   initLabelsFromControls: () => void;
+  setLabelPosition: (ids: string[], position: ControlDef['labelPosition']) => void;
   alignControls: (mode: 'left' | 'center-x' | 'right' | 'top' | 'center-y' | 'bottom') => void;
   distributeControls: (axis: 'horizontal' | 'vertical') => void;
   distributeWithGap: (axis: 'horizontal' | 'vertical', gap: number) => void;
@@ -1080,11 +1081,34 @@ export const createManifestSlice: StateCreator<
 
   setAllLabelFontSize: (size) => {
     set((s) => {
-      const updated: Record<string, ControlDef> = {};
+      // Update control.labelFontSize (metadata used by computeLabelPosition)
+      const updatedControls: Record<string, ControlDef> = {};
       for (const [id, ctrl] of Object.entries(s.controls)) {
-        updated[id] = { ...ctrl, labelFontSize: size };
+        updatedControls[id] = { ...ctrl, labelFontSize: size };
       }
-      return { controls: updated };
+
+      // Update EditorLabel.fontSize (what actually renders).
+      // When size is undefined ("Auto"), fall back to each control's default
+      // sizing based on sizeClass or type.
+      const updatedLabels = (s.editorLabels as EditorLabel[]).map((l) => {
+        if (size !== undefined) {
+          return { ...l, fontSize: size };
+        }
+        // "Auto" — compute default from linked control's sizeClass
+        if (l.controlId) {
+          const ctrl = updatedControls[l.controlId];
+          if (ctrl) {
+            const defaultSize = ctrl.sizeClass === 'xl' ? 11
+              : ctrl.sizeClass === 'lg' ? 10
+              : ctrl.sizeClass === 'sm' ? 7
+              : 8;
+            return { ...l, fontSize: defaultSize };
+          }
+        }
+        return { ...l, fontSize: 8 };
+      });
+
+      return { controls: updatedControls, editorLabels: updatedLabels };
     });
   },
 
@@ -1588,5 +1612,80 @@ export const createManifestSlice: StateCreator<
     if (repaired > 0 || newLabels.length > 0) {
       set({ editorLabels: [...repairedLabels, ...newLabels] });
     }
+  },
+
+  setLabelPosition: (ids, position) => {
+    const { controls, editorLabels } = get();
+    const controlScale = (get() as any).controlScale ?? 1;
+    const idSet = new Set(ids);
+    const updatedControls = { ...controls };
+    let updatedLabels = editorLabels as EditorLabel[];
+
+    for (const id of ids) {
+      const ctrl = updatedControls[id];
+      if (!ctrl) continue;
+      // Update the control's labelPosition
+      updatedControls[id] = { ...ctrl, labelPosition: position };
+    }
+
+    if (position === 'hidden' || position === 'on-button') {
+      // Remove editorLabels linked to these controls
+      updatedLabels = updatedLabels.filter(
+        (l) => !l.controlId || !idSet.has(l.controlId),
+      );
+    } else {
+      // Compute fresh position for each linked label (or create if missing)
+      const existingByCtrlId = new Map<string, EditorLabel>();
+      for (const l of updatedLabels) {
+        if (l.controlId) existingByCtrlId.set(l.controlId, l);
+      }
+
+      const newLabels: EditorLabel[] = [];
+      const updateMap = new Map<string, EditorLabel>();
+
+      for (const id of ids) {
+        const ctrl = updatedControls[id];
+        if (!ctrl || !ctrl.label) continue;
+        const visW = ctrl.w * controlScale;
+        const visH = ctrl.h * controlScale;
+        const fontSize = ctrl.labelFontSize
+          ?? (ctrl.sizeClass === 'xl' ? 11 : ctrl.sizeClass === 'lg' ? 10 : ctrl.sizeClass === 'sm' ? 7 : 8);
+        const lp = computeLabelPosition(
+          ctrl.x, ctrl.y, visW, visH,
+          position, ctrl.label, fontSize, ctrl.secondaryLabel,
+        );
+        if (!lp) continue;
+
+        const existing = existingByCtrlId.get(id);
+        if (existing) {
+          updateMap.set(existing.id, {
+            ...existing,
+            x: lp.x,
+            y: lp.y,
+            w: lp.w,
+            align: lp.align,
+            fontSize: lp.fontSize,
+          });
+        } else {
+          newLabels.push({
+            id: `label-${id}`,
+            controlId: id,
+            text: ctrl.label,
+            x: lp.x,
+            y: lp.y,
+            w: lp.w,
+            fontSize: lp.fontSize,
+            align: lp.align,
+          });
+        }
+      }
+
+      updatedLabels = [
+        ...updatedLabels.map((l) => updateMap.get(l.id) ?? l),
+        ...newLabels,
+      ];
+    }
+
+    set({ controls: updatedControls, editorLabels: updatedLabels });
   },
 });
