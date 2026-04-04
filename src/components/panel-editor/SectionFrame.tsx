@@ -21,11 +21,18 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
   const setSectionPosition = useEditorStore((s) => s.setSectionPosition);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
+  const setFocusedSection = useEditorStore((s) => s.setFocusedSection);
 
   const isSelected = selectedIds.includes(sectionId);
 
   const sx = section?.x ?? 0;
   const sy = section?.y ?? 0;
+
+  const handleDragStart = useCallback(() => {
+    // Focus the section immediately so it raises to z=99 above keyboard (z=15)
+    // and other sections, allowing drag anywhere on canvas without blocking.
+    setFocusedSection(sectionId);
+  }, [sectionId, setFocusedSection]);
 
   const handleDragStop = useCallback(
     (_e: unknown, d: { x: number; y: number }) => {
@@ -81,6 +88,7 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
       dragGrid={[snapGrid, snapGrid]}
       resizeGrid={[snapGrid, snapGrid]}
       dragHandleClassName="section-drag-handle"
+      onDragStart={handleDragStart}
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       enableResizing
