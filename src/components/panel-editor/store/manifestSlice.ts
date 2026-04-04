@@ -232,9 +232,11 @@ let addCounter = 0;
 
 /**
  * Re-center and align labels linked to the given controls.
- * After align/distribute: centers labels on controls (X axis) AND
- * aligns all labels to the same Y row (so "ZONE 1", "ZONE 2", etc.
- * form a neat horizontal line instead of staggered heights).
+ * Pass 1: centers labels on their control's X axis (always).
+ * Pass 2: IF controls form a horizontal row (similar Y values), snaps labels
+ *         above them to the same Y and below them to the same Y.
+ *         For vertical columns of controls, Y-snapping is SKIPPED — each
+ *         label stays at its own offset from its control.
  */
 function alignLinkedLabels(
   labels: EditorLabel[],
@@ -255,12 +257,25 @@ function alignLinkedLabels(
     return { ...l, x: Math.round(ctrlCenterX - labelW / 2), w: Math.round(labelW), align: 'center' as const };
   });
 
-  // Pass 2: align Y positions — labels above controls snap to min Y,
-  // labels below controls snap to max Y, so they form neat rows
-  const affected = result.filter((l) => l.controlId && idSet.has(l.controlId));
-  if (affected.length < 2) return result;
+  // Pass 2: Detect if controls form a horizontal row (vs vertical column).
+  // Only snap labels to shared Y positions if the controls themselves are
+  // in a row. For columns, each label should track its own control's Y.
+  const affectedCtrls = controlIds.map((id) => controls[id]).filter(Boolean);
+  if (affectedCtrls.length < 2) return result;
 
-  // Classify labels as above or below their control
+  const ys = affectedCtrls.map((c) => c.y);
+  const xs = affectedCtrls.map((c) => c.x);
+  const ySpread = Math.max(...ys) - Math.min(...ys);
+  const xSpread = Math.max(...xs) - Math.min(...xs);
+  const avgH = affectedCtrls.reduce((acc, c) => acc + c.h, 0) / affectedCtrls.length;
+
+  // Controls are in a "horizontal row" if Y spread is less than half average height
+  // AND X spread is greater than Y spread (they extend more horizontally)
+  const isHorizontalRow = ySpread < avgH / 2 && xSpread > ySpread;
+  if (!isHorizontalRow) return result;
+
+  // Snap labels to shared Y rows (above and below)
+  const affected = result.filter((l) => l.controlId && idSet.has(l.controlId));
   const above: EditorLabel[] = [];
   const below: EditorLabel[] = [];
   for (const l of affected) {
@@ -268,21 +283,15 @@ function alignLinkedLabels(
     if (!ctrl) continue;
     const ctrlVisH = ctrl.h * controlScale;
     const ctrlCenterY = ctrl.y + ctrlVisH / 2;
-    if (l.y < ctrlCenterY) {
-      above.push(l);
-    } else {
-      below.push(l);
-    }
+    if (l.y < ctrlCenterY) above.push(l);
+    else below.push(l);
   }
 
-  // Snap all "above" labels to the same Y (topmost = min Y)
   if (above.length >= 2) {
     const targetY = Math.min(...above.map((l) => l.y));
     const aboveIds = new Set(above.map((l) => l.id));
     result = result.map((l) => aboveIds.has(l.id) ? { ...l, y: targetY } : l);
   }
-
-  // Snap all "below" labels to the same Y (bottommost = max Y)
   if (below.length >= 2) {
     const targetY = Math.max(...below.map((l) => l.y));
     const belowIds = new Set(below.map((l) => l.id));

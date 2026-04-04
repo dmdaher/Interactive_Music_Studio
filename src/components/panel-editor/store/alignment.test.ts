@@ -119,29 +119,67 @@ describe('alignControls', () => {
     expect(ls.x).toBe(200);
   });
 
-  it('aligns label Y positions to same row (above labels snap to min Y)', () => {
-    // Labels at different Y positions above their controls
+  it('snaps label Y positions when controls form a horizontal row', () => {
+    // 3 controls in a horizontal row (same Y, different X)
     useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 10, y: 100, w: 40, h: 30, sectionId: 's1', label: 'A', type: 'button', labelPosition: 'above', locked: false },
+        b: { id: 'b', x: 100, y: 102, w: 40, h: 30, sectionId: 's1', label: 'B', type: 'button', labelPosition: 'above', locked: false },
+        c: { id: 'c', x: 200, y: 98, w: 40, h: 30, sectionId: 's1', label: 'C', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a', 'b', 'c'],
+      lockedIds: [],
       editorLabels: [
-        { id: 'la', controlId: 'a', text: 'ZONE 1', x: 5, y: 5, w: 40, fontSize: 8, align: 'center' },
-        { id: 'lb', controlId: 'b', text: 'ZONE 2', x: 90, y: 12, w: 40, fontSize: 8, align: 'center' },
-        { id: 'lc', controlId: 'c', text: 'ZONE 3', x: 55, y: 8, w: 40, fontSize: 8, align: 'center' },
+        { id: 'la', controlId: 'a', text: 'ZONE 1', x: 5, y: 85, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'ZONE 2', x: 90, y: 92, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lc', controlId: 'c', text: 'ZONE 3', x: 195, y: 88, w: 40, fontSize: 8, align: 'center' },
       ],
       controlScale: 1,
     } as any);
 
-    // Controls: a(y=20), b(y=50), c(y=80) — all labels are above their controls
-    useEditorStore.getState().alignControls('left');
+    useEditorStore.getState().alignControls('top');
     const { editorLabels } = useEditorStore.getState();
-
     const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
     const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
     const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
 
-    // All labels were above their controls → snap to min Y = 5
-    expect(la.y).toBe(5);
-    expect(lb.y).toBe(5);
-    expect(lc.y).toBe(5);
+    // Controls form a horizontal row (Y spread = 4, avg H = 30, 4 < 15) → Y-snap applies
+    // All labels were above their controls → snap to min Y = 85
+    expect(la.y).toBe(85);
+    expect(lb.y).toBe(85);
+    expect(lc.y).toBe(85);
+  });
+
+  it('does NOT snap label Y when controls form a vertical column', () => {
+    // 3 controls stacked vertically (same X, different Y) — user's actual use case
+    useEditorStore.setState({
+      controls: {
+        a: { id: 'a', x: 100, y: 10, w: 40, h: 30, sectionId: 's1', label: 'A', type: 'button', labelPosition: 'above', locked: false },
+        b: { id: 'b', x: 105, y: 50, w: 40, h: 30, sectionId: 's1', label: 'B', type: 'button', labelPosition: 'above', locked: false },
+        c: { id: 'c', x: 95, y: 90, w: 40, h: 30, sectionId: 's1', label: 'C', type: 'button', labelPosition: 'above', locked: false },
+      },
+      selectedIds: ['a', 'b', 'c'],
+      lockedIds: [],
+      editorLabels: [
+        { id: 'la', controlId: 'a', text: 'CTRL', x: 95, y: 0, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lb', controlId: 'b', text: 'ASSIGN', x: 100, y: 40, w: 40, fontSize: 8, align: 'center' },
+        { id: 'lc', controlId: 'c', text: 'ZONE SEL', x: 90, y: 80, w: 40, fontSize: 8, align: 'center' },
+      ],
+      controlScale: 1,
+    } as any);
+
+    useEditorStore.getState().alignControls('center-x'); // align horizontal centers
+    const { editorLabels } = useEditorStore.getState();
+    const la = (editorLabels as any[]).find((l: any) => l.id === 'la');
+    const lb = (editorLabels as any[]).find((l: any) => l.id === 'lb');
+    const lc = (editorLabels as any[]).find((l: any) => l.id === 'lc');
+
+    // Controls form a vertical column (Y spread = 80, X spread = 10, avg H = 30)
+    // 80 > 15 AND 10 < 80 → NOT a horizontal row → Y-snap SKIPPED
+    // Each label should keep its own Y position
+    expect(la.y).toBe(0);
+    expect(lb.y).toBe(40);
+    expect(lc.y).toBe(80);
   });
 });
 
