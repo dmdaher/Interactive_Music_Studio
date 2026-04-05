@@ -9,37 +9,44 @@
 ## The loop (what this plan delivers)
 
 ```
-YOU (local admin, terminal)          CONTRACTOR (website only)
-─────────────────────────            ───────────────────────
-1. Run hardware pipeline
-2. Click "Send to Contractor"
-   on local admin dashboard
-   → uploads manifest + photos
+YOU (local admin dashboard — localhost:3000/admin)
+───────────────────────────────────────────────────
+1. Click "+ New Instrument" → enter manufacturer + model
+   → pipeline starts automatically (existing dashboard action)
+2. Pipeline runs through phases (visible in dashboard)
+3. Pipeline completes → "Send to Contractor" button appears
+4. Click "Send to Contractor"
+   → uploads manifest + photos to hosted Blob
    → status=ready
-3. Text contractor "ready"
-                                     4. Visits site, logs in with password
-                                     5. Sees list: Fantom-06 Ready [Edit]
-                                     6. Edits panel, sees live render
-                                     7. Clicks Submit
-                                     8. Texts you "done"
-YOU (website)
-─────────────
-9. Visit site, review panel
-10. Click Approve (or Request Changes)
-    → status=approved
+5. Text contractor "ready"
 
-YOU (local admin, one more click)
-─────────────────────────────────
-11. Local admin shows "Approved — Build Tutorials"
-12. Click button → pulls manifest from site,
+CONTRACTOR (website only — askmiyagi.vercel.app)
+─────────────────────────────────────────────────
+6. Visits site, logs in with password
+7. Sees list: Fantom-06 Ready [Edit]
+8. Edits panel, sees live render
+9. Clicks Submit
+10. Texts you "done"
+
+YOU (website — askmiyagi.vercel.app/admin/review/...)
+──────────────────────────────────────────────────────
+11. Visit site, review panel in read-only editor
+12. Click Approve (or Request Changes)
+    → status=approved on hosted
+
+YOU (back to local admin dashboard)
+────────────────────────────────────
+13. Device card now shows "Approved — Build Tutorials" button
+14. Click button → pulls manifest from hosted site,
     runs codegen, runs tutorial pipeline,
     commits to test branch, opens PR
-13. Visit test preview URL
-14. Merge test → main (GitHub UI, owner-only)
+15. Visit test preview URL (visual check)
+16. Merge test → main (GitHub UI, owner-only)
 ```
 
 **Contractor's world: website only. Zero terminal, zero git.**
-**Your world: ~3 button clicks on local admin + ~2 clicks on website per cycle.**
+**Your world: all pipeline kickoff + handoff happens in the existing admin dashboard UI.**
+**You never touch the terminal for normal workflow** — pipeline-runner runs as a subprocess under the dashboard's start button, not a command you type.
 
 ---
 
