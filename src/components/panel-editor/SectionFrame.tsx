@@ -38,12 +38,15 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
     (_e: unknown, d: { x: number; y: number }) => {
       const dx = d.x - sx;
       const dy = d.y - sy;
+      // Clear focus — section returns to baseline z-index so it doesn't
+      // permanently cover controls in overlapping sections.
+      setFocusedSection(null);
       // Ignore micro-movements — prevents snap-grid correction on click
       if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
       pushSnapshot();
       moveSection(sectionId, dx, dy);
     },
-    [sx, sy, sectionId, moveSection, pushSnapshot],
+    [sx, sy, sectionId, moveSection, pushSnapshot, setFocusedSection],
   );
 
   const handleResizeStop = useCallback(
