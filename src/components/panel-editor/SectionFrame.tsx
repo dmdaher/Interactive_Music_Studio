@@ -21,32 +21,22 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
   const setSectionPosition = useEditorStore((s) => s.setSectionPosition);
   const pushSnapshot = useEditorStore((s) => s.pushSnapshot);
   const setSelectedIds = useEditorStore((s) => s.setSelectedIds);
-  const setFocusedSection = useEditorStore((s) => s.setFocusedSection);
 
   const isSelected = selectedIds.includes(sectionId);
 
   const sx = section?.x ?? 0;
   const sy = section?.y ?? 0;
 
-  const handleDragStart = useCallback(() => {
-    // Focus the section immediately so it raises to z=99 above keyboard (z=15)
-    // and other sections, allowing drag anywhere on canvas without blocking.
-    setFocusedSection(sectionId);
-  }, [sectionId, setFocusedSection]);
-
   const handleDragStop = useCallback(
     (_e: unknown, d: { x: number; y: number }) => {
       const dx = d.x - sx;
       const dy = d.y - sy;
-      // Clear focus — section returns to baseline z-index so it doesn't
-      // permanently cover controls in overlapping sections.
-      setFocusedSection(null);
       // Ignore micro-movements — prevents snap-grid correction on click
       if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
       pushSnapshot();
       moveSection(sectionId, dx, dy);
     },
-    [sx, sy, sectionId, moveSection, pushSnapshot, setFocusedSection],
+    [sx, sy, sectionId, moveSection, pushSnapshot],
   );
 
   const handleResizeStop = useCallback(
@@ -91,7 +81,6 @@ export default function SectionFrame({ sectionId, zIndex = 1 }: SectionFrameProp
       dragGrid={[snapGrid, snapGrid]}
       resizeGrid={[snapGrid, snapGrid]}
       dragHandleClassName="section-drag-handle"
-      onDragStart={handleDragStart}
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
       enableResizing

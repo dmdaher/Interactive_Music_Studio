@@ -108,7 +108,7 @@ export default function KeyboardSection() {
       }}
       onDragStop={handleDragStop}
       onResizeStop={handleResizeStop}
-      style={{ zIndex: 15 }}
+      style={{ zIndex: 50 }}
     >
       {/* Boundary line */}
       <div
