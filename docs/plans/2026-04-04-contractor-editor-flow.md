@@ -1,167 +1,234 @@
-# Contractor Editor Flow — Minimal Plan
+# Contractor Editor Flow — Final Minimal Plan
 
-**Date:** 2026-04-04
-**Goal:** Hosted editor for 1 non-engineer contractor. Keep it lightweight.
-**Supersedes:** `2026-04-04-hosted-editor-architecture.md` (delete when this lands)
-
----
-
-## Requirements
-
-- Contractor is a designer (no git, terminal, or code)
-- Contractor visits a URL, edits panel, sees final render, submits for review
-- Contractor tells Devin via existing channel (text/Slack) when done
-- Devin reviews in browser, approves, continues locally (codegen + deploy)
-- **Low-frequency workflow** — maybe a few instruments/month, so keep it small
+**Date:** 2026-04-05 (updated)
+**Goal:** Web-based editor for 1 non-engineer contractor, lightweight end-to-end loop
+**Supersedes:** `2026-04-04-hosted-editor-architecture.md`
 
 ---
 
-## Architecture: Reuse existing admin dashboard
+## The loop (what this plan delivers)
 
-**Local (Devin's Mac, mostly unchanged):**
-- `/admin/pipeline` — existing dashboard, ADD one button: "Send to Contractor"
-- Pipeline runner, codegen, git workflow all unchanged
+```
+YOU (local admin, terminal)          CONTRACTOR (website only)
+─────────────────────────            ───────────────────────
+1. Run hardware pipeline
+2. Click "Send to Contractor"
+   on local admin dashboard
+   → uploads manifest + photos
+   → status=ready
+3. Text contractor "ready"
+                                     4. Visits site, logs in with password
+                                     5. Sees list: Fantom-06 Ready [Edit]
+                                     6. Edits panel, sees live render
+                                     7. Clicks Submit
+                                     8. Texts you "done"
+YOU (website)
+─────────────
+9. Visit site, review panel
+10. Click Approve (or Request Changes)
+    → status=approved
 
-**Hosted (Vercel, 3 small new things):**
-- `/editor` — contractor's panel list (after password auth)
-- `/editor/[deviceId]` — the editor, reused with hosted-mode flag
-- `/admin/review/[deviceId]` — Devin's read-only review (editor with `readOnly=true`)
+YOU (local admin, one more click)
+─────────────────────────────────
+11. Local admin shows "Approved — Build Tutorials"
+12. Click button → pulls manifest from site,
+    runs codegen, runs tutorial pipeline,
+    commits to test branch, opens PR
+13. Visit test preview URL
+14. Merge test → main (GitHub UI, owner-only)
+```
+
+**Contractor's world: website only. Zero terminal, zero git.**
+**Your world: ~3 button clicks on local admin + ~2 clicks on website per cycle.**
+
+---
+
+## Architecture
+
+### Hosted on Vercel (contractor's interface)
+- `/editor` — panel list (after password)
+- `/editor/[deviceId]` — the editor
+- `/admin/review/[deviceId]` — your read-only review page (editor with `readOnly=true`)
+- Vercel Blob — one `state.json` per device (manifest + status + metadata)
+- Vercel Blob — photos per device
+
+### Local (your existing admin dashboard, add two buttons)
+- **"Send to Contractor"** button per device — uploads manifest + photos to Blob, sets status=ready
+- **"Build Tutorials"** button per device (appears when status=approved) — downloads manifest, runs codegen, runs tutorial pipeline, git commits + pushes + opens PR
+
+### Nothing else local
+- No watcher process
+- No sync CLI
+- No state machine library
+- No email notifications (you + contractor already text)
+
+---
+
+## Why no auto-triggered tutorial pipeline
+
+Approval could auto-trigger the tutorial pipeline via a local watcher, but:
+- Watcher = background process = single point of failure
+- Tutorial pipeline takes 1-3 hours and needs Claude CLI (local-only)
+- You're going to be at your computer anyway to merge test → main
+- One extra button click per cycle isn't worth the architectural complexity
+
+**If this friction ever feels painful,** add a watcher later. For now, the flow is: hosted approval sets a flag, your local admin dashboard shows the flag as a button, you click when ready.
 
 ---
 
 ## Storage: Vercel Blob only
 
-One JSON file per device in Vercel Blob at `devices/{deviceId}/state.json`:
+One JSON file per device at `devices/{deviceId}/state.json`:
+
 ```json
 {
+  "deviceId": "fantom-06",
+  "deviceName": "Fantom-06",
+  "manufacturer": "Roland",
   "status": "ready" | "in-progress" | "submitted" | "approved",
-  "manifest": { /* full manifest-editor.json */ },
-  "updatedAt": "2026-04-04T..."
+  "manifest": { /* full manifest-editor.json payload */ },
+  "updatedAt": "2026-04-05T..."
 }
 ```
 
-Photos uploaded as separate blobs at `devices/{deviceId}/photos/*.jpg`.
+Photos as separate blobs at `devices/{deviceId}/photos/{name}.jpg`.
 
-**No Postgres. No Drizzle. No schema migrations.** 1 contractor × <20 devices = not a database problem.
+**No Postgres, no Drizzle, no ORM, no schema migrations.**
+
+### Why Blob, not Postgres
+- 1-20 devices total
+- Single JSON blob per device, read/write at the whole-blob level
+- No need for relational queries, indexes, joins
+- Postgres adds setup overhead with zero benefit at this scale
+- Upgrade to Postgres later if/when multi-contractor scale demands it
 
 ---
 
-## Auth: Password cookie middleware
+## Auth: Password cookie
 
-Single shared password in env var (`CONTRACTOR_PASSWORD`). Middleware:
+Shared password per role (env vars):
+- `CONTRACTOR_PASSWORD` — gates `/editor/*`
+- `ADMIN_PASSWORD` — gates `/admin/review/*`
+
+Middleware:
 ```typescript
 // src/middleware.ts
-if (pathname.startsWith('/editor') || pathname.startsWith('/admin/review')) {
-  if (cookies.get('access') !== hash(env.CONTRACTOR_PASSWORD)) {
-    redirect('/signin');
-  }
+if (pathname.startsWith('/editor/')) {
+  if (!hasValidCookie(req, 'contractor')) redirect('/signin?role=contractor');
+}
+if (pathname.startsWith('/admin/review/')) {
+  if (!hasValidCookie(req, 'admin')) redirect('/signin?role=admin');
 }
 ```
 
-**No NextAuth. No magic links. No email.** Admin role for Devin via separate env var password (`ADMIN_PASSWORD`) if needed later.
+**No NextAuth, no magic links, no email.** For 1 contractor.
 
 ---
 
-## The flow
-
-### You (existing admin dashboard, localhost)
-
-1. Run pipeline (unchanged)
-2. Click "Send to Contractor" on the device card
-   - Posts manifest + photos to hosted `/api/panels/[deviceId]/init`
-   - Status set to `ready`
-3. Text contractor "Fantom-06 is ready"
-
-### Contractor (browser)
-
-1. Visit `askmiyagi.vercel.app/editor`, enter password
-2. See list:
-   ```
-   Fantom-06    Ready         [Edit]
-   CDJ-3000     In progress   [Continue]
-   Prophet-5    Approved ✓
-   ```
-3. Click Edit → hosted editor opens
-4. First edit flips status to `in-progress`
-5. Click "Submit for Review" → status = `submitted`
-6. Text Devin "Done"
-
-### You (browser → terminal)
-
-1. Visit `askmiyagi.vercel.app/admin/review/fantom-06`
-2. See panel in read-only editor mode
-3. Click Approve → status = `approved`
-4. Terminal: `curl .../api/panels/fantom-06/manifest > .pipeline/fantom-06/manifest-editor.json`
-5. Run existing codegen + deploy flow
-
----
-
-## Scope: ~280 LOC
+## Scope: ~320 LOC
 
 | Piece | LOC |
 |---|---|
-| "Send to Contractor" button + API call (local → hosted) | 40 |
-| Hosted API routes (init, manifest, list, status PATCH) | 100 |
-| `/editor` contractor list page | 60 |
-| `/admin/review/[id]` read-only review (reuses editor with readOnly flag) | 30 |
-| Password cookie + middleware | 20 |
+| "Send to Contractor" button + POST to hosted API | 40 |
+| Hosted API routes (POST init, GET list, GET manifest, PATCH status) | 100 |
+| Vercel Blob storage helpers | 60 |
+| `/editor` contractor list page (cards + links) | 60 |
+| `/admin/review/[id]` read-only view (reuses editor with `readOnly=true`) | 30 |
 | Hosted editor mode tweaks (hide local buttons, add Submit button) | 30 |
+| Password cookie + middleware | 20 |
+| `/signin` page (role parameter + password form) | 40 |
+| "Build Tutorials" button + local action (pull manifest + codegen + tutorial pipeline) | 40 |
 
-**Total: ~280 LOC.** Roughly 1-3 days of work.
-
----
-
-## What we deferred (add later if needed)
-
-- Dashboard with multiple instruments — you use your existing `/admin/pipeline`
-- State machine automation — 4 statuses, 3 manual transitions, good enough
-- Local watcher — no automation needed
-- Email notifications — text/Slack works
-- Automated tutorial pipeline triggering — manual after approval
-- `PanelRenderer` drift-proofing — defer until drift actually bites
-- Postgres — defer until multi-contractor scale
-- NextAuth + magic links — defer until multi-contractor
-- GitHub Actions — defer (watcher + actions solve same problem)
-- VPS watcher — not needed without watcher
+**Total: ~320 LOC.** Roughly 1-3 days of focused work.
 
 ---
 
-## Upgrade path (preserve optionality)
+## The contractor's experience in detail
 
-Everything here can upgrade in place:
-- Blob → Postgres: swap storage layer (one file changes)
-- Password cookie → NextAuth: replace middleware
-- Manual curl → sync-down CLI: add script
-- Single contractor → multi: add `contractor_email` to state JSON, filter list
-- No state machine → automated transitions: add watcher or server-side triggers
+### First-time login
+1. Receives text from Devin: "Fantom-06 is ready in the editor. URL: askmiyagi.vercel.app, password: XYZ"
+2. Visits URL, enters password → cookie set, redirects to `/editor`
+3. Sees the list page with Fantom-06 card labeled "Ready"
 
-**No architectural lock-in.** Ship small, grow when real usage demands it.
+### Editing session
+1. Clicks card → opens editor for Fantom-06
+2. First click flips status to `in-progress` behind the scenes
+3. Edits using Align/Distribute/Group/Label tools (see `docs/contractor-guide/alignment-tools.md`)
+4. Every 800ms, auto-save writes to Blob
+5. When happy, clicks **"Submit for Review"** button
+6. Status flips to `submitted`
+7. Contractor sees confirmation + goes back to list ("Fantom-06 Submitted")
+8. Contractor texts Devin "done"
+
+### Receiving feedback
+- If Devin requests changes: status flips back to `in-progress`, contractor re-opens, fixes, resubmits
+- If Devin approves: status=approved, contractor sees ✓ on the list, done
+
+---
+
+## Your review experience in detail
+
+1. Receive text from contractor "done"
+2. Visit `askmiyagi.vercel.app/admin/review/fantom-06`
+3. Enter admin password (if not already cookied)
+4. See the panel rendered in the editor's read-only mode (same components as contractor saw)
+5. Visually verify — does it look production-ready?
+6. Click **Approve** OR **Request Changes** (with optional note)
+
+Then switch to local admin dashboard (`localhost:3000/admin/pipeline`):
+7. See Fantom-06 card with "Approved — Build Tutorials" button
+8. Click it
+9. Local process runs: download manifest, codegen, tutorial pipeline, git push, open PR to `test`
+10. Email/notification when done
+11. Visit test preview URL, visually verify
+12. Merge test → main (GitHub UI)
+
+**Done.**
+
+---
+
+## Upgrade path (keep optionality)
+
+| If you later need | Upgrade |
+|---|---|
+| Multi-contractor support | Replace shared password with per-user auth (NextAuth) + filter Blob reads by user |
+| Relational queries on devices | Swap Blob storage layer for Postgres |
+| Auto-trigger tutorials on approval | Add a local watcher that polls Blob status |
+| Email notifications | Add Resend, fire on status transitions |
+| Rich review comments | Add comments field to state.json, render in review UI |
+
+**Nothing here locks you out of those upgrades. Each is one swappable layer.**
 
 ---
 
 ## Execution order
 
-1. Hosted API routes (init, manifest, list, status)
-2. Blob storage module
-3. Password middleware
-4. `/editor` list page
-5. Hosted editor mode flag + Submit button
-6. `/admin/review/[id]` read-only view
-7. "Send to Contractor" button on local admin
-8. Deploy + test round-trip with real Fantom-06
+1. Create Vercel Blob token + add to env
+2. Build hosted API routes (init, list, manifest, status)
+3. Build Blob storage helper module
+4. Build `/signin` + middleware + password cookies
+5. Build `/editor` list page
+6. Add hosted-mode editor tweaks (Submit button, hide local-only buttons)
+7. Build `/admin/review/[id]` page (readOnly editor)
+8. Add "Send to Contractor" button to local admin dashboard
+9. Add "Build Tutorials" button to local admin dashboard
+10. Deploy to Vercel, test round-trip with real Fantom-06
 
 ---
 
-## Prerequisites (land before this)
+## Non-goals (explicitly out of scope)
 
-- **Phase 1** fixes from `2026-04-04-editor-overlap-and-codegen-sync.md` (keyboard + section boxes in codegen, flat control layer) — editor should be clean before contractor sees it
+- Hosting pipeline runners on Vercel (requires API rewrite, incompatible with current architecture)
+- Auto-triggering tutorial pipeline on approval (manual button click, one extra action)
+- Email or Slack notifications (text/messaging works)
+- Dashboard with multiple simultaneous instrument orchestration
+- Real-time multi-contractor collaboration
+- Mobile editor support
+- GitHub Actions for codegen (local watcher/button is simpler)
 
 ---
 
-## Non-goals
+## Prerequisites
 
-- Hosting pipeline runners (stays local)
-- Automatic tutorial kickoff on approval (manual)
-- Automatic test→main merge (manual, per CLAUDE.md owner-only rule)
-- Mobile editor
-- Real-time collaboration
+- **Phase 1 editor fixes** from `2026-04-04-editor-overlap-and-codegen-sync.md` (tasks #13, #14, #18) should land first so the contractor isn't debugging editor bugs.
+- **Alignment tools tutorial** at `docs/contractor-guide/alignment-tools.md` ready for contractor onboarding.
